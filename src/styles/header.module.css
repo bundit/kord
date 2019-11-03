@@ -1,0 +1,19 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4rem;
+  border-bottom: 1px #EEE solid;
+  background-color: #FFF;
+  padding-top: 1rem;
+}
+
+.container {
+  width: 100%;
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+}
