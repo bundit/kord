@@ -1,0 +1,44 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 5rem;
+  width: 100%;
+  border-top: 1px #eee solid;
+  background-color: #fff;
+}
+
+.footer nav {
+  height: 100%;
+}
+
+.navUl {
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 0;
+  margin: 0;
+}
+
+.navUl li {
+  display: inline;
+  width: 100%;
+}
+
+.navLink {
+  background-color: #fff;
+  text-decoration: none;
+  color: #333;
+}
+
+.navWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.active {
+  color: red;
+}
