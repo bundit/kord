@@ -1,0 +1,48 @@
+@import url("https://fonts.googleapis.com/css?family=El+Messiri:500&display=swap");
+/* Vidaloka */
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+html {
+  font-size: 12px;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "El Messiri";
+  font-weight: bolder;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+.content {
+  margin-top: 5rem;
+  margin-bottom: 4rem;
+  overflow-y: scroll;
+}
