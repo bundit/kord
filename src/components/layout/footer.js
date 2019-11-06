@@ -6,7 +6,7 @@ import {
   faSearch,
   faEllipsisH
 } from "@fortawesome/free-solid-svg-icons";
-import styles from "../styles/footer.module.css";
+import styles from "../../styles/footer.module.css";
 
 const Footer = () => (
   <footer className={styles.footer}>

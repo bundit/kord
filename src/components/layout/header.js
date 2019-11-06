@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "../styles/header.module.css";
+import styles from "../../styles/header.module.css";
 
 function Header(props) {
   const {
