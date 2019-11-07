@@ -15,3 +15,7 @@ export const ADD_TO_QUEUE = "ADD_TO_QUEUE";
 export const REMOVE_FROM_QUEUE = "REMOVE_FROM_QUEUE";
 export const PLAY_FROM_QUEUE = "PLAY_FROM_QUEUE";
 export const SET_QUEUE = "SET_QUEUE";
+
+// Search Reducer
+export const SEARCH = "SEARCH";
+export const ADD_TO_SEARCH_HISTORY = "ADD_TO_SEARCH_HISTORY";
