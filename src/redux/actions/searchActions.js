@@ -5,7 +5,7 @@ import {
   LOAD_MORE_RESULTS
 } from "./types";
 
-async function fetchScTracks(endpoint) {
+export async function fetchScTracks(endpoint) {
   const res = await fetch(`${endpoint}&linked_partitioning=1`);
   const data = await res.json();
 
