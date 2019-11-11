@@ -18,7 +18,7 @@ export async function fetchScTracks(endpoint) {
       id: track.user.id
     },
     date: track.created_at,
-    duration: track.full_duration,
+    duration: track.duration,
     likes: track.likes_count,
     genre: track.genre,
     uri: track.uri,
