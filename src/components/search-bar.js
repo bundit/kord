@@ -4,22 +4,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/library.module.css";
 
-const SearchBar = ({ query, onChange, onSubmit }) => (
+const SearchBar = ({ placeholder, query, onChange, onSubmit, onReset }) => (
   // <div className={styles.searchBarWrapper}>
   <>
-    <form onSubmit={onSubmit} action="">
+    <form className={styles.searchForm} onSubmit={onSubmit} action="">
       <input
         className={styles.searchBar}
         name="search"
         type="search"
         onChange={onChange}
-        placeholder="Search for Music"
+        placeholder={placeholder}
         value={query}
       />
     </form>
     <FontAwesomeIcon className={styles.searchIcon} icon={faSearch} />
     {/* eslint-disable-next-line react/button-has-type */}
-    <button className={styles.xButton} type="reset">
+    <button className={styles.xButton} type="reset" onClick={onReset}>
       <FontAwesomeIcon icon={faTimesCircle} />
     </button>
   </>
@@ -28,11 +28,14 @@ const SearchBar = ({ query, onChange, onSubmit }) => (
 SearchBar.propTypes = {
   query: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
+  onReset: PropTypes.func.isRequired
 };
 
 SearchBar.defaultProps = {
-  query: ""
+  query: "",
+  placeholder: "Search"
 };
 
 export default SearchBar;
