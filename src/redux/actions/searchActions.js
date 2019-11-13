@@ -1,9 +1,34 @@
 import {
   SEARCH,
+  SEARCH_ARTISTS,
   ADD_TO_SEARCH_HISTORY,
   SET_NEXT_HREF,
   LOAD_MORE_RESULTS
 } from "./types";
+
+async function fetchScArtists(endpoint) {
+  const res = await fetch(`${endpoint}`);
+  const data = await res.json();
+
+  return data.map(artist => ({
+    name: artist.username,
+    id: artist.id,
+    numFollowers: artist.followers_count,
+    img: artist.avatar_url
+  }));
+}
+
+export const searchSoundcloudArtists = (query, limit = 5) => async dispatch => {
+  const KEY = process.env.REACT_APP_SC_KEY;
+  const endpoint = `https://api.soundcloud.com/users?q=${query}&client_id=${KEY}&limit=${limit}`;
+
+  const artistList = await fetchScArtists(endpoint);
+
+  dispatch({
+    type: SEARCH_ARTISTS,
+    payload: artistList
+  });
+};
 
 export async function fetchScTracks(endpoint) {
   const res = await fetch(`${endpoint}&linked_partitioning=1`);

@@ -20,6 +20,7 @@ export const SET_QUEUE = "SET_QUEUE";
 
 // Search Reducer
 export const SEARCH = "SEARCH";
+export const SEARCH_ARTISTS = "SEARCH_ARTISTS";
 export const LOAD_MORE_RESULTS = "LOAD_MORE_RESULTS";
 export const SET_SEARCH_QUERY = "SET_SEARCH_QUERY";
 export const RESET_SEARCH_QUERY = "RESET_SEARCH_QUERY";

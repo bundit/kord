@@ -1,7 +1,13 @@
-import { IMPORT_SC_LIKES, IMPORT_SONG } from "../actions/types";
+import {
+  IMPORT_SC_LIKES,
+  SET_LIB_QUERY,
+  RESET_LIB_QUERY,
+  IMPORT_SONG
+} from "../actions/types";
 import compareSongs from "../../utils/compareSongs";
 
 const initialState = {
+  query: "",
   library: [],
   playlists: []
 };
@@ -16,6 +22,20 @@ export default function(state = initialState, action) {
       return {
         ...state,
         library: newLib
+      };
+    }
+
+    case SET_LIB_QUERY: {
+      return {
+        ...state,
+        query: action.payload
+      };
+    }
+
+    case RESET_LIB_QUERY: {
+      return {
+        ...state,
+        query: ""
       };
     }
 

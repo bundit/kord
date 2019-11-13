@@ -52,7 +52,6 @@ export const importScLikes = username => async dispatch => {
   const tracks = [];
   let res;
 
-  let count = 0;
   do {
     // We must use the previous request's result to make the next request
     // eslint-disable-next-line no-await-in-loop
@@ -62,9 +61,8 @@ export const importScLikes = username => async dispatch => {
     tracks.push(...res.tracks);
 
     // Set the endpoint to the next pagination
-    nextEndpoint = res.nextPage;
-    count += 1;
-  } while (res.nextPage && count < 1);
+    nextEndpoint = res.nextHref;
+  } while (res.nextHref);
 
   // Send the payload to reducer
   dispatch({

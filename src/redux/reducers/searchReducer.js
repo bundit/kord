@@ -1,7 +1,9 @@
 import {
   SEARCH,
+  SEARCH_ARTISTS,
   LOAD_MORE_RESULTS,
   SET_SEARCH_QUERY,
+  RESET_SEARCH_QUERY,
   SET_NEXT_HREF,
   ADD_TO_SEARCH_HISTORY
 } from "../actions/types";
@@ -9,6 +11,7 @@ import {
 const initialState = {
   query: "",
   results: [],
+  artistResults: [],
   history: [],
   nextHref: ""
 };
@@ -21,6 +24,12 @@ export default function(state = initialState, action) {
         results: action.payload
       };
     }
+    case SEARCH_ARTISTS: {
+      return {
+        ...state,
+        artistResults: action.payload
+      };
+    }
     case LOAD_MORE_RESULTS: {
       return {
         ...state,
@@ -31,6 +40,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         query: action.query
+      };
+    }
+    case RESET_SEARCH_QUERY: {
+      return {
+        ...state,
+        query: ""
       };
     }
     case SET_NEXT_HREF: {
