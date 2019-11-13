@@ -21,6 +21,20 @@
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "quotes": [1, "double", { "avoidEscape": true }],
     "comma-dangle": ["error", "never"],
-    "arrow-parens": [1, "as-needed"]
+    "arrow-parens": [1, "as-needed"],
+    "space-before-function-paren": ["error", "never"],
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectExpression": "always",
+        "ObjectPattern": { "multiline": true }
+      }
+    ],
+    "operator-linebreak": [
+      1,
+      "after",
+      { "overrides": { "?": "before", ":": "before" } }
+    ],
+    "implicit-arrow-linebreak": [1]
   }
 }
