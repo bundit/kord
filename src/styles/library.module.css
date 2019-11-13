@@ -1,0 +1,78 @@
+.libraryWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+.searchForm {
+  padding: 0 3rem;
+  position: fixed;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.searchBar {
+  display: block;
+  height: 4rem;
+  width: inherit;
+  margin: 1rem auto;
+  padding-left: 3rem;
+  border-radius: 2rem;
+  border: none;
+  background-color: #eee;
+  box-sizing: border-box;
+}
+
+.searchIcon,
+.xButton {
+  position: fixed;
+  left: 4.5rem;
+  top: 7rem;
+  color: #aaa;
+  width: 2rem;
+  height: 2rem;
+}
+
+.xButton {
+  right: 4.5rem;
+  left: auto;
+  background-color: transparent;
+  border: none;
+}
+
+.libraryWrapper {
+  display: flex;
+  flex-direction: column;
+  padding-top: 7rem;
+  padding-bottom: 4rem;
+}
+
+.trackWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  border-bottom: 1px #eee solid;
+}
+
+.trackWrapper img {
+  border: 1px black solid;
+  height: 3rem;
+  border-radius: 1rem;
+  margin-right: 1rem;
+}
+
+.duration {
+  color: #bbb;
+}
+
+.trackRightControls {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
