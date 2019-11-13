@@ -1,0 +1,22 @@
+.playerWrapper {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  height: 3rem;
+  bottom: 5rem;
+  background-color: white;
+  align-items: center;
+  border-top: 1px #ddd solid;
+}
+
+.titleWrapper {
+  flex: 1;
+}
+.titleWrapper div {
+  text-align: center;
+}
+
+.playerWrapper div:last-child {
+  margin-left: auto;
+  /* border: 1px black solid; */
+}
