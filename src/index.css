@@ -42,7 +42,9 @@ h1 {
 }
 
 .content {
-  margin-top: 5rem;
-  margin-bottom: 4rem;
+  padding-top: 5rem;
+  padding-bottom: 4rem;
+  height: 100%;
+  width: 100%;
   overflow-y: scroll;
 }
