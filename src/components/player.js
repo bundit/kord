@@ -1,4 +1,5 @@
 import React from "react";
+import ReactHowler from "react-howler";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -48,43 +49,61 @@ class Player extends React.Component {
     const { current, isPlaying } = this.props;
     const title = current ? current.title : "Nothing";
     const artistName = current ? current.artist.name : "Currently Playing";
-    const { handlePlayPause, handleNext } = this;
+    const { handlePlayPause, handlePrev, handleNext } = this;
+    const KEY = process.env.REACT_APP_SC_KEY;
 
     return (
-      <div className={styles.playerWrapper}>
-        <button type="button">
-          <FontAwesomeIcon icon={faAngleUp} />
-        </button>
-        <div className={styles.titleWrapper}>
-          <div>
-            <strong>{truncateString(title, 38)}</strong>
+      <>
+        {current && (
+          <ReactHowler
+            src={`${current.streamUrl}?client_id=${KEY}`}
+            playing={isPlaying}
+            onEnd={handleNext}
+            preload
+            html5
+          />
+        )}
+        <div className={styles.playerWrapper}>
+          <button type="button">
+            <FontAwesomeIcon icon={faAngleUp} />
+          </button>
+          <div className={styles.titleWrapper}>
+            <div>
+              <strong>{truncateString(title, 38)}</strong>
+            </div>
+            <div>{truncateString(artistName, 38)}</div>
           </div>
-          <div>{truncateString(artistName, 38)}</div>
+          <div>
+            <button type="button" onClick={handlePrev}>
+              <FontAwesomeIcon icon={faBackward} />
+            </button>
+            <button type="button" onClick={handlePlayPause}>
+              <FontAwesomeIcon
+                icon={isPlaying ? faPauseCircle : faPlayCircle}
+              />
+            </button>
+            <button type="button" onClick={handleNext}>
+              <FontAwesomeIcon icon={faForward} />
+            </button>
+          </div>
         </div>
-        <div>
-          {/* <button type="button">
-            <FontAwesomeIcon icon={faBackward} />
-          </button> */}
-          <button type="button" onClick={handlePlayPause}>
-            <FontAwesomeIcon icon={isPlaying ? faPauseCircle : faPlayCircle} />
-          </button>
-          <button type="button" onClick={handleNext}>
-            <FontAwesomeIcon icon={faForward} />
-          </button>
-        </div>
-      </div>
+      </>
     );
   }
 }
 
 Player.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  current: PropTypes.object.isRequired,
+  current: PropTypes.object,
   isPlaying: PropTypes.bool.isRequired,
   play: PropTypes.func.isRequired,
   pause: PropTypes.func.isRequired,
   prevTrack: PropTypes.func.isRequired,
   nextTrack: PropTypes.func.isRequired
+};
+
+Player.defaultProps = {
+  current: null
 };
 
 const mapStateToProps = state => ({
