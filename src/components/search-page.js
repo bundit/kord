@@ -22,6 +22,7 @@ class Search extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAddToLibrary = this.handleAddToLibrary.bind(this);
     this.handleReset = this.handleReset.bind(this);
+    this.handlePlayTrack = this.handlePlayTrack.bind(this);
   }
 
   componentDidMount() {
@@ -49,10 +50,13 @@ class Search extends React.Component {
     event.preventDefault();
   }
 
-  handleAddToLibrary(track) {
+  handleAddToLibrary(event, track) {
     const { importSong } = this.props;
 
     importSong(track);
+
+    // Prevent event bubbling to other handlers
+    event.stopPropagation();
   }
 
   handleReset() {
@@ -60,9 +64,24 @@ class Search extends React.Component {
     resetQuery();
   }
 
+  handlePlayTrack(track) {
+    const { results, playTrack, setQueue } = this.props;
+    let index = 0;
+
+    // Find index of song clicked
+    while (results[index].id !== track.id && index < results.length) {
+      index += 1;
+    }
+
+    playTrack(track);
+
+    // Set queue to remaining songs
+    setQueue(results.slice(index));
+  }
+
   render() {
     const { query, results, loadMoreTracks } = this.props;
-    const { handleChange, handleSubmit, handleReset } = this;
+    const { handleChange, handleSubmit, handleReset, handlePlayTrack } = this;
     return (
       <>
         <SearchBar
@@ -82,8 +101,9 @@ class Search extends React.Component {
                 artist={track.artist.name}
                 id={track.id}
                 img={track.img}
-                addToLibrary={() => this.handleAddToLibrary(track)}
+                addToLibrary={event => this.handleAddToLibrary(event, track)}
                 ms={track.duration}
+                handlePlay={() => handlePlayTrack(track)}
               />
             ))}
           {!!results.length && (
@@ -101,11 +121,13 @@ Search.propTypes = {
   query: PropTypes.string.isRequired,
   results: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSearchQuery: PropTypes.func.isRequired,
+  playTrack: PropTypes.func.isRequired,
   importSong: PropTypes.func.isRequired,
   loadMoreTracks: PropTypes.func.isRequired,
   searchScTracks: PropTypes.func.isRequired,
   searchScArtists: PropTypes.func.isRequired,
-  resetQuery: PropTypes.func.isRequired
+  resetQuery: PropTypes.func.isRequired,
+  setQueue: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ search }) => ({
@@ -135,6 +157,16 @@ const mapDispatchToProps = dispatch => ({
   resetQuery: () =>
     dispatch({
       type: "RESET_SEARCH_QUERY"
+    }),
+  playTrack: track =>
+    dispatch({
+      type: "SET_TRACK",
+      payload: track
+    }),
+  setQueue: list =>
+    dispatch({
+      type: "SET_QUEUE",
+      payload: list
     })
 });
 

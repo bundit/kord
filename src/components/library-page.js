@@ -17,6 +17,7 @@ class Library extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReset = this.handleReset.bind(this);
+    this.handlePlayTrack = this.handlePlayTrack.bind(this);
   }
 
   componentDidMount() {
@@ -31,14 +32,28 @@ class Library extends React.Component {
   }
 
   handleChange(event) {
-    const { dispatchSetLibQuery } = this.props;
-    dispatchSetLibQuery(event.target.value);
+    const { setLibQuery } = this.props;
+    setLibQuery(event.target.value);
   }
 
   handleReset() {
-    const { dispatchResetQuery } = this.props;
+    const { resetQuery } = this.props;
+    resetQuery();
+  }
 
-    dispatchResetQuery();
+  handlePlayTrack(track) {
+    const { library, playTrack, setQueue } = this.props;
+    let index = 0;
+
+    // Find index of song clicked
+    while (library[index].id !== track.id && index < library.length) {
+      index += 1;
+    }
+
+    playTrack(track);
+
+    // Set the queue to the remaining songs
+    setQueue(library.slice(index));
   }
 
   handleSubmit(event) {
@@ -52,7 +67,7 @@ class Library extends React.Component {
   render() {
     // const { query  } = this.props;
     let { query, library } = this.props;
-    const { handleChange, handleSubmit, handleReset } = this;
+    const { handleChange, handleSubmit, handleReset, handlePlayTrack } = this;
 
     query = query.toLowerCase();
 
@@ -83,6 +98,7 @@ class Library extends React.Component {
                 artist={track.artist.name}
                 id={track.id}
                 ms={track.duration}
+                handlePlay={() => handlePlayTrack(track)}
               />
             ))}
         </div>
@@ -94,8 +110,10 @@ class Library extends React.Component {
 Library.propTypes = {
   query: PropTypes.string,
   library: PropTypes.arrayOf(PropTypes.object).isRequired,
-  dispatchSetLibQuery: PropTypes.func.isRequired,
-  dispatchResetQuery: PropTypes.func.isRequired
+  playTrack: PropTypes.func.isRequired,
+  setLibQuery: PropTypes.func.isRequired,
+  setQueue: PropTypes.func.isRequired,
+  resetQuery: PropTypes.func.isRequired
 };
 
 Library.defaultProps = {
@@ -109,14 +127,24 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   importScLikes: user => dispatch(importScLikes(user)),
-  dispatchSetLibQuery: query =>
+  setLibQuery: query =>
     dispatch({
       type: "SET_LIB_QUERY",
       payload: query
     }),
-  dispatchResetQuery: () =>
+  resetQuery: () =>
     dispatch({
       type: "RESET_LIB_QUERY"
+    }),
+  playTrack: track =>
+    dispatch({
+      type: "SET_TRACK",
+      payload: track
+    }),
+  setQueue: list =>
+    dispatch({
+      type: "SET_QUEUE",
+      payload: list
     }),
   dispatch
 });

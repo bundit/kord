@@ -11,6 +11,7 @@ export const SET_SC_USER = "SET_SC_USER";
 export const PLAY = "PLAY";
 export const PAUSE = "PAUSE";
 export const SEEK = "SEEK";
+export const SET_TRACK = "SET_TRACK";
 export const NEXT_TRACK = "NEXT_TRACK";
 export const PREV_TRACK = "PREV_TRACK";
 export const ADD_TO_QUEUE = "ADD_TO_QUEUE";
