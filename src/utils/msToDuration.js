@@ -1,5 +1,4 @@
 export default function msToDuration(duration) {
-  console.log(duration);
   const base = 10;
 
   let seconds = parseInt((duration / 1000) % 60, base);

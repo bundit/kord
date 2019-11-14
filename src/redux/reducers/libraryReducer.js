@@ -45,8 +45,14 @@ export default function(state = initialState, action) {
       const { length } = newLib;
 
       let i = 0;
+      let compare = 1;
 
-      while (i < length && compareSongs(newSong, newLib[i]) > 0) i += 1;
+      while (i < length && compare > 0) {
+        compare = compareSongs(newSong, newLib[i]);
+        i += 1;
+      }
+
+      if (compare === 0) return state;
 
       newLib.splice(i, 0, newSong);
 
