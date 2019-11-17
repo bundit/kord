@@ -10,6 +10,9 @@ class TrackList extends React.Component {
     const { library: currentLibrary } = this.props;
     const { library: prevLibrary } = prevProps;
 
+    // This will ensure that components that come into viewport during
+    // a filter will be rendered. Lazyload only checks on scroll events,
+    // so this way we force lazyload to check visible components
     if (currentLibrary !== prevLibrary) {
       forceCheck();
     }
