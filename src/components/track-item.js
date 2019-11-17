@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
@@ -23,41 +24,43 @@ const TrackItem = ({
   };
 
   return (
-    <div
-      className={styles.trackWrapper}
-      onClick={handlePlay}
-      role="button"
-      tabIndex="0"
-      onKeyPress={handlePlay}
-    >
-      <img src={img || placeholderImg} alt="track" />
-      <div className={styles.titleWrapper}>
-        <div>
-          <strong>{truncateString(title, 38)}</strong>
+    <LazyLoad height="5rem" once>
+      <div
+        className={styles.trackWrapper}
+        onClick={handlePlay}
+        role="button"
+        tabIndex="0"
+        onKeyPress={handlePlay}
+      >
+        <img src={img || placeholderImg} alt="track" />
+        <div className={styles.titleWrapper}>
+          <div>
+            <strong>{truncateString(title, 38)}</strong>
+          </div>
+          <div>{truncateString(artist, 38)}</div>
         </div>
-        <div>{truncateString(artist, 38)}</div>
+        <div className={styles.trackRightControls}>
+          <div className={styles.duration}>{msToDuration(ms)}</div>
+          {search && (
+            <button
+              type="button"
+              onClick={(event, track) => {
+                addToLibrary(event, track);
+                handleDisable();
+              }}
+              disabled={disable}
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </button>
+          )}
+          {!search && (
+            <button type="button">
+              <FontAwesomeIcon icon={faEllipsisH} />
+            </button>
+          )}
+        </div>
       </div>
-      <div className={styles.trackRightControls}>
-        <div className={styles.duration}>{msToDuration(ms)}</div>
-        {search && (
-          <button
-            type="button"
-            onClick={(event, track) => {
-              addToLibrary(event, track);
-              handleDisable();
-            }}
-            disabled={disable}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
-        )}
-        {!search && (
-          <button type="button">
-            <FontAwesomeIcon icon={faEllipsisH} />
-          </button>
-        )}
-      </div>
-    </div>
+    </LazyLoad>
   );
 };
 
