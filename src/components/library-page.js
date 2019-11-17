@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import SearchBar from "./search-bar";
-import TrackItem from "./track-item";
+import TrackList from "./track-list";
 import { importScLikes } from "../redux/actions/libraryActions";
-import styles from "../styles/library.module.css";
 
 // For restoring scroll position when component is unmounted
 let libraryScrollPosition = null;
@@ -88,20 +87,7 @@ class Library extends React.Component {
           onSubmit={handleSubmit}
           onReset={handleReset}
         />
-        <div id="lib" className={styles.libraryWrapper}>
-          {library &&
-            library.map(track => (
-              <TrackItem
-                key={track.id}
-                img={track.img}
-                title={track.title}
-                artist={track.artist.name}
-                id={track.id}
-                ms={track.duration}
-                handlePlay={() => handlePlayTrack(track)}
-              />
-            ))}
-        </div>
+        <TrackList library={library} handlePlay={handlePlayTrack} />
       </>
     );
   }
