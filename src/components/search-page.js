@@ -8,8 +8,7 @@ import {
   loadMoreResults
 } from "../redux/actions/searchActions";
 import SearchBar from "./search-bar";
-import TrackItem from "./track-item";
-import styles from "../styles/library.module.css";
+import TrackList from "./track-list";
 
 // For restoring scroll position when component is unmounted
 let searchScrollPosition = null;
@@ -81,7 +80,14 @@ class Search extends React.Component {
 
   render() {
     const { query, results, loadMoreTracks } = this.props;
-    const { handleChange, handleSubmit, handleReset, handlePlayTrack } = this;
+    const {
+      handleChange,
+      handleSubmit,
+      handleReset,
+      handlePlayTrack,
+      handleAddToLibrary
+    } = this;
+
     return (
       <>
         <SearchBar
@@ -91,27 +97,13 @@ class Search extends React.Component {
           onSubmit={handleSubmit}
           onReset={handleReset}
         />
-        <div className={styles.libraryWrapper}>
-          {results &&
-            results.map(track => (
-              <TrackItem
-                search
-                key={track.id}
-                title={track.title}
-                artist={track.artist.name}
-                id={track.id}
-                img={track.img}
-                addToLibrary={event => this.handleAddToLibrary(event, track)}
-                ms={track.duration}
-                handlePlay={() => handlePlayTrack(track)}
-              />
-            ))}
-          {!!results.length && (
-            <button type="button" onClick={loadMoreTracks}>
-              Load
-            </button>
-          )}
-        </div>
+        <TrackList
+          search
+          library={results}
+          handlePlay={handlePlayTrack}
+          addToLibrary={handleAddToLibrary}
+          loadMoreTracks={loadMoreTracks}
+        />
       </>
     );
   }
