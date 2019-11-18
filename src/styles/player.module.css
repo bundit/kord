@@ -5,8 +5,10 @@
   height: 3rem;
   bottom: 5rem;
   background-color: white;
+  padding: 0 2rem;
   align-items: center;
   border-top: 1px #ddd solid;
+  box-sizing: border-box;
 }
 
 .titleWrapper {
@@ -19,4 +21,19 @@
 .playerWrapper div:last-child {
   margin-left: auto;
   /* border: 1px black solid; */
+}
+
+.playerOpen {
+  height: 80%;
+  flex-direction: column;
+  border-top-left-radius: 4rem;
+  border-top-right-radius: 4rem;
+  box-shadow: 0px -6px 3px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.closeButton {
+  align-self: flex-start;
+  margin: 2rem 0 0 2rem;
 }
