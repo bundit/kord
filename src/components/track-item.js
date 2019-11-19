@@ -32,7 +32,10 @@ const TrackItem = ({
         tabIndex="0"
         onKeyPress={handlePlay}
       >
-        <img src={img || placeholderImg} alt="track" />
+        <img
+          src={img ? img.replace("large.jpg", "t67x67.jpg") : placeholderImg}
+          alt="track"
+        />
         <div className={styles.titleWrapper}>
           <div>
             <strong>{truncateString(title, 38)}</strong>
@@ -54,7 +57,7 @@ const TrackItem = ({
             </button>
           )}
           {!search && (
-            <button type="button">
+            <button type="button" onClick={e => e.stopPropagation()}>
               <FontAwesomeIcon icon={faEllipsisH} />
             </button>
           )}
