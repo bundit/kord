@@ -2,7 +2,12 @@ import {
   PLAY,
   PAUSE,
   SEEK,
+  TOGGLE_EXPANDED_PLAYER,
+  SET_IS_LOADED,
+  SET_PLAYER,
   SET_TRACK,
+  SET_DURATION,
+  SET_SEEK,
   NEXT_TRACK,
   PREV_TRACK,
   ADD_TO_QUEUE,
@@ -13,12 +18,15 @@ import {
 
 const initialState = {
   currentTrack: null,
-  position: 0,
-  trackLength: 0,
+  duration: 0,
+  seek: 0,
   isPlaying: false,
+  isExpanded: false,
+  isLoaded: false,
+  volume: 1.0,
   index: 0,
   queue: [],
-  scPlayer: null
+  player: null
 };
 
 export default function(state = initialState, action) {
@@ -42,14 +50,45 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        position: newPos
+        seek: newPos
+      };
+    }
+    case TOGGLE_EXPANDED_PLAYER: {
+      return {
+        ...state,
+        isExpanded: !state.isExpanded
+      };
+    }
+    case SET_IS_LOADED: {
+      return {
+        ...state,
+        isLoaded: action.payload
+      };
+    }
+    case SET_PLAYER: {
+      return {
+        ...state,
+        player: action.payload
       };
     }
     case SET_TRACK: {
       return {
         ...state,
         isPlaying: true,
-        currentTrack: action.payload
+        currentTrack: action.payload,
+        isLoaded: false
+      };
+    }
+    case SET_DURATION: {
+      return {
+        ...state,
+        duration: action.payload
+      };
+    }
+    case SET_SEEK: {
+      return {
+        ...state,
+        seek: action.payload
       };
     }
     case NEXT_TRACK: {
@@ -64,7 +103,8 @@ export default function(state = initialState, action) {
         currentTrack: nextTrack,
         position: 0,
         trackLength: nextTrack.duration,
-        index: nextIndex
+        index: nextIndex,
+        isLoaded: false
       };
     }
     case PREV_TRACK: {
@@ -78,7 +118,8 @@ export default function(state = initialState, action) {
         currentTrack: prevTrack,
         position: 0,
         trackLength: prevTrack.duration,
-        index: prevIndex
+        index: prevIndex,
+        isLoaded: false
       };
     }
     case ADD_TO_QUEUE: {
