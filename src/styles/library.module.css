@@ -45,6 +45,7 @@
 .libraryWrapper {
   display: flex;
   flex-direction: column;
+  width: 100%;
   padding-top: 7rem;
   padding-bottom: 4rem;
 }
@@ -53,6 +54,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  height: 5rem;
   width: 100%;
   padding: 1rem;
   box-sizing: border-box;

@@ -20,11 +20,10 @@
 
 .playerWrapper div:last-child {
   margin-left: auto;
-  /* border: 1px black solid; */
 }
 
 .playerOpen {
-  height: 80%;
+  height: 90%;
   flex-direction: column;
   border-top-left-radius: 4rem;
   border-top-right-radius: 4rem;
@@ -33,7 +32,43 @@
   box-sizing: border-box;
 }
 
+.playerOpen img {
+  width: 100%;
+  margin: 1rem 0;
+}
+
 .closeButton {
   align-self: flex-start;
   margin: 2rem 0 0 2rem;
+}
+
+.expandedPlayerControls {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.titleWrapperExpanded {
+  width: 100%;
+  text-align: center;
+}
+
+.volumeContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.volumeContainer > * {
+  margin: 0 1rem;
+  /* border: 1px black solid; */
+}
+
+.sliderContainer,
+.sliderContainer input {
+  width: 100%;
 }
