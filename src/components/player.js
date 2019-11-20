@@ -131,16 +131,18 @@ class Player extends React.Component {
   handleMouseUpSeek() {
     const { player } = this;
     let { userSeekPos } = this.state;
-    const { setSeek } = this.props;
+    const { setSeek, isLoaded } = this.props;
 
     // setting e.target.value to state defaults to string
     userSeekPos = Number(userSeekPos);
 
-    // Set our howler seek position
-    player.seek(userSeekPos);
+    if (isLoaded) {
+      // Set our howler seek position
+      player.seek(userSeekPos);
 
-    // Set our state seek position so it can render on slider
-    setSeek(userSeekPos);
+      // Set our state seek position so it can render on slider
+      setSeek(userSeekPos);
+    }
 
     // User is done seeking
     this.setState({
