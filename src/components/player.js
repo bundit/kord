@@ -1,12 +1,11 @@
 import React from "react";
-import { CSSTransition } from "react-transition-group";
-import ReactHowler from "react-howler";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ReactHowler from "react-howler";
 import raf from "raf";
+import { connect } from "react-redux";
+import { CSSTransition } from "react-transition-group";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faAngleUp,
   faPlayCircle,
   faPauseCircle,
   faForward,
@@ -18,6 +17,7 @@ import {
   // faVolumeUp
 } from "@fortawesome/free-solid-svg-icons";
 
+import MinifiedPlayer from "./minified-player";
 import truncateString from "../utils/truncateString";
 import secondsToFormatted from "../utils/secondsToFormatted";
 import styles from "../styles/player.module.css";
@@ -299,30 +299,13 @@ class Player extends React.Component {
           classNames={slideTransition}
           unmountOnExit
         >
-          <div
-            className={styles.playerWrapper}
-            tabIndex="0"
-            onKeyPress={handleToggleExpand}
-            role="button"
-            onClick={handleToggleExpand}
-          >
-            <button type="button" onClick={handleToggleExpand}>
-              <FontAwesomeIcon icon={faAngleUp} />
-            </button>
-            <div className={styles.titleWrapper}>
-              <div>
-                <strong>{truncateString(title, 38)}</strong>
-              </div>
-              <div>{truncateString(artistName, 38)}</div>
-            </div>
-            <div>
-              <button type="button" onClick={handlePlayPause}>
-                <FontAwesomeIcon
-                  icon={isPlaying ? faPauseCircle : faPlayCircle}
-                />
-              </button>
-            </div>
-          </div>
+          <MinifiedPlayer
+            title={title}
+            artist={artistName}
+            handleToggleExpand={handleToggleExpand}
+            handlePlayPause={handlePlayPause}
+            isPlaying={isPlaying}
+          />
         </CSSTransition>
       </>
     );
