@@ -11,8 +11,10 @@ import truncateString from "../utils/truncateString";
 import styles from "../styles/player.module.css";
 
 const MinifiedPlayer = ({
-  title,
-  artist,
+  current: {
+    title,
+    artist: { name: artistName }
+  },
   handleToggleExpand,
   handlePlayPause,
   isPlaying
@@ -31,7 +33,7 @@ const MinifiedPlayer = ({
       <div>
         <strong>{truncateString(title, 38)}</strong>
       </div>
-      <div>{truncateString(artist, 38)}</div>
+      <div>{truncateString(artistName, 38)}</div>
     </div>
     <div>
       <button type="button" onClick={handlePlayPause}>
@@ -42,8 +44,8 @@ const MinifiedPlayer = ({
 );
 
 MinifiedPlayer.propTypes = {
-  title: PropTypes.string.isRequired,
-  artist: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  current: PropTypes.object.isRequired,
   handleToggleExpand: PropTypes.func.isRequired,
   handlePlayPause: PropTypes.func.isRequired,
   isPlaying: PropTypes.bool.isRequired

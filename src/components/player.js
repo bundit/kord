@@ -240,8 +240,7 @@ class Player extends React.Component {
           unmountOnExit
         >
           <MinifiedPlayer
-            title={current.title}
-            artist={current.artist.name}
+            current={current}
             handleToggleExpand={handleToggleExpand}
             handlePlayPause={handlePlayPause}
             isPlaying={isPlaying}
@@ -254,7 +253,7 @@ class Player extends React.Component {
 
 Player.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  current: PropTypes.object,
+  current: PropTypes.object.isRequired,
   play: PropTypes.func.isRequired,
   pause: PropTypes.func.isRequired,
   prevTrack: PropTypes.func.isRequired,
@@ -269,15 +268,6 @@ Player.propTypes = {
   volume: PropTypes.number.isRequired,
   seek: PropTypes.number.isRequired,
   setSeek: PropTypes.func.isRequired
-};
-
-Player.defaultProps = {
-  current: {
-    title: "Nothing",
-    artist: {
-      name: "Currently Playing"
-    }
-  }
 };
 
 const mapStateToProps = state => ({

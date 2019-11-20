@@ -17,7 +17,12 @@ import {
 } from "../actions/types";
 
 const initialState = {
-  currentTrack: null,
+  currentTrack: {
+    title: "Nothing",
+    artist: {
+      name: "Currently Playing"
+    }
+  },
   duration: 0,
   seek: 0,
   isPlaying: false,
