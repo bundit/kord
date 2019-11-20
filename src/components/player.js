@@ -4,25 +4,10 @@ import ReactHowler from "react-howler";
 import raf from "raf";
 import { connect } from "react-redux";
 import { CSSTransition } from "react-transition-group";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlayCircle,
-  faPauseCircle,
-  faForward,
-  faBackward,
-  faAngleDown,
-  faFastForward,
-  faFastBackward
-  // faVolumeOff,
-  // faVolumeUp
-} from "@fortawesome/free-solid-svg-icons";
 
+import ExpandedPlayer from "./expanded-player";
 import MinifiedPlayer from "./minified-player";
-import truncateString from "../utils/truncateString";
-import secondsToFormatted from "../utils/secondsToFormatted";
-import styles from "../styles/player.module.css";
 import slideTransition from "../styles/slide.module.css";
-import placeholderImg from "../assets/placeholder.png";
 
 class Player extends React.Component {
   constructor(props) {
@@ -183,9 +168,14 @@ class Player extends React.Component {
   }
 
   render() {
-    const { current, isPlaying } = this.props;
-    const title = current ? current.title : "Nothing";
-    const artistName = current ? current.artist.name : "Currently Playing";
+    const {
+      current,
+      isPlaying,
+      isExpanded,
+      volume,
+      seek,
+      duration
+    } = this.props;
     const {
       handlePlayPause,
       handlePrev,
@@ -197,13 +187,12 @@ class Player extends React.Component {
       handleOnChangeUserSeek,
       renderSeekPos
     } = this;
-    const { isExpanded, volume, seek, duration } = this.props;
     const { isUserSeeking, userSeekPos } = this.state;
     const KEY = process.env.REACT_APP_SC_KEY;
 
     return (
       <>
-        {current && (
+        {current.streamUrl && (
           <ReactHowler
             src={`${current.streamUrl}?client_id=${KEY}`}
             playing={isPlaying}
@@ -218,81 +207,32 @@ class Player extends React.Component {
             }}
           />
         )}
+        {/* Expanded music player */}
         <CSSTransition
           in={isExpanded}
           timeout={300}
           classNames={slideTransition}
           unmountOnExit
         >
-          <div className={`${styles.playerWrapper} ${styles.playerOpen}`}>
-            <button
-              type="button"
-              onClick={handleToggleExpand}
-              className={styles.closeButton}
-            >
-              <FontAwesomeIcon icon={faAngleDown} size="2x" />
-            </button>
-            <img
-              src={
-                current
-                  ? current.img.replace("large.jpg", "t500x500.jpg")
-                  : placeholderImg
-              }
-              alt="album-artwork.jpg"
-            />
-            <div className={styles.expandedPlayerControls}>
-              <button type="button" onClick={handlePrev}>
-                <FontAwesomeIcon icon={faBackward} size="4x" />
-              </button>
-              <button type="button" onClick={() => handleSeek(-15)}>
-                <FontAwesomeIcon icon={faFastBackward} size="2x" />
-              </button>
-              <button type="button" onClick={handlePlayPause}>
-                <FontAwesomeIcon
-                  size="7x"
-                  icon={isPlaying ? faPauseCircle : faPlayCircle}
-                />
-              </button>
-              <button type="button" onClick={() => handleSeek(15)}>
-                <FontAwesomeIcon icon={faFastForward} size="2x" />
-              </button>
-              <button type="button" onClick={handleNext}>
-                <FontAwesomeIcon icon={faForward} size="4x" />
-              </button>
-            </div>
-            <div className={styles.titleWrapperExpanded}>
-              <div>
-                <strong>{truncateString(title, 45)}</strong>
-              </div>
-              <div>{truncateString(artistName, 45)}</div>
-            </div>
-            {/* SEEK INPUT */}
-            <div className={styles.volumeContainer}>
-              <span>
-                {isUserSeeking
-                  ? secondsToFormatted(userSeekPos)
-                  : secondsToFormatted(seek)}
-              </span>
-              <span className={styles.sliderContainer}>
-                <input
-                  type="range"
-                  min="0"
-                  max={duration}
-                  step="any"
-                  value={isUserSeeking ? userSeekPos : seek}
-                  onChange={
-                    isUserSeeking ? handleOnChangeUserSeek : renderSeekPos
-                  }
-                  onMouseDown={handleMouseDownSeek}
-                  onMouseUp={handleMouseUpSeek}
-                  onTouchStart={handleMouseDownSeek}
-                  onTouchEnd={handleMouseUpSeek}
-                />
-              </span>
-              <span>{secondsToFormatted(duration)}</span>
-            </div>
-          </div>
+          <ExpandedPlayer
+            current={current}
+            handleToggleExpand={handleToggleExpand}
+            handlePlayPause={handlePlayPause}
+            isPlaying={isPlaying}
+            handlePrev={handlePrev}
+            handleNext={handleNext}
+            handleSeek={handleSeek}
+            isUserSeeking={isUserSeeking}
+            userSeekPos={userSeekPos}
+            seek={seek}
+            duration={duration}
+            handleOnChangeUserSeek={handleOnChangeUserSeek}
+            renderSeekPos={renderSeekPos}
+            handleMouseDownSeek={handleMouseDownSeek}
+            handleMouseUpSeek={handleMouseUpSeek}
+          />
         </CSSTransition>
+        {/* Mini Player */}
         <CSSTransition
           in={!isExpanded}
           timeout={300}
@@ -300,8 +240,8 @@ class Player extends React.Component {
           unmountOnExit
         >
           <MinifiedPlayer
-            title={title}
-            artist={artistName}
+            title={current.title}
+            artist={current.artist.name}
             handleToggleExpand={handleToggleExpand}
             handlePlayPause={handlePlayPause}
             isPlaying={isPlaying}
@@ -332,7 +272,12 @@ Player.propTypes = {
 };
 
 Player.defaultProps = {
-  current: null
+  current: {
+    title: "Nothing",
+    artist: {
+      name: "Currently Playing"
+    }
+  }
 };
 
 const mapStateToProps = state => ({
