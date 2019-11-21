@@ -31,6 +31,7 @@ const TrackItem = ({
         role="button"
         tabIndex="0"
         onKeyPress={handlePlay}
+        onTouchStart={() => {}}
       >
         <img
           src={img ? img.replace("large.jpg", "t67x67.jpg") : placeholderImg}

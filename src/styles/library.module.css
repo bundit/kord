@@ -61,10 +61,14 @@
   border-bottom: 1px #eee solid;
 }
 
+.trackWrapper:active {
+  background-color: #eee;
+}
+
 .trackWrapper img {
-  border: 1px black solid;
+  border: 1px grey solid;
   height: 3rem;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   margin-right: 1rem;
 }
 
