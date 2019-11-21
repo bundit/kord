@@ -32,14 +32,13 @@
 }
 
 .playerOpen {
-  height: 85%;
+  height: 95%;
   flex-direction: column;
   border-top-left-radius: 3rem;
   border-top-right-radius: 3rem;
   box-shadow: 0px -6px 3px rgba(0, 0, 0, 0.1);
   justify-content: space-around;
-  /* background-color: #f2eeeeee; */
-  background-color: #eee;
+  bottom: 0;
   box-sizing: border-box;
 }
 

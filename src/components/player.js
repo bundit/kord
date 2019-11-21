@@ -8,6 +8,7 @@ import { CSSTransition } from "react-transition-group";
 import ExpandedPlayer from "./expanded-player";
 import MinifiedPlayer from "./minified-player";
 import slideTransition from "../styles/slide.module.css";
+import miniPlayerSlide from "../styles/miniPlayerSlide.module.css";
 
 class Player extends React.Component {
   constructor(props) {
@@ -235,8 +236,8 @@ class Player extends React.Component {
         {/* Mini Player */}
         <CSSTransition
           in={!isExpanded}
-          timeout={300}
-          classNames={slideTransition}
+          timeout={500}
+          classNames={miniPlayerSlide}
           unmountOnExit
         >
           <MinifiedPlayer

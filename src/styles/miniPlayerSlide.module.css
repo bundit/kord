@@ -1,11 +1,11 @@
 /* Slide animation for music player */
 .enter {
-  transform: translateY(100%);
+  transform: translateY(400%);
 }
 
 .enterActive {
   transform: translateY(0);
-  transition: transform 400ms ease-in-out;
+  transition: transform 500ms ease-in-out;
 }
 
 .exit {
@@ -13,6 +13,6 @@
 }
 
 .exitActive {
-  transform: translateY(100%);
-  transition: transform 400ms ease-in-out;
+  transform: translateY(400%);
+  transition: transform 500ms ease-in-out;
 }
