@@ -1,11 +1,19 @@
-@import url("https://fonts.googleapis.com/css?family=El+Messiri:500&display=swap");
-/* Vidaloka */
+@import url("https://fonts.googleapis.com/css?family=Pacifico&display=swap");
 
 html,
 body {
   margin: 0;
   height: 100%;
   width: 100%;
+
+  /* Disable text highlighting */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
 }
 
 html {
@@ -33,8 +41,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "El Messiri";
-  font-weight: bolder;
+  font-family: "Pacifico";
 }
 
 h1 {
@@ -47,4 +54,15 @@ h1 {
   height: 100%;
   width: 100%;
   overflow-y: scroll;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+}
+
+button,
+a {
+  /* Remove active highlight when touching on iOS */
+  -webkit-tap-highlight-color: transparent;
 }
