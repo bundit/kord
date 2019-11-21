@@ -20,7 +20,7 @@ const MinifiedPlayer = ({
   isPlaying
 }) => (
   <div
-    className={styles.playerWrapper}
+    className={`${styles.playerWrapper} ${styles.miniPlayer}`}
     tabIndex="0"
     onKeyPress={handleToggleExpand}
     role="button"

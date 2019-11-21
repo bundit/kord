@@ -6,9 +6,9 @@ import {
   faPauseCircle,
   faForward,
   faBackward,
-  faAngleDown,
-  faFastForward,
-  faFastBackward
+  faAngleDown
+  // faFastForward,
+  // faFastBackward
 } from "@fortawesome/free-solid-svg-icons";
 
 import placeholderImg from "../assets/placeholder.png";
@@ -27,7 +27,7 @@ const ExpandedPlayer = ({
   isPlaying,
   handlePrev,
   handleNext,
-  handleSeek,
+  // handleSeek,
   isUserSeeking,
   userSeekPos,
   seek,
@@ -49,32 +49,6 @@ const ExpandedPlayer = ({
       src={img ? img.replace("large.jpg", "t500x500.jpg") : placeholderImg}
       alt="album-artwork.jpg"
     />
-    <div className={styles.expandedPlayerControls}>
-      <button type="button" onClick={handlePrev}>
-        <FontAwesomeIcon icon={faBackward} size="4x" />
-      </button>
-      <button type="button" onClick={() => handleSeek(-15)}>
-        <FontAwesomeIcon icon={faFastBackward} size="2x" />
-      </button>
-      <button type="button" onClick={handlePlayPause}>
-        <FontAwesomeIcon
-          size="7x"
-          icon={isPlaying ? faPauseCircle : faPlayCircle}
-        />
-      </button>
-      <button type="button" onClick={() => handleSeek(15)}>
-        <FontAwesomeIcon icon={faFastForward} size="2x" />
-      </button>
-      <button type="button" onClick={handleNext}>
-        <FontAwesomeIcon icon={faForward} size="4x" />
-      </button>
-    </div>
-    <div className={styles.titleWrapperExpanded}>
-      <div>
-        <strong>{truncateString(title, 45)}</strong>
-      </div>
-      <div>{truncateString(artistName, 45)}</div>
-    </div>
     {/* SEEK INPUT */}
     <div className={styles.volumeContainer}>
       <span>
@@ -98,6 +72,32 @@ const ExpandedPlayer = ({
       </span>
       <span>{secondsToFormatted(duration)}</span>
     </div>
+    <div className={styles.titleWrapperExpanded}>
+      <div>
+        <strong>{truncateString(title, 45)}</strong>
+      </div>
+      <div>{truncateString(artistName, 45)}</div>
+    </div>
+    <div className={styles.expandedPlayerControls}>
+      <button type="button" onClick={handlePrev}>
+        <FontAwesomeIcon icon={faBackward} size="3x" />
+      </button>
+      {/* <button type="button" onClick={() => handleSeek(-15)}>
+        <FontAwesomeIcon icon={faFastBackward} size="2x" />
+      </button> */}
+      <button type="button" onClick={handlePlayPause}>
+        <FontAwesomeIcon
+          size="6x"
+          icon={isPlaying ? faPauseCircle : faPlayCircle}
+        />
+      </button>
+      {/* <button type="button" onClick={() => handleSeek(15)}>
+        <FontAwesomeIcon icon={faFastForward} size="2x" />
+      </button> */}
+      <button type="button" onClick={handleNext}>
+        <FontAwesomeIcon icon={faForward} size="3x" />
+      </button>
+    </div>
   </div>
 );
 
@@ -109,7 +109,7 @@ ExpandedPlayer.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
   handlePrev: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
-  handleSeek: PropTypes.func.isRequired,
+  // handleSeek: PropTypes.func.isRequired,
   isUserSeeking: PropTypes.bool.isRequired,
   userSeekPos: PropTypes.number.isRequired,
   seek: PropTypes.number.isRequired,

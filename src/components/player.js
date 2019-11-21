@@ -223,7 +223,7 @@ class Player extends React.Component {
             handleNext={handleNext}
             handleSeek={handleSeek}
             isUserSeeking={isUserSeeking}
-            userSeekPos={userSeekPos}
+            userSeekPos={Number(userSeekPos)}
             seek={seek}
             duration={duration}
             handleOnChangeUserSeek={handleOnChangeUserSeek}

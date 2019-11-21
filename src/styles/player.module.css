@@ -3,12 +3,21 @@
   display: flex;
   width: 100%;
   height: 3rem;
-  bottom: 5rem;
-  background-color: white;
-  padding: 0 2rem;
+  bottom: 7rem;
+  background-color: #fff;
+  padding: 0 1rem;
   align-items: center;
   border-top: 1px #ddd solid;
   box-sizing: border-box;
+  border-radius: 0.5rem;
+}
+
+.miniPlayer:active {
+  background-color: #eee;
+}
+
+.playerWrapper svg {
+  font-size: 1.3rem;
 }
 
 .titleWrapper {
@@ -23,23 +32,34 @@
 }
 
 .playerOpen {
-  height: 90%;
+  height: 85%;
   flex-direction: column;
-  border-top-left-radius: 4rem;
-  border-top-right-radius: 4rem;
+  border-top-left-radius: 3rem;
+  border-top-right-radius: 3rem;
   box-shadow: 0px -6px 3px rgba(0, 0, 0, 0.1);
-  padding: 0;
+  justify-content: space-around;
+  /* background-color: #f2eeeeee; */
+  background-color: #eee;
   box-sizing: border-box;
 }
 
+.playerWrapper button:active {
+  color: red;
+}
+
+.playerOpen svg {
+  font-size: 3rem;
+}
+
 .playerOpen img {
-  width: 100%;
-  margin: 1rem 0;
+  width: 85%;
+  border-radius: 1rem;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
 }
 
 .closeButton {
   align-self: flex-start;
-  margin: 2rem 0 0 2rem;
+  margin: 1rem 0 0 1rem;
 }
 
 .expandedPlayerControls {
@@ -47,6 +67,11 @@
   display: flex;
   justify-content: center;
   margin-bottom: 1rem;
+}
+
+/* Svg Icon inside second button (Play button) */
+.expandedPlayerControls button:nth-child(2) svg {
+  font-size: 5rem;
 }
 
 .titleWrapperExpanded {
@@ -65,10 +90,116 @@
 
 .volumeContainer > * {
   margin: 0 1rem;
-  /* border: 1px black solid; */
 }
 
 .sliderContainer,
 .sliderContainer input {
   width: 100%;
+}
+
+/* Seek Track styles */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 13px 0;
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  /* box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; */
+  background: #000000;
+  border-radius: 0px;
+  border: 0px solid #000000;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  /* box-shadow: 0.6px 0.6px 0.6px #000000, 0px 0px 0.6px #0d0d0d; */
+  border: 1px solid #000000;
+  height: 27px;
+  width: 6px;
+  border-radius: 31px;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -13px;
+}
+
+input[type="range"]:focus::-webkit-slider-runnable-track {
+  background: #000000;
+}
+
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  background: #000000;
+  border-radius: 0px;
+  /* border: 0px solid #000000; */
+}
+
+input[type="range"]::-moz-range-thumb {
+  border: 1px solid #000000;
+  height: 27px;
+  width: 6px;
+  border-radius: 31px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+input[type="range"]::-ms-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+input[type="range"]::-ms-fill-lower {
+  background: #000000;
+  border-radius: 0px;
+}
+
+input[type="range"]::-ms-fill-upper {
+  background: #000000;
+  border-radius: 0px;
+}
+
+input[type="range"]::-ms-thumb {
+  border: 1px solid #000000;
+  height: 27px;
+  width: 6px;
+  border-radius: 31px;
+  background: #ffffff;
+  cursor: pointer;
+  height: 1px;
+}
+
+/* input[type="range"]:focus::-ms-fill-lower {
+  background: #000000;
+}
+
+input[type="range"]:focus::-ms-fill-upper {
+  background: #000000;
+} */
+
+input[type="range"]:active::-webkit-slider-thumb {
+  height: 39px;
+  margin-top: -19px;
+}
+
+input[type="range"]:active::::-moz-range-thumb {
+  height: 45px;
+  margin-top: -19px;
+}
+
+input[type="range"]:active::-ms-thumb {
+  height: 45px;
+  margin-top: -19px;
 }
