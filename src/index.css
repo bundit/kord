@@ -56,6 +56,11 @@ h1 {
   overflow-y: scroll;
 }
 
+.content > svg,
+.content > button {
+  z-index: 1;
+}
+
 button {
   border: none;
   background-color: transparent;
