@@ -9,6 +9,7 @@
   padding-bottom: 1.5rem;
   padding-top: 0.5rem;
   font-family: "Pacifico";
+  z-index: 3;
 }
 
 .footer nav {
