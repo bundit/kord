@@ -16,7 +16,9 @@ const TrackItem = ({
   search,
   addToLibrary,
   ms,
-  handlePlay
+  handlePlay,
+  isActive,
+  isPlaying
 }) => {
   const [disable, setDisable] = useState(false);
   const handleDisable = () => {
@@ -26,17 +28,30 @@ const TrackItem = ({
   return (
     <LazyLoad height="5rem" once>
       <div
-        className={styles.trackWrapper}
+        className={`${styles.trackWrapper} ${isActive && styles.playingNow}`}
         onClick={handlePlay}
         role="button"
         tabIndex="0"
         onKeyPress={handlePlay}
         onTouchStart={() => {}}
       >
-        <img
-          src={img ? img.replace("large.jpg", "t67x67.jpg") : placeholderImg}
-          alt="track"
-        />
+        <div className={styles.trackImageWrap}>
+          <img
+            src={img ? img.replace("large.jpg", "t67x67.jpg") : placeholderImg}
+            alt="track"
+          />
+          {isActive && (
+            <div className={styles.overlay}>
+              <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />
+              <div
+                className={`${styles.bar} ${styles.midBar} ${!isPlaying &&
+                  styles.paused}`}
+              />
+              <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />
+            </div>
+          )}
+        </div>
+
         <div className={styles.titleWrapper}>
           <div>
             <strong>{truncateString(title, 38)}</strong>
@@ -75,7 +90,9 @@ TrackItem.propTypes = {
   search: PropTypes.bool,
   addToLibrary: PropTypes.func,
   ms: PropTypes.number.isRequired,
-  handlePlay: PropTypes.func.isRequired
+  handlePlay: PropTypes.func.isRequired,
+  isActive: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.bool.isRequired
 };
 
 TrackItem.defaultProps = {

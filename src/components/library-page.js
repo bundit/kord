@@ -66,6 +66,7 @@ class Library extends React.Component {
   render() {
     // const { query  } = this.props;
     let { query, library } = this.props;
+    const { currentTrackID, isPlaying } = this.props;
     const { handleChange, handleSubmit, handleReset, handlePlayTrack } = this;
 
     query = query.toLowerCase();
@@ -87,7 +88,12 @@ class Library extends React.Component {
           onSubmit={handleSubmit}
           onReset={handleReset}
         />
-        <TrackList library={library} handlePlay={handlePlayTrack} />
+        <TrackList
+          library={library}
+          handlePlay={handlePlayTrack}
+          currentTrackID={currentTrackID}
+          isPlaying={isPlaying}
+        />
       </>
     );
   }
@@ -99,7 +105,10 @@ Library.propTypes = {
   playTrack: PropTypes.func.isRequired,
   setLibQuery: PropTypes.func.isRequired,
   setQueue: PropTypes.func.isRequired,
-  resetQuery: PropTypes.func.isRequired
+  resetQuery: PropTypes.func.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+  currentTrackID: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired
 };
 
 Library.defaultProps = {
@@ -108,7 +117,9 @@ Library.defaultProps = {
 
 const mapStateToProps = state => ({
   library: state.music.library,
-  query: state.music.query
+  query: state.music.query,
+  currentTrackID: state.musicPlayer.currentTrack.id,
+  isPlaying: state.musicPlayer.isPlaying
 });
 
 const mapDispatchToProps = dispatch => ({

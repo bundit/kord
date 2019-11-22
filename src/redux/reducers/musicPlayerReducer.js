@@ -21,7 +21,8 @@ const initialState = {
     title: "Nothing",
     artist: {
       name: "Currently Playing"
-    }
+    },
+    id: "-1"
   },
   duration: 0,
   seek: 0,

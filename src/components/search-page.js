@@ -79,7 +79,13 @@ class Search extends React.Component {
   }
 
   render() {
-    const { query, results, loadMoreTracks } = this.props;
+    const {
+      query,
+      results,
+      loadMoreTracks,
+      isPlaying,
+      currentTrackID
+    } = this.props;
     const {
       handleChange,
       handleSubmit,
@@ -103,6 +109,8 @@ class Search extends React.Component {
           handlePlay={handlePlayTrack}
           addToLibrary={handleAddToLibrary}
           loadMoreTracks={loadMoreTracks}
+          currentTrackID={currentTrackID}
+          isPlaying={isPlaying}
         />
       </>
     );
@@ -119,13 +127,18 @@ Search.propTypes = {
   searchScTracks: PropTypes.func.isRequired,
   searchScArtists: PropTypes.func.isRequired,
   resetQuery: PropTypes.func.isRequired,
-  setQueue: PropTypes.func.isRequired
+  setQueue: PropTypes.func.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+  currentTrackID: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired
 };
 
-const mapStateToProps = ({ search }) => ({
-  query: search.query,
-  results: search.results,
-  history: search.history
+const mapStateToProps = state => ({
+  query: state.search.query,
+  results: state.search.results,
+  history: state.search.history,
+  currentTrackID: state.musicPlayer.currentTrack.id,
+  isPlaying: state.musicPlayer.isPlaying
 });
 
 const mapDispatchToProps = dispatch => ({

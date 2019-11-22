@@ -24,7 +24,9 @@ class TrackList extends React.Component {
       library,
       handlePlay,
       addToLibrary,
-      loadMoreTracks
+      loadMoreTracks,
+      currentTrackID,
+      isPlaying
     } = this.props;
 
     return (
@@ -41,6 +43,8 @@ class TrackList extends React.Component {
               ms={track.duration}
               handlePlay={() => handlePlay(track)}
               addToLibrary={event => addToLibrary(event, track)}
+              isActive={currentTrackID === track.id}
+              isPlaying={isPlaying}
             />
           ))}
         {search && library.length > 0 && (
@@ -58,7 +62,10 @@ TrackList.propTypes = {
   library: PropTypes.arrayOf(PropTypes.object),
   handlePlay: PropTypes.func,
   addToLibrary: PropTypes.func,
-  loadMoreTracks: PropTypes.func
+  loadMoreTracks: PropTypes.func,
+  isPlaying: PropTypes.bool.isRequired,
+  currentTrackID: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired
 };
 
 TrackList.defaultProps = {
