@@ -1,10 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import SearchBar from "./search-bar";
+import LibrarySectionList from "./library-category-list";
 import TrackList from "./track-list";
 import { importScLikes } from "../redux/actions/libraryActions";
+import slideInFromRight from "../styles/slideInFromRight.module.css";
 
 // For restoring scroll position when component is unmounted
 let libraryScrollPosition = null;
@@ -64,7 +68,7 @@ class Library extends React.Component {
   }
 
   render() {
-    // const { query  } = this.props;
+    const categories = ["Playlists", "Artists", "Songs", "Albums", "Genres"];
     let { query, library } = this.props;
     const { currentTrackID, isPlaying } = this.props;
     const { handleChange, handleSubmit, handleReset, handlePlayTrack } = this;
@@ -88,11 +92,49 @@ class Library extends React.Component {
           onSubmit={handleSubmit}
           onReset={handleReset}
         />
-        <TrackList
-          library={library}
-          handlePlay={handlePlayTrack}
-          currentTrackID={currentTrackID}
-          isPlaying={isPlaying}
+        <Route
+          render={({ location }) => {
+            const { pathname } = location;
+            return (
+              <TransitionGroup>
+                <CSSTransition
+                  key={pathname}
+                  classNames={pathname === "/library" ? "" : slideInFromRight}
+                  timeout={{
+                    enter: 300,
+                    exit: 300
+                  }}
+                >
+                  <Route
+                    location={location}
+                    render={() => (
+                      <Switch>
+                        <Route
+                          exact
+                          path="/library"
+                          render={() => (
+                            <LibrarySectionList categories={categories} />
+                          )}
+                        />
+                        <Route
+                          path="/library/songs"
+                          render={() => (
+                            <TrackList
+                              library={library}
+                              handlePlay={handlePlayTrack}
+                              currentTrackID={currentTrackID}
+                              isPlaying={isPlaying}
+                            />
+                          )}
+                        />
+                        {/* <Route component={<404 Placeholder />} /> */}
+                      </Switch>
+                    )}
+                  />
+                </CSSTransition>
+              </TransitionGroup>
+            );
+          }}
         />
       </>
     );

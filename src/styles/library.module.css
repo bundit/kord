@@ -7,6 +7,12 @@
   z-index: 1;
 }
 
+.sectionLink,
+.sectionLink * {
+  height: inherit;
+  width: inherit;
+}
+
 .searchForm {
   padding: 0 3rem;
   position: fixed;
@@ -62,6 +68,11 @@
   box-sizing: border-box;
   border-bottom: 1px #eee solid;
   z-index: 0;
+}
+
+.trackWrapper a {
+  color: black;
+  text-decoration: none;
 }
 
 .trackWrapper:active {
