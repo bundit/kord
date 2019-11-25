@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Redirect } from "react-router-dom";
 
 import Header from "./components/layout/header";
 import Footer from "./components/layout/footer";
@@ -9,9 +9,10 @@ import Search from "./components/search-page";
 
 const App = () => (
   <BrowserRouter>
+    <Redirect from="/" to="/library" />
     <Route path="/" component={Header} />
     <main className="content">
-      <Route exact path="/" component={Library} />
+      <Route path="/library" component={Library} />
       <Route exact path="/search" component={Search} />
     </main>
     <Route path="/" component={Player} />
