@@ -37,6 +37,7 @@ const TrackItem = ({
       >
         <div className={styles.trackImageWrap}>
           <img
+            className={styles.trackImage}
             src={img ? img.replace("large.jpg", "t67x67.jpg") : placeholderImg}
             alt="track"
           />

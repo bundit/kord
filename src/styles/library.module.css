@@ -109,11 +109,18 @@
 }
 
 .trackImageWrap img {
-  border: 1px grey solid;
-  border-radius: 0.5rem;
+  /* border: 1px grey solid; */
   width: inherit;
   height: inherit;
   box-sizing: border-box;
+}
+
+.trackImage {
+  border-radius: 0.5rem;
+}
+
+.artistImage {
+  border-radius: 50%;
 }
 
 .overlay {
