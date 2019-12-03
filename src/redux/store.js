@@ -13,10 +13,13 @@ const store = createStore(
 );
 
 store.subscribe(() => {
+  const state = store.getState();
   // Store the library in localStorage
   saveState({
     music: {
-      library: store.getState().music.library
+      library: state.music.library,
+      artists: state.music.artists,
+      genres: state.music.genres
     }
   });
 });
