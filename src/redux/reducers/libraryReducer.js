@@ -5,11 +5,14 @@ import {
   IMPORT_SONG
 } from "../actions/types";
 import compareSongs from "../../utils/compareSongs";
+import compareArtists from "../../utils/compareArtists";
 
 const initialState = {
   query: "",
   library: [],
-  playlists: []
+  artists: [],
+  playlists: [],
+  genres: []
 };
 
 export default function(state = initialState, action) {
@@ -19,9 +22,36 @@ export default function(state = initialState, action) {
         (track1, track2) => track1.title.localeCompare(track2.title)
       );
 
+      let i = 0;
+      // Remove song duplicates
+      while (i < newLib.length - 1) {
+        const song1 = newLib[i];
+        const song2 = newLib[i + 1];
+        if (compareSongs(song1, song2) === 0) {
+          newLib.splice(i, 1);
+        } else {
+          i += 1;
+        }
+      }
+
+      const newArtists = newLib.map(song => song.artist);
+
+      i = 0;
+      // Remove artist duplicates
+      while (i < newArtists.length - 1) {
+        const artist1 = newArtists[i];
+        const artist2 = newArtists[i + 1];
+        if (compareArtists(artist1, artist2) === 0) {
+          newArtists.splice(i, 1);
+        } else {
+          i += 1;
+        }
+      }
+
       return {
         ...state,
-        library: newLib
+        library: newLib,
+        artists: newArtists
       };
     }
 
@@ -41,24 +71,77 @@ export default function(state = initialState, action) {
 
     case IMPORT_SONG: {
       const newLib = state.library;
+      const newArtistList = state.artists;
       const newSong = action.payload;
-      const { length } = newLib;
+      const newArtist = newSong.artist;
+      const newGenre = newSong.genre;
 
       let i = 0;
       let compare = 1;
 
-      while (i < length && compare > 0) {
+      // Find alphabetical position of new song and insert it in place
+      while (i < newLib.length) {
         compare = compareSongs(newSong, newLib[i]);
-        i += 1;
+
+        // Song already exists in library
+        if (compare === 0) {
+          break;
+
+          // else if song fits in this position
+        } else if (compare < 0) {
+          newLib.splice(i, 0, newSong);
+          break;
+
+          // Else song goes after this position, continue =>
+        } else if (compare > 0) i += 1;
       }
 
-      if (compare === 0) return state;
+      // We reached the end of the list, song goes at the end
+      // We may also reach this condition if the list is empty
+      if (i === newLib.length) {
+        newLib.push(newSong);
+      }
 
-      newLib.splice(i, 0, newSong);
+      i = 0;
+      compare = 1;
+
+      // Iterate through the list of artists to insert the new artist at the correct position
+      while (i < newArtistList.length) {
+        compare = compareArtists(newArtist, newArtistList[i]);
+
+        // Artist already exists
+        if (compare === 0) {
+          // Append the result incase there is a new source (soundcloud, spotify, etc)
+          newArtistList[i] = {
+            ...newArtistList[i],
+            ...newArtist
+          };
+          break;
+
+          // Else if position found
+        } else if (compare < 0) {
+          newArtistList.splice(i, 0, newArtist);
+          break;
+
+          // Else artist goes after this position, continue =>
+        } else if (compare > 0) i += 1;
+      }
+
+      // We reached the end of the list, artist goes at the end
+      // We may also reach this condition if the list is empty
+      if (i === newArtistList.length) {
+        newArtistList.push(newArtist);
+      }
 
       return {
         ...state,
-        library: newLib
+        library: newLib,
+        artists: newArtistList,
+        // Don't add empty genres
+        genres:
+          newGenre.length > 0
+            ? [...new Set([...state.genres, newGenre])].sort()
+            : state.genres
       };
     }
 
