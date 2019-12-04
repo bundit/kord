@@ -1,13 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import LazyLoad from "react-lazyload";
+import { Link } from "react-router-dom";
 
 import styles from "../styles/library.module.css";
 import placeholderImg from "../assets/placeholder.png";
 
-const ArtistItem = ({ artist: { name, img, id } }) => (
+const ArtistItem = ({ artist: { name, img } }) => (
   <LazyLoad height="5rem" once>
-    <div className={styles.trackWrapper} role="button" tabIndex="0">
+    <Link to={`/library/artists/${name}`} className={styles.trackWrapper}>
       <div className={styles.trackImageWrap}>
         <img
           className={styles.artistImage}
@@ -27,8 +28,22 @@ const ArtistItem = ({ artist: { name, img, id } }) => (
           <strong>{name}</strong>
         </div>
       </div>
-    </div>
+    </Link>
   </LazyLoad>
 );
+
+ArtistItem.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  artist: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    img: PropTypes.string
+  })
+};
+
+ArtistItem.defaultProps = {
+  artist: {
+    img: placeholderImg
+  }
+};
 
 export default ArtistItem;

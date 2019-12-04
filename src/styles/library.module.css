@@ -67,6 +67,8 @@
   padding: 1rem;
   box-sizing: border-box;
   border-bottom: 1px #eee solid;
+  text-decoration: none;
+  color: inherit;
   z-index: 0;
 }
 
