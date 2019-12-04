@@ -12,4 +12,13 @@ const ArtistList = ({ artists }) => (
   </div>
 );
 
+ArtistList.propTypes = {
+  artists: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      img: PropTypes.string
+    })
+  ).isRequired
+};
+
 export default ArtistList;
