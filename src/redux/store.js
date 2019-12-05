@@ -19,7 +19,8 @@ store.subscribe(() => {
     music: {
       library: state.music.library,
       artists: state.music.artists,
-      genres: state.music.genres
+      genres: state.music.genres,
+      playlists: state.music.playlists
     }
   });
 });
