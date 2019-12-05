@@ -41,6 +41,7 @@
   justify-content: space-around;
   bottom: 0;
   box-sizing: border-box;
+  z-index: 4;
 }
 
 .playerWrapper button:active {

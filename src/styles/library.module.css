@@ -4,7 +4,8 @@
   height: 100%;
   box-sizing: border-box;
   overflow-y: scroll;
-  z-index: 1;
+  z-index: 0;
+  background-color: white;
 }
 
 .sectionLink,
@@ -18,7 +19,7 @@
   position: fixed;
   width: 100%;
   box-sizing: border-box;
-  z-index: 1;
+  z-index: 3;
 }
 
 .searchBar {
@@ -56,6 +57,8 @@
   width: 100%;
   padding-top: 7rem;
   padding-bottom: 4rem;
+  height: 100%;
+  /* position: absolute; */
 }
 
 .trackWrapper {
@@ -70,6 +73,7 @@
   text-decoration: none;
   color: inherit;
   z-index: 0;
+  background-color: inherit;
 }
 
 .trackWrapper a {

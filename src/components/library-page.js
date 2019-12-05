@@ -7,8 +7,9 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import SearchBar from "./search-bar";
 import LibrarySectionList from "./library-category-list";
 import TrackList from "./track-list";
+import ArtistList from "./artist-list";
 import { importScLikes } from "../redux/actions/libraryActions";
-import slideInFromRight from "../styles/slideInFromRight.module.css";
+import fadeTransition from "../styles/fade.module.css";
 
 // For restoring scroll position when component is unmounted
 let libraryScrollPosition = null;
@@ -69,8 +70,8 @@ class Library extends React.Component {
 
   render() {
     const categories = ["Playlists", "Artists", "Songs", "Albums", "Genres"];
-    let { query, library } = this.props;
-    const { currentTrackID, isPlaying } = this.props;
+    let { library, query } = this.props;
+    const { artists, currentTrackID, isPlaying } = this.props;
     const { handleChange, handleSubmit, handleReset, handlePlayTrack } = this;
 
     query = query.toLowerCase();
@@ -99,10 +100,10 @@ class Library extends React.Component {
               <TransitionGroup>
                 <CSSTransition
                   key={pathname}
-                  classNames={pathname === "/library" ? "" : slideInFromRight}
+                  classNames={fadeTransition}
                   timeout={{
                     enter: 300,
-                    exit: 300
+                    exit: 0
                   }}
                 >
                   <Route
@@ -117,10 +118,30 @@ class Library extends React.Component {
                           )}
                         />
                         <Route
+                          exact
                           path="/library/songs"
                           render={() => (
                             <TrackList
                               library={library}
+                              handlePlay={handlePlayTrack}
+                              currentTrackID={currentTrackID}
+                              isPlaying={isPlaying}
+                            />
+                          )}
+                        />
+                        <Route
+                          exact
+                          path="/library/artists"
+                          render={() => <ArtistList artists={artists} />}
+                        />
+                        <Route
+                          path="/library/artists/:artist"
+                          render={props => (
+                            <TrackList
+                              library={library.filter(
+                                song =>
+                                  song.artist.name === props.match.params.artist
+                              )}
                               handlePlay={handlePlayTrack}
                               currentTrackID={currentTrackID}
                               isPlaying={isPlaying}
@@ -144,6 +165,7 @@ class Library extends React.Component {
 Library.propTypes = {
   query: PropTypes.string,
   library: PropTypes.arrayOf(PropTypes.object).isRequired,
+  artists: PropTypes.arrayOf(PropTypes.object).isRequired,
   playTrack: PropTypes.func.isRequired,
   setLibQuery: PropTypes.func.isRequired,
   setQueue: PropTypes.func.isRequired,
@@ -159,6 +181,7 @@ Library.defaultProps = {
 
 const mapStateToProps = state => ({
   library: state.music.library,
+  artists: state.music.artists,
   query: state.music.query,
   currentTrackID: state.musicPlayer.currentTrack.id,
   isPlaying: state.musicPlayer.isPlaying
