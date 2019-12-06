@@ -180,17 +180,22 @@
 }
 
 .modal {
-  margin: 0 auto;
-  margin-top: 40%;
-  background-color: #fff;
-  border-radius: 1rem;
-  max-width: 20rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 20rem;
   min-height: 20rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #fff;
+  border-radius: 1rem;
   padding: 1rem;
   box-sizing: border-box;
+
+  margin-top: -20rem;
+  margin-left: -10rem;
+  z-index: 4;
 }
 
 .modal > button {

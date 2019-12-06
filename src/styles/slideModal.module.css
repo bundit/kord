@@ -1,0 +1,18 @@
+/* Slide animation for modal */
+.enter {
+  transform: translateY(400%);
+}
+
+.enterActive {
+  transform: translateY(0);
+  transition: transform 200ms linear;
+}
+
+.exit {
+  transform: translateY(0);
+}
+
+.exitActive {
+  transform: translateY(400%);
+  transition: transform 200ms linear;
+}

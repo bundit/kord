@@ -2,12 +2,21 @@ import React from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-
+import { CSSTransition } from "react-transition-group";
+import slideTransition from "../styles/slideModal.module.css";
 import styles from "../styles/library.module.css";
 
-const Modal = ({ show, onClose, children }) =>
-  show ? (
-    <div className={styles.backdrop} role="presentation" onClick={onClose}>
+const Modal = ({ show, onClose, children }) => (
+  <>
+    {show && (
+      <div className={styles.backdrop} role="presentation" onClick={onClose} />
+    )}
+    <CSSTransition
+      in={show}
+      timeout={200}
+      classNames={slideTransition}
+      unmountOnExit
+    >
       <div
         className={styles.modal}
         role="presentation"
@@ -19,8 +28,9 @@ const Modal = ({ show, onClose, children }) =>
 
         <div>{children}</div>
       </div>
-    </div>
-  ) : null;
+    </CSSTransition>
+  </>
+);
 
 Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
