@@ -39,7 +39,9 @@ export default function(state = initialState, action) {
         }
       }
 
-      const newArtists = newLib.map(song => song.artist);
+      const newArtists = newLib
+        .map(song => song.artist)
+        .sort((artist1, artist2) => compareArtists(artist1, artist2));
 
       i = 0;
       // Remove artist duplicates

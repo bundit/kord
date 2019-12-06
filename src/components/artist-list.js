@@ -5,7 +5,7 @@ import styles from "../styles/library.module.css";
 import ArtistItem from "./artist-item";
 
 const ArtistList = ({ artists }) => (
-  <div className={styles.libraryWrapper} zIndex="1">
+  <div className={styles.libraryWrapper} zindex="1">
     {artists.map(artist => (
       <ArtistItem key={artist.name} artist={artist} />
     ))}
