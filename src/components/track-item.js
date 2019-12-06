@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faEllipsisH,
+  faPen,
+  faTrash
+} from "@fortawesome/free-solid-svg-icons";
 
 import truncateString from "../utils/truncateString";
 import msToDuration from "../utils/msToDuration";
@@ -23,6 +28,11 @@ const TrackItem = ({
   const [disable, setDisable] = useState(false);
   const handleDisable = () => {
     setDisable(true);
+  };
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
@@ -74,11 +84,40 @@ const TrackItem = ({
             </button>
           )}
           {!search && (
-            <button type="button" onClick={e => e.stopPropagation()}>
+            <button
+              type="button"
+              onClick={e => {
+                toggleDropdown();
+                e.stopPropagation();
+              }}
+              style={{ color: `${isDropdownOpen ? "red" : "black"}` }}
+            >
               <FontAwesomeIcon icon={faEllipsisH} />
             </button>
           )}
         </div>
+        {isDropdownOpen && (
+          <div className={styles.trackDropdown}>
+            <button className={styles.dropdownOption} type="button">
+              <span>
+                <FontAwesomeIcon icon={faPlus} />
+              </span>
+              <span>Add to Playlist</span>
+            </button>
+            <button className={styles.dropdownOption} type="button">
+              <span>
+                <FontAwesomeIcon icon={faPen} />
+              </span>
+              <span>Edit Track</span>
+            </button>
+            <button className={styles.dropdownOption} type="button">
+              <span>
+                <FontAwesomeIcon icon={faTrash} />
+              </span>
+              <span>Delete from Library</span>
+            </button>
+          </div>
+        )}
       </div>
     </LazyLoad>
   );

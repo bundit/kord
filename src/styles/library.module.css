@@ -73,8 +73,9 @@
   border-bottom: 1px #eee solid;
   text-decoration: none;
   color: inherit;
-  z-index: 0;
+  /* z-index: -1; */
   background-color: inherit;
+  position: relative;
 }
 
 .trackWrapper a {
@@ -84,6 +85,38 @@
 
 .trackWrapper:active {
   background-color: #fcfbf8;
+}
+
+.trackDropdown {
+  position: absolute;
+  top: 4rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 0.5rem;
+  padding-left: 0.7rem;
+  box-shadow: 0 1rem 1rem rgb(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.trackDropdown > * {
+  margin-top: 0.5rem;
+}
+
+.dropdownOption {
+  display: flex;
+  width: inherit;
+  padding-left: 0;
+}
+
+.dropdownOption *:first-child {
+  padding-right: 0.5rem;
+  width: 1rem;
+}
+
+.dropdownOption:active {
+  color: red;
 }
 
 .playingNow {
