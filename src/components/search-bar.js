@@ -5,7 +5,6 @@ import { faSearch, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/library.module.css";
 
 const SearchBar = ({ placeholder, query, onChange, onSubmit, onReset }) => (
-  // <div className={styles.searchBarWrapper}>
   <>
     <form className={styles.searchForm} onSubmit={onSubmit} action="">
       <input
@@ -15,6 +14,11 @@ const SearchBar = ({ placeholder, query, onChange, onSubmit, onReset }) => (
         onChange={onChange}
         placeholder={placeholder}
         value={query}
+        // disable auto inputs
+        autoCapitalize="off"
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck="false"
       />
     </form>
     <FontAwesomeIcon className={styles.searchIcon} icon={faSearch} />
