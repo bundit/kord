@@ -24,8 +24,7 @@ const Footer = ({ isExpanded }) => (
         <ul className={styles.navUl}>
           <li>
             <NavLink
-              exact
-              to="/"
+              to="/library"
               className={styles.navLink}
               activeClassName={styles.active}
             >
@@ -37,7 +36,8 @@ const Footer = ({ isExpanded }) => (
           </li>
           <li>
             <NavLink
-              to="search"
+              exact
+              to="/search"
               className={styles.navLink}
               activeClassName={styles.active}
             >
@@ -49,7 +49,8 @@ const Footer = ({ isExpanded }) => (
           </li>
           <li>
             <NavLink
-              to="more"
+              exact
+              to="/more"
               className={styles.navLink}
               activeClassName={styles.active}
             >
