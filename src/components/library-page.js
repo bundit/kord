@@ -5,9 +5,11 @@ import { connect } from "react-redux";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import SearchBar from "./search-bar";
+import PlaylistForm from "./playlist-form";
 import LibrarySectionList from "./library-category-list";
 import TrackList from "./track-list";
 import ArtistList from "./artist-list";
+import ListOfPlaylists from "./playlist-list";
 import { importScLikes } from "../redux/actions/libraryActions";
 import fadeTransition from "../styles/fade.module.css";
 
@@ -22,6 +24,7 @@ class Library extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.handlePlayTrack = this.handlePlayTrack.bind(this);
+    this.handleNewPlaylist = this.handleNewPlaylist.bind(this);
   }
 
   componentDidMount() {
@@ -68,16 +71,46 @@ class Library extends React.Component {
     event.preventDefault();
   }
 
+  handleNewPlaylist(e) {
+    const {
+      newPlaylistName,
+      createNewPlaylist,
+      togglePlaylistForm,
+      setNewPlaylistName
+    } = this.props;
+
+    createNewPlaylist(newPlaylistName);
+    togglePlaylistForm();
+    setNewPlaylistName("");
+
+    e.preventDefault();
+  }
+
   render() {
     const categories = ["Playlists", "Artists", "Songs", "Albums", "Genres"];
     let { library, query } = this.props;
-    const { artists, currentTrackID, isPlaying } = this.props;
-    const { handleChange, handleSubmit, handleReset, handlePlayTrack } = this;
+    const {
+      artists,
+      playlists,
+      currentTrackID,
+      isPlaying,
+      isPlaylistFormOpen,
+      newPlaylistName,
+      togglePlaylistForm,
+      setNewPlaylistName
+    } = this.props;
+    const {
+      handleChange,
+      handleSubmit,
+      handleReset,
+      handlePlayTrack,
+      handleNewPlaylist
+    } = this;
 
     query = query.toLowerCase();
 
     if (query && query.length >= 3) {
-      library = library.filter(
+      const filteredSongs = library.filter(
         ({ title, artist }) =>
           title.toLowerCase().includes(query) ||
           artist.name.toLowerCase().includes(query)
@@ -92,6 +125,13 @@ class Library extends React.Component {
           onChange={handleChange}
           onSubmit={handleSubmit}
           onReset={handleReset}
+        />
+        <PlaylistForm
+          show={isPlaylistFormOpen}
+          value={newPlaylistName}
+          onChange={setNewPlaylistName}
+          onSubmit={handleNewPlaylist}
+          onClose={togglePlaylistForm}
         />
         <Route
           render={({ location }) => {
@@ -148,6 +188,17 @@ class Library extends React.Component {
                             />
                           )}
                         />
+                        <Route
+                          exact
+                          path="/library/playlists"
+                          render={() => (
+                            <ListOfPlaylists
+                              handleNewPlaylist={handleNewPlaylist}
+                              playlists={playlists}
+                              togglePlaylistForm={togglePlaylistForm}
+                            />
+                          )}
+                        />
                         {/* <Route component={<404 Placeholder />} /> */}
                       </Switch>
                     )}
@@ -172,19 +223,29 @@ Library.propTypes = {
   resetQuery: PropTypes.func.isRequired,
   isPlaying: PropTypes.bool.isRequired,
   currentTrackID: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired
+    .isRequired,
+  createNewPlaylist: PropTypes.func.isRequired,
+  playlists: PropTypes.PropTypes.arrayOf(PropTypes.object).isRequired,
+  isPlaylistFormOpen: PropTypes.bool.isRequired,
+  newPlaylistName: PropTypes.string,
+  togglePlaylistForm: PropTypes.func.isRequired,
+  setNewPlaylistName: PropTypes.func.isRequired
 };
 
 Library.defaultProps = {
-  query: ""
+  query: "",
+  newPlaylistName: ""
 };
 
 const mapStateToProps = state => ({
   library: state.music.library,
+  playlists: state.music.playlists,
   artists: state.music.artists,
   query: state.music.query,
   currentTrackID: state.musicPlayer.currentTrack.id,
-  isPlaying: state.musicPlayer.isPlaying
+  isPlaying: state.musicPlayer.isPlaying,
+  isPlaylistFormOpen: state.music.isPlaylistFormOpen,
+  newPlaylistName: state.music.newPlaylistName
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -207,6 +268,20 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: "SET_QUEUE",
       payload: list
+    }),
+  togglePlaylistForm: () =>
+    dispatch({
+      type: "TOGGLE_PLAYLIST_FORM"
+    }),
+  setNewPlaylistName: name =>
+    dispatch({
+      type: "SET_NEW_PLAYLIST_NAME",
+      payload: name
+    }),
+  createNewPlaylist: name =>
+    dispatch({
+      type: "CREATE_NEW_PLAYLIST",
+      payload: name
     }),
   dispatch
 });
