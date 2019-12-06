@@ -3,6 +3,9 @@ export const IMPORT_SC_LIKES = "IMPORT_SC";
 export const IMPORT_SONG = "IMPORT_SONG";
 export const SET_LIB_QUERY = "SET_LIB_QUERY";
 export const RESET_LIB_QUERY = "RESET_LIB_QUERY";
+export const TOGGLE_PLAYLIST_FORM = "TOGGLE_PLAYLIST_FORM";
+export const SET_NEW_PLAYLIST_NAME = "SET_NEW_PLAYLIST_NAME";
+export const CREATE_NEW_PLAYLIST = "CREATE_NEW_PLAYLIST";
 
 // User Reducer
 export const SET_SC_USER = "SET_SC_USER";

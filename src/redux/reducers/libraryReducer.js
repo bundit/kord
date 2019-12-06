@@ -2,7 +2,10 @@ import {
   IMPORT_SC_LIKES,
   SET_LIB_QUERY,
   RESET_LIB_QUERY,
-  IMPORT_SONG
+  IMPORT_SONG,
+  TOGGLE_PLAYLIST_FORM,
+  SET_NEW_PLAYLIST_NAME,
+  CREATE_NEW_PLAYLIST
 } from "../actions/types";
 import compareSongs from "../../utils/compareSongs";
 import compareArtists from "../../utils/compareArtists";
@@ -12,7 +15,9 @@ const initialState = {
   library: [],
   artists: [],
   playlists: [],
-  genres: []
+  genres: [],
+  isPlaylistFormOpen: false,
+  newPlaylistName: ""
 };
 
 export default function(state = initialState, action) {
@@ -142,6 +147,33 @@ export default function(state = initialState, action) {
           newGenre.length > 0
             ? [...new Set([...state.genres, newGenre])].sort()
             : state.genres
+      };
+    }
+
+    case TOGGLE_PLAYLIST_FORM: {
+      return {
+        ...state,
+        isPlaylistFormOpen: !state.isPlaylistFormOpen
+      };
+    }
+
+    case SET_NEW_PLAYLIST_NAME: {
+      return {
+        ...state,
+        newPlaylistName: action.payload
+      };
+    }
+
+    case CREATE_NEW_PLAYLIST: {
+      return {
+        ...state,
+        playlists: [
+          ...state.playlists,
+          {
+            title: action.payload,
+            list: []
+          }
+        ]
       };
     }
 
