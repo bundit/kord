@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlusSquare as farPlusSquare } from "@fortawesome/free-regular-svg-icons";
 
 import PlaylistItem from "./playlist-item";
 import styles from "../styles/library.module.css";
@@ -13,7 +13,7 @@ const ListOfPlaylists = ({ playlists, togglePlaylistForm }) => (
       onClick={togglePlaylistForm}
       type="button"
     >
-      <FontAwesomeIcon icon={faPlus} size="2x" />
+      <FontAwesomeIcon icon={farPlusSquare} />
     </button>
     <div className={styles.libraryWrapper} zindex="1">
       {playlists &&

@@ -63,6 +63,7 @@
 
 .trackWrapper {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: flex-start;
   height: 5rem;
@@ -157,6 +158,75 @@
 
 .paused {
   animation-play-state: paused;
+}
+
+.addPlaylist {
+  color: red;
+  position: fixed;
+  top: 1.5rem;
+  right: 0;
+  z-index: 3;
+  font-size: 2rem;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 4;
+}
+
+.modal {
+  margin: 0 auto;
+  margin-top: 40%;
+  background-color: #fff;
+  border-radius: 1rem;
+  max-width: 20rem;
+  min-height: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.modal > button {
+  align-self: flex-end;
+}
+
+.playlistForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.playlistForm label > input,
+.playlistForm label > h3 {
+  margin: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+}
+
+.playlistForm input {
+  width: 100%;
+  padding: 0.5rem;
+
+  border-radius: 1rem;
+  border: none;
+  background: #eee;
+  box-sizing: border-box;
+}
+
+.playlistForm > button {
+  width: auto;
+  margin-top: 1rem;
+  align-self: flex-end;
+  background-color: black;
+  border-radius: 1rem;
+  color: white;
 }
 
 @keyframes mainBar {

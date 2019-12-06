@@ -21,7 +21,7 @@ const PlaylistItem = ({ title, length }) => (
       }}
     >
       <span>{`${length} songs`}</span>
-      <button type="button" onClick={e => e.stopPropagation()}>
+      <button type="button" onClick={e => e.preventDefault()}>
         <FontAwesomeIcon icon={faEllipsisV} />
       </button>
     </div>
