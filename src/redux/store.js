@@ -20,8 +20,7 @@ store.subscribe(() => {
       library: state.music.library,
       artists: state.music.artists,
       genres: state.music.genres,
-      playlists: state.music.playlists,
-      isPlaylistFormOpen: false
+      playlists: state.music.playlists
     }
   });
 });

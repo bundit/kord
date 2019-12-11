@@ -3,7 +3,9 @@ import {
   SET_LIB_QUERY,
   RESET_LIB_QUERY,
   IMPORT_SONG,
-  TOGGLE_PLAYLIST_FORM,
+  TOGGLE_NEW_PLAYLIST_FORM,
+  TOGGLE_ADD_PLAYLIST_FORM,
+  ADD_TO_PLAYLISTS,
   SET_NEW_PLAYLIST_NAME,
   CREATE_NEW_PLAYLIST
 } from "../actions/types";
@@ -14,10 +16,12 @@ const initialState = {
   query: "",
   library: [],
   artists: [],
-  playlists: [],
+  playlists: {},
   genres: [],
-  isPlaylistFormOpen: false,
-  newPlaylistName: ""
+  isNewPlaylistFormOpen: false,
+  isAddToPlaylistFormOpen: true,
+  newPlaylistName: "",
+  currentAddToPlaylistSong: ""
 };
 
 export default function(state = initialState, action) {
@@ -152,10 +156,10 @@ export default function(state = initialState, action) {
       };
     }
 
-    case TOGGLE_PLAYLIST_FORM: {
+    case TOGGLE_NEW_PLAYLIST_FORM: {
       return {
         ...state,
-        isPlaylistFormOpen: !state.isPlaylistFormOpen
+        isNewPlaylistFormOpen: !state.isNewPlaylistFormOpen
       };
     }
 
@@ -169,13 +173,43 @@ export default function(state = initialState, action) {
     case CREATE_NEW_PLAYLIST: {
       return {
         ...state,
-        playlists: [
+        playlists: {
           ...state.playlists,
-          {
+          [action.payload]: {
             title: action.payload,
             list: []
           }
-        ]
+        }
+      };
+    }
+
+    case TOGGLE_ADD_PLAYLIST_FORM: {
+      return {
+        ...state,
+        isAddToPlaylistFormOpen: !state.isAddToPlaylistFormOpen,
+        currentAddToPlaylistSong: action.payload
+      };
+    }
+
+    case ADD_TO_PLAYLISTS: {
+      const newPlaylists = {};
+      const playlistsToAddTo = action.payload;
+
+      playlistsToAddTo.forEach(title => {
+        const prevList = state.playlists[title];
+
+        newPlaylists[title] = {
+          ...prevList,
+          list: [...prevList.list, state.currentAddToPlaylistSong]
+        };
+      });
+
+      return {
+        ...state,
+        playlists: {
+          ...state.playlists,
+          ...newPlaylists
+        }
       };
     }
 
