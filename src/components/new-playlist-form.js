@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Modal from "./modal";
 import styles from "../styles/library.module.css";
 
-const PlaylistForm = ({ show, value, onClose, onChange, onSubmit }) => (
+const NewPlaylistForm = ({ show, value, onClose, onChange, onSubmit }) => (
   <Modal show={show} onClose={onClose}>
     <h1 className="text-center">{`${value || "New Playlist"}`}</h1>
     <form className={styles.playlistForm} onSubmit={onSubmit}>
@@ -30,7 +30,7 @@ const PlaylistForm = ({ show, value, onClose, onChange, onSubmit }) => (
   </Modal>
 );
 
-PlaylistForm.propTypes = {
+NewPlaylistForm.propTypes = {
   show: PropTypes.bool.isRequired,
   value: PropTypes.string,
   onClose: PropTypes.func.isRequired,
@@ -38,8 +38,8 @@ PlaylistForm.propTypes = {
   onSubmit: PropTypes.func.isRequired
 };
 
-PlaylistForm.defaultProps = {
+NewPlaylistForm.defaultProps = {
   value: ""
 };
 
-export default PlaylistForm;
+export default NewPlaylistForm;

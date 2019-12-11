@@ -6,18 +6,18 @@ import { faPlusSquare as farPlusSquare } from "@fortawesome/free-regular-svg-ico
 import PlaylistItem from "./playlist-item";
 import styles from "../styles/library.module.css";
 
-const ListOfPlaylists = ({ playlists, togglePlaylistForm }) => (
+const ListOfPlaylists = ({ playlists, toggleNewPlaylistForm }) => (
   <>
     <button
       className={styles.addPlaylist}
-      onClick={togglePlaylistForm}
+      onClick={toggleNewPlaylistForm}
       type="button"
     >
       <FontAwesomeIcon icon={farPlusSquare} />
     </button>
     <div className={styles.libraryWrapper} zindex="1">
       {playlists &&
-        playlists.map(playlist => (
+        Object.values(playlists).map(playlist => (
           <PlaylistItem
             key={playlist.title}
             title={playlist.title}
@@ -29,13 +29,9 @@ const ListOfPlaylists = ({ playlists, togglePlaylistForm }) => (
 );
 
 ListOfPlaylists.propTypes = {
-  playlists: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      list: PropTypes.arrayOf(PropTypes.object)
-    })
-  ).isRequired,
-  togglePlaylistForm: PropTypes.func.isRequired
+  // eslint-disable-next-line
+  playlists: PropTypes.object.isRequired,
+  toggleNewPlaylistForm: PropTypes.func.isRequired
 };
 
 export default ListOfPlaylists;
