@@ -26,7 +26,8 @@ class TrackList extends React.Component {
       addToLibrary,
       loadMoreTracks,
       currentTrackID,
-      isPlaying
+      isPlaying,
+      toggleAddToPlaylistForm
     } = this.props;
 
     return (
@@ -34,17 +35,14 @@ class TrackList extends React.Component {
         {library &&
           library.map(track => (
             <TrackItem
-              search={search}
               key={track.id}
-              img={track.img}
-              title={track.title}
-              artist={track.artist.name}
-              id={track.id}
-              ms={track.duration}
+              track={track}
+              search={search}
               handlePlay={() => handlePlay(track)}
               addToLibrary={event => addToLibrary(event, track)}
               isActive={currentTrackID === track.id}
               isPlaying={isPlaying}
+              toggleAddToPlaylistForm={() => toggleAddToPlaylistForm(track)}
             />
           ))}
         {search && library.length > 0 && (
@@ -65,7 +63,8 @@ TrackList.propTypes = {
   loadMoreTracks: PropTypes.func,
   isPlaying: PropTypes.bool.isRequired,
   currentTrackID: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired
+    .isRequired,
+  toggleAddToPlaylistForm: PropTypes.func
 };
 
 TrackList.defaultProps = {
@@ -73,7 +72,8 @@ TrackList.defaultProps = {
   library: [],
   handlePlay: () => {},
   addToLibrary: () => {},
-  loadMoreTracks: () => {}
+  loadMoreTracks: () => {},
+  toggleAddToPlaylistForm: () => {}
 };
 
 export default TrackList;
