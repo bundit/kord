@@ -248,7 +248,7 @@
   padding-left: 1rem;
 }
 
-.playlistForm input {
+.playlistForm input[type="text"] {
   width: 100%;
   padding: 0.5rem;
 
@@ -265,6 +265,38 @@
   background-color: black;
   border-radius: 1rem;
   color: white;
+}
+
+.playlistForm .checkboxLabel:first-child {
+  margin-top: 1rem;
+  border-top: 1px #eee solid;
+}
+
+.checkboxLabel {
+  display: flex;
+  border-bottom: 1px #eee solid;
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: 0.5rem 1rem;
+}
+
+.checkboxLabel:active {
+  background-color: #eee;
+}
+
+.checkboxLabel span {
+  font-size: 1.2rem;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  margin: 0;
+  margin-left: auto;
+  opacity: 0;
+}
+
+.checkbox {
+  margin: 0;
+  padding: 0;
 }
 
 @keyframes mainBar {
