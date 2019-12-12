@@ -87,17 +87,23 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
             size="lg"
           />
         </label>
-        {playlistTitles.map((playlist, i) => (
-          <AddToPlaylistCheckbox
-            title={playlist}
-            key={playlist}
-            i={i}
-            value={checkedPlaylists[playlist]}
-            onChange={toggleCheckedPlaylist}
-          />
-        ))}
-
-        {isOneChecked && <button type="submit">Add</button>}
+        <div className={styles.formScrollContainer}>
+          {playlistTitles.map((playlist, i) => (
+            <AddToPlaylistCheckbox
+              title={playlist}
+              key={playlist}
+              i={i}
+              value={checkedPlaylists[playlist]}
+              onChange={toggleCheckedPlaylist}
+            />
+          ))}
+        </div>
+        <button
+          style={{ visibility: isOneChecked ? "visible" : "hidden" }}
+          type="submit"
+        >
+          Add
+        </button>
       </form>
     </Modal>
   );

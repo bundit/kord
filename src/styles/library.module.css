@@ -267,6 +267,11 @@
   color: white;
 }
 
+.formScrollContainer {
+  overflow-y: auto;
+  max-height: 15rem;
+}
+
 .checkboxLabel,
 .textboxLabel {
   display: flex;
