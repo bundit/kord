@@ -19,6 +19,7 @@ const AddToPlaylistCheckbox = ({ title, i, value, onChange }) => (
       style={{
         color: value ? "red" : "grey"
       }}
+      size="lg"
     />
   </label>
 );
