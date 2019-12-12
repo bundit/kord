@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 import Modal from "./modal";
 import AddToPlaylistCheckbox from "./add-playlist-checkbox";
@@ -14,6 +16,8 @@ const AddToPlaylistForm = ({ show, playlists, onClose, onSubmit }) => {
 
   const [checkedPlaylists, setCheckedPlaylists] = useState(initialState);
   const [isOneChecked, setIsOneChecked] = useState(false);
+
+  const [newPlaylist, setNewPlaylist] = useState("");
 
   const toggleCheckedPlaylist = value => {
     const newValues = {
@@ -34,6 +38,22 @@ const AddToPlaylistForm = ({ show, playlists, onClose, onSubmit }) => {
         className={styles.playlistForm}
         onSubmit={e => onSubmit(e, checkedPlaylists)}
       >
+        <label className={styles.textboxLabel} htmlFor="newplaylist">
+          <input
+            id="newplaylist"
+            type="text"
+            placeholder="Create New Playlist"
+            value={newPlaylist}
+            onChange={e => setNewPlaylist(e.target.value)}
+          />
+          <FontAwesomeIcon
+            icon={newPlaylist.length ? faCheck : faPlus}
+            style={{
+              color: newPlaylist.length ? "red" : "grey"
+            }}
+            size="lg"
+          />
+        </label>
         {playlists.map((playlist, i) => (
           <AddToPlaylistCheckbox
             title={playlist}

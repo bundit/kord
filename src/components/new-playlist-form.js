@@ -8,7 +8,7 @@ const NewPlaylistForm = ({ show, value, onClose, onChange, onSubmit }) => (
   <Modal show={show} onClose={onClose}>
     <h1 className="text-center">{`${value || "New Playlist"}`}</h1>
     <form className={styles.playlistForm} onSubmit={onSubmit}>
-      <label htmlFor="playlistname">
+      <label htmlFor="playlistname" className={styles.newPlaylistFormLabel}>
         <h2>Enter a playlist name:</h2>
         <input
           ref={input => input && input.focus()}

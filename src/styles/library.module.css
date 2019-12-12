@@ -240,7 +240,7 @@
   flex-direction: column;
 }
 
-.playlistForm label > input,
+.newPlaylistFormLabel > input,
 .playlistForm label > h3 {
   margin: auto;
   margin-top: 0.5rem;
@@ -258,7 +258,7 @@
   box-sizing: border-box;
 }
 
-.playlistForm > button {
+.playlistForm > button[type="submit"] {
   width: auto;
   margin-top: 1rem;
   align-self: flex-end;
@@ -267,36 +267,45 @@
   color: white;
 }
 
-.playlistForm .checkboxLabel:first-child {
-  margin-top: 1rem;
-  border-top: 1px #eee solid;
-}
-
-.checkboxLabel {
+.checkboxLabel,
+.textboxLabel {
   display: flex;
   border-bottom: 1px #eee solid;
   white-space: nowrap;
   vertical-align: middle;
   padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+}
+
+.textboxLabel {
+  border-bottom: none;
+  margin-top: 1rem;
+  padding-left: 0.6rem;
+}
+
+.textboxLabel input[type="text"] {
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}
+
+.checkboxLabel svg,
+.textboxLabel svg {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .checkboxLabel:active {
   background-color: #eee;
 }
 
-.checkboxLabel span {
-  font-size: 1.2rem;
-}
-
-.checkboxLabel input[type="checkbox"] {
+.checkboxLabel > input[type="checkbox"] {
   margin: 0;
   margin-left: auto;
   opacity: 0;
 }
 
-.checkbox {
-  margin: 0;
-  padding: 0;
+.checkboxLabel > *:last-child {
+  margin-left: auto;
 }
 
 @keyframes mainBar {
