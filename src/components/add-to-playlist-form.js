@@ -7,18 +7,27 @@ import Modal from "./modal";
 import AddToPlaylistCheckbox from "./add-playlist-checkbox";
 import styles from "../styles/library.module.css";
 
-const AddToPlaylistForm = ({ show, playlists, onClose, onSubmit }) => {
-  // eslint-disable-next-line object-curly-newline
-  const initialState = {};
+// This functions takes a list of strings and returns a new object with
+// the object's attributes set by the strings to be the value
+// E.g: initAttributesFromList(["a", "b"], true)
+// returns {a: true, b: true}
+function initAttributesFromList(list, value = false) {
+  const object = {};
 
-  playlists.forEach(playlist => {
-    initialState[playlist] = false;
+  list.forEach(attribute => {
+    object[attribute] = value;
   });
 
-  const [checkedPlaylists, setCheckedPlaylists] = useState(initialState);
+  return object;
+}
+
+const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
+  const [checkedPlaylists, setCheckedPlaylists] = useState(
+    initAttributesFromList(playlistTitles)
+  );
   const [isOneChecked, setIsOneChecked] = useState(false);
 
-  const [newPlaylistField, setnewPlaylistField] = useState("");
+  const [newPlaylistField, setNewPlaylistField] = useState("");
 
   const toggleCheckedPlaylist = value => {
     const newValues = {
@@ -48,7 +57,10 @@ const AddToPlaylistForm = ({ show, playlists, onClose, onSubmit }) => {
       : playlistsToAddTo;
   };
 
-  // TODO add textfield to submit
+  const clearForm = () => {
+    setNewPlaylistField("");
+    setCheckedPlaylists(initAttributesFromList(playlistTitles));
+  };
 
   return (
     <Modal show={show} onClose={onClose}>
@@ -58,6 +70,7 @@ const AddToPlaylistForm = ({ show, playlists, onClose, onSubmit }) => {
         onSubmit={e => {
           e.preventDefault();
           onSubmit(prepareFormData());
+          clearForm();
         }}
       >
         <label className={styles.textboxLabel} htmlFor="newPlaylistField">
@@ -66,17 +79,15 @@ const AddToPlaylistForm = ({ show, playlists, onClose, onSubmit }) => {
             type="text"
             placeholder="Create New Playlist"
             value={newPlaylistField}
-            onChange={e => setnewPlaylistField(e.target.value)}
+            onChange={e => setNewPlaylistField(e.target.value)}
           />
           <FontAwesomeIcon
             icon={newPlaylistField.length ? faCheck : faPlus}
-            style={{
-              color: newPlaylistField.length ? "red" : "grey"
-            }}
+            style={{ color: newPlaylistField.length ? "red" : "grey" }}
             size="lg"
           />
         </label>
-        {playlists.map((playlist, i) => (
+        {playlistTitles.map((playlist, i) => (
           <AddToPlaylistCheckbox
             title={playlist}
             key={playlist}
@@ -94,7 +105,7 @@ const AddToPlaylistForm = ({ show, playlists, onClose, onSubmit }) => {
 
 AddToPlaylistForm.propTypes = {
   show: PropTypes.bool.isRequired,
-  playlists: PropTypes.arrayOf(PropTypes.string).isRequired,
+  playlistTitles: PropTypes.arrayOf(PropTypes.string).isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired
 };
