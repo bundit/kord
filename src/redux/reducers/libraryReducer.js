@@ -196,7 +196,8 @@ export default function(state = initialState, action) {
       const playlistsToAddTo = action.payload;
 
       playlistsToAddTo.forEach(title => {
-        const prevList = state.playlists[title];
+        // If is falsy, create a new playlist instead
+        const prevList = state.playlists[title] || { title, list: [] };
 
         newPlaylists[title] = {
           ...prevList,

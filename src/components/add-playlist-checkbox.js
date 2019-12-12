@@ -27,8 +27,12 @@ const AddToPlaylistCheckbox = ({ title, i, value, onChange }) => (
 AddToPlaylistCheckbox.propTypes = {
   title: PropTypes.string.isRequired,
   i: PropTypes.number.isRequired,
-  value: PropTypes.bool.isRequired,
+  value: PropTypes.bool,
   onChange: PropTypes.func.isRequired
+};
+
+AddToPlaylistCheckbox.defaultProps = {
+  value: false
 };
 
 export default AddToPlaylistCheckbox;

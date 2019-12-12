@@ -90,20 +90,10 @@ class Library extends React.Component {
     e.preventDefault();
   }
 
-  handleSubmitAddToPlaylists(e, map) {
+  handleSubmitAddToPlaylists(playlists) {
     const { addToPlaylists, toggleAddToPlaylistForm } = this.props;
-    e.preventDefault();
 
-    // Only add to playlists that are toggled true
-    const playlistsToAddTo = [];
-    const titles = Object.keys(map);
-    titles.forEach(title => {
-      if (map[title]) {
-        playlistsToAddTo.push(title);
-      }
-    });
-
-    addToPlaylists(playlistsToAddTo);
+    addToPlaylists(playlists);
     toggleAddToPlaylistForm();
   }
 

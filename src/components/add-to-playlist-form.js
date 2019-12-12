@@ -10,6 +10,7 @@ import styles from "../styles/library.module.css";
 const AddToPlaylistForm = ({ show, playlists, onClose, onSubmit }) => {
   // eslint-disable-next-line object-curly-newline
   const initialState = {};
+
   playlists.forEach(playlist => {
     initialState[playlist] = false;
   });
@@ -17,7 +18,7 @@ const AddToPlaylistForm = ({ show, playlists, onClose, onSubmit }) => {
   const [checkedPlaylists, setCheckedPlaylists] = useState(initialState);
   const [isOneChecked, setIsOneChecked] = useState(false);
 
-  const [newPlaylist, setNewPlaylist] = useState("");
+  const [newPlaylistField, setnewPlaylistField] = useState("");
 
   const toggleCheckedPlaylist = value => {
     const newValues = {
@@ -31,25 +32,46 @@ const AddToPlaylistForm = ({ show, playlists, onClose, onSubmit }) => {
     setIsOneChecked(Object.values(newValues).some(isTrue => isTrue));
   };
 
+  const prepareFormData = () => {
+    // Only add to playlists that are toggled true
+    const playlistsToAddTo = [];
+    const titles = Object.keys(checkedPlaylists);
+    titles.forEach(title => {
+      if (checkedPlaylists[title]) {
+        playlistsToAddTo.push(title);
+      }
+    });
+
+    // If there is any value on the new playlist field, add it to the list
+    return newPlaylistField.length
+      ? [...playlistsToAddTo, newPlaylistField]
+      : playlistsToAddTo;
+  };
+
+  // TODO add textfield to submit
+
   return (
     <Modal show={show} onClose={onClose}>
       <h1 className="text-center">Add to Playlist</h1>
       <form
         className={styles.playlistForm}
-        onSubmit={e => onSubmit(e, checkedPlaylists)}
+        onSubmit={e => {
+          e.preventDefault();
+          onSubmit(prepareFormData());
+        }}
       >
-        <label className={styles.textboxLabel} htmlFor="newplaylist">
+        <label className={styles.textboxLabel} htmlFor="newPlaylistField">
           <input
-            id="newplaylist"
+            id="newPlaylistField"
             type="text"
             placeholder="Create New Playlist"
-            value={newPlaylist}
-            onChange={e => setNewPlaylist(e.target.value)}
+            value={newPlaylistField}
+            onChange={e => setnewPlaylistField(e.target.value)}
           />
           <FontAwesomeIcon
-            icon={newPlaylist.length ? faCheck : faPlus}
+            icon={newPlaylistField.length ? faCheck : faPlus}
             style={{
-              color: newPlaylist.length ? "red" : "grey"
+              color: newPlaylistField.length ? "red" : "grey"
             }}
             size="lg"
           />
