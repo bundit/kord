@@ -34,16 +34,19 @@ const EditTrackForm = ({ show, onClose, track }) => {
           title="Title"
           value={titleField}
           onChange={setTitleField}
+          original={title}
         />
         <EditTextfield
           title="Artist"
           value={artistField}
           onChange={setArtistField}
+          original={artistName}
         />
         <EditTextfield
           title="Genre"
           value={genreField}
           onChange={setGenreField}
+          original={genre}
         />
         <button
           // style={{ visibility: isOneChecked ? "visible" : "hidden" }}
