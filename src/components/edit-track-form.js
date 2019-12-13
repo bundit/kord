@@ -33,19 +33,19 @@ const EditTrackForm = ({ show, onClose, track }) => {
         <EditTextfield
           title="Title"
           value={titleField}
-          onChange={setTitleField}
+          handleChange={setTitleField}
           original={title}
         />
         <EditTextfield
           title="Artist"
           value={artistField}
-          onChange={setArtistField}
+          handleChange={setArtistField}
           original={artistName}
         />
         <EditTextfield
           title="Genre"
           value={genreField}
-          onChange={setGenreField}
+          handleChange={setGenreField}
           original={genre}
         />
         <button
