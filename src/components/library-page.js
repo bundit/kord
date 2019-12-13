@@ -7,6 +7,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import SearchBar from "./search-bar";
 import NewPlaylistForm from "./new-playlist-form";
 import AddToPlaylistForm from "./add-to-playlist-form";
+import EditTrackForm from "./edit-track-form";
 import LibrarySectionList from "./library-category-list";
 import TrackList from "./track-list";
 import ArtistList from "./artist-list";
@@ -110,7 +111,10 @@ class Library extends React.Component {
       toggleNewPlaylistForm,
       setNewPlaylistName,
       toggleAddToPlaylistForm,
-      isAddToPlaylistFormOpen
+      isAddToPlaylistFormOpen,
+      trackDropdownSelected,
+      isEditTrackFormOpen,
+      toggleEditTrackForm
     } = this.props;
     const {
       handleChange,
@@ -150,9 +154,15 @@ class Library extends React.Component {
         />
         <AddToPlaylistForm
           show={isAddToPlaylistFormOpen}
-          playlists={Object.keys(playlists)}
+          playlistTitles={Object.keys(playlists)}
           onSubmit={handleSubmitAddToPlaylists}
           onClose={toggleAddToPlaylistForm}
+        />
+        <EditTrackForm
+          show={isEditTrackFormOpen}
+          track={trackDropdownSelected}
+          // onSubmit={}
+          onClose={toggleEditTrackForm}
         />
         <Route
           render={({ location }) => {
@@ -188,6 +198,7 @@ class Library extends React.Component {
                               currentTrackID={currentTrackID}
                               isPlaying={isPlaying}
                               toggleAddToPlaylistForm={toggleAddToPlaylistForm}
+                              toggleEditTrackForm={toggleEditTrackForm}
                             />
                           )}
                         />
@@ -208,6 +219,7 @@ class Library extends React.Component {
                               currentTrackID={currentTrackID}
                               isPlaying={isPlaying}
                               toggleAddToPlaylistForm={toggleAddToPlaylistForm}
+                              toggleEditTrackForm={toggleEditTrackForm}
                             />
                           )}
                         />
@@ -256,14 +268,24 @@ Library.propTypes = {
   setNewPlaylistName: PropTypes.func.isRequired,
   isAddToPlaylistFormOpen: PropTypes.bool,
   toggleAddToPlaylistForm: PropTypes.func.isRequired,
-  addToPlaylists: PropTypes.func.isRequired
+  addToPlaylists: PropTypes.func.isRequired,
+  // eslint-disable-next-line
+  trackDropdownSelected: PropTypes.object,
+  isEditTrackFormOpen: PropTypes.bool,
+  toggleEditTrackForm: PropTypes.func.isRequired
 };
 
 Library.defaultProps = {
   query: "",
   newPlaylistName: "",
   isNewPlaylistFormOpen: false,
-  isAddToPlaylistFormOpen: false
+  isAddToPlaylistFormOpen: false,
+  isEditTrackFormOpen: false,
+  trackDropdownSelected: {
+    title: "Title",
+    artist: { name: "Artist" },
+    genre: "Genre"
+  }
 };
 
 const mapStateToProps = state => ({
@@ -275,7 +297,9 @@ const mapStateToProps = state => ({
   isPlaying: state.musicPlayer.isPlaying,
   isNewPlaylistFormOpen: state.music.isNewPlaylistFormOpen,
   isAddToPlaylistFormOpen: state.music.isAddToPlaylistFormOpen,
-  newPlaylistName: state.music.newPlaylistName
+  newPlaylistName: state.music.newPlaylistName,
+  trackDropdownSelected: state.music.trackDropdownSelected,
+  isEditTrackFormOpen: state.music.isEditTrackFormOpen
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -285,10 +309,7 @@ const mapDispatchToProps = dispatch => ({
       type: "SET_LIB_QUERY",
       payload: query
     }),
-  resetQuery: () =>
-    dispatch({
-      type: "RESET_LIB_QUERY"
-    }),
+  resetQuery: () => dispatch({ type: "RESET_LIB_QUERY" }),
   playTrack: track =>
     dispatch({
       type: "SET_TRACK",
@@ -299,10 +320,7 @@ const mapDispatchToProps = dispatch => ({
       type: "SET_QUEUE",
       payload: list
     }),
-  toggleNewPlaylistForm: () =>
-    dispatch({
-      type: "TOGGLE_NEW_PLAYLIST_FORM"
-    }),
+  toggleNewPlaylistForm: () => dispatch({ type: "TOGGLE_NEW_PLAYLIST_FORM" }),
   setNewPlaylistName: name =>
     dispatch({
       type: "SET_NEW_PLAYLIST_NAME",
@@ -322,6 +340,11 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: "ADD_TO_PLAYLISTS",
       payload: map
+    }),
+  toggleEditTrackForm: track =>
+    dispatch({
+      type: "TOGGLE_EDIT_TRACK_FORM",
+      payload: track
     }),
   dispatch
 });

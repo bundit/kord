@@ -7,7 +7,8 @@ import {
   TOGGLE_ADD_PLAYLIST_FORM,
   ADD_TO_PLAYLISTS,
   SET_NEW_PLAYLIST_NAME,
-  CREATE_NEW_PLAYLIST
+  CREATE_NEW_PLAYLIST,
+  TOGGLE_EDIT_TRACK_FORM
 } from "../actions/types";
 import compareSongs from "../../utils/compareSongs";
 import compareArtists from "../../utils/compareArtists";
@@ -19,9 +20,10 @@ const initialState = {
   playlists: {},
   genres: [],
   isNewPlaylistFormOpen: false,
-  isAddToPlaylistFormOpen: true,
+  isAddToPlaylistFormOpen: false,
+  isEditTrackFormOpen: false,
   newPlaylistName: "",
-  currentAddToPlaylistSong: ""
+  trackDropdownSelected: null
 };
 
 export default function(state = initialState, action) {
@@ -187,7 +189,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         isAddToPlaylistFormOpen: !state.isAddToPlaylistFormOpen,
-        currentAddToPlaylistSong: action.payload
+        trackDropdownSelected: action.payload
       };
     }
 
@@ -201,7 +203,7 @@ export default function(state = initialState, action) {
 
         newPlaylists[title] = {
           ...prevList,
-          list: [...prevList.list, state.currentAddToPlaylistSong]
+          list: [...prevList.list, state.trackDropdownSelected]
         };
       });
 
@@ -211,6 +213,14 @@ export default function(state = initialState, action) {
           ...state.playlists,
           ...newPlaylists
         }
+      };
+    }
+
+    case TOGGLE_EDIT_TRACK_FORM: {
+      return {
+        ...state,
+        isEditTrackFormOpen: !state.isEditTrackFormOpen,
+        trackDropdownSelected: action.payload
       };
     }
 

@@ -37,7 +37,8 @@ const TrackItem = ({
   addToLibrary,
   isActive,
   isPlaying,
-  toggleAddToPlaylistForm
+  toggleAddToPlaylistForm,
+  toggleEditTrackForm
 }) => {
   const {
     title,
@@ -141,9 +142,7 @@ const TrackItem = ({
                 toggleDropdown();
                 e.stopPropagation();
               }}
-              style={{
-                color: `${isDropdownOpen ? "red" : "black"}`
-              }}
+              style={{ color: `${isDropdownOpen ? "red" : "black"}` }}
             >
               <FontAwesomeIcon icon={faEllipsisH} />
             </button>
@@ -154,7 +153,7 @@ const TrackItem = ({
             <button
               className={styles.dropdownOption}
               onClick={e => {
-                toggleAddToPlaylistForm();
+                toggleAddToPlaylistForm(track);
                 toggleDropdown();
                 e.stopPropagation();
               }}
@@ -165,7 +164,15 @@ const TrackItem = ({
               </span>
               <span>Add to Playlist</span>
             </button>
-            <button className={styles.dropdownOption} type="button">
+            <button
+              className={styles.dropdownOption}
+              onClick={e => {
+                toggleEditTrackForm(track);
+                toggleDropdown();
+                e.stopPropagation();
+              }}
+              type="button"
+            >
               <span>
                 <FontAwesomeIcon icon={faPen} />
               </span>
@@ -189,16 +196,15 @@ TrackItem.propTypes = {
     title: PropTypes.string.isRequired,
     img: PropTypes.string,
     duration: PropTypes.number.isRequired,
-    artist: PropTypes.shape({
-      name: PropTypes.string.isRequired
-    })
+    artist: PropTypes.shape({ name: PropTypes.string.isRequired })
   }).isRequired,
   search: PropTypes.bool,
   addToLibrary: PropTypes.func,
   handlePlay: PropTypes.func.isRequired,
   isActive: PropTypes.bool.isRequired,
   isPlaying: PropTypes.bool.isRequired,
-  toggleAddToPlaylistForm: PropTypes.func.isRequired
+  toggleAddToPlaylistForm: PropTypes.func.isRequired,
+  toggleEditTrackForm: PropTypes.func.isRequired
 };
 
 TrackItem.defaultProps = {

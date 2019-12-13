@@ -9,7 +9,11 @@ import styles from "../styles/library.module.css";
 const Modal = ({ show, onClose, children }) => (
   <>
     {show && (
-      <div className={styles.backdrop} role="presentation" onClick={onClose} />
+      <div
+        className={styles.backdrop}
+        role="presentation"
+        onClick={() => onClose()}
+      />
     )}
     <CSSTransition
       in={show}
@@ -22,11 +26,11 @@ const Modal = ({ show, onClose, children }) => (
         role="presentation"
         onClick={e => e.stopPropagation()}
       >
-        <button onClick={onClose} type="button">
+        <button onClick={() => onClose()} type="button">
           <FontAwesomeIcon icon={faTimes} size="2x" />
         </button>
 
-        <div>{children}</div>
+        <div className={styles.modalChildrenContainer}>{children}</div>
       </div>
     </CSSTransition>
   </>

@@ -231,6 +231,10 @@
   z-index: 4;
 }
 
+.modalChildrenContainer {
+  width: inherit;
+}
+
 .modal > button {
   align-self: flex-end;
 }
@@ -238,6 +242,7 @@
 .playlistForm {
   display: flex;
   flex-direction: column;
+  padding: 1rem;
 }
 
 .newPlaylistFormLabel > input,
@@ -251,7 +256,6 @@
 .playlistForm input[type="text"] {
   width: 100%;
   padding: 0.5rem;
-
   border-radius: 1rem;
   border: none;
   background: #eee;
@@ -273,7 +277,8 @@
 }
 
 .checkboxLabel,
-.textboxLabel {
+.textboxLabel,
+.editTextLabel {
   display: flex;
   border-bottom: 1px #eee solid;
   white-space: nowrap;
@@ -311,6 +316,26 @@
 
 .checkboxLabel > *:last-child {
   margin-left: auto;
+}
+
+.editTextLabel {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+}
+
+.editTextLabel > span {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.editTextLabel > span > svg {
+  float: right;
+}
+
+.editTextLabel input[type="text"] {
+  width: inherit;
 }
 
 @keyframes mainBar {
