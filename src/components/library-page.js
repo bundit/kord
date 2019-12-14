@@ -172,6 +172,7 @@ class Library extends React.Component {
         <DeleteTrackForm
           show={isDeleteTrackFormOpen}
           onSubmit={submitDeleteTrack}
+          track={trackDropdownSelected}
           onClose={toggleDeleteTrackForm}
         />
         <Route

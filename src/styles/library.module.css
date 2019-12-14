@@ -239,6 +239,10 @@
   align-self: flex-end;
 }
 
+.modal > button:active {
+  color: red;
+}
+
 .playlistForm {
   display: flex;
   flex-direction: column;
@@ -336,6 +340,22 @@
 
 .editTextLabel input[type="text"] {
   width: inherit;
+}
+
+.confirmWrapper {
+  position: relative;
+  height: 10rem;
+  top: 50%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.confirmWrapper button {
+  align-self: center;
+  height: auto;
+  background-color: black;
+  border-radius: 1rem;
+  color: white;
 }
 
 @keyframes mainBar {
