@@ -8,6 +8,7 @@ import SearchBar from "./search-bar";
 import NewPlaylistForm from "./new-playlist-form";
 import AddToPlaylistForm from "./add-to-playlist-form";
 import EditTrackForm from "./edit-track-form";
+import DeleteTrackForm from "./delete-track-form";
 import LibrarySectionList from "./library-category-list";
 import TrackList from "./track-list";
 import ArtistList from "./artist-list";
@@ -115,7 +116,10 @@ class Library extends React.Component {
       trackDropdownSelected,
       isEditTrackFormOpen,
       toggleEditTrackForm,
-      submitTrackEdit
+      submitTrackEdit,
+      isDeleteTrackFormOpen,
+      toggleDeleteTrackForm,
+      submitDeleteTrack
     } = this.props;
     const {
       handleChange,
@@ -165,6 +169,11 @@ class Library extends React.Component {
           onSubmit={submitTrackEdit}
           onClose={toggleEditTrackForm}
         />
+        <DeleteTrackForm
+          show={isDeleteTrackFormOpen}
+          onSubmit={submitDeleteTrack}
+          onClose={toggleDeleteTrackForm}
+        />
         <Route
           render={({ location }) => {
             const { pathname } = location;
@@ -200,6 +209,7 @@ class Library extends React.Component {
                               isPlaying={isPlaying}
                               toggleAddToPlaylistForm={toggleAddToPlaylistForm}
                               toggleEditTrackForm={toggleEditTrackForm}
+                              toggleDeleteTrackForm={toggleDeleteTrackForm}
                             />
                           )}
                         />
@@ -221,6 +231,7 @@ class Library extends React.Component {
                               isPlaying={isPlaying}
                               toggleAddToPlaylistForm={toggleAddToPlaylistForm}
                               toggleEditTrackForm={toggleEditTrackForm}
+                              toggleDeleteTrackForm={toggleDeleteTrackForm}
                             />
                           )}
                         />
@@ -274,7 +285,10 @@ Library.propTypes = {
   trackDropdownSelected: PropTypes.object,
   isEditTrackFormOpen: PropTypes.bool,
   toggleEditTrackForm: PropTypes.func.isRequired,
-  submitTrackEdit: PropTypes.func.isRequired
+  submitTrackEdit: PropTypes.func.isRequired,
+  toggleDeleteTrackForm: PropTypes.func.isRequired,
+  isDeleteTrackFormOpen: PropTypes.bool,
+  submitDeleteTrack: PropTypes.func.isRequired
 };
 
 Library.defaultProps = {
@@ -283,6 +297,7 @@ Library.defaultProps = {
   isNewPlaylistFormOpen: false,
   isAddToPlaylistFormOpen: false,
   isEditTrackFormOpen: false,
+  isDeleteTrackFormOpen: false,
   trackDropdownSelected: {
     title: "Title",
     artist: { name: "Artist" },
@@ -301,7 +316,8 @@ const mapStateToProps = state => ({
   isAddToPlaylistFormOpen: state.music.isAddToPlaylistFormOpen,
   newPlaylistName: state.music.newPlaylistName,
   trackDropdownSelected: state.music.trackDropdownSelected,
-  isEditTrackFormOpen: state.music.isEditTrackFormOpen
+  isEditTrackFormOpen: state.music.isEditTrackFormOpen,
+  isDeleteTrackFormOpen: state.music.isDeleteTrackFormOpen
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -353,6 +369,12 @@ const mapDispatchToProps = dispatch => ({
       type: "EDIT_TRACK",
       payload: newEdit
     }),
+  toggleDeleteTrackForm: track =>
+    dispatch({
+      type: "TOGGLE_DELETE_TRACK_FORM",
+      payload: track
+    }),
+  submitDeleteTrack: () => dispatch({ type: "DELETE_TRACK" }),
   dispatch
 });
 

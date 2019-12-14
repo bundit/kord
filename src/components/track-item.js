@@ -38,7 +38,8 @@ const TrackItem = ({
   isActive,
   isPlaying,
   toggleAddToPlaylistForm,
-  toggleEditTrackForm
+  toggleEditTrackForm,
+  toggleDeleteTrackForm
 }) => {
   const {
     title,
@@ -178,7 +179,15 @@ const TrackItem = ({
               </span>
               <span>Edit Track</span>
             </button>
-            <button className={styles.dropdownOption} type="button">
+            <button
+              className={styles.dropdownOption}
+              onClick={e => {
+                toggleDeleteTrackForm(track);
+                toggleDropdown();
+                e.stopPropagation();
+              }}
+              type="button"
+            >
               <span>
                 <FontAwesomeIcon icon={faTrash} />
               </span>
@@ -204,7 +213,8 @@ TrackItem.propTypes = {
   isActive: PropTypes.bool.isRequired,
   isPlaying: PropTypes.bool.isRequired,
   toggleAddToPlaylistForm: PropTypes.func.isRequired,
-  toggleEditTrackForm: PropTypes.func.isRequired
+  toggleEditTrackForm: PropTypes.func.isRequired,
+  toggleDeleteTrackForm: PropTypes.func.isRequired
 };
 
 TrackItem.defaultProps = {
