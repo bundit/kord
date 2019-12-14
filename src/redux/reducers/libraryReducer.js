@@ -8,10 +8,13 @@ import {
   ADD_TO_PLAYLISTS,
   SET_NEW_PLAYLIST_NAME,
   CREATE_NEW_PLAYLIST,
-  TOGGLE_EDIT_TRACK_FORM
+  TOGGLE_EDIT_TRACK_FORM,
+  EDIT_TRACK
 } from "../actions/types";
+import insertInPlace from "../../utils/insertInPlace";
 import compareSongs from "../../utils/compareSongs";
 import compareArtists from "../../utils/compareArtists";
+import compareGenres from "../../utils/compareGenres";
 
 const initialState = {
   query: "",
@@ -23,7 +26,7 @@ const initialState = {
   isAddToPlaylistFormOpen: false,
   isEditTrackFormOpen: false,
   newPlaylistName: "",
-  trackDropdownSelected: null
+  trackDropdownSelected: undefined
 };
 
 export default function(state = initialState, action) {
@@ -88,73 +91,24 @@ export default function(state = initialState, action) {
       const newSong = action.payload;
       const newArtist = newSong.artist;
       const newGenre = newSong.genre;
+      const newGenreList = state.genres;
 
-      let i = 0;
-      let compare = 1;
-
-      // Find alphabetical position of new song and insert it in place
-      while (i < newLib.length) {
-        compare = compareSongs(newSong, newLib[i]);
-
-        // Song already exists in library
-        if (compare === 0) {
-          break;
-
-          // else if song fits in this position
-        } else if (compare < 0) {
-          newLib.splice(i, 0, newSong);
-          break;
-
-          // Else song goes after this position, continue =>
-        } else if (compare > 0) i += 1;
+      // Ignore duplicates
+      if (state.library.some(track => track.id === newSong.id)) {
+        return state;
       }
 
-      // We reached the end of the list, song goes at the end
-      // We may also reach this condition if the list is empty
-      if (i === newLib.length) {
-        newLib.push(newSong);
-      }
-
-      i = 0;
-      compare = 1;
-
-      // Iterate through the list of artists to insert the new artist at the correct position
-      while (i < newArtistList.length) {
-        compare = compareArtists(newArtist, newArtistList[i]);
-
-        // Artist already exists
-        if (compare === 0) {
-          // Append the result incase there is a new source (soundcloud, spotify, etc)
-          newArtistList[i] = {
-            ...newArtistList[i],
-            ...newArtist
-          };
-          break;
-
-          // Else if position found
-        } else if (compare < 0) {
-          newArtistList.splice(i, 0, newArtist);
-          break;
-
-          // Else artist goes after this position, continue =>
-        } else if (compare > 0) i += 1;
-      }
-
-      // We reached the end of the list, artist goes at the end
-      // We may also reach this condition if the list is empty
-      if (i === newArtistList.length) {
-        newArtistList.push(newArtist);
+      insertInPlace(newLib, newSong, compareSongs);
+      insertInPlace(newArtistList, newArtist, compareArtists);
+      if (newGenre && newGenre.length) {
+        insertInPlace(newGenreList, newGenre, compareGenres);
       }
 
       return {
         ...state,
         library: newLib,
         artists: newArtistList,
-        // Don't add empty genres
-        genres:
-          newGenre.length > 0
-            ? [...new Set([...state.genres, newGenre])].sort()
-            : state.genres
+        genres: newGenreList
       };
     }
 
@@ -221,6 +175,34 @@ export default function(state = initialState, action) {
         ...state,
         isEditTrackFormOpen: !state.isEditTrackFormOpen,
         trackDropdownSelected: action.payload
+      };
+    }
+
+    case EDIT_TRACK: {
+      const { trackEdit, artistEdit } = action.payload;
+      const { library, trackDropdownSelected } = state;
+
+      const updatedTrack = {
+        ...trackDropdownSelected,
+        ...trackEdit,
+        artist: {
+          ...trackDropdownSelected.artist,
+          artistEdit
+        }
+      };
+
+      // Remove the old track
+      const index = library.findIndex(
+        track => compareSongs(track, trackDropdownSelected) === 0
+      );
+      const updatedLib = library.slice();
+      updatedLib.splice(index, 1);
+
+      insertInPlace(updatedLib, updatedTrack, compareSongs);
+
+      return {
+        ...state,
+        library: updatedLib
       };
     }
 
