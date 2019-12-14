@@ -9,7 +9,9 @@ import {
   SET_NEW_PLAYLIST_NAME,
   CREATE_NEW_PLAYLIST,
   TOGGLE_EDIT_TRACK_FORM,
-  EDIT_TRACK
+  EDIT_TRACK,
+  DELETE_TRACK,
+  TOGGLE_DELETE_TRACK_FORM
 } from "../actions/types";
 import insertInPlace from "../../utils/insertInPlace";
 import compareSongs from "../../utils/compareSongs";
@@ -25,6 +27,7 @@ const initialState = {
   isNewPlaylistFormOpen: false,
   isAddToPlaylistFormOpen: false,
   isEditTrackFormOpen: false,
+  isDeleteTrackFormOpen: false,
   newPlaylistName: "",
   trackDropdownSelected: undefined
 };
@@ -200,9 +203,12 @@ export default function(state = initialState, action) {
       insertInPlace(updatedLib, updatedTrack, compareSongs);
 
       // Update artist list if a change was made
-      const updatedArtistList = artists.slice();
+      // We don't slice here incase no changes need to be made, the old reference can be used
+      let updatedArtistList = artists;
       if (oldArtistName !== artistEdit.name) {
         if (!artists.find(artist => artist.name === artistEdit.name)) {
+          // Only create a new reference if changes need to be made
+          updatedArtistList = artists.slice();
           insertInPlace(updatedArtistList, updatedArtist, compareArtists);
         }
       }
@@ -222,6 +228,43 @@ export default function(state = initialState, action) {
         library: updatedLib,
         artists: updatedArtistList,
         genres: updatedGenres
+      };
+    }
+
+    case TOGGLE_DELETE_TRACK_FORM: {
+      return {
+        ...state,
+        trackDropdownSelected: action.payload,
+        isDeleteTrackFormOpen: !state.isDeleteTrackFormOpen
+      };
+    }
+
+    case DELETE_TRACK: {
+      const deleteTrackID = state.trackDropdownSelected.id;
+      const deleteArtist = state.trackDropdownSelected.artist;
+      const { library, artists } = state;
+
+      const updatedLib = library.filter(track => track.id !== deleteTrackID);
+      // We don't create a new reference here incase the artist list
+      // does not need to be changed.
+      let updatedArtists = artists;
+
+      // If no other song with this artist exists
+      // Delete it
+      if (
+        !updatedLib.some(
+          song => compareArtists(song.artist, deleteArtist) === 0
+        )
+      ) {
+        updatedArtists = artists.filter(
+          artist => compareArtists(artist, deleteArtist) !== 0
+        );
+      }
+
+      return {
+        ...state,
+        library: updatedLib,
+        artists: updatedArtists
       };
     }
 
