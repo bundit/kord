@@ -25,7 +25,6 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
   const [checkedPlaylists, setCheckedPlaylists] = useState(
     initAttributesFromList(playlistTitles)
   );
-  const [isOneChecked, setIsOneChecked] = useState(false);
 
   const [newPlaylistField, setNewPlaylistField] = useState("");
 
@@ -36,9 +35,6 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
     };
 
     setCheckedPlaylists(newValues);
-
-    // Check to see if at least one is checked, they are booleans already
-    setIsOneChecked(Object.values(newValues).some(isTrue => isTrue));
   };
 
   const prepareFormData = () => {
@@ -61,6 +57,10 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
     setNewPlaylistField("");
     setCheckedPlaylists(initAttributesFromList(playlistTitles));
   };
+
+  const userMadeChanges = () =>
+    Object.values(checkedPlaylists).some(isTrue => isTrue) ||
+    newPlaylistField.length;
 
   return (
     <Modal show={show} onClose={onClose}>
@@ -99,7 +99,7 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
           ))}
         </div>
         <button
-          style={{ visibility: isOneChecked ? "visible" : "hidden" }}
+          style={{ visibility: userMadeChanges() ? "visible" : "hidden" }}
           type="submit"
         >
           Add
