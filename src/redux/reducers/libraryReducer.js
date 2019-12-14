@@ -32,42 +32,36 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case IMPORT_SC_LIKES: {
-      const newLib = [...state.library, ...action.payload].sort(
-        (track1, track2) => track1.title.localeCompare(track2.title)
-      );
+      const newLib = [...state.library, ...action.payload]
+        .sort((track1, track2) => compareSongs(track1, track2))
+        .filter(
+          (track, index, arr) =>
+            arr.findIndex(element => track.id === element.id) === index
+        );
 
-      let i = 0;
-      // Remove song duplicates
-      while (i < newLib.length - 1) {
-        const song1 = newLib[i];
-        const song2 = newLib[i + 1];
-        if (compareSongs(song1, song2) === 0) {
-          newLib.splice(i, 1);
-        } else {
-          i += 1;
-        }
-      }
+      const newArtists = [...state.artists, ...newLib.map(song => song.artist)]
+        .sort((artist1, artist2) => compareArtists(artist1, artist2))
+        .filter(
+          (artist, index, arr) =>
+            arr.findIndex(element => compareArtists(artist, element) === 0) ===
+            index
+        );
 
-      const newArtists = newLib
-        .map(song => song.artist)
-        .sort((artist1, artist2) => compareArtists(artist1, artist2));
-
-      i = 0;
-      // Remove artist duplicates
-      while (i < newArtists.length - 1) {
-        const artist1 = newArtists[i];
-        const artist2 = newArtists[i + 1];
-        if (compareArtists(artist1, artist2) === 0) {
-          newArtists.splice(i, 1);
-        } else {
-          i += 1;
-        }
-      }
+      const newGenres = [...state.genres, ...newLib.map(song => song.genre)]
+        .sort((genre1, genre2) => compareGenres(genre1, genre2))
+        .filter(
+          (genre, index, arr) =>
+            genre &&
+            genre.length &&
+            arr.findIndex(element => compareGenres(genre, element) === 0) ===
+              index
+        );
 
       return {
         ...state,
         library: newLib,
-        artists: newArtists
+        artists: newArtists,
+        genres: newGenres
       };
     }
 
@@ -199,6 +193,8 @@ export default function(state = initialState, action) {
       updatedLib.splice(index, 1);
 
       insertInPlace(updatedLib, updatedTrack, compareSongs);
+
+      // TODO update artist list and genre list
 
       return {
         ...state,
