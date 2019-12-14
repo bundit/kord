@@ -9,6 +9,7 @@ export const ADD_TO_PLAYLISTS = "ADD_TO_PLAYLISTS";
 export const SET_NEW_PLAYLIST_NAME = "SET_NEW_PLAYLIST_NAME";
 export const CREATE_NEW_PLAYLIST = "CREATE_NEW_PLAYLIST";
 export const TOGGLE_EDIT_TRACK_FORM = "TOGGLE_EDIT_TRACK_FORM";
+export const EDIT_TRACK = "EDIT_TRACK";
 
 // User Reducer
 export const SET_SC_USER = "SET_SC_USER";

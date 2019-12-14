@@ -174,18 +174,23 @@ export default function(state = initialState, action) {
 
     case EDIT_TRACK: {
       const { trackEdit, artistEdit } = action.payload;
-      const { library, trackDropdownSelected } = state;
+      const { library, artists, trackDropdownSelected, genres } = state;
+      const {
+        artist: { name: oldArtistName }
+      } = trackDropdownSelected;
+
+      const updatedArtist = {
+        ...trackDropdownSelected.artist,
+        ...artistEdit
+      };
 
       const updatedTrack = {
         ...trackDropdownSelected,
         ...trackEdit,
-        artist: {
-          ...trackDropdownSelected.artist,
-          artistEdit
-        }
+        artist: updatedArtist
       };
 
-      // Remove the old track
+      // Remove the old track and insert new one
       const index = library.findIndex(
         track => compareSongs(track, trackDropdownSelected) === 0
       );
@@ -194,11 +199,29 @@ export default function(state = initialState, action) {
 
       insertInPlace(updatedLib, updatedTrack, compareSongs);
 
-      // TODO update artist list and genre list
+      // Update artist list if a change was made
+      const updatedArtistList = artists.slice();
+      if (oldArtistName !== artistEdit.name) {
+        if (!artists.find(artist => artist.name === artistEdit.name)) {
+          insertInPlace(updatedArtistList, updatedArtist, compareArtists);
+        }
+      }
+
+      // Update list of genres
+      const updatedGenres = [...genres.slice(), trackEdit.genre]
+        .sort((genre1, genre2) => compareGenres(genre1, genre2))
+        .filter(
+          (genre, i, arr) =>
+            genre &&
+            genre.length &&
+            arr.findIndex(element => compareGenres(genre, element) === 0) === i
+        );
 
       return {
         ...state,
-        library: updatedLib
+        library: updatedLib,
+        artists: updatedArtistList,
+        genres: updatedGenres
       };
     }
 
