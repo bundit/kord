@@ -5,7 +5,7 @@ import Modal from "./modal";
 import EditTextfield from "./edit-textfield";
 import styles from "../styles/library.module.css";
 
-const EditTrackForm = ({ show, onClose, track }) => {
+const EditTrackForm = ({ show, onClose, track, onSubmit }) => {
   const {
     title,
     artist: { name: artistName },
@@ -23,13 +23,28 @@ const EditTrackForm = ({ show, onClose, track }) => {
     setGenreField(genre);
   }, [title, artistName, genre]);
 
+  const getEdittedText = () => ({
+    trackEdit: { title: titleField, genre: genreField },
+    artistEdit: { name: artistField }
+  });
+
+  const userMadeChanges = () =>
+    title !== titleField || artistName !== artistField || genre !== genreField;
+
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    if (userMadeChanges()) {
+      onSubmit(getEdittedText());
+    }
+
+    onClose();
+  };
+
   return (
     <Modal show={show} onClose={onClose}>
       <h1 className="text-center">Edit Track</h1>
-      <form
-        className={styles.playlistForm}
-        // onSubmit={}
-      >
+      <form className={styles.playlistForm} onSubmit={handleSubmit}>
         <EditTextfield
           title="Title"
           value={titleField}
@@ -49,10 +64,10 @@ const EditTrackForm = ({ show, onClose, track }) => {
           original={genre}
         />
         <button
-          // style={{ visibility: isOneChecked ? "visible" : "hidden" }}
+          style={{ visibility: userMadeChanges() ? "visible" : "hidden" }}
           type="submit"
         >
-          Add
+          Finish Edit
         </button>
       </form>
     </Modal>
@@ -66,7 +81,8 @@ EditTrackForm.propTypes = {
     title: PropTypes.string,
     artist: PropTypes.shape({ name: PropTypes.string }),
     genre: PropTypes.string
-  })
+  }),
+  onSubmit: PropTypes.func.isRequired
 };
 
 EditTrackForm.defaultProps = {

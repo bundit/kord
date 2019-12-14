@@ -36,7 +36,7 @@ class TrackList extends React.Component {
         {library &&
           library.map(track => (
             <TrackItem
-              key={track.id}
+              key={`${track.id}${track.source}`}
               track={track}
               search={search}
               handlePlay={() => handlePlay(track)}

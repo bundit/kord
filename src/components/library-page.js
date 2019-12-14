@@ -114,7 +114,8 @@ class Library extends React.Component {
       isAddToPlaylistFormOpen,
       trackDropdownSelected,
       isEditTrackFormOpen,
-      toggleEditTrackForm
+      toggleEditTrackForm,
+      submitTrackEdit
     } = this.props;
     const {
       handleChange,
@@ -161,7 +162,7 @@ class Library extends React.Component {
         <EditTrackForm
           show={isEditTrackFormOpen}
           track={trackDropdownSelected}
-          // onSubmit={}
+          onSubmit={submitTrackEdit}
           onClose={toggleEditTrackForm}
         />
         <Route
@@ -272,7 +273,8 @@ Library.propTypes = {
   // eslint-disable-next-line
   trackDropdownSelected: PropTypes.object,
   isEditTrackFormOpen: PropTypes.bool,
-  toggleEditTrackForm: PropTypes.func.isRequired
+  toggleEditTrackForm: PropTypes.func.isRequired,
+  submitTrackEdit: PropTypes.func.isRequired
 };
 
 Library.defaultProps = {
@@ -345,6 +347,11 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: "TOGGLE_EDIT_TRACK_FORM",
       payload: track
+    }),
+  submitTrackEdit: newEdit =>
+    dispatch({
+      type: "EDIT_TRACK",
+      payload: newEdit
     }),
   dispatch
 });
