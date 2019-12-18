@@ -1,9 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+
 import styles from "../../styles/header.module.css";
 
-function Header({ location }) {
+function Header({ location, history }) {
   const { pathname } = location;
+  const baseUrls = ["Library", "Search", "More"];
 
   // Get only last route
   let title = pathname.slice(pathname.lastIndexOf("/") + 1);
@@ -16,9 +20,17 @@ function Header({ location }) {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <h1>
-          <div>{title}</div>
-        </h1>
+        <div className={styles.placeholder}>
+          {!baseUrls.includes(title) && (
+            <button type="button" onClick={() => history.goBack()}>
+              <FontAwesomeIcon icon={faAngleLeft} size="3x" />
+            </button>
+          )}
+        </div>
+
+        <h1>{title}</h1>
+
+        <div className={styles.placeholder} />
       </div>
     </header>
   );
@@ -27,6 +39,9 @@ function Header({ location }) {
 Header.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired
+  }).isRequired,
+  history: PropTypes.shape({
+    goBack: PropTypes.func
   }).isRequired
 };
 

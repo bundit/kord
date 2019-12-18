@@ -12,7 +12,18 @@
 
 .container {
   width: 100%;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder {
+  flex: 1;
+}
+
+.container button:first-child {
+  text-align: left;
+  color: red;
 }
 
 h1 {
