@@ -16,9 +16,6 @@ import ListOfPlaylists from "./playlist-list";
 import { importScLikes } from "../redux/actions/libraryActions";
 import fadeTransition from "../styles/fade.module.css";
 
-// For restoring scroll position when component is unmounted
-let libraryScrollPosition = null;
-
 class Library extends React.Component {
   constructor(props) {
     super(props);
@@ -31,17 +28,6 @@ class Library extends React.Component {
     this.handleSubmitAddToPlaylists = this.handleSubmitAddToPlaylists.bind(
       this
     );
-  }
-
-  componentDidMount() {
-    if (libraryScrollPosition) {
-      document.querySelector("html").scrollTop = libraryScrollPosition;
-    }
-    // this.props.importScLikes("bundit");
-  }
-
-  componentWillUnmount() {
-    libraryScrollPosition = document.querySelector("html").scrollTop;
   }
 
   handleChange(event) {
