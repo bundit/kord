@@ -1,11 +1,12 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "../../styles/header.module.css";
 
-function Header({ location, history }) {
+function Header({ location }) {
   const { pathname } = location;
   const baseUrls = ["Library", "Search", "More"];
 
@@ -17,14 +18,20 @@ function Header({ location, history }) {
     title = `${title[0].toUpperCase()}${title.slice(1)}`;
   }
 
+  // Previous route within tab
+  const prevRoute = pathname.slice(0, pathname.lastIndexOf("/"));
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.placeholder}>
           {!baseUrls.includes(title) && (
-            <button type="button" onClick={() => history.goBack()}>
+            <NavLink
+              style={{ color: "red", marginLeft: "0.3rem" }}
+              to={`${prevRoute}`}
+            >
               <FontAwesomeIcon icon={faAngleLeft} size="3x" />
-            </button>
+            </NavLink>
           )}
         </div>
 
@@ -39,9 +46,6 @@ function Header({ location, history }) {
 Header.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired
-  }).isRequired,
-  history: PropTypes.shape({
-    goBack: PropTypes.func
   }).isRequired
 };
 
