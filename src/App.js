@@ -6,9 +6,11 @@ import Footer from "./components/layout/footer";
 import Player from "./components/player";
 import Library from "./components/library-page";
 import Search from "./components/search-page";
+import NavHistory from "./components/nav-history";
 
 const App = () => (
   <BrowserRouter>
+    <NavHistory />
     <Redirect from="/" to="/library" />
     <Route path="/" component={Header} />
     <main className="content">
