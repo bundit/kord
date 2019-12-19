@@ -14,6 +14,7 @@ export const EDIT_TRACK = "EDIT_TRACK";
 export const DELETE_TRACK = "DELETE_TRACK";
 
 // User Reducer
+export const PUSH_LIB_ROUTE = "PUSH_LIB_ROUTE";
 export const SET_SC_USER = "SET_SC_USER";
 
 // Music Player Reducer
