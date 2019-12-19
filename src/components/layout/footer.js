@@ -12,66 +12,84 @@ import {
 import slide from "../../styles/slide.module.css";
 import styles from "../../styles/footer.module.css";
 
-const Footer = ({ isExpanded }) => (
-  <CSSTransition
-    in={!isExpanded}
-    timeout={400}
-    classNames={slide}
-    unmountOnExit
-  >
-    <footer className={styles.footer}>
-      <nav>
-        <ul className={styles.navUl}>
-          <li>
-            <NavLink
-              to="/library"
-              className={styles.navLink}
-              activeClassName={styles.active}
-            >
-              <div className={styles.navWrap}>
-                <FontAwesomeIcon icon={faMusic} />
-                Library
-              </div>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              exact
-              to="/search"
-              className={styles.navLink}
-              activeClassName={styles.active}
-            >
-              <div className={styles.navWrap}>
-                <FontAwesomeIcon icon={faSearch} />
-                Search
-              </div>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              exact
-              to="/more"
-              className={styles.navLink}
-              activeClassName={styles.active}
-            >
-              <div className={styles.navWrap}>
-                <FontAwesomeIcon icon={faEllipsisH} />
-                More
-              </div>
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
-    </footer>
-  </CSSTransition>
-);
+const Footer = ({ isExpanded, location, libHistory }) => {
+  const { pathname } = location;
+  const pastLibRoute = libHistory[libHistory.length - 1];
+
+  const libNavSecondTap = pastLibRoute === pathname;
+
+  return (
+    <CSSTransition in={!isExpanded} timeout={400} classNames={slide}>
+      <footer className={styles.footer}>
+        <nav>
+          <ul className={styles.navUl}>
+            <li>
+              <NavLink
+                to={`${libNavSecondTap ? "/library" : pastLibRoute}`}
+                className={styles.navLink}
+                activeClassName={styles.active}
+              >
+                <div className={styles.navWrap}>
+                  <FontAwesomeIcon icon={faMusic} />
+                  Library
+                </div>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                exact
+                to="/search"
+                className={styles.navLink}
+                activeClassName={styles.active}
+              >
+                <div className={styles.navWrap}>
+                  <FontAwesomeIcon icon={faSearch} />
+                  Search
+                </div>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                exact
+                to="/more"
+                className={styles.navLink}
+                activeClassName={styles.active}
+              >
+                <div className={styles.navWrap}>
+                  <FontAwesomeIcon icon={faEllipsisH} />
+                  More
+                </div>
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+      </footer>
+    </CSSTransition>
+  );
+};
 
 Footer.propTypes = {
-  isExpanded: PropTypes.bool.isRequired
+  isExpanded: PropTypes.bool.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string
+  }).isRequired,
+  libHistory: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 const mapStateToProps = state => ({
-  isExpanded: state.musicPlayer.isExpanded
+  isExpanded: state.musicPlayer.isExpanded,
+  libHistory: state.user.history.library
 });
 
-export default connect(mapStateToProps)(Footer);
+const mapDispatchToProps = dispatch => ({
+  saveLibRoute: route =>
+    dispatch({
+      type: "SAVE_LIB_ROUTE",
+      payload: route
+    })
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Footer);

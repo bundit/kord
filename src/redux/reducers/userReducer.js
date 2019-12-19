@@ -25,7 +25,7 @@ export default function(state = initialState, action) {
       // If the path is the base then clear history
       const newLibHistory =
         pathname.toLowerCase() === "/library"
-          ? []
+          ? ["/library"]
           : [...state.history.library, pathname];
 
       return {
