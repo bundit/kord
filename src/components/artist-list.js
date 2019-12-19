@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
 import styles from "../styles/library.module.css";
 import ArtistItem from "./artist-item";
 
-const ArtistList = ({ artists }) => (
-  <div className={styles.libraryWrapper} zindex="1">
-    {artists.map(artist => (
-      <ArtistItem key={artist.name} artist={artist} />
-    ))}
-  </div>
-);
+let artistListScrollPosition = null;
+
+const ArtistList = ({ artists }) => {
+  // Save or restore scroll position
+  useEffect(() => {
+    if (artistListScrollPosition) {
+      window.scrollTo(0, artistListScrollPosition);
+    }
+
+    return () => {
+      artistListScrollPosition = window.scrollY;
+    };
+  }, []);
+  return (
+    <div className={styles.libraryWrapper} zindex="1">
+      {artists.map(artist => (
+        <ArtistItem key={artist.name} artist={artist} />
+      ))}
+    </div>
+  );
+};
 
 ArtistList.propTypes = {
   artists: PropTypes.arrayOf(
