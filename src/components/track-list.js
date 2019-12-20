@@ -5,7 +5,15 @@ import { forceCheck } from "react-lazyload";
 import TrackItem from "./track-item";
 import styles from "../styles/library.module.css";
 
+let trackListScrollPosition = null;
+
 class TrackList extends React.Component {
+  componentDidMount() {
+    if (trackListScrollPosition) {
+      window.scroll(0, trackListScrollPosition);
+    }
+  }
+
   componentDidUpdate(prevProps) {
     const { library: currentLibrary } = this.props;
     const { library: prevLibrary } = prevProps;
@@ -16,6 +24,10 @@ class TrackList extends React.Component {
     if (currentLibrary !== prevLibrary) {
       forceCheck();
     }
+  }
+
+  componentWillUnmount() {
+    trackListScrollPosition = window.scrollY;
   }
 
   render() {
