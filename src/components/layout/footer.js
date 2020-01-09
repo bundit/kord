@@ -10,6 +10,7 @@ import {
   faEllipsisH
 } from "@fortawesome/free-solid-svg-icons";
 import slide from "../../styles/slide.module.css";
+import rippleEffect from "../../utils/rippleEffect";
 import styles from "../../styles/footer.module.css";
 
 const Footer = ({ isExpanded, location, libHistory }) => {
@@ -28,6 +29,7 @@ const Footer = ({ isExpanded, location, libHistory }) => {
                 to={`${libNavSecondTap ? "/library" : pastLibRoute}`}
                 className={styles.navLink}
                 activeClassName={styles.active}
+                onClick={rippleEffect}
               >
                 <div className={styles.navWrap}>
                   <FontAwesomeIcon icon={faMusic} />
@@ -41,6 +43,7 @@ const Footer = ({ isExpanded, location, libHistory }) => {
                 to="/search"
                 className={styles.navLink}
                 activeClassName={styles.active}
+                onClick={rippleEffect}
               >
                 <div className={styles.navWrap}>
                   <FontAwesomeIcon icon={faSearch} />
@@ -54,6 +57,7 @@ const Footer = ({ isExpanded, location, libHistory }) => {
                 to="/more"
                 className={styles.navLink}
                 activeClassName={styles.active}
+                onClick={rippleEffect}
               >
                 <div className={styles.navWrap}>
                   <FontAwesomeIcon icon={faEllipsisH} />

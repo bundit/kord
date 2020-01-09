@@ -2,12 +2,10 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  height: 5rem;
+  height: 7rem;
   width: 100%;
   border-top: 1px #eee solid;
   background-color: #fff;
-  padding-bottom: 1.5rem;
-  padding-top: 0.5rem;
   font-family: "Pacifico";
   z-index: 3;
 }
@@ -19,6 +17,7 @@
 /* Icon selector */
 .footer svg {
   font-size: 1.5rem;
+  pointer-events: none;
 }
 
 .navUl {
@@ -41,10 +40,13 @@
 }
 
 .navWrap {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: baseline;
+  padding-top: 1.5rem;
   height: 100%;
 }
 
