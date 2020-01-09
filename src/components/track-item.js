@@ -9,6 +9,7 @@ import {
   faTrash
 } from "@fortawesome/free-solid-svg-icons";
 
+import rippleEffect from "../utils/rippleEffect";
 import truncateString from "../utils/truncateString";
 import msToDuration from "../utils/msToDuration";
 import styles from "../styles/library.module.css";
@@ -49,7 +50,6 @@ const TrackItem = ({
   } = track;
   // Keep a reference to detect clicks outside of target area
   const trackItemRef = useRef();
-
   const [disable, setDisable] = useState(false);
   const handleDisable = () => {
     setDisable(true);
@@ -91,7 +91,10 @@ const TrackItem = ({
       <div
         ref={trackItemRef}
         className={`${styles.trackWrapper} ${isActive && styles.playingNow}`}
-        onClick={handlePlay}
+        onClick={e => {
+          handlePlay();
+          rippleEffect(e);
+        }}
         role="button"
         tabIndex="0"
         onKeyPress={handlePlay}

@@ -76,6 +76,7 @@
   /* z-index: -1; */
   background-color: inherit;
   position: relative;
+  overflow: hidden;
 }
 
 .trackWrapper a {
@@ -85,6 +86,10 @@
 
 .trackWrapper:active {
   background-color: #fcfbf8;
+}
+
+.titleWrapper {
+  pointer-events: none;
 }
 
 .trackDropdown {
