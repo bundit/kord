@@ -88,69 +88,77 @@ const TrackItem = ({
 
   return (
     <LazyLoad height="5rem" once>
-      <div
-        ref={trackItemRef}
-        className={`${styles.trackWrapper} ${isActive && styles.playingNow}`}
-        onClick={e => {
-          handlePlay();
-          rippleEffect(e);
-        }}
-        role="button"
-        tabIndex="0"
-        onKeyPress={handlePlay}
-        onTouchStart={() => {}}
-      >
-        <div className={styles.trackImageWrap}>
-          <img
-            className={styles.trackImage}
-            src={img ? img.replace("large.jpg", "t67x67.jpg") : placeholderImg}
-            alt="track"
-          />
-          {isActive && (
-            <div className={styles.overlay}>
-              <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />
-              <div
-                className={`${styles.bar} ${styles.midBar} ${!isPlaying &&
-                  styles.paused}`}
-              />
-              <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />
-            </div>
-          )}
-        </div>
-
-        <div className={styles.titleWrapper}>
-          <div>
-            <strong>{truncateString(title, 38)}</strong>
+      <div style={{ position: "relative" }}>
+        <div
+          ref={trackItemRef}
+          className={`${styles.trackWrapper} ${isActive && styles.playingNow}`}
+          onClick={e => {
+            handlePlay();
+            rippleEffect(e);
+          }}
+          role="button"
+          tabIndex="0"
+          onKeyPress={handlePlay}
+          onTouchStart={() => {}}
+        >
+          <div className={styles.trackImageWrap}>
+            <img
+              className={styles.trackImage}
+              src={
+                img ? img.replace("large.jpg", "t67x67.jpg") : placeholderImg
+              }
+              alt="track"
+            />
+            {isActive && (
+              <div className={styles.overlay}>
+                <div
+                  className={`${styles.bar} ${!isPlaying && styles.paused}`}
+                />
+                <div
+                  className={`${styles.bar} ${styles.midBar} ${!isPlaying &&
+                    styles.paused}`}
+                />
+                <div
+                  className={`${styles.bar} ${!isPlaying && styles.paused}`}
+                />
+              </div>
+            )}
           </div>
-          <div>{truncateString(artist, 38)}</div>
-        </div>
-        <div className={styles.trackRightControls}>
-          <div className={styles.duration}>{msToDuration(ms)}</div>
-          {search && (
-            <button
-              type="button"
-              onClick={event => {
-                addToLibrary(event, track);
-                toggleAddToPlaylistForm();
-                handleDisable();
-              }}
-              disabled={disable}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </button>
-          )}
-          {!search && (
-            <button
-              type="button"
-              onClick={e => {
-                toggleDropdown();
-                e.stopPropagation();
-              }}
-              style={{ color: `${isDropdownOpen ? "red" : "black"}` }}
-            >
-              <FontAwesomeIcon icon={faEllipsisH} />
-            </button>
-          )}
+
+          <div className={styles.titleWrapper}>
+            <div>
+              <strong>{truncateString(title, 38)}</strong>
+            </div>
+            <div>{truncateString(artist, 38)}</div>
+          </div>
+          <div className={styles.trackRightControls}>
+            <div className={styles.duration}>{msToDuration(ms)}</div>
+            {search && (
+              <button
+                type="button"
+                onClick={event => {
+                  addToLibrary(event, track);
+                  toggleAddToPlaylistForm();
+                  handleDisable();
+                }}
+                disabled={disable}
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </button>
+            )}
+            {!search && (
+              <button
+                type="button"
+                onClick={e => {
+                  toggleDropdown();
+                  e.stopPropagation();
+                }}
+                style={{ color: `${isDropdownOpen ? "red" : "black"}` }}
+              >
+                <FontAwesomeIcon icon={faEllipsisH} />
+              </button>
+            )}
+          </div>
         </div>
         {isDropdownOpen && (
           <div className={styles.trackDropdown}>
