@@ -61,6 +61,10 @@
   /* position: absolute; */
 }
 
+.relativeWrapper {
+  position: relative;
+}
+
 .trackWrapper {
   display: flex;
   flex-direction: row;

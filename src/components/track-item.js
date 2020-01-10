@@ -84,9 +84,8 @@ const TrackItem = ({
 
   return (
     <LazyLoad height="5rem" once>
-      <div style={{ position: "relative" }}>
+      <div ref={trackItemRef} className={styles.relativeWrapper}>
         <div
-          ref={trackItemRef}
           className={`${styles.trackWrapper} ${isActive && styles.playingNow}`}
           onClick={e => {
             handlePlay();
