@@ -2,13 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlus,
-  faEllipsisH,
-  faPen,
-  faTrash
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 
+import TrackDropdown from "./track-dropdown";
 import rippleEffect from "../utils/rippleEffect";
 import truncateString from "../utils/truncateString";
 import msToDuration from "../utils/msToDuration";
@@ -161,50 +157,13 @@ const TrackItem = ({
           </div>
         </div>
         {isDropdownOpen && (
-          <div className={styles.trackDropdown}>
-            <button
-              className={styles.dropdownOption}
-              onClick={e => {
-                toggleAddToPlaylistForm(track);
-                toggleDropdown();
-                e.stopPropagation();
-              }}
-              type="button"
-            >
-              <span>
-                <FontAwesomeIcon icon={faPlus} />
-              </span>
-              <span>Add to Playlist</span>
-            </button>
-            <button
-              className={styles.dropdownOption}
-              onClick={e => {
-                toggleEditTrackForm(track);
-                toggleDropdown();
-                e.stopPropagation();
-              }}
-              type="button"
-            >
-              <span>
-                <FontAwesomeIcon icon={faPen} />
-              </span>
-              <span>Edit Track</span>
-            </button>
-            <button
-              className={styles.dropdownOption}
-              onClick={e => {
-                toggleDeleteTrackForm(track);
-                toggleDropdown();
-                e.stopPropagation();
-              }}
-              type="button"
-            >
-              <span>
-                <FontAwesomeIcon icon={faTrash} />
-              </span>
-              <span>Delete from Library</span>
-            </button>
-          </div>
+          <TrackDropdown
+            toggleAddToPlaylistForm={toggleAddToPlaylistForm}
+            toggleDropdown={toggleDropdown}
+            toggleEditTrackForm={toggleEditTrackForm}
+            toggleDeleteTrackForm={toggleDeleteTrackForm}
+            track={track}
+          />
         )}
       </div>
     </LazyLoad>
