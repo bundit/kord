@@ -108,7 +108,7 @@ export default function(state = initialState, action) {
         ...state,
         currentTrack: nextTrack,
         position: 0,
-        trackLength: nextTrack.duration,
+        duration: nextTrack.duration,
         index: nextIndex,
         isLoaded: false
       };
@@ -123,7 +123,7 @@ export default function(state = initialState, action) {
         ...state,
         currentTrack: prevTrack,
         position: 0,
-        trackLength: prevTrack.duration,
+        duration: prevTrack.duration,
         index: prevIndex,
         isLoaded: false
       };
