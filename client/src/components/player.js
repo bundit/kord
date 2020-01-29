@@ -31,6 +31,23 @@ class Player extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const { setSpotifyAccessToken } = this.props;
+    const { history } = this.props;
+
+    if (window.location.search) {
+      const URLParams = new URLSearchParams(window.location.search);
+      const source = URLParams.get("source");
+
+      if (source === "spotify") {
+        const accessToken = URLParams.get("access_token");
+        setSpotifyAccessToken(accessToken);
+
+        history.push("/more");
+      }
+    }
+  }
+
   componentWillUnmount() {
     // Clear the RAF
     raf.cancel(this.raf);
@@ -316,6 +333,11 @@ const mapDispatchToProps = dispatch => ({
   prevTrack: () =>
     dispatch({
       type: "PREV_TRACK"
+    }),
+  setSpotifyAccessToken: token =>
+    dispatch({
+      type: "SET_SPOTIFY_ACCESS_TOKEN",
+      payload: token
     })
 });
 

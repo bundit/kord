@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 import {
   searchSouncloudTracks,
   searchSoundcloudArtists,
-  loadMoreResults
+  loadMoreResults,
+  searchSpotify
 } from "../redux/actions/searchActions";
 import SearchBar from "./search-bar";
 import TrackList from "./track-list";
@@ -41,10 +42,18 @@ class Search extends React.Component {
   }
 
   async handleSubmit(event) {
-    const { query, searchScTracks, searchScArtists } = this.props;
+    const {
+      query,
+      searchScTracks,
+      searchScArtists,
+      dispatchSearchSpotify,
+      spotifyAccessToken
+    } = this.props;
 
     searchScTracks(query);
     searchScArtists(query);
+    console.log("access_token", spotifyAccessToken);
+    dispatchSearchSpotify(query, "track,artist", spotifyAccessToken);
 
     event.preventDefault();
   }
@@ -138,7 +147,8 @@ const mapStateToProps = state => ({
   results: state.search.results,
   history: state.search.history,
   currentTrackID: state.musicPlayer.currentTrack.id,
-  isPlaying: state.musicPlayer.isPlaying
+  isPlaying: state.musicPlayer.isPlaying,
+  spotifyAccessToken: state.user.spotify.token
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -147,6 +157,9 @@ const mapDispatchToProps = dispatch => ({
   },
   searchScArtists: query => {
     dispatch(searchSoundcloudArtists(query));
+  },
+  dispatchSearchSpotify: (query, scope, token) => {
+    dispatch(searchSpotify(query, scope, token));
   },
   loadMoreTracks: () => dispatch(loadMoreResults()),
   setSearchQuery: query =>
