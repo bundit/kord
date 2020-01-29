@@ -104,3 +104,27 @@ export const searchSouncloudTracks = (query, limit = 10) => async dispatch => {
     payload: collection.nextHref
   });
 };
+
+export const searchSpotify = (
+  query,
+  scope,
+  token,
+  limit = 10
+) => async dispatch => {
+  const url = `https://api.spotify.com/v1/search?q=${query}&type=${scope}&limit=${limit}`;
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }
+  };
+
+  // const collection = await fetch(url, options);
+  fetch(url, options)
+    .then(res => (res.status === 200 ? res.json() : res))
+    .then(json => console.log(json))
+    .then(i => (window.search = i))
+    .catch(object => console.log(object.type, object.message));
+};

@@ -21,6 +21,18 @@ store.subscribe(() => {
       artists: state.music.artists,
       genres: state.music.genres,
       playlists: state.music.playlists
+    },
+    user: {
+      soundcloud: {
+        key: state.user.soundcloud.key,
+        username: state.user.soundcloud.username
+      },
+      spotify: {
+        token: state.user.spotify.token
+      },
+      history: {
+        library: state.user.history.library
+      }
     }
   });
 });

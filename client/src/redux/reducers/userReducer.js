@@ -5,6 +5,9 @@ const initialState = {
     key: null,
     username: ""
   },
+  spotify: {
+    token: null
+  },
   history: {
     library: [],
     search: [],
@@ -33,6 +36,16 @@ export default function(state = initialState, action) {
         history: {
           ...state.history,
           library: newLibHistory
+        }
+      };
+    }
+    case "SET_SPOTIFY_ACCESS_TOKEN": {
+      const spotifyAccessToken = action.payload;
+
+      return {
+        ...state,
+        spotify: {
+          token: spotifyAccessToken
         }
       };
     }

@@ -8,7 +8,7 @@ import styles from "../../styles/header.module.css";
 
 function Header({ location }) {
   const { pathname } = location;
-  const baseUrls = ["Library", "Search", "More"];
+  const baseUrls = ["Library", "Search", "More", ""];
 
   // Get only last route
   let title = pathname.slice(pathname.lastIndexOf("/") + 1);

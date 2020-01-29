@@ -80,6 +80,10 @@ Footer.propTypes = {
   libHistory: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
+Footer.defaultProps = {
+  libHistory: []
+};
+
 const mapStateToProps = state => ({
   isExpanded: state.musicPlayer.isExpanded,
   libHistory: state.user.history.library
