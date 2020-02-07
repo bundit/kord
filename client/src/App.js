@@ -1,6 +1,7 @@
 import React from "react";
-import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
+import LandingPage from "./components/landing-page";
 import Header from "./components/layout/header";
 import Footer from "./components/layout/footer";
 import Player from "./components/player";
@@ -11,14 +12,21 @@ import NavHistory from "./components/nav-history";
 const App = () => (
   <BrowserRouter>
     <NavHistory />
-    <Redirect from="/" to="/library" />
-    <Route path="/" component={Header} />
-    <main className="content">
-      <Route path="/library" component={Library} />
-      <Route exact path="/search" component={Search} />
-    </main>
-    <Route path="/" component={Player} />
-    <Route path="/" component={Footer} />
+    <Switch>
+      <Route exact path="/" component={LandingPage} />
+
+      <Route>
+        <Route component={Header} />
+        <Player />
+        <main className="content">
+          <Switch>
+            <Route exact path="/search" component={Search} />
+            <Route path="/library" component={Library} />
+          </Switch>
+        </main>
+        <Route component={Footer} />
+      </Route>
+    </Switch>
   </BrowserRouter>
 );
 
