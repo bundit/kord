@@ -1,0 +1,32 @@
+{
+  "name": "music-pwa",
+  "version": "1.0.0",
+  "description": "listen to the musics",
+  "main": "server.js",
+  "repository": "https://github.com/bundit/kord-app.git",
+  "author": "Bundit Hongmanee <bundit.j.h@gmail.com>",
+  "dependencies": {
+    "eslint-config-airbnb": "^18.0.1",
+    "express": "^4.17.1",
+    "passport": "^0.4.1",
+    "passport-mixcloud": "^0.0.2",
+    "passport-spotify": "^1.1.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
+    "nodemon": "^2.0.2"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node_modules/.bin/concurrently \"nodemon -r dotenv/config server.js\" \"cd client && yarn start\"",
+    "heroku-postbuild": "cd client && yarn && yarn run build"
+  }
+}
