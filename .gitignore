@@ -8,10 +8,12 @@
 
 # testing
 .env.development
+.env
 /coverage
 
 # production
 /build
+postgres.sql
 
 # misc
 .DS_Store
