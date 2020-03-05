@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("path");
 
+require("./config/database-setup");
+
 const app = express();
 
 // Serve static assets in production
