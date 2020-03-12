@@ -36,6 +36,14 @@
       { "overrides": { "?": "before", ":": "before" } }
     ],
     "implicit-arrow-linebreak": [1],
-    "object-curly-newline": [1, { "multiline": true, "minProperties": 5 }]
+    "object-curly-newline": [1, { "multiline": true, "minProperties": 5 }],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "never",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ]
   }
 }
