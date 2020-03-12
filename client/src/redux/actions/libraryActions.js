@@ -1,7 +1,8 @@
 import { IMPORT_SC_LIKES, IMPORT_SONG } from "./types";
 import { fetchScTracks } from "./searchActions";
 
-const KEY = process.env.REACT_APP_SC_KEY;
+const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
+
 const MAX_LIMIT = 200;
 const LINK = 1;
 const SC_API_BASE_URL = "https://api.soundcloud.com";

@@ -206,7 +206,8 @@ class Player extends React.Component {
       renderSeekPos
     } = this;
     const { isUserSeeking, userSeekPos } = this.state;
-    const KEY = process.env.REACT_APP_SC_KEY;
+    const KEY =
+      process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
 
     return (
       <>

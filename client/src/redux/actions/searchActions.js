@@ -19,7 +19,7 @@ async function fetchScArtists(endpoint) {
 }
 
 export const searchSoundcloudArtists = (query, limit = 5) => async dispatch => {
-  const KEY = process.env.REACT_APP_SC_KEY;
+  const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
   const endpoint = `https://api.soundcloud.com/users?q=${query}&client_id=${KEY}&limit=${limit}`;
 
   const artistList = await fetchScArtists(endpoint);
@@ -61,7 +61,7 @@ export async function fetchScTracks(endpoint) {
 }
 
 async function fetchScTrackSearch(query, limit) {
-  const KEY = process.env.REACT_APP_SC_KEY;
+  const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
   const trackSearchEndpoint = `https://api.soundcloud.com/tracks?q=${query}&limit=${limit}&format=json&client_id=${KEY}`;
 
   return fetchScTracks(trackSearchEndpoint);
