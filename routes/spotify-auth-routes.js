@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const passport = require("passport");
-const request = require("request");
+const jwt = require("jsonwebtoken");
 
 // Client will get directed to this route when they click "Login with Spotify"
 router.get(
@@ -21,33 +21,31 @@ router.get(
   "/callback",
   passport.authenticate("spotify", { failureRedirect: "/login" }),
   (req, res) => {
-    const code = req.query.code || null;
+    // This code block will only execute if login is successful
+    const { user } = req;
 
-    const authOptions = {
-      url: "https://accounts.spotify.com/api/token",
-      form: {
-        // eslint-disable-next-line
-        code: code,
-        redirect_uri: "/", // redirectUri,
-        grant_type: "authorization_code"
-      },
-      headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
-        ).toString("base64")}`
-      },
-      json: true
+    // JWT payload
+    const payload = {
+      username: user.email,
+      expires: Date.now() + parseInt(process.env.JWT_TOKEN_EXPIRE, 10)
     };
 
-    request.post(authOptions, (error, response, body) => {
-      const { access_token: accessToken, refresh_token: refreshToken } = body;
+    /** assigns payload to req.user */
+    req.login(payload, { session: false }, error => {
+      if (error) {
+        res.status(400).send({ error });
+      }
 
-      const uri = process.env.FRONTEND_URI || "http://localhost:3000/library";
+      /** generate a signed json web token and return it in the response */
+      const token = jwt.sign(JSON.stringify(payload), process.env.JWT_SECRET);
 
-      // Return access token and refresh token to client
-      res.redirect(
-        `${uri}?access_token=${accessToken}&source=spotify&refresh_token=${refreshToken}`
-      );
+      /** assign our jwt to the cookie */
+      res.cookie("kordUser", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production"
+      });
+
+      res.redirect("/library");
     });
   }
 );
