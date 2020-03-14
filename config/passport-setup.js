@@ -7,20 +7,6 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser(async (userID, done) => {
-  const query = {
-    text: `SELECT *
-            FROM users
-            WHERE id=$1;`,
-    values: [userID]
-  };
-  const {
-    rows: [user]
-  } = await db.query(query);
-
-  done(null, user);
-});
-
 async function checkIfUserExists(client, email) {
   const searchQuery = {
     text: `SELECT *
@@ -50,18 +36,23 @@ async function insertNewUser(client, email) {
   return newUserRows[0];
 }
 
-async function insertUserProfile(client, userID, providerUserID, images) {
+async function insertUserProfile(client, user, provider) {
+  const { kordUserID, providerID, accessToken, refreshToken, images } = user;
+
   const profileInsertQuery = {
-    text: `INSERT INTO user_profiles(user_id, oauth_provider, provider_id, photos)
-             VALUES
-             (
-               $1,
-               'spotify',
-               $2,
-               $3
+    text: `INSERT INTO user_profiles(user_id, oauth_provider, provider_id, access_token, refresh_token, images)
+             VALUES (
+               $1, $2, $3, $4, $5, $6
              )
            ON CONFLICT DO NOTHING;`,
-    values: [userID, providerUserID, images]
+    values: [
+      kordUserID,
+      provider,
+      providerID,
+      accessToken,
+      refreshToken,
+      images
+    ]
   };
 
   await client.query(profileInsertQuery);
@@ -87,7 +78,15 @@ passport.use(
           kordUser = await insertNewUser(client, email);
         }
 
-        await insertUserProfile(client, kordUser.id, spotifyUserID, images);
+        const newUserProfile = {
+          accessToken,
+          refreshToken,
+          kordUserID: kordUser.id,
+          providerID: spotifyUserID,
+          images
+        };
+
+        await insertUserProfile(client, newUserProfile, "spotify");
 
         // Return the user profile to be serialized
         done(null, kordUser);
