@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 
 require("./config/database-setup");
@@ -7,7 +8,7 @@ require("./config/passport-setup");
 const authRoutes = require("./routes/auth-routes");
 
 const app = express();
-
+app.use(cookieParser());
 app.use("/auth", authRoutes);
 
 // Serve static assets in production

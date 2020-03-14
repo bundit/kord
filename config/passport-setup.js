@@ -1,5 +1,6 @@
 const passport = require("passport");
 const SpotifyStrategy = require("passport-spotify").Strategy;
+const JWTStrategy = require("passport-jwt").Strategy;
 
 const db = require("./database-setup");
 
@@ -91,6 +92,24 @@ passport.use(
         // Return the user profile to be serialized
         done(null, kordUser);
       });
+    }
+  )
+);
+
+passport.use(
+  new JWTStrategy(
+    {
+      jwtFromRequest: req => req.cookies.kordUser,
+      secretOrKey: process.env.JWT_SECRET,
+      httpOnly: true,
+      secure: true
+    },
+    (jwtPayload, done) => {
+      if (Date.now() > jwtPayload.expires) {
+        return done("jwt expired", null);
+      }
+
+      return done(null, jwtPayload);
     }
   )
 );
