@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css?family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Arimo&display=swap");
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+
+  /* Disable text highlighting */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+html {
+  font-size: 12px;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: white;
+}
+
+h1 {
+  font-family: "Pacifico";
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+}
+
+button,
+a {
+  /* Remove active highlight when touching on iOS */
+  -webkit-tap-highlight-color: transparent;
+}
