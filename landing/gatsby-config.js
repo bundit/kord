@@ -10,7 +10,7 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `images`,
-        path: `${__dirname}/src/images`
+        path: `${__dirname}/src/assets`
       }
     },
     `gatsby-transformer-sharp`,
@@ -35,7 +35,6 @@ module.exports = {
         }
       }
     },
-    // `gatsby-plugin-transition-link`,
     `gatsby-plugin-layout`
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline

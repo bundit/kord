@@ -1,0 +1,167 @@
+html {
+  /* border: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto; */
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  /* box-sizing: border-box; */
+}
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+/* bottom color */
+.button .bottom {
+  background-color: #4e1cae;
+}
+/* border color  */
+.button .top {
+  border: 2px solid white;
+}
+/* text color */
+.button .top .label {
+  color: white;
+}
+/* background color hover */
+.button:hover .bottom {
+  /* background-color: #f3f3f3; */
+  background-color: white;
+}
+/* text color hover */
+.button:hover .top .label {
+  /* color: #2acdc1; */
+  color: #4e1cae;
+}
+/* border on hover */
+.button-border {
+  background-color: #4e1cae;
+}
+
+.button {
+  display: inline-block;
+  text-decoration: none;
+  position: relative;
+  margin-top: 40px;
+}
+
+.button .bottom {
+  position: absolute;
+  left: 7px;
+  top: 7px;
+  width: 100%;
+  height: 100%;
+  /* background-color: #2acdc1; */
+  /* color: white; */
+  /* background-color: #4e1cae; */
+  /* background-color: #55a1be; */
+  display: block;
+  -webkit-transition: all 0.15s ease-out;
+  -moz-transition: all 0.15s ease-out;
+  -o-transition: all 0.15s ease-out;
+  transition: all 0.15s ease-out;
+}
+
+.button .top {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  padding: 24px 34px 22px 34px;
+  /* border color not hovered */
+  /* border: 2px solid white; */
+}
+
+.top {
+  /* not sure */
+  /* border: 2px solid red; */
+}
+
+.button .top .label {
+  font-family: sans-serif;
+  font-weight: 600;
+  /* color: #04049d; */
+  /* text color not hovered */
+  /* color: white; */
+  font-size: 13px;
+  line-height: 110%;
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+  -webkit-transition: all 0.15s ease-out;
+  -moz-transition: all 0.15s ease-out;
+  -o-transition: all 0.15s ease-out;
+  transition: all 0.15s ease-out;
+}
+
+.top .label {
+  /* not sure */
+  /* color: #fff; */
+}
+
+.button:hover .bottom {
+  left: 0;
+  top: 0;
+  /* background color on hover */
+  /* background-color: #f3f3f3; */
+}
+
+.button:hover .top .label {
+  /* text color hover */
+  /* color: #2acdc1; */
+}
+
+.button-border {
+  position: absolute;
+  /* border on hover */
+  /* background-color: #2acdc1; */
+  -webkit-transition: all 0.25s ease-out;
+  -moz-transition: all 0.25s ease-out;
+  -o-transition: all 0.25s ease-out;
+  transition: all 0.25s ease-out;
+}
+
+.button:hover .top .button-border-left,
+.button:hover .top .button-border-right {
+  height: calc(100% + 2px);
+}
+
+.button:hover .top .button-border-top,
+.button:hover .top .button-border-bottom {
+  width: calc(100% + 2px);
+}
+
+.button-border-left {
+  left: -2px;
+  bottom: -2px;
+  width: 2px;
+  height: 0;
+}
+
+.button-border-top {
+  left: -2px;
+  top: -2px;
+  width: 0;
+  height: 2px;
+}
+
+.button-border-right {
+  right: -2px;
+  top: -2px;
+  width: 2px;
+  height: 0;
+}
+
+.button-border-bottom {
+  right: -2px;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+}

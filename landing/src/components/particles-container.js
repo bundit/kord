@@ -4,7 +4,7 @@ import Particles from "react-particles-js";
 // window.addEventListener("load", event => {});
 let numParticles = 150;
 
-if (process.env.NODE_ENV !== "development") {
+if (process.env.NODE_ENV !== "development" && typeof window !== `undefined`) {
   const { innerWidth: width, innerHeight: height } = window;
   const divisor = 10000;
 

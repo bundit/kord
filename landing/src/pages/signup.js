@@ -5,7 +5,7 @@ import styles from "../components/styles/landing.module.css";
 const SignUp = () => (
   <>
     <div className={styles.p1}>
-      <LoginPanel />
+      <LoginPanel login={false} />
     </div>
   </>
 );

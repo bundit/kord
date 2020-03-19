@@ -2,7 +2,8 @@ import { Link } from "gatsby";
 import PropTypes from "prop-types";
 import React from "react";
 import styles from "./styles/landing.module.css";
-import Icon from "../images/svg/logo-single-no-white.svg";
+import Kord3D from "../assets/kord-3d.svg";
+import Icon from "../assets/logo-single-no-white.svg";
 
 const Header = ({ isScrolledPast }) => (
   <header
@@ -15,7 +16,9 @@ const Header = ({ isScrolledPast }) => (
         <span className={styles.svgContainer}>
           <Icon />
         </span>
-        <h2>kord</h2>
+        <h2>
+          <Kord3D />
+        </h2>
       </Link>
       <div className={styles.headerLinks}>
         <Link to="/login">Log In</Link>

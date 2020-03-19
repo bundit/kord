@@ -81,7 +81,7 @@
   margin-bottom: 4rem;
 }
 
-.p1Content a {
+/* .p1Content a {
   font-size: 1.3rem;
   border-radius: 2.5rem;
   padding: 1.3rem 4rem;
@@ -91,7 +91,7 @@
   font-family: "Open Sans";
   font-weight: 900;
   transition: 0.2s ease;
-}
+} */
 
 .p1Content a:hover {
   background-color: #2c096f;
@@ -117,11 +117,24 @@
   top: 0;
   left: 0;
   right: 0;
-  transition: 0.3s ease;
 }
 
-.svgContainer path {
-  fill: inherit;
+.header * {
+  transition: 0.15s ease-in-out;
+}
+
+.header h2 {
+  font-family: Pacifico;
+  font-size: 2.7rem;
+  text-shadow: 2px 2px 0 black;
+  -webkit-text-stroke: 1px black;
+  color: #fb1;
+}
+
+.header a {
+  display: inline-block;
+  color: black;
+  text-decoration: none;
 }
 
 .header svg {
@@ -131,20 +144,13 @@
   margin-right: 1rem;
 }
 
-.header h2 {
-  font-family: Pacifico;
-  font-size: 2.7rem;
-}
-
-.header a {
-  display: inline-block;
-  color: black;
-  text-decoration: none;
-  transition: 0.3s ease;
-}
-
 .header a:hover {
   color: white;
+}
+
+.header a:hover svg {
+  /* transform: scale(1.1); */
+  fill: white;
 }
 
 .headerLinks {
@@ -164,9 +170,9 @@
   fill: black;
 }
 
-.homeLink:hover {
+/* .homeLink:hover {
   fill: white;
-}
+} */
 
 .headerLinks a:last-child {
   border-radius: 2.5rem;
