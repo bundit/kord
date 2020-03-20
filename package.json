@@ -5,6 +5,9 @@
   "main": "server.js",
   "repository": "https://github.com/bundit/kord-app.git",
   "author": "Bundit Hongmanee <bundit.j.h@gmail.com>",
+  "engines": {
+    "node": "11.12.x"
+  },
   "dependencies": {
     "cookie-parser": "^1.4.4",
     "eslint-config-airbnb": "^18.0.1",
@@ -33,6 +36,6 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node_modules/.bin/concurrently \"nodemon -r dotenv/config server.js\" \"cd client && yarn start\"",
-    "heroku-postbuild": "cd client && yarn && yarn run build && cd ../landing && yarn && gatsby build"
+    "heroku-postbuild": "cd client && yarn && yarn run build && cd ../landing && yarn && yarn run build"
   }
 }

@@ -14,11 +14,11 @@ app.use("/auth", authRoutes);
 // Serve static assets in production
 if (process.env.NODE_ENV === "production") {
   // Set static folder
-  app.use(express.static(path.resolve(__dirname, "client", "build")));
+  app.use("/app", express.static(path.resolve(__dirname, "client", "build")));
   app.use(express.static(path.resolve(__dirname, "landing", "public")));
 
   // Send application on /app
-  app.get("/app", (req, res) => {
+  app.get("/app*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 
