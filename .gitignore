@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /client/node_modules
+/landing/node_modules
 /.pnp
 .pnp.js
 
@@ -28,3 +29,7 @@ endpoints.txt
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# gatsby
+landing/.cache/
+landing/public
