@@ -8,7 +8,7 @@
   margin-top: 30vh;
   box-shadow: 1px 3px 10px #a2740080;
   text-align: center;
-  box-shadow: inset 0px 0px 10px rgb(0, 0, 0, 0.4);
+  box-shadow: inset 0px 0px 20px rgb(0, 0, 0, 0.5);
 }
 
 .loginWrapper a {
@@ -22,14 +22,17 @@
 }
 
 .loginHeaderWrapper h1 {
-  font-size: 6rem;
+  font-size: 2rem;
   display: inline;
   width: 200px;
-  background-image: linear-gradient(to left bottom, #3188aa, #663cb6);
+  color: grey;
+  padding-left: 35px;
+  /* text gradient clip */
+  /* background-image: linear-gradient(to left bottom, #3188aa, #663cb6);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent; */
 }
 
 .loginHeaderWrapper svg {
@@ -39,7 +42,7 @@
 }
 
 .loginHeaderWrapper:hover svg {
-  fill: #3188aa;
+  fill: #663cb6;
 }
 
 .loginWrapper h3 {
@@ -72,6 +75,11 @@
 .oAuthLink:hover {
   box-shadow: 0px 5px 10px rgb(0, 0, 0, 0.3);
   transform: translate(0, -7px);
+}
+
+.oAuthLink:active {
+  transition: 0s;
+  background-color: whitesmoke;
 }
 
 .loginListWrapper .oAuthLink:first-child:hover {

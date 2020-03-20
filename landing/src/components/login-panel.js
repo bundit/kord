@@ -17,6 +17,7 @@ const LoginPanel = ({ login }) => {
         <Link to="/">
           <h1>
             <Kord3D />
+            {" v0.3"}
           </h1>
         </Link>
       </div>
