@@ -81,22 +81,6 @@
   margin-bottom: 4rem;
 }
 
-/* .p1Content a {
-  font-size: 1.3rem;
-  border-radius: 2.5rem;
-  padding: 1.3rem 4rem;
-  text-decoration: none;
-  color: white;
-  background-color: #4e1cae;
-  font-family: "Open Sans";
-  font-weight: 900;
-  transition: 0.2s ease;
-} */
-
-.p1Content a:hover {
-  background-color: #2c096f;
-}
-
 .contentContainer {
   width: 100vw;
   display: flex;
@@ -119,10 +103,6 @@
   right: 0;
 }
 
-.header * {
-  transition: 0.15s ease-in-out;
-}
-
 .header h2 {
   font-family: Pacifico;
   font-size: 2.7rem;
@@ -131,10 +111,13 @@
   color: #fb1;
 }
 
-.header a {
+.link {
   display: inline-block;
   color: black;
   text-decoration: none;
+  transition: 0.2s linear;
+  margin: 0 35px;
+  padding: 5px;
 }
 
 .header svg {
@@ -144,13 +127,16 @@
   margin-right: 1rem;
 }
 
-.header a:hover {
+.link:hover {
   color: white;
 }
 
-.header a:hover svg {
-  /* transform: scale(1.1); */
-  fill: white;
+.link:active {
+  color: black;
+}
+
+.homeLink:active path {
+  fill: black;
 }
 
 .headerLinks {
@@ -170,17 +156,20 @@
   fill: black;
 }
 
-/* .homeLink:hover {
+.homeLink:hover svg {
   fill: white;
-} */
-
-.headerLinks a:last-child {
-  border-radius: 2.5rem;
-  padding: 1.3rem 4rem;
 }
 
 .headerScrolled {
   transition: 0.5s ease;
   background-color: #fb1;
   opacity: 0.98;
+}
+
+.active {
+  color: white;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin: 0 20px;
+  background: #121212;
 }

@@ -12,7 +12,7 @@ const Header = ({ isScrolledPast }) => (
     }`}
   >
     <div className={styles.headerContainer}>
-      <Link to="/" className={styles.homeLink} style={{ display: "flex" }}>
+      <Link to="/" className={`${styles.homeLink}`} style={{ display: "flex" }}>
         <span className={styles.svgContainer}>
           <Icon />
         </span>
@@ -21,8 +21,20 @@ const Header = ({ isScrolledPast }) => (
         </h2>
       </Link>
       <div className={styles.headerLinks}>
-        <Link to="/login">Log In</Link>
-        <Link to="/signup">Sign Up</Link>
+        <Link
+          to="/login"
+          className={styles.link}
+          activeClassName={styles.active}
+        >
+          Log In
+        </Link>
+        <Link
+          to="/signup"
+          className={styles.link}
+          activeClassName={styles.active}
+        >
+          Sign Up
+        </Link>
       </div>
     </div>
   </header>

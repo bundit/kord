@@ -15,7 +15,9 @@ import styles from "../../styles/footer.module.css";
 
 const Footer = ({ isExpanded, location, libHistory }) => {
   const { pathname } = location;
-  const pastLibRoute = libHistory[libHistory.length - 1];
+  const pastLibRoute = libHistory.length
+    ? libHistory[libHistory.length - 1]
+    : "/app/library";
 
   const libNavSecondTap = pastLibRoute === pathname;
 
@@ -26,7 +28,7 @@ const Footer = ({ isExpanded, location, libHistory }) => {
           <ul className={styles.navUl}>
             <li>
               <NavLink
-                to={`${libNavSecondTap ? "/library" : pastLibRoute}`}
+                to={`${libNavSecondTap ? "/app/library" : pastLibRoute}`}
                 className={styles.navLink}
                 activeClassName={styles.active}
                 onClick={rippleEffect}
@@ -40,7 +42,7 @@ const Footer = ({ isExpanded, location, libHistory }) => {
             <li>
               <NavLink
                 exact
-                to="/search"
+                to="/app/search"
                 className={styles.navLink}
                 activeClassName={styles.active}
                 onClick={rippleEffect}
@@ -54,7 +56,7 @@ const Footer = ({ isExpanded, location, libHistory }) => {
             <li>
               <NavLink
                 exact
-                to="/more"
+                to="/app/more"
                 className={styles.navLink}
                 activeClassName={styles.active}
                 onClick={rippleEffect}
