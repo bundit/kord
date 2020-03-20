@@ -33,6 +33,6 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node_modules/.bin/concurrently \"nodemon -r dotenv/config server.js\" \"cd client && yarn start\"",
-    "heroku-postbuild": "cd client && yarn && yarn run build"
+    "heroku-postbuild": "cd client && yarn && yarn run build && cd ../landing && yarn && gatsby build"
   }
 }
