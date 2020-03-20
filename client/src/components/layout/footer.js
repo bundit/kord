@@ -15,10 +15,11 @@ import styles from "../../styles/footer.module.css";
 
 const Footer = ({ isExpanded, location, libHistory }) => {
   const { pathname } = location;
-  const pastLibRoute = libHistory.length
-    ? libHistory[libHistory.length - 1]
-    : "/app/library";
-
+  const pastLibRoute =
+    libHistory && libHistory.length
+      ? libHistory[libHistory.length - 1]
+      : "/app/library";
+  console.log("hist", libHistory);
   const libNavSecondTap = pastLibRoute === pathname;
 
   return (

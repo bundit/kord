@@ -8,7 +8,7 @@ const NavHistory = ({ pushLibRoute }) => {
 
   React.useEffect(() => {
     const { pathname } = location;
-    const rootRelativeURL = pathname.split("/")[1];
+    const rootRelativeURL = pathname.split("/")[2];
 
     if (rootRelativeURL === "library") {
       pushLibRoute(pathname);

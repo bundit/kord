@@ -180,14 +180,14 @@ class Library extends React.Component {
                       <Switch>
                         <Route
                           exact
-                          path="/library"
+                          path="/app/library"
                           render={() => (
                             <LibrarySectionList categories={categories} />
                           )}
                         />
                         <Route
                           exact
-                          path="/library/songs"
+                          path="/app/library/songs"
                           render={() => (
                             <TrackList
                               library={library}
@@ -202,11 +202,11 @@ class Library extends React.Component {
                         />
                         <Route
                           exact
-                          path="/library/artists"
+                          path="/app/library/artists"
                           render={() => <ArtistList artists={artists} />}
                         />
                         <Route
-                          path="/library/artists/:artist"
+                          path="/app/library/artists/:artist"
                           render={props => (
                             <TrackList
                               library={library.filter(
@@ -224,7 +224,7 @@ class Library extends React.Component {
                         />
                         <Route
                           exact
-                          path="/library/playlists"
+                          path="/app/library/playlists"
                           render={() => (
                             <ListOfPlaylists
                               handleNewPlaylist={handleNewPlaylist}

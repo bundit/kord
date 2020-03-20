@@ -20,6 +20,7 @@ export default function(state = initialState, action) {
     case PUSH_LIB_ROUTE: {
       const pathname = action.payload;
       const libHistory = state.history.library;
+      console.log("his", libHistory);
 
       if (pathname === libHistory[libHistory.length - 1]) {
         return state;

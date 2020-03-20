@@ -31,7 +31,9 @@ store.subscribe(() => {
         token: state.user.spotify.token
       },
       history: {
-        library: state.user.history.library
+        library: ["/app/library"],
+        search: [],
+        more: []
       }
     }
   });

@@ -15,7 +15,7 @@ const CategoryListItem = ({ category }) => (
   >
     <NavLink
       exact
-      to={`/library/${category}`}
+      to={`/app/library/${category}`}
       className={styles.sectionLink}
       activeClassName={styles.activeSection}
       onClick={scrollTop}
