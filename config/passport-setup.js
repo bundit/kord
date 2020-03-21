@@ -13,7 +13,7 @@ passport.use(
     {
       clientID: process.env.SPOTIFY_CLIENT_ID,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-      callbackURL: "http://localhost:8888/auth/spotify/callback"
+      callbackURL: process.env.SPOTIFY_CALLBACK
     },
     (accessToken, refreshToken, expiresIn, profile, done) => {
       AuthService.SignUpOrSignIn(profile, refreshToken, accessToken, done);
@@ -25,9 +25,7 @@ passport.use(
   new JWTStrategy(
     {
       jwtFromRequest: req => req.cookies.kordUser,
-      secretOrKey: process.env.JWT_SECRET,
-      httpOnly: true,
-      secure: true
+      secretOrKey: process.env.JWT_SECRET
     },
     (jwtPayload, done) => {
       if (Date.now() > jwtPayload.expires) {

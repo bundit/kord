@@ -24,10 +24,14 @@ router.get(
     // This code block will only execute if login is successful
     const { user } = req;
 
+    // TODO get SSL Certs
+    // const isProduction = process.env.NODE_ENV === "production";
+    const expires = Date.now() + parseInt(process.env.JWT_TOKEN_EXPIRE, 10);
+
     // JWT payload
     const payload = {
       username: user.email,
-      expires: Date.now() + parseInt(process.env.JWT_TOKEN_EXPIRE, 10)
+      expires
     };
 
     /** assigns payload to req.user */
@@ -41,11 +45,13 @@ router.get(
 
       /** assign our jwt to the cookie */
       res.cookie("kordUser", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production"
+        httpOnly: true
+        // TODO Get SSL Certs
+        // secure: isProduction
       });
-
-      res.redirect("/library");
+      res.redirect(
+        `/app/library#source=spotify&spotifyToken=${user.accessToken}`
+      );
     });
   }
 );

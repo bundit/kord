@@ -5,34 +5,33 @@ const jwt = require("jsonwebtoken");
 const spotifyAuthRoutes = require("./spotify-auth-routes");
 // const mixcloudAuthRoutes = require("./mixcloud-auth-routes");
 
-router.use(passport.initialize());
-
 router.use("/spotify", spotifyAuthRoutes);
 // router.use("/mixcloud", mixcloudAuthRoutes);
 
 router.get("/token", (req, res, next) => {
   passport.authenticate("jwt", (err, user, info) => {
+    const expires = Date.now() + parseInt(process.env.JWT_TOKEN_EXPIRE, 10);
+
     if (err) {
-      req.logout();
       return res.send(err);
     }
 
     if (!user) {
-      req.logout();
-      return res.send("user is not logged in");
+      return res.send(`user is not logged in & info = ${info}`);
     }
 
     const newToken = jwt.sign(
       {
         username: user.email,
-        expires: Date.now() + parseInt(process.env.JWT_TOKEN_EXPIRE, 10)
+        expires
       },
       process.env.JWT_SECRET
     );
 
     res.cookie("kordUser", newToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production"
+      httpOnly: true
+      // maxAge: expires
+      // secure: process.env.NODE_ENV === "production"
     });
 
     return res.send("OK");
