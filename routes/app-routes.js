@@ -3,6 +3,8 @@ const express = require("express");
 const passport = require("passport");
 const path = require("path");
 
+// It is important to set the authentication middleware,
+// BEFORE the static path middleware
 router.use("/", (req, res, next) => {
   passport.authenticate("jwt", (err, user, info) => {
     if (err) {
