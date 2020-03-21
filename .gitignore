@@ -13,7 +13,7 @@
 /coverage
 
 # production
-/build
+/client/build
 postgres.sql
 
 # misc

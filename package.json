@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "node_modules/.bin/concurrently \"nodemon -r dotenv/config server.js\" \"cd client && yarn start\"",
+    "dev": "node_modules/.bin/concurrently \"nodemon -r dotenv/config server.js\" \"cd client && yarn start\" \"cd landing && yarn start\"",
     "heroku-postbuild": "cd client && yarn && yarn run build && cd ../landing && yarn && yarn run build"
   }
 }
