@@ -75,7 +75,7 @@
 
 .p1Content h1 {
   text-shadow: 3px 3px #a2740080;
-  font-size: 7rem;
+  font-size: 90px;
   color: #fff;
   font-weight: 300;
   margin-bottom: 4rem;
@@ -93,6 +93,7 @@
   display: flex;
   align-items: center;
   width: 80%;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -105,7 +106,7 @@
 
 .header h2 {
   font-family: Pacifico;
-  font-size: 2.7rem;
+  font-size: 2.8rem;
   text-shadow: 2px 2px 0 black;
   -webkit-text-stroke: 1px black;
   color: #fb1;
@@ -122,7 +123,7 @@
 
 .header svg {
   color: white;
-  height: 35px;
+  height: 40px;
   width: auto;
   margin-right: 1rem;
 }
@@ -172,4 +173,14 @@
   padding: 15px 20px;
   margin: 0 20px;
   background: #121212;
+}
+
+@media (max-width: 1200px) {
+  .headerContainer {
+    max-width: 950px;
+  }
+}
+
+@media (max-width: 950px) {
+  /* Mobile */
 }
