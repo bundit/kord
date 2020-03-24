@@ -1,0 +1,120 @@
+.sidebarWrapper {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  background-color: #121a1d;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 100vh;
+  padding: 0 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.sidebarWrapper > * {
+  overflow: hidden;
+  flex: 0 0 1 0;
+}
+
+.sidebarWrapper * {
+  font-size: 16px;
+}
+
+.sidebarHeader {
+  min-height: 70px;
+  max-height: 70px;
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+.sidebarHeader svg {
+  float: left;
+  margin-top: 20px;
+  width: 60%;
+  height: 60%;
+}
+
+.sectionWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.sidebarWrapper .sectionWrapper:nth-child(2) {
+  /* App bar navigation */
+  min-height: 180px;
+}
+
+.playlistContainer {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionWrapper h2 {
+  padding-left: 15px;
+  color: #ccc;
+  font-size: 17px;
+  font-weight: 700;
+  border-bottom: 1px #383f41 solid;
+  padding-bottom: 10px;
+}
+
+.sidebarNavLink {
+  color: #aaa;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 0 20px;
+}
+
+.sidebarNavLink svg {
+  margin-right: 10px;
+}
+
+.sidebarNavLink:hover {
+  color: white;
+}
+
+.sidebarWrapper .sectionWrapper a {
+  text-decoration: none;
+  padding: 7px 30px;
+}
+
+.activeNavLink {
+  transition: 0.5s ease;
+  background: linear-gradient(to left, #121a1d, #1e2629);
+  color: white;
+  font-weight: 600;
+  transform: translateX(3px);
+  border-radius: 6px;
+}
+
+.activePlaylistLink {
+  transition: 0.5s ease;
+  color: white;
+  font-weight: 600;
+  transform: translateX(3px);
+}
+
+.sidebarFooter {
+  border-top: 1px #383f41 solid;
+  margin-top: auto;
+  height: 150px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.sidebarFooter > svg {
+  font-size: 30px;
+  color: #6f7c7f;
+}
+
+@media (max-width: 1025px) {
+  .sidebarWrapper {
+    display: none;
+  }
+}
