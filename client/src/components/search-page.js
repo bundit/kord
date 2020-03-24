@@ -1,14 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { loadMoreResults } from "../redux/actions/searchActions";
 
-import {
-  searchSouncloudTracks,
-  searchSoundcloudArtists,
-  loadMoreResults,
-  searchSpotify
-} from "../redux/actions/searchActions";
-import SearchBar from "./search-bar";
 import TrackList from "./track-list";
 
 // For restoring scroll position when component is unmounted
@@ -18,10 +12,7 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAddToLibrary = this.handleAddToLibrary.bind(this);
-    this.handleReset = this.handleReset.bind(this);
     this.handlePlayTrack = this.handlePlayTrack.bind(this);
   }
 
@@ -33,29 +24,6 @@ class Search extends React.Component {
 
   componentWillUnmount() {
     searchScrollPosition = document.querySelector("html").scrollTop;
-  }
-
-  handleChange(event) {
-    const { setSearchQuery } = this.props;
-
-    setSearchQuery(event.target.value);
-  }
-
-  async handleSubmit(event) {
-    const {
-      query,
-      searchScTracks,
-      searchScArtists,
-      dispatchSearchSpotify,
-      spotifyAccessToken
-    } = this.props;
-
-    searchScTracks(query);
-    searchScArtists(query);
-    console.log("access_token", spotifyAccessToken);
-    dispatchSearchSpotify(query, "track,artist", spotifyAccessToken);
-
-    event.preventDefault();
   }
 
   handleAddToLibrary(event, track) {
@@ -88,30 +56,11 @@ class Search extends React.Component {
   }
 
   render() {
-    const {
-      query,
-      results,
-      loadMoreTracks,
-      isPlaying,
-      currentTrackID
-    } = this.props;
-    const {
-      handleChange,
-      handleSubmit,
-      handleReset,
-      handlePlayTrack,
-      handleAddToLibrary
-    } = this;
+    const { results, loadMoreTracks, isPlaying, currentTrackID } = this.props;
+    const { handlePlayTrack, handleAddToLibrary } = this;
 
     return (
       <>
-        <SearchBar
-          placeholder="Search for Music"
-          query={query}
-          onChange={handleChange}
-          onSubmit={handleSubmit}
-          onReset={handleReset}
-        />
         <TrackList
           search
           library={results}
@@ -127,14 +76,11 @@ class Search extends React.Component {
 }
 
 Search.propTypes = {
-  query: PropTypes.string.isRequired,
   results: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSearchQuery: PropTypes.func.isRequired,
   playTrack: PropTypes.func.isRequired,
   importSong: PropTypes.func.isRequired,
   loadMoreTracks: PropTypes.func.isRequired,
-  searchScTracks: PropTypes.func.isRequired,
-  searchScArtists: PropTypes.func.isRequired,
   resetQuery: PropTypes.func.isRequired,
   setQueue: PropTypes.func.isRequired,
   isPlaying: PropTypes.bool.isRequired,
@@ -143,7 +89,6 @@ Search.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  query: state.search.query,
   results: state.search.results,
   history: state.search.history,
   currentTrackID: state.musicPlayer.currentTrack.id,
@@ -152,21 +97,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  searchScTracks: query => {
-    dispatch(searchSouncloudTracks(query));
-  },
-  searchScArtists: query => {
-    dispatch(searchSoundcloudArtists(query));
-  },
-  dispatchSearchSpotify: (query, scope, token) => {
-    dispatch(searchSpotify(query, scope, token));
-  },
   loadMoreTracks: () => dispatch(loadMoreResults()),
-  setSearchQuery: query =>
-    dispatch({
-      type: "SET_SEARCH_QUERY",
-      query
-    }),
   importSong: track =>
     dispatch({
       type: "IMPORT_SONG",
