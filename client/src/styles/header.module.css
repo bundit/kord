@@ -1,32 +1,109 @@
 .header {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
   height: 4rem;
   border-bottom: 1px #eee solid;
-  background-color: #fff;
+  background: #151d20;
   padding-top: 1rem;
-  z-index: 2;
 }
 
-.container {
+.mobileContainer {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.placeholder {
+.mobileContainer h1 {
+  font-family: Pacifico;
+  margin: 0;
+  margin-top: -0.5rem;
+  color: white;
+}
+
+.mobileContainer .placeholder {
+  /* This ensures the header stays centered */
   flex: 1;
 }
 
-.container button:first-child {
+.mobileContainer button:first-child {
   text-align: left;
   color: red;
 }
 
-h1 {
-  margin: 0;
-  margin-top: -0.5rem;
+.deskHeader {
+  display: none;
+  flex-direction: column;
+  position: sticky;
+  background: #151d20;
+  padding-bottom: 30px;
+  box-sizing: border-box;
+}
+
+.deskHeaderContainer {
+  height: 60px;
+  background-color: #151d20;
+  border-bottom: 1px #383f41 solid;
+  padding: 10px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.titleHeader {
+  display: flex;
+  padding-left: 30px;
+}
+
+.titleHeader h1 {
+  font-family: "Open Sans";
+  font-weight: 600;
+  font-size: 60px;
+  color: white;
+  margin-bottom: 0;
+}
+
+.titleHeader span {
+  padding-left: 20px;
+  color: #ffd46b;
+}
+
+.navGroup {
+  height: 100%;
+  width: 80px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.navGroup button {
+  cursor: pointer;
+  color: white;
+  width: 25px;
+  height: 25px;
+  background-color: #272f31;
+
+  border-radius: 50%;
+}
+
+.navGroup button:hover {
+  background-color: #666;
+}
+
+.settingIconContainer {
+  margin-left: auto;
+}
+
+.settingIconContainer button {
+  color: #666;
+}
+
+@media (min-width: 1025px) {
+  .header {
+    display: none;
+  }
+  .deskHeader {
+    display: flex;
+  }
 }
