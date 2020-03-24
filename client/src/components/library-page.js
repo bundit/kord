@@ -4,7 +4,6 @@ import { Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-import SearchBar from "./search-bar";
 import NewPlaylistForm from "./new-playlist-form";
 import AddToPlaylistForm from "./add-to-playlist-form";
 import EditTrackForm from "./edit-track-form";
@@ -20,24 +19,11 @@ class Library extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleReset = this.handleReset.bind(this);
     this.handlePlayTrack = this.handlePlayTrack.bind(this);
     this.handleNewPlaylist = this.handleNewPlaylist.bind(this);
     this.handleSubmitAddToPlaylists = this.handleSubmitAddToPlaylists.bind(
       this
     );
-  }
-
-  handleChange(event) {
-    const { setLibQuery } = this.props;
-    setLibQuery(event.target.value);
-  }
-
-  handleReset() {
-    const { resetQuery } = this.props;
-    resetQuery();
   }
 
   handlePlayTrack(track) {
@@ -53,14 +39,6 @@ class Library extends React.Component {
 
     // Set the queue to the remaining songs
     setQueue(library.slice(index));
-  }
-
-  handleSubmit(event) {
-    // const { query, dispatchSearchLibrary } = this.props;
-
-    // dispatchSearchLibrary(query);
-
-    event.preventDefault();
   }
 
   handleNewPlaylist(e) {
@@ -87,7 +65,7 @@ class Library extends React.Component {
 
   render() {
     const categories = ["Playlists", "Artists", "Songs", "Albums", "Genres"];
-    let { library, query } = this.props;
+    let { library } = this.props;
     const {
       artists,
       playlists,
@@ -108,15 +86,10 @@ class Library extends React.Component {
       submitDeleteTrack
     } = this.props;
     const {
-      handleChange,
-      handleSubmit,
-      handleReset,
       handlePlayTrack,
       handleNewPlaylist,
       handleSubmitAddToPlaylists
     } = this;
-
-    query = query.toLowerCase();
 
     // TODO: create new filtering for songs and artist view
     // if (query && query.length >= 3) {
@@ -129,13 +102,6 @@ class Library extends React.Component {
 
     return (
       <>
-        <SearchBar
-          placeholder="Search Library"
-          query={query}
-          onChange={handleChange}
-          onSubmit={handleSubmit}
-          onReset={handleReset}
-        />
         <NewPlaylistForm
           show={isNewPlaylistFormOpen}
           value={newPlaylistName}
@@ -162,83 +128,80 @@ class Library extends React.Component {
           onClose={toggleDeleteTrackForm}
         />
         <Route
+          path="/app/library"
+          render={() => <LibrarySectionList categories={categories} />}
+        />
+        <Route
           render={({ location }) => {
             const { pathname } = location;
             return (
-              <TransitionGroup>
-                <CSSTransition
-                  key={pathname}
-                  classNames={fadeTransition}
-                  timeout={{
-                    enter: 300,
-                    exit: 0
-                  }}
-                >
-                  <Route
-                    location={location}
-                    render={() => (
-                      <Switch>
-                        <Route
-                          exact
-                          path="/app/library"
-                          render={() => (
-                            <LibrarySectionList categories={categories} />
+              // <TransitionGroup>
+              //   <CSSTransition
+              //     key={pathname}
+              //     classNames={fadeTransition}
+              //     timeout={{
+              //       enter: 300,
+              //       exit: 0
+              //     }}
+              //   >
+              <Route
+                location={location}
+                render={() => (
+                  <Switch>
+                    <Route
+                      exact
+                      path="/app/library/songs"
+                      render={() => (
+                        <TrackList
+                          library={library}
+                          handlePlay={handlePlayTrack}
+                          currentTrackID={currentTrackID}
+                          isPlaying={isPlaying}
+                          toggleAddToPlaylistForm={toggleAddToPlaylistForm}
+                          toggleEditTrackForm={toggleEditTrackForm}
+                          toggleDeleteTrackForm={toggleDeleteTrackForm}
+                        />
+                      )}
+                    />
+                    <Route
+                      exact
+                      path="/app/library/artists"
+                      render={() => <ArtistList artists={artists} />}
+                    />
+                    <Route
+                      path="/app/library/artists/:artist"
+                      render={props => (
+                        <TrackList
+                          library={library.filter(
+                            song =>
+                              song.artist.name === props.match.params.artist
                           )}
+                          handlePlay={handlePlayTrack}
+                          currentTrackID={currentTrackID}
+                          isPlaying={isPlaying}
+                          toggleAddToPlaylistForm={toggleAddToPlaylistForm}
+                          toggleEditTrackForm={toggleEditTrackForm}
+                          toggleDeleteTrackForm={toggleDeleteTrackForm}
                         />
-                        <Route
-                          exact
-                          path="/app/library/songs"
-                          render={() => (
-                            <TrackList
-                              library={library}
-                              handlePlay={handlePlayTrack}
-                              currentTrackID={currentTrackID}
-                              isPlaying={isPlaying}
-                              toggleAddToPlaylistForm={toggleAddToPlaylistForm}
-                              toggleEditTrackForm={toggleEditTrackForm}
-                              toggleDeleteTrackForm={toggleDeleteTrackForm}
-                            />
-                          )}
+                      )}
+                    />
+                    <Route
+                      exact
+                      path="/app/library/playlists"
+                      render={() => (
+                        <ListOfPlaylists
+                          handleNewPlaylist={handleNewPlaylist}
+                          playlists={playlists}
+                          toggleNewPlaylistForm={toggleNewPlaylistForm}
                         />
-                        <Route
-                          exact
-                          path="/app/library/artists"
-                          render={() => <ArtistList artists={artists} />}
-                        />
-                        <Route
-                          path="/app/library/artists/:artist"
-                          render={props => (
-                            <TrackList
-                              library={library.filter(
-                                song =>
-                                  song.artist.name === props.match.params.artist
-                              )}
-                              handlePlay={handlePlayTrack}
-                              currentTrackID={currentTrackID}
-                              isPlaying={isPlaying}
-                              toggleAddToPlaylistForm={toggleAddToPlaylistForm}
-                              toggleEditTrackForm={toggleEditTrackForm}
-                              toggleDeleteTrackForm={toggleDeleteTrackForm}
-                            />
-                          )}
-                        />
-                        <Route
-                          exact
-                          path="/app/library/playlists"
-                          render={() => (
-                            <ListOfPlaylists
-                              handleNewPlaylist={handleNewPlaylist}
-                              playlists={playlists}
-                              toggleNewPlaylistForm={toggleNewPlaylistForm}
-                            />
-                          )}
-                        />
-                        {/* <Route component={<404 Placeholder />} /> */}
-                      </Switch>
-                    )}
-                  />
-                </CSSTransition>
-              </TransitionGroup>
+                      )}
+                    />
+                    {/* <Route component={<404 Placeholder />} /> */}
+                  </Switch>
+                )}
+              />
+              //   </CSSTransition>
+              // </TransitionGroup>
             );
           }}
         />
@@ -248,13 +211,10 @@ class Library extends React.Component {
 }
 
 Library.propTypes = {
-  query: PropTypes.string,
   library: PropTypes.arrayOf(PropTypes.object).isRequired,
   artists: PropTypes.arrayOf(PropTypes.object).isRequired,
   playTrack: PropTypes.func.isRequired,
-  setLibQuery: PropTypes.func.isRequired,
   setQueue: PropTypes.func.isRequired,
-  resetQuery: PropTypes.func.isRequired,
   isPlaying: PropTypes.bool.isRequired,
   currentTrackID: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     .isRequired,
@@ -296,7 +256,6 @@ const mapStateToProps = state => ({
   library: state.music.library,
   playlists: state.music.playlists,
   artists: state.music.artists,
-  query: state.music.query,
   currentTrackID: state.musicPlayer.currentTrack.id,
   isPlaying: state.musicPlayer.isPlaying,
   isNewPlaylistFormOpen: state.music.isNewPlaylistFormOpen,
@@ -309,12 +268,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   importScLikes: user => dispatch(importScLikes(user)),
-  setLibQuery: query =>
-    dispatch({
-      type: "SET_LIB_QUERY",
-      payload: query
-    }),
-  resetQuery: () => dispatch({ type: "RESET_LIB_QUERY" }),
   playTrack: track =>
     dispatch({
       type: "SET_TRACK",

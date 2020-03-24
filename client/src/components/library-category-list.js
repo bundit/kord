@@ -14,8 +14,8 @@ function LibraryCategoryList({ categories }) {
 
   return (
     <ul
-      style={{ margin: "0", paddingLeft: "0", position: "absolute" }}
-      className={styles.libraryWrapper}
+      style={{ margin: "0", padding: 0 }}
+      className={styles.categoryListWrapper}
     >
       {categoryList}
     </ul>

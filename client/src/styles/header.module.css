@@ -34,6 +34,9 @@
 }
 
 .deskHeader {
+  position: fixed;
+  /* TODO FIX THIS FIXED THING */
+  top: 0;
   display: none;
   flex-direction: column;
   position: sticky;

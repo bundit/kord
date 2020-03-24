@@ -5,24 +5,15 @@ import scrollTop from "../utils/scrollTop";
 import styles from "../styles/library.module.css";
 
 const CategoryListItem = ({ category }) => (
-  <li
-    style={{
-      textDecoration: "none",
-      listStyleType: "none",
-      margin: "0"
-    }}
-    className={styles.trackWrapper}
+  <NavLink
+    exact
+    to={`/app/library/${category}`}
+    className={styles.categoryWrapper}
+    activeClassName={styles.activeSection}
+    onClick={scrollTop}
   >
-    <NavLink
-      exact
-      to={`/app/library/${category}`}
-      className={styles.sectionLink}
-      activeClassName={styles.activeSection}
-      onClick={scrollTop}
-    >
-      <h2>{category}</h2>
-    </NavLink>
-  </li>
+    {category}
+  </NavLink>
 );
 
 CategoryListItem.propTypes = {

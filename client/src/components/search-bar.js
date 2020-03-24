@@ -1,7 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/library.module.css";
 
 const SearchBar = ({ placeholder, query, onChange, onSubmit, onReset }) => (
@@ -21,11 +19,6 @@ const SearchBar = ({ placeholder, query, onChange, onSubmit, onReset }) => (
         spellCheck="false"
       />
     </form>
-    <FontAwesomeIcon className={styles.searchIcon} icon={faSearch} />
-    {/* eslint-disable-next-line react/button-has-type */}
-    <button className={styles.xButton} type="reset" onClick={onReset}>
-      <FontAwesomeIcon icon={faTimesCircle} />
-    </button>
   </>
 );
 

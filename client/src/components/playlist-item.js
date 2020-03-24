@@ -1,17 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "../styles/library.module.css";
+import sidebarStyles from "../styles/sidebar.module.css";
 
-const PlaylistItem = ({ title, length }) => (
-  <Link to={`/library/playlists/${title}`} className={styles.trackWrapper}>
+const PlaylistItem = ({ title, length, sidebar }) => (
+  <NavLink
+    to={`/app/library/playlists/${title}`}
+    className={sidebar ? sidebarStyles.sidebarNavLink : styles.trackWrapper}
+    activeClassName={sidebar && sidebarStyles.activePlaylistLink}
+  >
     <div className={styles.titleWrapper}>
-      <div>
-        <strong>{title}</strong>
-      </div>
+      <div>{title}</div>
     </div>
     <div
       style={{
@@ -20,12 +23,16 @@ const PlaylistItem = ({ title, length }) => (
         flexDirection: "inherit"
       }}
     >
-      <span>{`${length} songs`}</span>
-      <button type="button" onClick={e => e.preventDefault()}>
-        <FontAwesomeIcon icon={faEllipsisV} />
-      </button>
+      {!sidebar && (
+        <>
+          <span>{`${length} songs`}</span>
+          <button type="button" onClick={e => e.preventDefault()}>
+            <FontAwesomeIcon icon={faEllipsisV} />
+          </button>
+        </>
+      )}
     </div>
-  </Link>
+  </NavLink>
 );
 
 PlaylistItem.propTypes = {
