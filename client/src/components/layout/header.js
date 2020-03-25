@@ -1,19 +1,22 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
+import { connect } from "react-redux";
 import {
   faAngleLeft,
   faAngleRight,
-  faCogs
+  faCogs,
+  faExpand
 } from "@fortawesome/free-solid-svg-icons";
+import PropTypes from "prop-types";
+import React from "react";
+import { Route } from "react-router-dom";
+
 import {
   searchSouncloudTracks,
   searchSoundcloudArtists,
   searchSpotify
 } from "../../redux/actions/searchActions";
-import PropTypes from "prop-types";
-import React from "react";
-import { connect } from "react-redux";
-
+import LibraryCategoryList from "../library-category-list";
 import SearchBar from "../search-bar";
 import styles from "../../styles/header.module.css";
 
@@ -58,7 +61,7 @@ function Header({
             )}
           </div>
 
-          <h1>{title}</h1>
+          <h1>{title.length ? title : "kord"}</h1>
 
           <div className={styles.placeholder} />
         </div>
@@ -83,7 +86,7 @@ function Header({
             placeholder="Search for Music"
             query={libQuery}
             onChange={e => setLibQuery(e.target.value)}
-            // onSubmit={handleSubmit}
+            onSubmit={() => console.log("handle submit search")}
             onReset={resetQuery}
           />
           <div className={styles.settingIconContainer}>
@@ -92,12 +95,29 @@ function Header({
             </button>
           </div>
         </div>
-        <div className={styles.titleHeader}>
-          <div>
-            <h1>{title}</h1>
-            <span>No fluff. Just your music.</span>
-          </div>
-        </div>
+
+        <Route
+          path="(/app/library|/app/search|/app/explore)"
+          render={() => (
+            <div className={styles.titleHeader}>
+              <div>
+                <h1>{title}</h1>
+                <span>No fluff. Just your music.</span>
+              </div>
+              <div style={{ marginLeft: "auto" }}>
+                <FontAwesomeIcon size="2x" icon={faExpand} />
+              </div>
+            </div>
+          )}
+        />
+        <Route
+          path="/app/library"
+          render={() => (
+            <LibraryCategoryList
+              categories={["Playlists", "Songs", "Artists", "Genres", "Albums"]}
+            />
+          )}
+        />
       </header>
     </>
   );

@@ -9,13 +9,13 @@ import styles from "../styles/library.module.css";
 const ListOfPlaylists = ({ playlists, toggleNewPlaylistForm }) => (
   <>
     <button
-      className={styles.addPlaylist}
+      className={styles.mobileAddPlaylist}
       onClick={toggleNewPlaylistForm}
       type="button"
     >
       <FontAwesomeIcon icon={farPlusSquare} />
     </button>
-    <div className={styles.libraryWrapper} zindex="1">
+    <div className={styles.libraryWrapper}>
       {playlists &&
         Object.values(playlists).map(playlist => (
           <PlaylistItem

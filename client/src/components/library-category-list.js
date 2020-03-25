@@ -5,7 +5,7 @@ import CategoryListItem from "./category-list-item";
 import scrollTop from "../utils/scrollTop";
 import styles from "../styles/library.module.css";
 
-function LibraryCategoryList({ categories }) {
+function LibraryCategoryList({ categories, mobile }) {
   const categoryList = categories.map(category => (
     <CategoryListItem key={category} category={category} />
   ));
@@ -15,7 +15,9 @@ function LibraryCategoryList({ categories }) {
   return (
     <ul
       style={{ margin: "0", padding: 0 }}
-      className={styles.categoryListWrapper}
+      className={`${styles.categoryListWrapper} ${
+        mobile ? styles.mobileCategoryList : styles.desktopCategoryList
+      }`}
     >
       {categoryList}
     </ul>

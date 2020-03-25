@@ -8,7 +8,7 @@ import NewPlaylistForm from "./new-playlist-form";
 import AddToPlaylistForm from "./add-to-playlist-form";
 import EditTrackForm from "./edit-track-form";
 import DeleteTrackForm from "./delete-track-form";
-import LibrarySectionList from "./library-category-list";
+import LibraryCategoryList from "./library-category-list";
 import TrackList from "./track-list";
 import ArtistList from "./artist-list";
 import ListOfPlaylists from "./playlist-list";
@@ -24,6 +24,22 @@ class Library extends React.Component {
     this.handleSubmitAddToPlaylists = this.handleSubmitAddToPlaylists.bind(
       this
     );
+    this.onResize = this.onResize.bind(this);
+
+    this.state = { isMobile: window.innerWidth < 800 };
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.onScroll);
+    // this.props.importScLikes("bundit");
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.onScroll);
+  }
+
+  onResize() {
+    this.setState({ isMobile: window.innerWidth < 800 });
   }
 
   handlePlayTrack(track) {
@@ -128,8 +144,9 @@ class Library extends React.Component {
           onClose={toggleDeleteTrackForm}
         />
         <Route
+          exact={this.state.isMobile}
           path="/app/library"
-          render={() => <LibrarySectionList categories={categories} />}
+          render={() => <LibraryCategoryList categories={categories} mobile />}
         />
         <Route
           render={({ location }) => {

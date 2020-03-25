@@ -1,4 +1,5 @@
 .header {
+  /* Mobile Header */
   position: sticky;
   top: 0;
   left: 0;
@@ -34,14 +35,14 @@
 }
 
 .deskHeader {
-  position: fixed;
+  position: sticky;
   /* TODO FIX THIS FIXED THING */
+  z-index: 1;
   top: 0;
   display: none;
   flex-direction: column;
   position: sticky;
   background: #151d20;
-  padding-bottom: 30px;
   box-sizing: border-box;
 }
 
@@ -57,6 +58,7 @@
 .titleHeader {
   display: flex;
   padding-left: 30px;
+  padding-bottom: 10px;
 }
 
 .titleHeader h1 {
@@ -102,7 +104,7 @@
   color: #666;
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 800px) {
   .header {
     display: none;
   }

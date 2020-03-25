@@ -7,8 +7,8 @@
 }
 
 .searchForm {
-  padding: 0 3rem;
-  width: 600px;
+  padding-left: 45px;
+  width: 400px;
   box-sizing: border-box;
 }
 
@@ -16,7 +16,7 @@
   float: left;
   display: block;
   height: 35px;
-  width: 25%;
+  width: 130px;
   margin: 1rem auto;
   padding-left: 20px;
   border-radius: 7px;
@@ -41,7 +41,7 @@
 
 .searchBar:focus {
   background-color: #fff;
-  width: 75%;
+  width: 350px;
 }
 
 .searchIcon,
@@ -150,16 +150,28 @@
   width: 35px;
   height: 35px;
   border-radius: 6px;
-  transition: 0.3s ease;
+  transition: 0.4s ease;
 }
 
 .dropDownButton:hover {
-  background-color: #888;
+  background-color: #192124;
+  border: 1px #2f3638 solid;
   cursor: pointer;
 }
+
+.dropDownButton:active {
+  transform: scale(1.2);
+}
+
+.activeDropDown {
+  color: black;
+  border: 1px #2f3638 solid;
+  background-color: #192124;
+}
+
 .activeDropDown span,
 .dropDownButton:hover span {
-  color: #fb1;
+  color: #ffd46b;
 }
 
 .dropDownButton:focus {
@@ -199,7 +211,7 @@
   margin-left: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .trackImageWrap {
@@ -264,7 +276,7 @@
   animation-play-state: paused;
 }
 
-.addPlaylist {
+.mobileAddPlaylist {
   color: red;
   position: fixed;
   top: 1.5rem;
@@ -433,8 +445,11 @@
   display: flex;
   flex-direction: column;
   padding-left: 0;
-
   background-color: #171e21;
+}
+
+.desktopCategoryList {
+  display: none;
 }
 
 .categoryWrapper {
@@ -444,20 +459,25 @@
   padding: 1rem;
   box-sizing: border-box;
   border-bottom: 1px #333 solid;
-  /* height: 5rem; */
   color: inherit;
   background-color: inherit;
   overflow: hidden;
-  /* color: #b8ced3; */
   text-decoration: none;
   color: #626d70;
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 800px) {
   .libraryWrapper {
-    padding: 0 2rem;
+    padding: 2rem 2rem;
   }
-  .categoryListWrapper {
+
+  .mobileCategoryList {
+    display: none;
+  }
+
+  .desktopCategoryList {
+    display: flex;
+    text-align: center;
     position: sticky;
     top: 245px;
     z-index: 1;
@@ -492,7 +512,15 @@
   .titleWrapper {
     width: 550px;
   }
+  .mobileAddPlaylist {
+    display: none;
+  }
+}
+.singleArtistName {
+  color: #ffd46b;
+}
 
+@media (min-width: 1025px) {
   .ellipsisH,
   .duration {
     display: none;
@@ -507,14 +535,10 @@
     margin-right: 10px;
   }
 }
-.singleArtistName {
-  color: #ffd46b;
-}
+
 @media (min-width: 1400px) {
   .singleArtistName {
     display: block;
-    /* min-width: 100px; */
-
     width: 190px;
   }
 
@@ -528,15 +552,6 @@
     width: 100px;
     display: inline;
   }
-  /* .singleGenre {
-    display: block;
-  } */
-  /* .duration {
-    display: none;
-  }
-  .singleTime {
-    display: block;
-  } */
 }
 
 @keyframes mainBar {

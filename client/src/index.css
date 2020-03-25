@@ -41,11 +41,11 @@ body {
   background-color: #192124;
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 800px) {
   .content {
     position: fixed;
     top: 0;
-    left: 300px;
+    left: 230px;
     right: 0;
     bottom: 0;
   }
