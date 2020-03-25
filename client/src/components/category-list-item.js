@@ -6,8 +6,7 @@ import styles from "../styles/library.module.css";
 
 const CategoryListItem = ({ category }) => (
   <NavLink
-    exact
-    to={`/app/library/${category}`}
+    to={`/app/library/${category.toLowerCase()}`}
     className={styles.categoryWrapper}
     activeClassName={styles.activeSection}
     onClick={scrollTop}
