@@ -1,3 +1,5 @@
+// The ripple effect
+// @param e: the event object
 export default function rippleEffect(e) {
   // This is necessary to remove the element after
   // due to React's synthetic events. It will normally
@@ -5,10 +7,11 @@ export default function rippleEffect(e) {
   // the ripple span after the function has completed
   e.persist();
 
-  const bound = e.target.getBoundingClientRect();
+  let x, y;
 
-  const x = e.clientX - bound.left;
-  const y = e.clientY - bound.top;
+  const offset = e.target.getClientRects()[0];
+  x = e.target.offsetLeft + e.clientX - offset.left;
+  y = e.target.offsetTop + e.clientY - offset.top;
 
   const rippleSpan = document.createElement("span");
   rippleSpan.className = "ripple";
