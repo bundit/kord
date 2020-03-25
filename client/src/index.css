@@ -38,7 +38,6 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   background-color: #192124;
 }
 
@@ -111,6 +110,6 @@ a {
   }
   to {
     opacity: 0;
-    transform: scale(5);
+    transform: scale(15);
   }
 }

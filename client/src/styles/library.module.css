@@ -2,10 +2,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* height: 100%; */
-  /* overflow-y: scroll; */
   background-color: #192124;
-  box-sizing: border-box;
+  overflow: auto;
 }
 
 .searchForm {
@@ -21,16 +19,24 @@
   width: 25%;
   margin: 1rem auto;
   padding-left: 20px;
-  border-radius: 5px;
+  border-radius: 7px;
   border: none;
   background-color: #bbb;
   box-sizing: border-box;
   transition: 0.4s ease;
 }
 
+.searchBar::placeholder {
+  color: black;
+}
+
+.searchBar:focus {
+  outline: none;
+}
+
 .searchBar:hover {
   cursor: text;
-  background-color: #eee;
+  background-color: #fff;
 }
 
 .searchBar:focus {
@@ -55,36 +61,45 @@
   border: none;
 }
 
-.libraryWrapper {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding-top: 7rem;
-  padding-bottom: 4rem;
-  height: 100%;
-  /* position: absolute; */
-}
-
 .relativeWrapper {
   position: relative;
 }
 
+.artistLink {
+  color: black;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  color: white;
+}
+
 .trackWrapper {
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  height: 5rem;
+  min-height: 60px;
   width: 100%;
-  padding: 1rem;
+  padding: 1rem 2rem;
   box-sizing: border-box;
-  /* border-bottom: 1px #eee solid; */
   text-decoration: none;
-  color: inherit;
-  /* z-index: -1; */
+  color: #ddd;
   background-color: inherit;
   position: relative;
   overflow: hidden;
+  font-size: 12px;
+  transition: 0.3s ease-out;
+  border-radius: 7px;
+}
+
+.trackWrapper:focus {
+  background-color: #2f3638;
+  outline: none;
+}
+
+.trackWrapper:hover {
+  background-color: #2f3638;
 }
 
 .trackWrapper a {
@@ -92,12 +107,26 @@
   text-decoration: none;
 }
 
-.trackWrapper:active {
-  background-color: #fcfbf8;
-}
-
 .titleWrapper {
   pointer-events: none;
+  max-width: 800px;
+}
+
+.stackedArtistName {
+  color: #ffd46b;
+}
+
+.singleArtistName,
+.singleGenre,
+.singleTime,
+.ellipsisV {
+  display: none;
+  margin-right: auto;
+}
+
+.ellipsisH,
+.ellipsisV {
+  color: #aaa;
 }
 
 .trackDropdown {
@@ -106,7 +135,7 @@
   right: 1.5rem;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background-color: #383f41;
   padding: 0.5rem;
   padding-left: 0.7rem;
   box-shadow: 0 1rem 1rem rgb(0, 0, 0, 0.2);
@@ -117,10 +146,36 @@
   margin-top: 0.5rem;
 }
 
+.dropDownButton {
+  width: 35px;
+  height: 35px;
+  border-radius: 6px;
+  transition: 0.3s ease;
+}
+
+.dropDownButton:hover {
+  background-color: #888;
+  cursor: pointer;
+}
+.activeDropDown span,
+.dropDownButton:hover span {
+  color: #fb1;
+}
+
+.dropDownButton:focus {
+  outline: none;
+}
+
 .dropdownOption {
+  color: #ccc;
   display: flex;
   width: inherit;
   padding-left: 0;
+}
+
+.dropdownOption:hover {
+  cursor: pointer;
+  color: #fb1;
 }
 
 .dropdownOption *:first-child {
@@ -133,7 +188,7 @@
 }
 
 .playingNow {
-  background-color: #eee;
+  background-color: #232a2d;
 }
 
 .duration {
@@ -152,6 +207,7 @@
   height: 3rem;
   width: 3rem;
   margin-right: 1rem;
+  border-radius: 7px;
 }
 
 .trackImageWrap,
@@ -169,11 +225,13 @@
 }
 
 .trackImage {
-  border-radius: 0.5rem;
+  /* border-radius: 0.5rem; */
+  border-radius: 7px;
 }
 
 .artistImage {
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  border-radius: 7px;
 }
 
 .overlay {
@@ -183,7 +241,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(0, 0, 0, 0.2);
+  background-color: rgb(0, 0, 0, 0.3);
   border-radius: 0.5rem;
 }
 
@@ -396,15 +454,20 @@
 }
 
 @media (min-width: 1025px) {
+  .libraryWrapper {
+    padding: 0 2rem;
+  }
   .categoryListWrapper {
+    position: sticky;
+    top: 245px;
+    z-index: 1;
     flex-direction: row;
     align-items: baseline;
     justify-content: flex-start;
-    max-width: 1200px;
-    margin-top: 30px;
   }
 
   .categoryWrapper {
+    max-width: 1200px;
     font-size: 17px;
     width: auto;
     margin: 15px 30px;
@@ -426,6 +489,54 @@
     background-color: #232a2d;
     color: #b8ced3;
   }
+  .titleWrapper {
+    width: 550px;
+  }
+
+  .ellipsisH,
+  .duration {
+    display: none;
+  }
+  .singleTime,
+  .ellipsisV {
+    display: block;
+  }
+
+  .singleTime {
+    margin-left: auto;
+    margin-right: 10px;
+  }
+}
+.singleArtistName {
+  color: #ffd46b;
+}
+@media (min-width: 1400px) {
+  .singleArtistName {
+    display: block;
+    /* min-width: 100px; */
+
+    width: 190px;
+  }
+
+  .stackedArtistName {
+    display: none;
+  }
+}
+
+@media (min-width: 1600px) {
+  .singleGenre {
+    width: 100px;
+    display: inline;
+  }
+  /* .singleGenre {
+    display: block;
+  } */
+  /* .duration {
+    display: none;
+  }
+  .singleTime {
+    display: block;
+  } */
 }
 
 @keyframes mainBar {

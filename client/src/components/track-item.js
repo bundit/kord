@@ -2,7 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faEllipsisH,
+  faEllipsisV
+} from "@fortawesome/free-solid-svg-icons";
 
 import TrackDropdown from "./track-dropdown";
 import rippleEffect from "../utils/rippleEffect";
@@ -42,7 +46,8 @@ const TrackItem = ({
     title,
     img,
     duration: ms,
-    artist: { name: artist }
+    artist: { name: artist },
+    genre
   } = track;
   // Keep a reference to detect clicks outside of target area
   const trackItemRef = useRef();
@@ -83,14 +88,15 @@ const TrackItem = ({
   );
 
   return (
-    <LazyLoad height="5rem" once>
-      <div ref={trackItemRef} className={styles.relativeWrapper}>
+    <div ref={trackItemRef} className={styles.relativeWrapper}>
+      <LazyLoad height={60} overflow={true} offset={200}>
         <div
           className={`${styles.trackWrapper} ${isActive && styles.playingNow}`}
           onClick={e => {
-            handlePlay();
+            // handlePlay();
             rippleEffect(e);
           }}
+          onDoubleClick={handlePlay}
           role="button"
           tabIndex="0"
           onKeyPress={handlePlay}
@@ -122,10 +128,13 @@ const TrackItem = ({
 
           <div className={styles.titleWrapper}>
             <div>
-              <strong>{truncateString(title, 38)}</strong>
+              <strong>{title}</strong>
             </div>
-            <div>{truncateString(artist, 38)}</div>
+            <div className={styles.stackedArtistName}>{artist}</div>
           </div>
+          <div className={styles.singleArtistName}>{artist}</div>
+          <div className={styles.singleGenre}>{genre}</div>
+          <div className={styles.singleTime}>{msToDuration(ms)}</div>
           <div className={styles.trackRightControls}>
             <div className={styles.duration}>{msToDuration(ms)}</div>
             {search && (
@@ -148,9 +157,16 @@ const TrackItem = ({
                   toggleDropdown();
                   e.stopPropagation();
                 }}
-                style={{ color: `${isDropdownOpen ? "red" : "black"}` }}
+                className={`${styles.dropDownButton} ${
+                  isDropdownOpen ? styles.activeDropDown : ""
+                }`}
               >
-                <FontAwesomeIcon icon={faEllipsisH} />
+                <span className={styles.ellipsisH}>
+                  <FontAwesomeIcon icon={faEllipsisH} />
+                </span>
+                <span className={styles.ellipsisV}>
+                  <FontAwesomeIcon size="2x" icon={faEllipsisV} />
+                </span>
               </button>
             )}
           </div>
@@ -164,8 +180,8 @@ const TrackItem = ({
             track={track}
           />
         )}
-      </div>
-    </LazyLoad>
+      </LazyLoad>
+    </div>
   );
 };
 

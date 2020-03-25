@@ -18,7 +18,7 @@ const ArtistList = ({ artists }) => {
     };
   }, []);
   return (
-    <div className={styles.libraryWrapper} zindex="1">
+    <div className={styles.libraryWrapper}>
       {artists.map(artist => (
         <ArtistItem key={artist.name} artist={artist} />
       ))}
