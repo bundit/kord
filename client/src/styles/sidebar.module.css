@@ -1,11 +1,11 @@
 .sidebarWrapper {
+  display: none;
   position: fixed;
   top: 0;
   bottom: 0;
   background-color: #121a1d;
-  display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 250px;
   height: 100vh;
   padding: 0 10px;
   box-sizing: border-box;
@@ -22,16 +22,30 @@
 }
 
 .sidebarHeader {
-  min-height: 70px;
-  max-height: 70px;
+  min-height: 80px;
+  max-height: 80px;
   text-align: center;
 
   box-sizing: border-box;
 }
 
+.logoWrapper {
+  height: 70px;
+  width: inherit;
+  border-radius: 7px;
+  margin: 10px;
+  transition: 0.3s ease;
+}
+
+.logoWrapper:hover {
+  cursor: pointer;
+  background-color: #192124;
+}
+
 .sidebarHeader svg {
   float: left;
-  margin-top: 20px;
+  margin-top: 15px;
+  margin-left: 15px;
   width: 60%;
   height: 60%;
 }
@@ -114,8 +128,9 @@
   color: #6f7c7f;
 }
 
-@media (max-width: 1025px) {
+@media (min-width: 800px) {
   .sidebarWrapper {
-    display: none;
+    display: flex;
+    width: 230px;
   }
 }

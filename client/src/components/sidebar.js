@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import React from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMusic,
@@ -24,7 +25,11 @@ import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 const Sidebar = ({ playlists }) => (
   <div className={styles.sidebarWrapper}>
     <div className={styles.sidebarHeader}>
-      <Kord3d />
+      <Link to="/app/">
+        <div className={styles.logoWrapper}>
+          <Kord3d />
+        </div>
+      </Link>
     </div>
     <div className={styles.sectionWrapper}>
       <h2>App</h2>
