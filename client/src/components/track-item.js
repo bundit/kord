@@ -88,8 +88,8 @@ const TrackItem = ({
   );
 
   return (
-    <div ref={trackItemRef} className={styles.relativeWrapper}>
-      <LazyLoad height={60} overflow={true} offset={200}>
+    <LazyLoad height={60} overflow={true} offset={200}>
+      <div className={styles.relativeWrapper} ref={trackItemRef}>
         <div
           className={`${styles.trackWrapper} ${isActive && styles.playingNow}`}
           onClick={e => {
@@ -100,7 +100,6 @@ const TrackItem = ({
           role="button"
           tabIndex="0"
           onKeyPress={handlePlay}
-          onTouchStart={() => {}}
         >
           <div className={styles.trackImageWrap}>
             <img
@@ -180,8 +179,8 @@ const TrackItem = ({
             track={track}
           />
         )}
-      </LazyLoad>
-    </div>
+      </div>
+    </LazyLoad>
   );
 };
 

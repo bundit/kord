@@ -32,16 +32,13 @@
 
 .searchBar:focus {
   outline: none;
+  background-color: #fff;
+  width: 350px;
 }
 
 .searchBar:hover {
   cursor: text;
   background-color: #fff;
-}
-
-.searchBar:focus {
-  background-color: #fff;
-  width: 350px;
 }
 
 .searchIcon,
@@ -63,6 +60,7 @@
 
 .relativeWrapper {
   position: relative;
+  max-width: 1300px;
 }
 
 .artistLink {
@@ -79,8 +77,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  min-height: 60px;
+  min-height: 75px;
   width: 100%;
+  max-width: 1310px;
   padding: 1rem 2rem;
   box-sizing: border-box;
   text-decoration: none;
@@ -109,7 +108,8 @@
 
 .titleWrapper {
   pointer-events: none;
-  max-width: 800px;
+  flex-grow: 1;
+  /* max-width: 800px; */
 }
 
 .stackedArtistName {
@@ -122,11 +122,13 @@
 .ellipsisV {
   display: none;
   margin-right: auto;
+  text-align: left;
 }
 
 .ellipsisH,
 .ellipsisV {
   color: #aaa;
+  text-align: center;
 }
 
 .trackDropdown {
@@ -200,7 +202,7 @@
 }
 
 .playingNow {
-  background-color: #232a2d;
+  background-color: #2f3638;
 }
 
 .duration {
@@ -510,7 +512,7 @@
     color: #b8ced3;
   }
   .titleWrapper {
-    width: 550px;
+    /* width: 550px; */
   }
   .mobileAddPlaylist {
     display: none;
@@ -530,26 +532,37 @@
     display: block;
   }
 
+  .dropDownButton {
+    margin-left: 0;
+  }
+
   .singleTime {
-    margin-left: auto;
-    margin-right: 10px;
+    width: 60px;
+    margin-right: 20px;
+  }
+
+  .titleWrapper {
   }
 }
 
 @media (min-width: 1400px) {
   .singleArtistName {
     display: block;
-    width: 190px;
+    width: 300px;
   }
 
   .stackedArtistName {
     display: none;
   }
+
+  .singleTime {
+    margin-right: auto;
+  }
 }
 
 @media (min-width: 1600px) {
   .singleGenre {
-    width: 100px;
+    width: 250px;
     display: inline;
   }
 }
