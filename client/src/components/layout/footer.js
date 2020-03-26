@@ -1,16 +1,17 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { NavLink } from "react-router-dom";
+import { connect } from "react-redux";
 import {
   faMusic,
   faSearch,
   faEllipsisH
 } from "@fortawesome/free-solid-svg-icons";
+import PropTypes from "prop-types";
+import React from "react";
+
+import Player from "../player";
 import slide from "../../styles/slide.module.css";
-import rippleEffect from "../../utils/rippleEffect";
 import styles from "../../styles/footer.module.css";
 
 const Footer = ({ isExpanded, location, libHistory }) => {
@@ -19,59 +20,49 @@ const Footer = ({ isExpanded, location, libHistory }) => {
     libHistory && libHistory.length
       ? libHistory[libHistory.length - 1]
       : "/app/library";
-  console.log("hist", libHistory);
+
   const libNavSecondTap = pastLibRoute === pathname;
 
   return (
-    <CSSTransition in={!isExpanded} timeout={400} classNames={slide}>
-      <footer className={styles.footer}>
-        <nav>
-          <ul className={styles.navUl}>
-            <li>
-              <NavLink
-                to={`${libNavSecondTap ? "/app/library" : pastLibRoute}`}
-                className={styles.navLink}
-                activeClassName={styles.active}
-                onClick={rippleEffect}
-              >
-                <div className={styles.navWrap}>
-                  <FontAwesomeIcon icon={faMusic} />
-                  Library
-                </div>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                exact
-                to="/app/search"
-                className={styles.navLink}
-                activeClassName={styles.active}
-                onClick={rippleEffect}
-              >
-                <div className={styles.navWrap}>
-                  <FontAwesomeIcon icon={faSearch} />
-                  Search
-                </div>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                exact
-                to="/app/more"
-                className={styles.navLink}
-                activeClassName={styles.active}
-                onClick={rippleEffect}
-              >
-                <div className={styles.navWrap}>
-                  <FontAwesomeIcon icon={faEllipsisH} />
-                  More
-                </div>
-              </NavLink>
-            </li>
-          </ul>
-        </nav>
-      </footer>
-    </CSSTransition>
+    <div style={{ marginTop: "auto" }}>
+      <Player />
+      <CSSTransition in={!isExpanded} timeout={400} classNames={slide}>
+        <footer className={styles.footer}>
+          <NavLink
+            to={`${libNavSecondTap ? "/app/library" : pastLibRoute}`}
+            className={styles.navLink}
+            activeClassName={styles.active}
+          >
+            <div className={styles.navWrap}>
+              <FontAwesomeIcon icon={faMusic} />
+              Library
+            </div>
+          </NavLink>
+          <NavLink
+            exact
+            to="/app/search"
+            className={styles.navLink}
+            activeClassName={styles.active}
+          >
+            <div className={styles.navWrap}>
+              <FontAwesomeIcon icon={faSearch} />
+              Search
+            </div>
+          </NavLink>
+          <NavLink
+            exact
+            to="/app/more"
+            className={styles.navLink}
+            activeClassName={styles.active}
+          >
+            <div className={styles.navWrap}>
+              <FontAwesomeIcon icon={faEllipsisH} />
+              More
+            </div>
+          </NavLink>
+        </footer>
+      </CSSTransition>
+    </div>
   );
 };
 

@@ -1,17 +1,12 @@
 .footer {
   position: fixed;
+  display: flex;
+  justify-content: space-around;
   bottom: 0;
-  left: 0;
-  height: 7rem;
-  width: 100%;
+  width: 100vw;
+  height: 84px;
   border-top: 1px #eee solid;
-  background-color: #fff;
   font-family: "Pacifico";
-  z-index: 3;
-}
-
-.footer nav {
-  height: 100%;
 }
 
 /* Icon selector */
@@ -20,23 +15,15 @@
   pointer-events: none;
 }
 
-.navUl {
-  height: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  padding: 0;
-  margin: 0;
-}
-
-.navUl li {
-  display: inline;
-  width: 100%;
-}
-
 .navLink {
-  background-color: #fff;
+  justify-content: space-evenly;
   text-decoration: none;
-  color: #666;
+  color: #777;
+  background-color: #121a1df2;
+}
+
+.navLink:active .navWrap {
+  background-color: white;
 }
 
 .navWrap {
@@ -48,8 +35,18 @@
   justify-content: baseline;
   padding-top: 1.5rem;
   height: 100%;
+  width: 33vw;
 }
 
 .active {
-  color: red;
+  transition: 0.1s ease;
+  background-color: #192124;
+  color: #ddd;
+  font-size: 15px;
+}
+
+@media (min-width: 800px) {
+  .footer {
+    display: none;
+  }
 }
