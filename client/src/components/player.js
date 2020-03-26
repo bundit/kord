@@ -263,6 +263,8 @@ class Player extends React.Component {
             handleToggleExpand={handleToggleExpand}
             handlePlayPause={handlePlayPause}
             isPlaying={isPlaying}
+            handlePrev={handlePrev}
+            handleNext={handleNext}
           />
         </CSSTransition>
       </>

@@ -17,6 +17,9 @@
   transition: 0.15s ease;
   padding: 0;
 }
+.miniPlayer button:hover svg {
+  fill: #ffd46b;
+}
 .miniPlayer button:focus {
   outline: none;
 }
@@ -34,7 +37,7 @@
   /* border: 1px #383f41 solid; */
 }
 
-.desktopPlayButton {
+.desktopPlayPauseButton {
   width: 60px;
   height: 60px;
 }
@@ -44,7 +47,7 @@
   display: none;
 }
 .desktopButtonGroup {
-  width: 200px;
+  width: 150px;
 }
 
 .miniPlayerImageWrap,
@@ -64,17 +67,16 @@
   font-size: 1.3rem;
 }
 
-.titleWrapper {
-  flex: 1;
+.nowPlaying {
   text-align: center;
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.titleWrapper div:last-child {
+.nowPlayingArtist {
   color: #ffd46b;
-}
-
-.playerWrapper div:last-child {
-  margin-left: auto;
 }
 
 .playerOpen {
@@ -269,19 +271,30 @@ input[type="range"]:active::-ms-thumb {
     display: none;
   }
 
-  .miniPlayerImageWrap,
+  .miniPlayerImageWrap {
+    display: block;
+    margin-right: 15px;
+  }
   .desktopButtonGroup {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
-  .titleWrapper {
-    flex: 0 1 auto;
+  .desktopButtonGroup {
+    padding: 0 20px;
+  }
+
+  .nowPlaying {
+    flex: 1;
+    display: flex;
     text-align: left;
-    margin-left: 15px;
-    width: 100px;
-    margin-right: auto;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .volumeSlider {
+    flex: 1;
   }
 
   .forwardButton,
@@ -294,6 +307,8 @@ input[type="range"]:active::-ms-thumb {
 input[type="range"].slider {
   -webkit-appearance: none;
   width: 100%;
+  max-width: 150px;
+  margin-left: auto;
   background: #151d20;
 }
 
