@@ -93,12 +93,7 @@
 }
 
 .trackWrapper:focus {
-  background-color: #2f3638;
   outline: none;
-}
-
-.trackWrapper:hover {
-  background-color: #2f3638;
 }
 
 .trackWrapper a {
@@ -109,7 +104,6 @@
 .titleWrapper {
   pointer-events: none;
   flex-grow: 1;
-  /* max-width: 800px; */
 }
 
 .stackedArtistName {
@@ -523,6 +517,11 @@
 }
 
 @media (min-width: 1025px) {
+  .trackWrapper:focus,
+  .trackWrapper:hover {
+    background-color: #2f3638;
+  }
+
   .ellipsisH,
   .duration {
     display: none;

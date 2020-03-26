@@ -88,8 +88,8 @@ const TrackItem = ({
   );
 
   return (
-    <LazyLoad height={60} overflow={true} offset={200}>
-      <div className={styles.relativeWrapper} ref={trackItemRef}>
+    <div className={styles.relativeWrapper} ref={trackItemRef}>
+      <LazyLoad height={60} overflow={true} offset={200}>
         <div
           className={`${styles.trackWrapper} ${isActive && styles.playingNow}`}
           onClick={e => {
@@ -179,8 +179,8 @@ const TrackItem = ({
             track={track}
           />
         )}
-      </div>
-    </LazyLoad>
+      </LazyLoad>
+    </div>
   );
 };
 
