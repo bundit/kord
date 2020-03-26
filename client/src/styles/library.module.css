@@ -102,6 +102,9 @@
 }
 
 .titleWrapper {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   pointer-events: none;
   flex-grow: 1;
 }
@@ -463,6 +466,10 @@
 }
 
 @media (min-width: 800px) {
+  .trackWrapper:focus,
+  .trackWrapper:hover {
+    background-color: #2f3638;
+  }
   .libraryWrapper {
     padding: 2rem 2rem;
   }
@@ -505,9 +512,7 @@
     background-color: #232a2d;
     color: #b8ced3;
   }
-  .titleWrapper {
-    /* width: 550px; */
-  }
+
   .mobileAddPlaylist {
     display: none;
   }
@@ -517,11 +522,6 @@
 }
 
 @media (min-width: 1025px) {
-  .trackWrapper:focus,
-  .trackWrapper:hover {
-    background-color: #2f3638;
-  }
-
   .ellipsisH,
   .duration {
     display: none;
@@ -538,9 +538,6 @@
   .singleTime {
     width: 60px;
     margin-right: 20px;
-  }
-
-  .titleWrapper {
   }
 }
 
