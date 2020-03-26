@@ -117,7 +117,7 @@
 .sidebarFooter {
   border-top: 1px #383f41 solid;
   margin-top: auto;
-  height: 150px;
+  height: 100px;
   display: flex;
   justify-content: space-around;
   align-items: center;

@@ -1,11 +1,11 @@
 .footer {
   position: fixed;
   display: flex;
-  justify-content: space-around;
   bottom: 0;
   width: 100vw;
   height: 84px;
-  border-top: 1px #eee solid;
+  /* border-top: 1px #eee solid; */
+  border-top: 1px #383f41 solid;
   font-family: "Pacifico";
 }
 
