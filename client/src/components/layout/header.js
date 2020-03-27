@@ -16,7 +16,7 @@ import {
   searchSoundcloudArtists,
   searchSpotify
 } from "../../redux/actions/searchActions";
-import LibraryCategoryList from "../library-category-list";
+import CategoryList from "../category-list";
 import SearchBar from "../search-bar";
 import styles from "../../styles/header.module.css";
 
@@ -113,7 +113,7 @@ function Header({
         <Route
           path="/app/library"
           render={() => (
-            <LibraryCategoryList
+            <CategoryList
               categories={["Playlists", "Songs", "Artists", "Genres", "Albums"]}
             />
           )}

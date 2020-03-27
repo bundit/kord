@@ -8,7 +8,7 @@ import NewPlaylistForm from "./new-playlist-form";
 import AddToPlaylistForm from "./add-to-playlist-form";
 import EditTrackForm from "./edit-track-form";
 import DeleteTrackForm from "./delete-track-form";
-import LibraryCategoryList from "./library-category-list";
+import CategoryList from "./category-list";
 import TrackList from "./track-list";
 import ArtistList from "./artist-list";
 import ListOfPlaylists from "./playlist-list";
@@ -146,7 +146,7 @@ class Library extends React.Component {
         <Route
           exact={this.state.isMobile}
           path="/app/library"
-          render={() => <LibraryCategoryList categories={categories} mobile />}
+          render={() => <CategoryList categories={categories} mobile />}
         />
         <Route
           render={({ location }) => {
@@ -266,7 +266,9 @@ Library.defaultProps = {
     title: "Title",
     artist: { name: "Artist" },
     genre: "Genre"
-  }
+  },
+  playlists: [],
+  artists: []
 };
 
 const mapStateToProps = state => ({

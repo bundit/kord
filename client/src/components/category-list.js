@@ -5,7 +5,7 @@ import CategoryListItem from "./category-list-item";
 import scrollTop from "../utils/scrollTop";
 import styles from "../styles/library.module.css";
 
-function LibraryCategoryList({ categories, mobile }) {
+function CategoryList({ categories, mobile }) {
   const categoryList = categories.map(category => (
     <CategoryListItem key={category} category={category} />
   ));
@@ -24,8 +24,8 @@ function LibraryCategoryList({ categories, mobile }) {
   );
 }
 
-LibraryCategoryList.propTypes = {
+CategoryList.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
-export default LibraryCategoryList;
+export default CategoryList;
