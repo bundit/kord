@@ -4,15 +4,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { CSSTransition } from "react-transition-group";
 import slideTransition from "../styles/slideModal.module.css";
-import styles from "../styles/library.module.css";
+import styles from "../styles/modal.module.css";
 
-const Modal = ({ show, onClose, children }) => (
+const Modal = ({ show, onClose, children, isBackdropClosable = true }) => (
   <>
     {show && (
       <div
         className={styles.backdrop}
         role="presentation"
-        onClick={() => onClose()}
+        onClick={isBackdropClosable ? () => onClose() : null}
       />
     )}
     <CSSTransition
@@ -26,7 +26,11 @@ const Modal = ({ show, onClose, children }) => (
         role="presentation"
         onClick={e => e.stopPropagation()}
       >
-        <button onClick={() => onClose()} type="button">
+        <button
+          className={styles.closeButton}
+          onClick={() => onClose()}
+          type="button"
+        >
           <FontAwesomeIcon icon={faTimes} size="2x" />
         </button>
 

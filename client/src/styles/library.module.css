@@ -159,7 +159,7 @@
 }
 
 .dropDownButton:active {
-  transform: scale(1.2);
+  transform: scale(1.3);
 }
 
 .activeDropDown {
@@ -186,16 +186,17 @@
 
 .dropdownOption:hover {
   cursor: pointer;
+  color: white;
+}
+
+.dropdownOption:active {
   color: #fb1;
+  outline: none;
 }
 
 .dropdownOption *:first-child {
   padding-right: 0.5rem;
   width: 1rem;
-}
-
-.dropdownOption:active {
-  color: red;
 }
 
 .playingNow {
@@ -282,162 +283,6 @@
   right: 0;
   z-index: 3;
   font-size: 2rem;
-}
-
-.backdrop {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 4;
-}
-
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 20rem;
-  min-height: 20rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 1rem;
-  padding: 1rem;
-  box-sizing: border-box;
-
-  margin-top: -20rem;
-  margin-left: -10rem;
-  z-index: 4;
-}
-
-.modalChildrenContainer {
-  width: inherit;
-}
-
-.modal > button {
-  align-self: flex-end;
-}
-
-.modal > button:active {
-  color: red;
-}
-
-.playlistForm {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-}
-
-.newPlaylistFormLabel > input,
-.playlistForm label > h3 {
-  margin: auto;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
-  padding-left: 1rem;
-}
-
-.playlistForm input[type="text"] {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 1rem;
-  border: none;
-  background: #eee;
-  box-sizing: border-box;
-}
-
-.playlistForm > button[type="submit"] {
-  width: auto;
-  margin-top: 1rem;
-  align-self: flex-end;
-  background-color: black;
-  border-radius: 1rem;
-  color: white;
-}
-
-.formScrollContainer {
-  overflow-y: auto;
-  max-height: 15rem;
-}
-
-.checkboxLabel,
-.textboxLabel,
-.editTextLabel {
-  display: flex;
-  border-bottom: 1px #eee solid;
-  white-space: nowrap;
-  vertical-align: middle;
-  padding: 0.5rem 1rem;
-  font-size: 1.2rem;
-}
-
-.textboxLabel {
-  border-bottom: none;
-  margin-top: 1rem;
-  padding-left: 0.6rem;
-}
-
-.textboxLabel input[type="text"] {
-  margin-right: 1rem;
-  font-size: 1.2rem;
-}
-
-.checkboxLabel svg,
-.textboxLabel svg {
-  margin-top: auto;
-  margin-bottom: auto;
-}
-
-.checkboxLabel:active {
-  background-color: #eee;
-}
-
-.checkboxLabel > input[type="checkbox"] {
-  margin: 0;
-  margin-left: auto;
-  opacity: 0;
-}
-
-.checkboxLabel > *:last-child {
-  margin-left: auto;
-}
-
-.editTextLabel {
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
-}
-
-.editTextLabel > span {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  padding: 0 0.5rem;
-}
-
-.editTextLabel > span > * {
-  float: right;
-}
-
-.editTextLabel input[type="text"] {
-  width: inherit;
-}
-
-.confirmWrapper {
-  position: relative;
-  height: 10rem;
-  top: 50%;
-  display: flex;
-  justify-content: space-around;
-}
-
-.confirmWrapper button {
-  align-self: center;
-  height: auto;
-  background-color: black;
-  border-radius: 1rem;
-  color: white;
 }
 
 .categoryListWrapper {

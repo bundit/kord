@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import Modal from "./modal";
 import EditTextfield from "./edit-textfield";
-import styles from "../styles/library.module.css";
+import styles from "../styles/modal.module.css";
 
 const EditTrackForm = ({ show, onClose, track, onSubmit }) => {
   const {

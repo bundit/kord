@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import Modal from "./modal";
-import styles from "../styles/library.module.css";
+import styles from "../styles/modal.module.css";
 
 const DeleteTrackForm = ({ show, onClose, track, onSubmit }) => (
   <Modal show={show} onClose={onClose}>

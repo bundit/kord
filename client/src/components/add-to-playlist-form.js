@@ -5,7 +5,7 @@ import { faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 import Modal from "./modal";
 import AddToPlaylistCheckbox from "./add-playlist-checkbox";
-import styles from "../styles/library.module.css";
+import styles from "../styles/modal.module.css";
 
 // This functions takes a list of strings and returns a new object with
 // the object's attributes set by the strings to be the value

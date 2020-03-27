@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faUndo } from "@fortawesome/free-solid-svg-icons";
 
-import styles from "../styles/library.module.css";
+import styles from "../styles/modal.module.css";
 
 const EditTextfield = ({ title, value, handleChange, original }) => (
   <label className={styles.editTextLabel} htmlFor={title}>
