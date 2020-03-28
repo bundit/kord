@@ -3,10 +3,13 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
-import styles from "../styles/library.module.css";
+import styles from "../styles/modal.module.css";
 
 const AddToPlaylistCheckbox = ({ title, i, value, onChange }) => (
-  <label className={styles.checkboxLabel} htmlFor={`checkbox${i}`}>
+  <label
+    className={`${styles.checkboxLabel} ${value ? styles.changesMade : null}`}
+    htmlFor={`checkbox${i}`}
+  >
     <span>{title}</span>
     <input
       id={`checkbox${i}`}
@@ -14,13 +17,7 @@ const AddToPlaylistCheckbox = ({ title, i, value, onChange }) => (
       checked={value}
       onChange={() => onChange(title)}
     />
-    <FontAwesomeIcon
-      icon={faCheck}
-      style={{
-        color: value ? "red" : "grey"
-      }}
-      size="lg"
-    />
+    <FontAwesomeIcon icon={faCheck} size="lg" />
   </label>
 );
 

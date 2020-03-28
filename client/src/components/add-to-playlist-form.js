@@ -63,31 +63,34 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
     newPlaylistField.length;
 
   return (
-    <Modal show={show} onClose={onClose}>
-      <h1 className="text-center">Add to Playlist</h1>
+    <Modal title="Add to Playlist" show={true} onClose={onClose}>
       <form
-        className={styles.playlistForm}
+        className={styles.modalForm}
         onSubmit={e => {
           e.preventDefault();
           onSubmit(prepareFormData());
           clearForm();
         }}
       >
-        <label className={styles.textboxLabel} htmlFor="newPlaylistField">
-          <input
-            id="newPlaylistField"
-            type="text"
-            placeholder="Create New Playlist"
-            value={newPlaylistField}
-            onChange={e => setNewPlaylistField(e.target.value)}
-          />
-          <FontAwesomeIcon
-            icon={newPlaylistField.length ? faCheck : faPlus}
-            style={{ color: newPlaylistField.length ? "red" : "grey" }}
-            size="lg"
-          />
-        </label>
-        <div className={styles.formScrollContainer}>
+        <div className={styles.formInnerWrapper}>
+          <label
+            className={`${styles.textfieldCheckmarkLabel} ${
+              newPlaylistField.length ? styles.changesMade : null
+            }`}
+            htmlFor="newPlaylistField"
+          >
+            <input
+              id="newPlaylistField"
+              type="text"
+              placeholder="Create New Playlist"
+              value={newPlaylistField}
+              onChange={e => setNewPlaylistField(e.target.value)}
+            />
+            <FontAwesomeIcon
+              icon={newPlaylistField.length ? faCheck : faPlus}
+              size="lg"
+            />
+          </label>
           {playlistTitles.map((playlist, i) => (
             <AddToPlaylistCheckbox
               title={playlist}
@@ -98,12 +101,22 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
             />
           ))}
         </div>
-        <button
-          style={{ visibility: userMadeChanges() ? "visible" : "hidden" }}
-          type="submit"
-        >
-          Add
-        </button>
+        <div className={styles.formCancelSubmitButtonGroup}>
+          <button
+            type="button"
+            className={styles.formCancelButton}
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className={styles.formSubmitButton}
+            // style={{ visibility: userMadeChanges() ? "visible" : "hidden" }}
+          >
+            Finish
+          </button>
+        </div>
       </form>
     </Modal>
   );

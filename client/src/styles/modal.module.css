@@ -4,118 +4,172 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 4;
 }
 
 .modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 80vw;
-  height: 50vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background-color: #272f31;
-  border-radius: 10px;
-  padding: 1rem;
-  color: #eee;
+  position: fixed;
+  top: 50vh;
+  left: 50vw;
+  width: 80vw;
+  height: auto;
+  max-height: 50vh;
   margin-top: -25vh;
   margin-left: -40vw;
+  background-color: #192124;
+  border-radius: 10px;
+  color: #eee;
   z-index: 4;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.modalChildrenContainer {
-  width: inherit;
-}
-
-.modal > button {
-  align-self: flex-end;
-}
-
-.modal > button:active {
-  color: red;
-}
-
-.playlistForm {
+.modalHeader {
   display: flex;
-  flex-direction: column;
-  padding: 1rem;
+  align-items: center;
+  min-height: 80px;
+  background-color: #151d20;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  border-bottom: 1px #383f41 solid;
+  justify-content: space-between;
+  padding: 0 25px;
 }
 
-.newPlaylistFormLabel > input,
-.playlistForm label > h3 {
-  margin: auto;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
-  padding-left: 1rem;
+.modalTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #aaa;
 }
 
-.playlistForm input[type="text"] {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 7px;
-  border: none;
-  background: #eee;
-  box-sizing: border-box;
+.closeButton {
+  cursor: pointer;
+  color: #aaa;
 }
 
-.playlistForm > button[type="submit"] {
-  width: auto;
-  margin-top: 1rem;
-  align-self: flex-end;
-  background-color: black;
-  border-radius: 7px;
+.closeButton:hover {
+  transition: 0.2s ease;
   color: white;
 }
 
-.formScrollContainer {
-  overflow-y: auto;
-  max-height: 15rem;
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 25px;
+  align-items: center;
+  flex-shrink: 1;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.modalForm h2 {
+  color: #bbb;
+}
+
+.formInnerWrapper {
+  flex: 1;
+  width: 100%;
+  padding-left: 10px;
+  padding-bottom: 50px;
+
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.modalForm input[type="text"] {
+  flex: 1;
+  margin-right: 20px;
+  height: inherit;
+  padding: 5px 10px;
+  border-radius: 7px;
+  background: #ddd;
+  box-sizing: border-box;
+}
+
+.modalForm input[type="text"]:focus {
+  background: white;
+}
+
+.formLabel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.formCancelSubmitButtonGroup {
+  display: flex;
+  justify-content: flex-end;
+  align-self: flex-end;
+  min-height: 45px;
+  margin-bottom: 0;
+  margin-top: 10px;
+}
+
+.formCancelSubmitButtonGroup button {
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 15px;
+  border-radius: 7px;
+}
+
+.formCancelButton {
+  color: #999;
+  margin-right: 20px;
+}
+
+.formSubmitButton {
+  background-color: #fb1;
+  color: black;
+}
+
+.textfieldCheckmarkLabel {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.textfieldCheckmarkLabel svg,
+.checkboxLabel svg {
+  margin-left: auto;
 }
 
 .checkboxLabel,
-.textboxLabel,
 .editTextLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: flex;
-  border-bottom: 1px #eee solid;
+  min-height: 5px;
   white-space: nowrap;
   vertical-align: middle;
-  padding: 0.5rem 1rem;
-  font-size: 1.2rem;
-}
-
-.textboxLabel {
-  border-bottom: none;
-  margin-top: 1rem;
-  padding-left: 0.6rem;
-}
-
-.textboxLabel input[type="text"] {
-  margin-right: 1rem;
-  font-size: 1.2rem;
-}
-
-.checkboxLabel svg,
-.textboxLabel svg {
-  margin-top: auto;
-  margin-bottom: auto;
+  padding: 10px 0;
 }
 
 .checkboxLabel:active {
   background-color: #eee;
 }
 
+.checkboxLabel span {
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .checkboxLabel > input[type="checkbox"] {
-  margin: 0;
   margin-left: auto;
   opacity: 0;
 }
 
-.checkboxLabel > *:last-child {
-  margin-left: auto;
+.changesMade {
+  color: #ffd46b;
 }
 
 .editTextLabel {
