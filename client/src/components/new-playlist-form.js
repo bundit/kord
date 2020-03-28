@@ -5,27 +5,38 @@ import Modal from "./modal";
 import styles from "../styles/modal.module.css";
 
 const NewPlaylistForm = ({ show, value, onClose, onChange, onSubmit }) => (
-  <Modal show={show} onClose={onClose}>
-    <h1 className="text-center">{`${value || "New Playlist"}`}</h1>
-    <form className={styles.playlistForm} onSubmit={onSubmit}>
-      <label htmlFor="playlistname" className={styles.newPlaylistFormLabel}>
-        <h2>Enter a playlist name:</h2>
-        <input
-          ref={input => input && input.focus()}
-          id="playlistname"
-          type="text"
-          placeholder="Playlist Name"
-          onChange={e => onChange(e.target.value)}
-          value={value}
-          // disable auto inputs
-          autoCapitalize="off"
-          autoComplete="off"
-          autoCorrect="off"
-          spellCheck="false"
-        />
+  <Modal title="New Playlist" show={true} onClose={onClose}>
+    <form className={styles.modalForm} onSubmit={onSubmit}>
+      <label htmlFor="playlistname" className={styles.formLabel}>
+        <div className={styles.formInnerWrapper}>
+          <h2>Enter a playlist name:</h2>
+          <input
+            ref={input => input && input.focus()}
+            id="playlistname"
+            type="text"
+            placeholder="Playlist Name"
+            onChange={e => onChange(e.target.value)}
+            value={value}
+            // disable auto inputs
+            autoCapitalize="off"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck="false"
+          />
+        </div>
       </label>
-
-      <button type="submit">Create</button>
+      <div className={styles.formCancelSubmitButtonGroup}>
+        <button
+          type="button"
+          className={styles.formCancelButton}
+          onClick={onClose}
+        >
+          Cancel
+        </button>
+        <button type="submit" className={styles.formSubmitButton}>
+          Create
+        </button>
+      </div>
     </form>
   </Modal>
 );
