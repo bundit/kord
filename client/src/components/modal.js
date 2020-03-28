@@ -6,7 +6,13 @@ import { CSSTransition } from "react-transition-group";
 import slideTransition from "../styles/slideModal.module.css";
 import styles from "../styles/modal.module.css";
 
-const Modal = ({ show, onClose, children, isBackdropClosable = true }) => (
+const Modal = ({
+  title,
+  show,
+  onClose,
+  children,
+  isBackdropClosable = true
+}) => (
   <>
     {show && (
       <div
@@ -26,15 +32,18 @@ const Modal = ({ show, onClose, children, isBackdropClosable = true }) => (
         role="presentation"
         onClick={e => e.stopPropagation()}
       >
-        <button
-          className={styles.closeButton}
-          onClick={() => onClose()}
-          type="button"
-        >
-          <FontAwesomeIcon icon={faTimes} size="2x" />
-        </button>
+        <div className={styles.modalHeader}>
+          <span className={styles.modalTitle}>{title}</span>
+          <button
+            className={styles.closeButton}
+            onClick={() => onClose()}
+            type="button"
+          >
+            <FontAwesomeIcon icon={faTimes} size="2x" />
+          </button>
+        </div>
 
-        <div className={styles.modalChildrenContainer}>{children}</div>
+        {children}
       </div>
     </CSSTransition>
   </>
