@@ -5,7 +5,7 @@ import Modal from "./modal";
 import styles from "../styles/modal.module.css";
 
 const NewPlaylistForm = ({ show, value, onClose, onChange, onSubmit }) => (
-  <Modal title="New Playlist" show={true} onClose={onClose}>
+  <Modal title="New Playlist" show={show} onClose={onClose}>
     <form className={styles.modalForm} onSubmit={onSubmit}>
       <label htmlFor="playlistname" className={styles.formLabel}>
         <div className={styles.formInnerWrapper}>

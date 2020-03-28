@@ -7,20 +7,6 @@ import Modal from "./modal";
 import AddToPlaylistCheckbox from "./add-playlist-checkbox";
 import styles from "../styles/modal.module.css";
 
-// This functions takes a list of strings and returns a new object with
-// the object's attributes set by the strings to be the value
-// E.g: initAttributesFromList(["a", "b"], true)
-// returns {a: true, b: true}
-function initAttributesFromList(list, value = false) {
-  const object = {};
-
-  list.forEach(attribute => {
-    object[attribute] = value;
-  });
-
-  return object;
-}
-
 const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
   const [checkedPlaylists, setCheckedPlaylists] = useState(
     initAttributesFromList(playlistTitles)
@@ -58,12 +44,8 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
     setCheckedPlaylists(initAttributesFromList(playlistTitles));
   };
 
-  const userMadeChanges = () =>
-    Object.values(checkedPlaylists).some(isTrue => isTrue) ||
-    newPlaylistField.length;
-
   return (
-    <Modal title="Add to Playlist" show={true} onClose={onClose}>
+    <Modal title="Add to Playlist" show={show} onClose={onClose}>
       <form
         className={styles.modalForm}
         onSubmit={e => {
@@ -109,11 +91,7 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
           >
             Cancel
           </button>
-          <button
-            type="submit"
-            className={styles.formSubmitButton}
-            // style={{ visibility: userMadeChanges() ? "visible" : "hidden" }}
-          >
+          <button type="submit" className={styles.formSubmitButton}>
             Finish
           </button>
         </div>
@@ -121,6 +99,20 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
     </Modal>
   );
 };
+
+// This functions takes a list of strings and returns a new object with
+// the object's attributes set by the strings to be the value
+// E.g: initAttributesFromList(["a", "b"], true)
+// returns {a: true, b: true}
+function initAttributesFromList(list, value = false) {
+  const object = {};
+
+  list.forEach(attribute => {
+    object[attribute] = value;
+  });
+
+  return object;
+}
 
 AddToPlaylistForm.propTypes = {
   show: PropTypes.bool.isRequired,
