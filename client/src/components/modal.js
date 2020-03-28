@@ -1,10 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
+import { CSSTransition } from "react-transition-group";
+import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { CSSTransition } from "react-transition-group";
+import PropTypes from "prop-types";
+import React from "react";
+
 import slideTransition from "../styles/slideModal.module.css";
 import styles from "../styles/modal.module.css";
+import usePortal from "../utils/usePortal";
 
 const Modal = ({
   title,
@@ -12,42 +15,47 @@ const Modal = ({
   onClose,
   children,
   isBackdropClosable = true
-}) => (
-  <>
-    {show && (
-      <div
-        className={styles.backdrop}
-        role="presentation"
-        onClick={isBackdropClosable ? () => onClose() : null}
-      />
-    )}
-    <CSSTransition
-      in={show}
-      timeout={200}
-      classNames={slideTransition}
-      unmountOnExit
-    >
-      <div
-        className={styles.modal}
-        role="presentation"
-        onClick={e => e.stopPropagation()}
-      >
-        <div className={styles.modalHeader}>
-          <span className={styles.modalTitle}>{title}</span>
-          <button
-            className={styles.closeButton}
-            onClick={() => onClose()}
-            type="button"
-          >
-            <FontAwesomeIcon icon={faTimes} size="2x" />
-          </button>
-        </div>
+}) => {
+  const target = usePortal("portal");
 
-        {children}
-      </div>
-    </CSSTransition>
-  </>
-);
+  return createPortal(
+    <>
+      {show && (
+        <div
+          className={styles.backdrop}
+          role="presentation"
+          onClick={isBackdropClosable ? () => onClose() : null}
+        />
+      )}
+      <CSSTransition
+        in={show}
+        timeout={200}
+        classNames={slideTransition}
+        unmountOnExit
+      >
+        <div
+          className={styles.modal}
+          role="presentation"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className={styles.modalHeader}>
+            <span className={styles.modalTitle}>{title}</span>
+            <button
+              className={styles.closeButton}
+              onClick={() => onClose()}
+              type="button"
+            >
+              <FontAwesomeIcon icon={faTimes} size="2x" />
+            </button>
+          </div>
+
+          {children}
+        </div>
+      </CSSTransition>
+    </>,
+    target
+  );
+};
 
 Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
