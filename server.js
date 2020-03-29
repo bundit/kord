@@ -9,6 +9,7 @@ require("./config/passport-setup");
 const authRoutes = require("./routes/auth-routes");
 const appRoutes = require("./routes/app-routes");
 const indexRoutes = require("./routes/index-routes");
+const userRoutes = require("./routes/user-routes");
 
 const app = express();
 // MIDDLEWARE
@@ -16,6 +17,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
 //
 // PRODUCTION
 if (process.env.NODE_ENV === "production") {
