@@ -2,11 +2,19 @@ import { PUSH_LIB_ROUTE, SET_SC_USER } from "../actions/types";
 
 const initialState = {
   soundcloud: {
-    key: null,
     username: ""
   },
   spotify: {
-    token: null
+    token: null,
+    username: ""
+  },
+  youtube: {
+    token: null,
+    username: ""
+  },
+  mixcloud: {
+    token: null,
+    username: ""
   },
   history: {
     library: [],
@@ -20,7 +28,6 @@ export default function(state = initialState, action) {
     case PUSH_LIB_ROUTE: {
       const pathname = action.payload;
       const libHistory = state.history.library;
-      console.log("his", libHistory);
 
       if (pathname === libHistory[libHistory.length - 1]) {
         return state;
@@ -50,6 +57,28 @@ export default function(state = initialState, action) {
         }
       };
     }
+    case "SET_YOUTUBE_ACCESS_TOKEN": {
+      const youtubeAccessToken = action.payload;
+
+      return {
+        ...state,
+        youtube: {
+          token: youtubeAccessToken
+        }
+      };
+    }
+
+    case "SET_MIXCLOUD_ACCESS_TOKEN": {
+      const mixcloudAccessToken = action.payload;
+
+      return {
+        ...state,
+        mixcloud: {
+          token: mixcloudAccessToken
+        }
+      };
+    }
+
     default:
       return state;
   }

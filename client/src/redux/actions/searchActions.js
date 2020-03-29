@@ -25,7 +25,7 @@ export const searchSoundcloudArtists = (query, limit = 5) => async dispatch => {
   const artistList = await fetchScArtists(endpoint);
 
   dispatch({
-    type: SEARCH_ARTISTS,
+    type: "SEARCH_SC_ARTISTS",
     payload: artistList
   });
 };
@@ -76,12 +76,12 @@ export const loadMoreResults = () => async (dispatch, getState) => {
   const collection = await fetchScTracks(nextHref);
 
   dispatch({
-    type: LOAD_MORE_RESULTS,
+    type: "LOAD_MORE_SC_SONGS",
     payload: collection.tracks
   });
 
   dispatch({
-    type: SET_NEXT_HREF,
+    type: "SET_NEXT_SC_HREF",
     payload: collection.nextHref
   });
 };
@@ -90,7 +90,7 @@ export const searchSouncloudTracks = (query, limit = 10) => async dispatch => {
   const collection = await fetchScTrackSearch(query, limit);
 
   dispatch({
-    type: SEARCH,
+    type: "SEARCH_SC_SONGS",
     payload: collection.tracks
   });
 
@@ -100,7 +100,7 @@ export const searchSouncloudTracks = (query, limit = 10) => async dispatch => {
   });
 
   dispatch({
-    type: SET_NEXT_HREF,
+    type: "SET_NEXT_SC_HREF",
     payload: collection.nextHref
   });
 };

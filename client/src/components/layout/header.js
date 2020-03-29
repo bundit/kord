@@ -130,7 +130,7 @@ Header.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  libQuery: state.music.query,
+  libQuery: state.form.query,
   fetchQuery: state.search.query
 });
 

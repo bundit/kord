@@ -77,7 +77,7 @@ class Search extends React.Component {
 
 Search.propTypes = {
   results: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setSearchQuery: PropTypes.func.isRequired,
+  // setSearchQuery: PropTypes.func.isRequired,
   playTrack: PropTypes.func.isRequired,
   importSong: PropTypes.func.isRequired,
   loadMoreTracks: PropTypes.func.isRequired,
@@ -91,8 +91,8 @@ Search.propTypes = {
 const mapStateToProps = state => ({
   results: state.search.results,
   history: state.search.history,
-  currentTrackID: state.musicPlayer.currentTrack.id,
-  isPlaying: state.musicPlayer.isPlaying,
+  currentTrackID: state.player.currentTrack.id,
+  isPlaying: state.player.isPlaying,
   spotifyAccessToken: state.user.spotify.token
 });
 

@@ -1,12 +1,15 @@
 import { combineReducers } from "redux";
+
+import formReducer from "./formReducer";
 import libraryReducer from "./libraryReducer";
+import playerReducer from "./playerReducer";
 import searchReducer from "./searchReducer";
-import musicPlayerReducer from "./musicPlayerReducer";
 import userReducer from "./userReducer";
 
 export default combineReducers({
-  music: libraryReducer,
+  library: libraryReducer,
   search: searchReducer,
-  musicPlayer: musicPlayerReducer,
-  user: userReducer
+  player: playerReducer,
+  user: userReducer,
+  form: formReducer
 });

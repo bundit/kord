@@ -16,11 +16,11 @@ store.subscribe(() => {
   const state = store.getState();
   // Store the library in localStorage
   saveState({
-    music: {
-      library: state.music.library,
-      artists: state.music.artists,
-      genres: state.music.genres,
-      playlists: state.music.playlists
+    library: {
+      songs: state.library.songs,
+      artists: state.library.artists,
+      genres: state.library.genres,
+      playlists: state.library.playlists
     },
     user: {
       soundcloud: {

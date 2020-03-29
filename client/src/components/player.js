@@ -292,13 +292,13 @@ Player.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  current: state.musicPlayer.currentTrack,
-  isPlaying: state.musicPlayer.isPlaying,
-  isExpanded: state.musicPlayer.isExpanded,
-  isLoaded: state.musicPlayer.isLoaded,
-  volume: state.musicPlayer.volume,
-  seek: state.musicPlayer.seek,
-  duration: state.musicPlayer.duration
+  current: state.player.currentTrack,
+  isPlaying: state.player.isPlaying,
+  isExpanded: state.player.isExpanded,
+  isLoaded: state.player.isLoaded,
+  volume: state.player.volume,
+  seek: state.player.seek,
+  duration: state.player.duration
 });
 
 const mapDispatchToProps = dispatch => ({

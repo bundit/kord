@@ -15,8 +15,8 @@ class TrackList extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { library: currentLibrary } = this.props;
-    const { library: prevLibrary } = prevProps;
+    const { songs: currentLibrary } = this.props;
+    const { songs: prevLibrary } = prevProps;
 
     // This will ensure that components that come into viewport during
     // a filter will be rendered. Lazyload only checks on scroll events,
@@ -33,7 +33,7 @@ class TrackList extends React.Component {
   render() {
     const {
       search,
-      library,
+      songs,
       handlePlay,
       addToLibrary,
       loadMoreTracks,
@@ -46,8 +46,8 @@ class TrackList extends React.Component {
 
     return (
       <div className={styles.libraryWrapper}>
-        {library &&
-          library.map(track => (
+        {songs &&
+          songs.map(track => (
             <TrackItem
               key={`${track.id}${track.source}`}
               track={track}
@@ -61,7 +61,7 @@ class TrackList extends React.Component {
               toggleDeleteTrackForm={toggleDeleteTrackForm}
             />
           ))}
-        {search && library.length > 0 && (
+        {search && songs.length > 0 && (
           <button type="button" onClick={loadMoreTracks}>
             Load More
           </button>
@@ -73,7 +73,7 @@ class TrackList extends React.Component {
 
 TrackList.propTypes = {
   search: PropTypes.bool,
-  library: PropTypes.arrayOf(PropTypes.object),
+  songs: PropTypes.arrayOf(PropTypes.object),
   handlePlay: PropTypes.func,
   addToLibrary: PropTypes.func,
   loadMoreTracks: PropTypes.func,
@@ -87,7 +87,7 @@ TrackList.propTypes = {
 
 TrackList.defaultProps = {
   search: false,
-  library: [],
+  songs: [],
   handlePlay: () => {},
   addToLibrary: () => {},
   loadMoreTracks: () => {},

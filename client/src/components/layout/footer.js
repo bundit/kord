@@ -79,7 +79,7 @@ Footer.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  isExpanded: state.musicPlayer.isExpanded,
+  isExpanded: state.player.isExpanded,
   libHistory: state.user.history.library
 });
 

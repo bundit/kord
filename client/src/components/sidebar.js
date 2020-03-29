@@ -1,26 +1,22 @@
-import { NavLink } from "react-router-dom";
-import { connect } from "react-redux";
-import React from "react";
-import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link, NavLink } from "react-router-dom";
+import { connect } from "react-redux";
 import {
   faMusic,
   faSearch,
   faCompass
 } from "@fortawesome/free-solid-svg-icons";
-
 import {
   faSoundcloud,
   faSpotify,
   faYoutube,
   faMixcloud
 } from "@fortawesome/free-brands-svg-icons";
+import React from "react";
 
+import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 import PlaylistItem from "./playlist-item";
 import styles from "../styles/sidebar.module.css";
-// import { ReactComponent as Logo } from './logo.svg';
-import { ReactComponent as Music3d } from "../assets/logo-double-no-white.svg";
-import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 
 const Sidebar = ({ playlists }) => (
   <div className={styles.sidebarWrapper}>
@@ -83,7 +79,7 @@ const Sidebar = ({ playlists }) => (
 );
 
 const mapStateToProps = state => ({
-  playlists: state.music.playlists
+  playlists: state.library.playlists
 });
 
 export default connect(mapStateToProps)(Sidebar);

@@ -1,41 +1,27 @@
 import {
   IMPORT_SC_LIKES,
-  SET_LIB_QUERY,
-  RESET_LIB_QUERY,
   IMPORT_SONG,
-  TOGGLE_NEW_PLAYLIST_FORM,
-  TOGGLE_ADD_PLAYLIST_FORM,
   ADD_TO_PLAYLISTS,
-  SET_NEW_PLAYLIST_NAME,
   CREATE_NEW_PLAYLIST,
-  TOGGLE_EDIT_TRACK_FORM,
   EDIT_TRACK,
-  DELETE_TRACK,
-  TOGGLE_DELETE_TRACK_FORM
+  DELETE_TRACK
 } from "../actions/types";
-import insertInPlace from "../../utils/insertInPlace";
-import compareSongs from "../../utils/compareSongs";
 import compareArtists from "../../utils/compareArtists";
 import compareGenres from "../../utils/compareGenres";
+import compareSongs from "../../utils/compareSongs";
+import insertInPlace from "../../utils/insertInPlace";
 
 const initialState = {
-  query: "",
-  library: [],
+  songs: [],
   artists: [],
   playlists: {},
-  genres: [],
-  isNewPlaylistFormOpen: false,
-  isAddToPlaylistFormOpen: false,
-  isEditTrackFormOpen: false,
-  isDeleteTrackFormOpen: false,
-  newPlaylistName: "",
-  trackDropdownSelected: undefined
+  genres: []
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
     case IMPORT_SC_LIKES: {
-      const newLib = [...state.library, ...action.payload]
+      const newLib = [...action.payload]
         .sort((track1, track2) => compareSongs(track1, track2))
         .filter(
           (track, index, arr) =>
@@ -62,28 +48,14 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        library: newLib,
+        songs: newLib,
         artists: newArtists,
         genres: newGenres
       };
     }
 
-    case SET_LIB_QUERY: {
-      return {
-        ...state,
-        query: action.payload
-      };
-    }
-
-    case RESET_LIB_QUERY: {
-      return {
-        ...state,
-        query: ""
-      };
-    }
-
     case IMPORT_SONG: {
-      const newLib = state.library;
+      const newLib = state.songs;
       const newArtistList = state.artists;
       const newSong = action.payload;
       const newArtist = newSong.artist;
@@ -91,7 +63,7 @@ export default function(state = initialState, action) {
       const newGenreList = state.genres;
 
       // Ignore duplicates
-      if (state.library.some(track => track.id === newSong.id)) {
+      if (state.songs.some(track => track.id === newSong.id)) {
         return state;
       }
 
@@ -103,23 +75,9 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        library: newLib,
+        songs: newLib,
         artists: newArtistList,
         genres: newGenreList
-      };
-    }
-
-    case TOGGLE_NEW_PLAYLIST_FORM: {
-      return {
-        ...state,
-        isNewPlaylistFormOpen: !state.isNewPlaylistFormOpen
-      };
-    }
-
-    case SET_NEW_PLAYLIST_NAME: {
-      return {
-        ...state,
-        newPlaylistName: action.payload
       };
     }
 
@@ -133,14 +91,6 @@ export default function(state = initialState, action) {
             list: []
           }
         }
-      };
-    }
-
-    case TOGGLE_ADD_PLAYLIST_FORM: {
-      return {
-        ...state,
-        isAddToPlaylistFormOpen: !state.isAddToPlaylistFormOpen,
-        trackDropdownSelected: action.payload
       };
     }
 
@@ -167,17 +117,9 @@ export default function(state = initialState, action) {
       };
     }
 
-    case TOGGLE_EDIT_TRACK_FORM: {
-      return {
-        ...state,
-        isEditTrackFormOpen: !state.isEditTrackFormOpen,
-        trackDropdownSelected: action.payload
-      };
-    }
-
     case EDIT_TRACK: {
       const { trackEdit, artistEdit } = action.payload;
-      const { library, artists, trackDropdownSelected, genres } = state;
+      const { songs, artists, trackDropdownSelected, genres } = state;
       const {
         artist: { name: oldArtistName }
       } = trackDropdownSelected;
@@ -194,10 +136,10 @@ export default function(state = initialState, action) {
       };
 
       // Remove the old track and insert new one
-      const index = library.findIndex(
+      const index = songs.findIndex(
         track => compareSongs(track, trackDropdownSelected) === 0
       );
-      const updatedLib = library.slice();
+      const updatedLib = songs.slice();
       updatedLib.splice(index, 1);
 
       insertInPlace(updatedLib, updatedTrack, compareSongs);
@@ -225,26 +167,18 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        library: updatedLib,
+        songs: updatedLib,
         artists: updatedArtistList,
         genres: updatedGenres
-      };
-    }
-
-    case TOGGLE_DELETE_TRACK_FORM: {
-      return {
-        ...state,
-        trackDropdownSelected: action.payload,
-        isDeleteTrackFormOpen: !state.isDeleteTrackFormOpen
       };
     }
 
     case DELETE_TRACK: {
       const deleteTrackID = state.trackDropdownSelected.id;
       const deleteArtist = state.trackDropdownSelected.artist;
-      const { library, artists } = state;
+      const { songs, artists } = state;
 
-      const updatedLib = library.filter(track => track.id !== deleteTrackID);
+      const updatedLib = songs.filter(track => track.id !== deleteTrackID);
       // We don't create a new reference here incase the artist list
       // does not need to be changed.
       let updatedArtists = artists;
@@ -263,7 +197,7 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        library: updatedLib,
+        songs: updatedLib,
         artists: updatedArtists
       };
     }

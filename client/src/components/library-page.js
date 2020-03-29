@@ -43,18 +43,18 @@ class Library extends React.Component {
   }
 
   handlePlayTrack(track) {
-    const { library, playTrack, setQueue } = this.props;
+    const { songs, playTrack, setQueue } = this.props;
     let index = 0;
 
     // Find index of song clicked
-    while (library[index].id !== track.id && index < library.length) {
+    while (songs[index].id !== track.id && index < songs.length) {
       index += 1;
     }
 
     playTrack(track);
 
     // Set the queue to the remaining songs
-    setQueue(library.slice(index));
+    setQueue(songs.slice(index));
   }
 
   handleNewPlaylist(e) {
@@ -81,7 +81,7 @@ class Library extends React.Component {
 
   render() {
     const categories = ["Playlists", "Artists", "Songs", "Albums", "Genres"];
-    let { library } = this.props;
+    let { songs } = this.props;
     const {
       artists,
       playlists,
@@ -109,7 +109,7 @@ class Library extends React.Component {
 
     // TODO: create new filtering for songs and artist view
     // if (query && query.length >= 3) {
-    //   const filteredSongs = library.filter(
+    //   const filteredSongs = songs.filter(
     //     ({ title, artist }) =>
     //       title.toLowerCase().includes(query) ||
     //       artist.name.toLowerCase().includes(query)
@@ -170,7 +170,7 @@ class Library extends React.Component {
                       path="/app/library/songs"
                       render={() => (
                         <TrackList
-                          library={library}
+                          songs={songs}
                           handlePlay={handlePlayTrack}
                           currentTrackID={currentTrackID}
                           isPlaying={isPlaying}
@@ -189,7 +189,7 @@ class Library extends React.Component {
                       path="/app/library/artists/:artist"
                       render={props => (
                         <TrackList
-                          library={library.filter(
+                          songs={songs.filter(
                             song =>
                               song.artist.name === props.match.params.artist
                           )}
@@ -228,7 +228,7 @@ class Library extends React.Component {
 }
 
 Library.propTypes = {
-  library: PropTypes.arrayOf(PropTypes.object).isRequired,
+  songs: PropTypes.arrayOf(PropTypes.object).isRequired,
   artists: PropTypes.arrayOf(PropTypes.object).isRequired,
   playTrack: PropTypes.func.isRequired,
   setQueue: PropTypes.func.isRequired,
@@ -256,6 +256,7 @@ Library.propTypes = {
 };
 
 Library.defaultProps = {
+  songs: [],
   query: "",
   newPlaylistName: "",
   isNewPlaylistFormOpen: false,
@@ -272,17 +273,17 @@ Library.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  library: state.music.library,
-  playlists: state.music.playlists,
-  artists: state.music.artists,
-  currentTrackID: state.musicPlayer.currentTrack.id,
-  isPlaying: state.musicPlayer.isPlaying,
-  isNewPlaylistFormOpen: state.music.isNewPlaylistFormOpen,
-  isAddToPlaylistFormOpen: state.music.isAddToPlaylistFormOpen,
-  newPlaylistName: state.music.newPlaylistName,
-  trackDropdownSelected: state.music.trackDropdownSelected,
-  isEditTrackFormOpen: state.music.isEditTrackFormOpen,
-  isDeleteTrackFormOpen: state.music.isDeleteTrackFormOpen
+  songs: state.library.songs,
+  playlists: state.library.playlists,
+  artists: state.library.artists,
+  currentTrackID: state.player.currentTrack.id,
+  isPlaying: state.player.isPlaying,
+  isNewPlaylistFormOpen: state.form.isNewPlaylistFormOpen,
+  isAddToPlaylistFormOpen: state.form.isAddToPlaylistFormOpen,
+  newPlaylistName: state.form.newPlaylistName,
+  trackDropdownSelected: state.form.trackDropdownSelected,
+  isEditTrackFormOpen: state.form.isEditTrackFormOpen,
+  isDeleteTrackFormOpen: state.form.isDeleteTrackFormOpen
 });
 
 const mapDispatchToProps = dispatch => ({
