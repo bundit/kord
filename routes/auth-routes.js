@@ -22,14 +22,15 @@ router.get("/token", (req, res, next) => {
 
     const newToken = jwt.sign(
       {
-        username: user.email,
+        email: user.email,
         expires
       },
       process.env.JWT_SECRET
     );
 
     res.cookie("kordUser", newToken, {
-      httpOnly: true
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7
       // maxAge: expires
       // secure: process.env.NODE_ENV === "production"
     });

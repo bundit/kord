@@ -30,7 +30,7 @@ router.get(
 
     // JWT payload
     const payload = {
-      username: user.email,
+      email: user.email,
       expires
     };
 
@@ -45,7 +45,8 @@ router.get(
 
       /** assign our jwt to the cookie */
       res.cookie("kordUser", token, {
-        httpOnly: true
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7
         // TODO Get SSL Certs
         // secure: isProduction
       });
