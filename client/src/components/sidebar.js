@@ -15,68 +15,71 @@ import {
 import React from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
+import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
 import PlaylistItem from "./playlist-item";
 import styles from "../styles/sidebar.module.css";
 
-const Sidebar = ({ playlists }) => (
-  <div className={styles.sidebarWrapper}>
-    <div className={styles.sidebarHeader}>
-      <Link to="/app/">
-        <div className={styles.logoWrapper}>
-          <Kord3d />
-        </div>
-      </Link>
-    </div>
-    <div className={styles.sectionWrapper}>
-      <h2>App</h2>
-      <NavLink
-        to="/app/library"
-        className={styles.sidebarNavLink}
-        activeClassName={styles.activeNavLink}
-      >
-        <FontAwesomeIcon size="lg" icon={faMusic} />
-        Library
-      </NavLink>
-      <NavLink
-        to="/app/search"
-        className={styles.sidebarNavLink}
-        activeClassName={styles.activeNavLink}
-      >
-        <FontAwesomeIcon size="lg" icon={faSearch} />
-        Search
-      </NavLink>
-      <NavLink
-        to="/app/explore"
-        className={styles.sidebarNavLink}
-        activeClassName={styles.activeNavLink}
-      >
-        <FontAwesomeIcon size="lg" icon={faCompass} />
-        Explore
-      </NavLink>
-    </div>
+const Sidebar = ({ playlists }) => {
+  const allPlaylists = flattenPlaylistObject(playlists);
 
-    <div className={styles.sectionWrapper}>
-      <h2>Playlists</h2>
-      <div className={styles.playlistContainer}>
-        {playlists &&
-          Object.values(playlists).map(playlist => (
-            <PlaylistItem
-              sidebar
-              key={playlist.title}
-              title={playlist.title}
-              length={playlist.list.length}
-            />
-          ))}
+  const playlistComponents = allPlaylists.map(playlist => (
+    <PlaylistItem
+      sidebar
+      key={`sidebar ${playlist.source} ${playlist.title} ${playlist.id}`}
+      title={playlist.title}
+    />
+  ));
+
+  return (
+    <div className={styles.sidebarWrapper}>
+      <div className={styles.sidebarHeader}>
+        <Link to="/app/">
+          <div className={styles.logoWrapper}>
+            <Kord3d />
+          </div>
+        </Link>
+      </div>
+      <div className={styles.sectionWrapper}>
+        <h2>App</h2>
+        <NavLink
+          to="/app/library"
+          className={styles.sidebarNavLink}
+          activeClassName={styles.activeNavLink}
+        >
+          <FontAwesomeIcon size="lg" icon={faMusic} />
+          Library
+        </NavLink>
+        <NavLink
+          to="/app/search"
+          className={styles.sidebarNavLink}
+          activeClassName={styles.activeNavLink}
+        >
+          <FontAwesomeIcon size="lg" icon={faSearch} />
+          Search
+        </NavLink>
+        <NavLink
+          to="/app/explore"
+          className={styles.sidebarNavLink}
+          activeClassName={styles.activeNavLink}
+        >
+          <FontAwesomeIcon size="lg" icon={faCompass} />
+          Explore
+        </NavLink>
+      </div>
+
+      <div className={styles.sectionWrapper}>
+        <h2>Playlists</h2>
+        <div className={styles.playlistContainer}>{playlistComponents}</div>
+      </div>
+      <div className={styles.sidebarFooter}>
+        <FontAwesomeIcon size="10x" icon={faSoundcloud} />
+        <FontAwesomeIcon size="6x" icon={faSpotify} />
+        <FontAwesomeIcon size="6x" icon={faYoutube} />
+        <FontAwesomeIcon size="6x" icon={faMixcloud} />
       </div>
     </div>
-    <div className={styles.sidebarFooter}>
-      <FontAwesomeIcon size="10x" icon={faSoundcloud} />
-      <FontAwesomeIcon size="6x" icon={faSpotify} />
-      <FontAwesomeIcon size="6x" icon={faYoutube} />
-      <FontAwesomeIcon size="6x" icon={faMixcloud} />
-    </div>
-  </div>
-);
+  );
+};
 
 const mapStateToProps = state => ({
   playlists: state.library.playlists

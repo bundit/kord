@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
 import PropTypes from "prop-types";
+import React, { useEffect } from "react";
 
-import styles from "../styles/library.module.css";
+import { formatArtistName } from "../utils/formatArtistName";
 import ArtistItem from "./artist-item";
+import styles from "../styles/library.module.css";
 
 let artistListScrollPosition = null;
 
@@ -17,10 +18,14 @@ const ArtistList = ({ artists }) => {
       artistListScrollPosition = window.scrollY;
     };
   }, []);
+
   return (
     <div className={styles.libraryWrapper}>
       {artists.map(artist => (
-        <ArtistItem key={artist.name} artist={artist} />
+        <ArtistItem
+          key={`${formatArtistName(artist)} ${artist.id || artist[0].id}`}
+          artist={artist}
+        />
       ))}
     </div>
   );
@@ -28,10 +33,10 @@ const ArtistList = ({ artists }) => {
 
 ArtistList.propTypes = {
   artists: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      img: PropTypes.string
-    })
+    PropTypes.oneOfType([
+      PropTypes.shape({ name: PropTypes.string.isRequired }),
+      PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string.isRequired }))
+    ])
   ).isRequired
 };
 

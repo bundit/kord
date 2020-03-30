@@ -7,7 +7,7 @@ import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/library.module.css";
 import sidebarStyles from "../styles/sidebar.module.css";
 
-const PlaylistItem = ({ title, length, sidebar }) => (
+const PlaylistItem = ({ title, sidebar }) => (
   <NavLink
     to={`/app/library/playlists/${title}`}
     className={sidebar ? sidebarStyles.sidebarNavLink : styles.trackWrapper}
@@ -25,7 +25,6 @@ const PlaylistItem = ({ title, length, sidebar }) => (
     >
       {!sidebar && (
         <>
-          <span>{`${length} songs`}</span>
           <button type="button" onClick={e => e.preventDefault()}>
             <FontAwesomeIcon icon={faEllipsisV} />
           </button>
@@ -36,8 +35,7 @@ const PlaylistItem = ({ title, length, sidebar }) => (
 );
 
 PlaylistItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  length: PropTypes.number.isRequired
+  title: PropTypes.string.isRequired
 };
 
 export default PlaylistItem;

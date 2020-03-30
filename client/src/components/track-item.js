@@ -1,19 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
-import LazyLoad from "react-lazyload";
-import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faEllipsisH,
   faEllipsisV
 } from "@fortawesome/free-solid-svg-icons";
+import LazyLoad from "react-lazyload";
+import PropTypes from "prop-types";
+import React, { useState, useRef, useEffect } from "react";
 
+import { formatArtistName } from "../utils/formatArtistName";
 import TrackDropdown from "./track-dropdown";
-import rippleEffect from "../utils/rippleEffect";
-import truncateString from "../utils/truncateString";
 import msToDuration from "../utils/msToDuration";
-import styles from "../styles/library.module.css";
 import placeholderImg from "../assets/placeholder.png";
+import rippleEffect from "../utils/rippleEffect";
+import styles from "../styles/library.module.css";
 
 function addListenersToDocument(events, callback) {
   events.forEach(e => document.addEventListener(e, callback));
@@ -42,19 +42,15 @@ const TrackItem = ({
   toggleEditTrackForm,
   toggleDeleteTrackForm
 }) => {
-  const {
-    title,
-    img,
-    duration: ms,
-    artist: { name: artist },
-    genre
-  } = track;
+  const { title, img, duration: ms, artist, genre, source } = track;
   // Keep a reference to detect clicks outside of target area
   const trackItemRef = useRef();
   const [disable, setDisable] = useState(false);
   const handleDisable = () => {
     setDisable(true);
   };
+
+  const artistName = formatArtistName(artist);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -129,10 +125,13 @@ const TrackItem = ({
             <div>
               <strong>{title}</strong>
             </div>
-            <div className={styles.stackedArtistName}>{artist}</div>
+            <div className={styles.stackedArtistName}>
+              {artistName.toString()}
+            </div>
           </div>
-          <div className={styles.singleArtistName}>{artist}</div>
+          <div className={styles.singleArtistName}>{artistName.toString()}</div>
           <div className={styles.singleGenre}>{genre}</div>
+          <div className={styles.singleSource}>{source}</div>
           <div className={styles.singleTime}>{msToDuration(ms)}</div>
           <div className={styles.trackRightControls}>
             <div className={styles.duration}>{msToDuration(ms)}</div>
@@ -189,7 +188,10 @@ TrackItem.propTypes = {
     title: PropTypes.string.isRequired,
     img: PropTypes.string,
     duration: PropTypes.number.isRequired,
-    artist: PropTypes.shape({ name: PropTypes.string.isRequired })
+    artist: PropTypes.oneOfType([
+      PropTypes.shape({ name: PropTypes.string.isRequired }),
+      PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string.isRequired }))
+    ])
   }).isRequired,
   search: PropTypes.bool,
   addToLibrary: PropTypes.func,

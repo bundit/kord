@@ -1,19 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
+import PropTypes from "prop-types";
+import React from "react";
 
-import NewPlaylistForm from "./new-playlist-form";
-import AddToPlaylistForm from "./add-to-playlist-form";
-import EditTrackForm from "./edit-track-form";
-import DeleteTrackForm from "./delete-track-form";
-import CategoryList from "./category-list";
-import TrackList from "./track-list";
-import ArtistList from "./artist-list";
-import ListOfPlaylists from "./playlist-list";
+import { formatArtistName } from "../utils/formatArtistName";
 import { importScLikes } from "../redux/actions/libraryActions";
-import fadeTransition from "../styles/fade.module.css";
+import AddToPlaylistForm from "./add-to-playlist-form";
+import ArtistList from "./artist-list";
+import CategoryList from "./category-list";
+import DeleteTrackForm from "./delete-track-form";
+import EditTrackForm from "./edit-track-form";
+import ListOfPlaylists from "./playlist-list";
+import NewPlaylistForm from "./new-playlist-form";
+import TrackList from "./track-list";
 
 class Library extends React.Component {
   constructor(props) {
@@ -161,37 +160,38 @@ class Library extends React.Component {
               //       exit: 0
               //     }}
               //   >
-              <Route
-                location={location}
-                render={() => (
-                  <Switch>
-                    <Route
-                      exact
-                      path="/app/library/songs"
-                      render={() => (
-                        <TrackList
-                          songs={songs}
-                          handlePlay={handlePlayTrack}
-                          currentTrackID={currentTrackID}
-                          isPlaying={isPlaying}
-                          toggleAddToPlaylistForm={toggleAddToPlaylistForm}
-                          toggleEditTrackForm={toggleEditTrackForm}
-                          toggleDeleteTrackForm={toggleDeleteTrackForm}
-                        />
-                      )}
-                    />
-                    <Route
-                      exact
-                      path="/app/library/artists"
-                      render={() => <ArtistList artists={artists} />}
-                    />
-                    <Route
-                      path="/app/library/artists/:artist"
-                      render={props => (
-                        <TrackList
-                          songs={songs.filter(
-                            song =>
-                              song.artist.name === props.match.params.artist
+                <Route
+                  location={location}
+                  render={() => (
+                    <Switch>
+                      <Route
+                        exact
+                        path="/app/library/songs"
+                        render={() => (
+                          <TrackList
+                            songs={songs}
+                            handlePlay={handlePlayTrack}
+                            currentTrackID={currentTrackID}
+                            isPlaying={isPlaying}
+                            toggleAddToPlaylistForm={toggleAddToPlaylistForm}
+                            toggleEditTrackForm={toggleEditTrackForm}
+                            toggleDeleteTrackForm={toggleDeleteTrackForm}
+                          />
+                        )}
+                      />
+                      <Route
+                        exact
+                        path="/app/library/artists"
+                        render={() => <ArtistList artists={artists} />}
+                      />
+                      <Route
+                        path="/app/library/artists/:artist"
+                        render={props => (
+                          <TrackList
+                            songs={songs.filter(
+                              song =>
+                              formatArtistName(song.artist) ===
+                              props.match.params.artist
                           )}
                           handlePlay={handlePlayTrack}
                           currentTrackID={currentTrackID}
@@ -229,7 +229,10 @@ class Library extends React.Component {
 
 Library.propTypes = {
   songs: PropTypes.arrayOf(PropTypes.object).isRequired,
-  artists: PropTypes.arrayOf(PropTypes.object).isRequired,
+  artist: PropTypes.oneOfType([
+    PropTypes.shape({ name: PropTypes.string.isRequired }),
+    PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string.isRequired }))
+  ]),
   playTrack: PropTypes.func.isRequired,
   setQueue: PropTypes.func.isRequired,
   isPlaying: PropTypes.bool.isRequired,
