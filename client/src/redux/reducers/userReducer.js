@@ -2,17 +2,21 @@ import { PUSH_LIB_ROUTE, SET_SC_USER } from "../actions/types";
 
 const initialState = {
   soundcloud: {
+    isConnected: false,
     username: ""
   },
   spotify: {
+    isConnected: false,
     token: null,
     username: ""
   },
   youtube: {
+    isConnected: false,
     token: null,
     username: ""
   },
   mixcloud: {
+    isConnected: false,
     token: null,
     username: ""
   },
@@ -47,38 +51,42 @@ export default function(state = initialState, action) {
         }
       };
     }
-    case "SET_SPOTIFY_ACCESS_TOKEN": {
-      const spotifyAccessToken = action.payload;
+    case "SET_ACCESS_TOKEN": {
+      const accessToken = action.payload;
+      const source = action.source;
 
       return {
         ...state,
-        spotify: {
-          token: spotifyAccessToken
+        [source]: {
+          ...state[source],
+          token: accessToken
         }
       };
     }
-    case "SET_YOUTUBE_ACCESS_TOKEN": {
-      const youtubeAccessToken = action.payload;
+    case "SET_USERNAME": {
+      const username = action.payload;
+      const source = action.source;
 
       return {
         ...state,
-        youtube: {
-          token: youtubeAccessToken
+        [source]: {
+          ...state[source],
+          username: username
         }
       };
     }
-
-    case "SET_MIXCLOUD_ACCESS_TOKEN": {
-      const mixcloudAccessToken = action.payload;
+    case "SET_CONNECTION": {
+      const isConnected = action.payload;
+      const source = action.source;
 
       return {
         ...state,
-        mixcloud: {
-          token: mixcloudAccessToken
+        [source]: {
+          ...state[source],
+          isConnected
         }
       };
     }
-
     default:
       return state;
   }
