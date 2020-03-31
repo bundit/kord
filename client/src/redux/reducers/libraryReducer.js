@@ -1,5 +1,4 @@
 import {
-  IMPORT_SC_LIKES,
   IMPORT_SONG,
   ADD_TO_PLAYLISTS,
   CREATE_NEW_PLAYLIST,
@@ -14,14 +13,19 @@ import insertInPlace from "../../utils/insertInPlace";
 const initialState = {
   songs: [],
   artists: [],
-  playlists: {},
+  playlists: {
+    soundcloud: [],
+    spotify: [],
+    youtube: [],
+    mixcloud: []
+  },
   genres: []
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case IMPORT_SC_LIKES: {
-      const newLib = [...action.payload]
+    case "IMPORT_SONGS": {
+      const newLib = [...state.songs, ...action.payload]
         .sort((track1, track2) => compareSongs(track1, track2))
         .filter(
           (track, index, arr) =>
@@ -116,7 +120,6 @@ export default function(state = initialState, action) {
         }
       };
     }
-
     case EDIT_TRACK: {
       const { trackEdit, artistEdit } = action.payload;
       const { songs, artists, trackDropdownSelected, genres } = state;
@@ -199,6 +202,18 @@ export default function(state = initialState, action) {
         ...state,
         songs: updatedLib,
         artists: updatedArtists
+      };
+    }
+
+    case "IMPORT_PLAYLISTS": {
+      const newPlaylists = action.payload;
+      const source = action.source;
+
+      return {
+        ...state,
+        playlists: {
+          [source]: newPlaylists
+        }
       };
     }
 
