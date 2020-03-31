@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
 
+import FormCheckbox from "./form-checkbox";
 import Modal from "./modal";
-import AddToPlaylistCheckbox from "./add-playlist-checkbox";
 import styles from "../styles/modal.module.css";
 
 const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
@@ -74,12 +74,12 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
             />
           </label>
           {playlistTitles.map((playlist, i) => (
-            <AddToPlaylistCheckbox
+            <FormCheckbox
               title={playlist}
               key={playlist}
               i={i}
               value={checkedPlaylists[playlist]}
-              onChange={toggleCheckedPlaylist}
+              onChange={() => toggleCheckedPlaylist(playlist)}
             />
           ))}
         </div>
