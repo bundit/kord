@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   faMusic,
@@ -12,23 +12,43 @@ import {
   faYoutube,
   faMixcloud
 } from "@fortawesome/free-brands-svg-icons";
-import React from "react";
+import React, { useState } from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
+import ConnectedSourceButton from "./connected-source-button";
 import PlaylistItem from "./playlist-item";
+import SettingsForm from "./settings-form";
 import styles from "../styles/sidebar.module.css";
 
-const Sidebar = ({ playlists }) => {
+const Sidebar = ({ user, playlists }) => {
+  const [isSettingsFormOpen, setIsSettingsFormOpen] = useState(false);
+  const [settingsSource, setSettingsSource] = useState();
+
+  function toggleSettingsForm(source) {
+    setSettingsSource(source);
+    setIsSettingsFormOpen(!isSettingsFormOpen);
+  }
+
+  function redirectToConnectSource(source) {
+    if (process.env.NODE_ENV === "development") {
+      window.location.href = `http://localhost:8888/auth/${source}`;
+    } else {
+      window.location.href = `/auth/${source}`;
+    }
+  }
+
   const allPlaylists = flattenPlaylistObject(playlists);
 
-  const playlistComponents = allPlaylists.map(playlist => (
-    <PlaylistItem
-      sidebar
-      key={`sidebar ${playlist.source} ${playlist.title} ${playlist.id}`}
-      title={playlist.title}
-    />
-  ));
+  const playlistComponents = allPlaylists
+    .filter(playlist => playlist.isConnected)
+    .map(playlist => (
+      <PlaylistItem
+        sidebar
+        key={`sidebar ${playlist.source} ${playlist.title} ${playlist.id}`}
+        title={playlist.title}
+      />
+    ));
 
   return (
     <div className={styles.sidebarWrapper}>
@@ -72,16 +92,47 @@ const Sidebar = ({ playlists }) => {
         <div className={styles.playlistContainer}>{playlistComponents}</div>
       </div>
       <div className={styles.sidebarFooter}>
-        <FontAwesomeIcon size="10x" icon={faSoundcloud} />
-        <FontAwesomeIcon size="6x" icon={faSpotify} />
-        <FontAwesomeIcon size="6x" icon={faYoutube} />
-        <FontAwesomeIcon size="6x" icon={faMixcloud} />
+        <ConnectedSourceButton
+          isConnected={user.soundcloud.isConnected}
+          handleSettings={toggleSettingsForm}
+          handleConnectSource={redirectToConnectSource}
+          source="soundcloud"
+          icon={faSoundcloud}
+        />
+        <ConnectedSourceButton
+          isConnected={user.spotify.isConnected}
+          handleSettings={toggleSettingsForm}
+          handleConnectSource={redirectToConnectSource}
+          source="spotify"
+          icon={faSpotify}
+        />
+        {/* <ConnectedSourceButton
+          isConnected={user.youtube.isConnected}
+          handleSettings={toggleSettingsForm}
+          handleConnectSource={redirectToConnectSource}
+          source="youtube"
+          icon={faYoutube}
+          />
+          <ConnectedSourceButton
+          isConnected={user.mixcloud.isConnected}
+          handleSettings={toggleSettingsForm}
+          handleConnectSource={redirectToConnectSource}
+          source="mixcloud"
+          icon={faMixcloud}
+        /> */}
+        <SettingsForm
+          show={isSettingsFormOpen}
+          source={settingsSource}
+          onClose={toggleSettingsForm}
+        />
+        }
       </div>
     </div>
   );
 };
 
 const mapStateToProps = state => ({
+  user: state.user,
   playlists: state.library.playlists
 });
 

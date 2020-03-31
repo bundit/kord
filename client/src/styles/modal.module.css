@@ -128,6 +128,10 @@
   color: black;
 }
 
+.formSubmitButton:hover {
+  cursor: pointer;
+}
+
 .textfieldCheckmarkLabel {
   display: flex;
   align-items: center;
@@ -206,4 +210,12 @@
   background-color: black;
   border-radius: 7px;
   color: white;
+}
+
+@media (min-width: 800px) {
+  .modal {
+    left: 50%;
+    width: 500px;
+    margin-left: -250px;
+  }
 }
