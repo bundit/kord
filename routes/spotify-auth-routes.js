@@ -6,7 +6,23 @@ const jwt = require("jsonwebtoken");
 router.get(
   "/",
   passport.authenticate("spotify", {
-    scope: ["user-read-email", "user-read-private"],
+    scope: [
+      "user-read-email",
+      "user-read-private",
+      "user-read-playback-state",
+      "streaming",
+      "user-modify-playback-state",
+      "playlist-modify-public",
+      "user-library-modify",
+      "user-top-read",
+      "playlist-read-collaborative",
+      "user-read-currently-playing",
+      // "playlist-read-private",
+      "user-follow-read",
+      "user-read-recently-played",
+      "playlist-modify-private",
+      "user-library-read"
+    ],
     showDialog: true
   }),
   // eslint-disable-next-line
