@@ -117,15 +117,34 @@
 .sidebarFooter {
   border-top: 1px #383f41 solid;
   margin-top: auto;
-  height: 100px;
+  height: 80px;
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
 
-.sidebarFooter > svg {
+.sidebarFooter button {
+  transition: 0.2s ease;
+  outline: none;
   font-size: 30px;
-  color: #6f7c7f;
+  color: #505a5b;
+  cursor: pointer;
+}
+
+.sidebarFooter button:hover {
+  color: white;
+}
+
+.sidebarFooter svg {
+  font-size: 30px;
+}
+
+.connectedSource > svg {
+  color: #ffd46b;
+}
+
+.connectedSource:hover {
+  transform: scale(1.1);
 }
 
 @media (min-width: 800px) {

@@ -31,15 +31,15 @@
 .miniPlayerPlayButton,
 .forwardButton,
 .backwardButton {
-  height: 34px;
-  width: 34px;
+  height: 30px;
+  width: 30px;
   border-radius: 7px;
   /* border: 1px #383f41 solid; */
 }
 
 .desktopPlayPauseButton {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
 }
 .desktopButtonGroup,
 .miniPlayerImageWrap,
@@ -52,8 +52,8 @@
 
 .miniPlayerImageWrap,
 .miniPlayerImageWrap img {
-  height: 70px;
-  width: 70px;
+  height: 60px;
+  width: auto;
   border-radius: 7px;
 }
 
@@ -258,7 +258,7 @@ input[type="range"]:active::-ms-thumb {
     right: 0;
     left: 230px;
     width: auto;
-    height: 100px;
+    height: 80px;
     border-radius: 0;
   }
 
