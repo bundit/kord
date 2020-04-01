@@ -1,5 +1,3 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlayCircle,
@@ -10,18 +8,16 @@ import {
   // faFastForward,
   // faFastBackward
 } from "@fortawesome/free-solid-svg-icons";
+import PropTypes from "prop-types";
+import React from "react";
 
+import { formatArtistName } from "../utils/formatArtistName";
 import placeholderImg from "../assets/placeholder.png";
-import truncateString from "../utils/truncateString";
 import secondsToFormatted from "../utils/secondsToFormatted";
 import styles from "../styles/player.module.css";
 
 const ExpandedPlayer = ({
-  current: {
-    title,
-    artist: { name: artistName },
-    img
-  },
+  current: { title, artist, img },
   handleToggleExpand,
   handlePlayPause,
   isPlaying,
@@ -74,9 +70,9 @@ const ExpandedPlayer = ({
     </div>
     <div className={styles.titleWrapperExpanded}>
       <div>
-        <strong>{truncateString(title, 45)}</strong>
+        <strong>{title}</strong>
       </div>
-      <div>{truncateString(artistName, 45)}</div>
+      <div>{formatArtistName(artist)}</div>
     </div>
     <div className={styles.expandedPlayerControls}>
       <button type="button" onClick={handlePrev}>

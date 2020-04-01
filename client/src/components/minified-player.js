@@ -9,19 +9,15 @@ import React from "react";
 
 import { ReactComponent as BackwardIcon } from "../assets/backward.svg";
 import { ReactComponent as ForwardIcon } from "../assets/forward.svg";
-import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import { ReactComponent as PauseIcon } from "../assets/pause-button.svg";
+import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
+import { formatArtistName } from "../utils/formatArtistName";
 import { useMobileDetection } from "../utils/useMobileDetection";
 import placeholderImg from "../assets/placeholder.png";
 import styles from "../styles/player.module.css";
-import truncateString from "../utils/truncateString";
 
 const MinifiedPlayer = ({
-  current: {
-    title,
-    artist: { name: artistName },
-    img
-  },
+  current: { title, artist, img },
   handleToggleExpand,
   handlePlayPause,
   isPlaying,
@@ -55,7 +51,9 @@ const MinifiedPlayer = ({
         </div>
         <div className={styles.titleWrapper}>
           <div className={styles.nowPlayingTitle}>{title}</div>
-          <div className={styles.nowPlayingArtist}>{artistName}</div>
+          <div className={styles.nowPlayingArtist}>
+            {formatArtistName(artist)}
+          </div>
         </div>
       </div>
       <button
