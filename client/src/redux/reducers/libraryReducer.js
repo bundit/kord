@@ -212,6 +212,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         playlists: {
+          ...state.playlists,
           [source]: newPlaylists
         }
       };
