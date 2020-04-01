@@ -15,13 +15,15 @@
     "react-dom": "^16.11.0",
     "react-howler": "^3.7.4",
     "react-lazyload": "^2.6.5",
+    "react-loading-overlay": "^1.0.1",
     "react-particles-js": "^2.7.0",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "react-transition-group": "^4.3.0",
     "redux": "^4.0.4",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "spotify-web-api-js": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
