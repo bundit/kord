@@ -15,7 +15,9 @@ const ListOfPlaylists = ({ playlists, toggleNewPlaylistForm }) => {
     .map(playlist => (
       <PlaylistItem
         key={`${playlist.source} ${playlist.title} ${playlist.id}`}
+        source={playlist.source}
         title={playlist.title}
+        id={playlist.id}
       />
     ));
 

@@ -47,6 +47,8 @@ const Sidebar = ({ user, playlists }) => {
         sidebar
         key={`sidebar ${playlist.source} ${playlist.title} ${playlist.id}`}
         title={playlist.title}
+        id={playlist.id}
+        source={playlist.source}
       />
     ));
 
@@ -125,7 +127,6 @@ const Sidebar = ({ user, playlists }) => {
           source={settingsSource}
           onClose={toggleSettingsForm}
         />
-        }
       </div>
     </div>
   );
