@@ -36,26 +36,11 @@ export const importSavedSpotifyTracks = (
   let data;
   do {
     data = await spotifyApi.getMySavedTracks({ limit, offset });
-
-    const newTracks = data.items
-      .map(trackData => trackData.track)
-      .map(track => ({
-        album: {
-          title: track.album.name,
-          id: track.album.id,
-          externalUrl: track.album.external_urls.spotify
-        },
-        id: track.id,
-        duration: track.duration_ms,
-        title: track.name,
-        artist: track.artists.map(artist => ({
-          id: artist.id,
-          name: artist.name
-        })),
-        source: "spotify"
-      }));
+    const newTracks = mapSpotifyResponseToTrackObjects(data);
     tracks.push(...newTracks);
+
     offset += limit;
+    //
   } while (data.items.length >= limit);
 
   dispatch({
@@ -75,6 +60,8 @@ export const getUserSpotifyPlaylists = (
     images: item.images,
     externalUrl: item.external_urls.spotify,
     source: "spotify",
+    tracks: [],
+    next: "start",
     isConnected: false
   }));
 
@@ -84,6 +71,55 @@ export const getUserSpotifyPlaylists = (
     payload: playlists
   });
 };
+
+export const getSpotifyPlaylistTracks = (id, next) => async dispatch => {
+  let data;
+
+  if (!next) {
+    return;
+  } else if (next === "start") {
+    data = await spotifyApi.getPlaylistTracks(id);
+  } else {
+    data = await spotifyApi.getGeneric(next);
+  }
+
+  const newTracks = mapSpotifyResponseToTrackObjects(data);
+
+  dispatch({
+    type: "IMPORT_PLAYLIST_TRACKS",
+    source: "spotify",
+    playlistId: id,
+    payload: newTracks
+  });
+
+  dispatch({
+    type: "SET_NEXT_PLAYLIST_HREF",
+    source: "spotify",
+    playlistId: id,
+    payload: data.next
+  });
+};
+
+function mapSpotifyResponseToTrackObjects(data) {
+  return data.items
+    .map(trackData => trackData.track)
+    .map(track => ({
+      album: {
+        title: track.album.name,
+        id: track.album.id,
+        externalUrl: track.album.external_urls.spotify
+      },
+      id: track.id,
+      duration: track.duration_ms,
+      title: track.name,
+      artist: track.artists.map(artist => ({
+        id: artist.id,
+        name: artist.name
+      })),
+      img: track.album.images,
+      source: "spotify"
+    }));
+}
 
 export const getSpotifyProfile = () => async dispatch => {
   const profile = spotifyApi.getMe();
