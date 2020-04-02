@@ -7,9 +7,9 @@ import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/library.module.css";
 import sidebarStyles from "../styles/sidebar.module.css";
 
-const PlaylistItem = ({ title, sidebar }) => (
+const PlaylistItem = ({ title, source, id, sidebar }) => (
   <NavLink
-    to={`/app/library/playlists/${title}`}
+    to={`/app/library/playlists/${source}/${id}/${title}`}
     className={sidebar ? sidebarStyles.sidebarNavLink : styles.trackWrapper}
     activeClassName={sidebar && sidebarStyles.activePlaylistLink}
   >
