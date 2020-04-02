@@ -213,7 +213,49 @@ export default function(state = initialState, action) {
         ...state,
         playlists: {
           ...state.playlists,
-          [source]: newPlaylists
+          [source]: [...newPlaylists, ...state.playlists[source]]
+        }
+      };
+    }
+
+    case "IMPORT_PLAYLIST_TRACKS": {
+      const { source, playlistId } = action;
+      const loadedTracks = action.payload;
+
+      const newPlaylistList = state.playlists[source].map(playlist => {
+        if (playlist.id === playlistId) {
+          playlist.tracks = [...playlist.tracks, ...loadedTracks];
+        }
+
+        return playlist;
+      });
+
+      return {
+        ...state,
+        playlists: {
+          ...state.playlists,
+          [source]: newPlaylistList
+        }
+      };
+    }
+
+    case "SET_NEXT_PLAYLIST_HREF": {
+      const { source, playlistId } = action;
+      const nextHref = action.payload;
+
+      const newPlaylistList = state.playlists[source].map(playlist => {
+        if (playlist.id === playlistId) {
+          playlist.next = nextHref;
+        }
+
+        return playlist;
+      });
+
+      return {
+        ...state,
+        playlists: {
+          ...state.playlists,
+          [source]: newPlaylistList
         }
       };
     }
