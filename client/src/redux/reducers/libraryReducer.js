@@ -209,11 +209,25 @@ export default function(state = initialState, action) {
       const newPlaylists = action.payload;
       const source = action.source;
 
+      // Combine previously loaded playlists with new playlists
+      // Going by order given by source, our new index may not match the last time request was made
+      const newAndOldCombined = newPlaylists.map(newPlaylist => {
+        const prevPlaylists = state.playlists[source];
+        const prevIndex = prevPlaylists.findIndex(
+          prevList => prevList.id === newPlaylist.id
+        );
+        // If prevIndex found, set it to the state we had before
+        if (prevIndex !== -1) {
+          newPlaylist = prevPlaylists[prevIndex];
+        }
+        return newPlaylist;
+      });
+
       return {
         ...state,
         playlists: {
           ...state.playlists,
-          [source]: [...newPlaylists, ...state.playlists[source]]
+          [source]: newAndOldCombined
         }
       };
     }
