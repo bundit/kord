@@ -12,12 +12,13 @@ import { ReactComponent as ForwardIcon } from "../assets/forward.svg";
 import { ReactComponent as PauseIcon } from "../assets/pause-button.svg";
 import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import { formatArtistName } from "../utils/formatArtistName";
+import { getImgUrl } from "../utils/getImgUrl";
 import { useMobileDetection } from "../utils/useMobileDetection";
 import placeholderImg from "../assets/placeholder.png";
 import styles from "../styles/player.module.css";
 
 const MinifiedPlayer = ({
-  current: { title, artist, img },
+  current,
   handleToggleExpand,
   handlePlayPause,
   isPlaying,
@@ -43,16 +44,14 @@ const MinifiedPlayer = ({
       <div className={styles.nowPlaying}>
         <div className={styles.miniPlayerImageWrap}>
           <img
-            src={
-              img ? img.replace("large.jpg", "t500x500.jpg") : placeholderImg
-            }
+            src={current.img ? getImgUrl(current, "md") : placeholderImg}
             alt="album-art"
           />
         </div>
         <div className={styles.titleWrapper}>
-          <div className={styles.nowPlayingTitle}>{title}</div>
+          <div className={styles.nowPlayingTitle}>{current.title}</div>
           <div className={styles.nowPlayingArtist}>
-            {formatArtistName(artist)}
+            {formatArtistName(current.artist)}
           </div>
         </div>
       </div>

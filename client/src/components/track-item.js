@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import React, { useState, useRef, useEffect } from "react";
 
 import { formatArtistName } from "../utils/formatArtistName";
+import { getImgUrl } from "../utils/getImgUrl";
 import TrackDropdown from "./track-dropdown";
 import msToDuration from "../utils/msToDuration";
 import placeholderImg from "../assets/placeholder.png";
@@ -42,7 +43,7 @@ const TrackItem = ({
   toggleEditTrackForm,
   toggleDeleteTrackForm
 }) => {
-  const { title, img, duration: ms, artist, genre, source } = track;
+  const { title, duration: ms, artist, genre, source } = track;
   // Keep a reference to detect clicks outside of target area
   const trackItemRef = useRef();
   const [disable, setDisable] = useState(false);
@@ -100,9 +101,7 @@ const TrackItem = ({
           <div className={styles.trackImageWrap}>
             <img
               className={styles.trackImage}
-              src={
-                img ? img.replace("large.jpg", "t67x67.jpg") : placeholderImg
-              }
+              src={track.img ? getImgUrl(track, "sm") : placeholderImg}
               alt="track"
             />
             {isActive && (
@@ -186,7 +185,6 @@ const TrackItem = ({
 TrackItem.propTypes = {
   track: PropTypes.shape({
     title: PropTypes.string.isRequired,
-    img: PropTypes.string,
     duration: PropTypes.number.isRequired,
     artist: PropTypes.oneOfType([
       PropTypes.shape({ name: PropTypes.string.isRequired }),

@@ -12,12 +12,13 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import { formatArtistName } from "../utils/formatArtistName";
+import { getImgUrl } from "../utils/getImgUrl";
 import placeholderImg from "../assets/placeholder.png";
 import secondsToFormatted from "../utils/secondsToFormatted";
 import styles from "../styles/player.module.css";
 
 const ExpandedPlayer = ({
-  current: { title, artist, img },
+  current,
   handleToggleExpand,
   handlePlayPause,
   isPlaying,
@@ -42,7 +43,7 @@ const ExpandedPlayer = ({
       <FontAwesomeIcon icon={faAngleDown} size="2x" />
     </button>
     <img
-      src={img ? img.replace("large.jpg", "t500x500.jpg") : placeholderImg}
+      src={current.img ? getImgUrl(current, "lg") : placeholderImg}
       alt="album-artwork.jpg"
     />
     {/* SEEK INPUT */}
@@ -70,9 +71,9 @@ const ExpandedPlayer = ({
     </div>
     <div className={styles.titleWrapperExpanded}>
       <div>
-        <strong>{title}</strong>
+        <strong>{current.title}</strong>
       </div>
-      <div>{formatArtistName(artist)}</div>
+      <div>{formatArtistName(current.artist)}</div>
     </div>
     <div className={styles.expandedPlayerControls}>
       <button type="button" onClick={handlePrev}>
