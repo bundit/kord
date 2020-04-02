@@ -1,75 +1,54 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { forceCheck } from "react-lazyload";
+import PropTypes from "prop-types";
+import React, { useEffect } from "react";
 
 import TrackItem from "./track-item";
 import styles from "../styles/library.module.css";
 
-let trackListScrollPosition = null;
-
-class TrackList extends React.Component {
-  componentDidMount() {
-    if (trackListScrollPosition) {
-      window.scroll(0, trackListScrollPosition);
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { songs: currentLibrary } = this.props;
-    const { songs: prevLibrary } = prevProps;
-
+const TrackList = ({
+  search,
+  songs,
+  handlePlay,
+  addToLibrary,
+  loadMoreTracks,
+  currentTrackID,
+  isPlaying,
+  toggleAddToPlaylistForm,
+  toggleEditTrackForm,
+  toggleDeleteTrackForm
+}) => {
+  useEffect(() => {
     // This will ensure that components that come into viewport during
     // a filter will be rendered. Lazyload only checks on scroll events,
     // so this way we force lazyload to check visible components
-    if (currentLibrary !== prevLibrary) {
-      forceCheck();
-    }
-  }
+    forceCheck();
+  }, [songs]);
 
-  componentWillUnmount() {
-    trackListScrollPosition = window.scrollY;
-  }
-
-  render() {
-    const {
-      search,
-      songs,
-      handlePlay,
-      addToLibrary,
-      loadMoreTracks,
-      currentTrackID,
-      isPlaying,
-      toggleAddToPlaylistForm,
-      toggleEditTrackForm,
-      toggleDeleteTrackForm
-    } = this.props;
-
-    return (
-      <div className={styles.libraryWrapper}>
-        {songs &&
-          songs.map(track => (
-            <TrackItem
-              key={`${track.id}${track.source}`}
-              track={track}
-              search={search}
-              handlePlay={() => handlePlay(track)}
-              addToLibrary={event => addToLibrary(event, track)}
-              isActive={currentTrackID === track.id}
-              isPlaying={isPlaying}
-              toggleAddToPlaylistForm={toggleAddToPlaylistForm}
-              toggleEditTrackForm={toggleEditTrackForm}
-              toggleDeleteTrackForm={toggleDeleteTrackForm}
-            />
-          ))}
-        {search && songs.length > 0 && (
-          <button type="button" onClick={loadMoreTracks}>
-            Load More
-          </button>
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div className={styles.libraryWrapper}>
+      {songs &&
+        songs.map(track => (
+          <TrackItem
+            key={`${track.id}${track.source}`}
+            track={track}
+            search={search}
+            handlePlay={() => handlePlay(track)}
+            addToLibrary={event => addToLibrary(event, track)}
+            isActive={currentTrackID === track.id}
+            isPlaying={isPlaying}
+            toggleAddToPlaylistForm={toggleAddToPlaylistForm}
+            toggleEditTrackForm={toggleEditTrackForm}
+            toggleDeleteTrackForm={toggleDeleteTrackForm}
+          />
+        ))}
+      {search && (
+        <button type="button" onClick={loadMoreTracks}>
+          Load More
+        </button>
+      )}
+    </div>
+  );
+};
 
 TrackList.propTypes = {
   search: PropTypes.bool,
