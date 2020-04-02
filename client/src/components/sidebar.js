@@ -1,30 +1,25 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, NavLink, useHistory } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   faMusic,
   faSearch,
   faCompass
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faSoundcloud,
-  faSpotify,
-  faYoutube,
-  faMixcloud
-} from "@fortawesome/free-brands-svg-icons";
+import { faSoundcloud, faSpotify } from "@fortawesome/free-brands-svg-icons";
 import React, { useState } from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
+import { getUserSpotifyPlaylists } from "../redux/actions/spotifyActions";
 import ConnectedSourceButton from "./connected-source-button";
 import PlaylistItem from "./playlist-item";
 import SettingsForm from "./settings-form";
 import styles from "../styles/sidebar.module.css";
 
-const Sidebar = ({ user, playlists }) => {
+const Sidebar = ({ user, playlists, updateSpotifyPlaylists }) => {
   const [isSettingsFormOpen, setIsSettingsFormOpen] = useState(false);
   const [settingsSource, setSettingsSource] = useState();
-
   function toggleSettingsForm(source) {
     setSettingsSource(source);
     setIsSettingsFormOpen(!isSettingsFormOpen);
@@ -36,6 +31,15 @@ const Sidebar = ({ user, playlists }) => {
     } else {
       window.location.href = `/auth/${source}`;
     }
+  }
+
+  async function fetchPlaylistsAndToggleSettingsForm(source) {
+    if (source === "spotify") {
+      await updateSpotifyPlaylists();
+    } else if (source === "soundcloud") {
+      //
+    }
+    toggleSettingsForm(source);
   }
 
   const allPlaylists = flattenPlaylistObject(playlists);
@@ -96,14 +100,14 @@ const Sidebar = ({ user, playlists }) => {
       <div className={styles.sidebarFooter}>
         <ConnectedSourceButton
           isConnected={user.soundcloud.isConnected}
-          handleSettings={toggleSettingsForm}
+          handleSettings={fetchPlaylistsAndToggleSettingsForm}
           handleConnectSource={redirectToConnectSource}
           source="soundcloud"
           icon={faSoundcloud}
         />
         <ConnectedSourceButton
           isConnected={user.spotify.isConnected}
-          handleSettings={toggleSettingsForm}
+          handleSettings={fetchPlaylistsAndToggleSettingsForm}
           handleConnectSource={redirectToConnectSource}
           source="spotify"
           icon={faSpotify}
@@ -137,4 +141,11 @@ const mapStateToProps = state => ({
   playlists: state.library.playlists
 });
 
-export default connect(mapStateToProps)(Sidebar);
+const mapDispatchToProps = dispatch => ({
+  updateSpotifyPlaylists: () => dispatch(getUserSpotifyPlaylists())
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Sidebar);
