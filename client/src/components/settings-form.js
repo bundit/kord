@@ -7,13 +7,11 @@ import Modal from "./modal";
 import styles from "../styles/modal.module.css";
 
 const SettingsForm = ({ show, source, playlists, setSettings, onClose }) => {
-  const sourcePlaylists = playlists[source] || [];
-  const [playlistSettings, setPlaylistSettings] = useState([
-    ...sourcePlaylists
-  ]);
+  const sourcePlaylists = playlists[source];
+  const [playlistSettings, setPlaylistSettings] = useState(sourcePlaylists);
 
   useEffect(() => {
-    setPlaylistSettings([...sourcePlaylists]);
+    setPlaylistSettings(sourcePlaylists);
   }, [source]); // Safe to omit 'setPlaylistSettings'
 
   function onSubmit(e) {
@@ -42,8 +40,8 @@ const SettingsForm = ({ show, source, playlists, setSettings, onClose }) => {
       <form className={styles.modalForm} onSubmit={onSubmit}>
         <div className={styles.formInnerWrapper}>
           {/* TODO: insert user profile here */}
-          {sourcePlaylists &&
-            sourcePlaylists.map((playlist, i) => (
+          {playlistSettings &&
+            playlistSettings.map((playlist, i) => (
               <FormCheckbox
                 title={playlist.title}
                 i={i}
