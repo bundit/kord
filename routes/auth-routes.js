@@ -1,7 +1,10 @@
 const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const jwtDecode = require("jwt-decode");
+const refresh = require("passport-oauth2-refresh");
 
+const db = require("../config/database-setup");
 const spotifyAuthRoutes = require("./spotify-auth-routes");
 // const mixcloudAuthRoutes = require("./mixcloud-auth-routes");
 
@@ -36,6 +39,56 @@ router.get("/token", (req, res, next) => {
     });
 
     return res.send("OK");
+  })(req, res, next);
+});
+
+router.get("/:provider/refresh", (req, res, next) => {
+  passport.authenticate("jwt", async (err, user, info) => {
+    const userCookie = req.cookies.kordUser;
+    const kordUser = jwtDecode(userCookie);
+    const { provider } = req.params;
+
+    if (err) {
+      return res.send(err);
+    }
+
+    if (!user) {
+      return res.send(`user is not logged in & info = ${info}`);
+    }
+
+    // const
+    const query = {
+      text: `SELECT *
+             FROM (users JOIN user_profiles
+             ON users.id=user_profiles.user_id)
+             WHERE users.email=$1 AND user_profiles.oauth_provider=$2`,
+      values: [kordUser.email, provider]
+    };
+    // const data = db.query(query);
+    const {
+      rows: [firstRow]
+    } = await db.query(query);
+
+    if (!firstRow) {
+      return res.send("Error: provider connection does not exist");
+    }
+
+    refresh.requestNewAccessToken(
+      firstRow.oauth_provider,
+      firstRow.refresh_token,
+      (error, accessToken) => {
+        if (error) {
+          return res.send({
+            provider: firstRow.oauth_provider,
+            error: JSON.parse(error.data)
+          });
+        }
+        return res.send({
+          provider: firstRow.oauth_provider,
+          accessToken
+        });
+      }
+    );
   })(req, res, next);
 });
 
