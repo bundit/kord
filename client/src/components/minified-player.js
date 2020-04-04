@@ -13,7 +13,7 @@ import { ReactComponent as PauseIcon } from "../assets/pause-button.svg";
 import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import { formatArtistName } from "../utils/formatArtistName";
 import { getImgUrl } from "../utils/getImgUrl";
-import { useMobileDetection } from "../utils/useMobileDetection";
+import { useMobileDetection } from "../utils/hooks";
 import placeholderImg from "../assets/placeholder.png";
 import styles from "../styles/player.module.css";
 

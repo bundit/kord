@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { importSavedSpotifyTracks } from "../redux/actions/spotifyActions";
 import { setAccessToken } from "../redux/actions/userActions";
@@ -46,4 +46,19 @@ export function useHashParamDetectionOnLoad() {
       }
     }
   }, [dispatch]);
+}
+
+export function useMobileDetection() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 800);
+  function handleResize() {
+    setIsMobile(window.innerWidth < 800);
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return isMobile;
 }
