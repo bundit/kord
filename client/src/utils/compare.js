@@ -1,15 +1,7 @@
 import { formatArtistName } from "./formatArtistName";
 
-/**
- * compareSongs - Compares two songs in alphabetic order
- * Compares by title > artist > source
- *
- * @param  {object} song1
- * @param  {object} song2
- * @return {number}
- * Returns > 0 if song1 comes first, < 0 if song2 comes first and 0 if they are the same
- */
-export default function compareSongs(song1, song2) {
+// Compare Songs
+export function compareSongs(song1, song2) {
   const titleCompare = song1.title
     .toLowerCase()
     .localeCompare(song2.title.toLowerCase());
@@ -31,4 +23,17 @@ export default function compareSongs(song1, song2) {
   const sourceCompare = song1.source.localeCompare(song1.source);
 
   return sourceCompare;
+}
+
+// Comapre Artists
+export function compareArtists(artist1, artist2) {
+  artist1 = formatArtistName(artist1);
+  artist2 = formatArtistName(artist2);
+
+  return artist1.toLowerCase().localeCompare(artist2.toLowerCase());
+}
+
+// Compare Genres
+export function compareGenres(genre1, genre2) {
+  return genre1.toLowerCase().localeCompare(genre2.toLowerCase());
 }

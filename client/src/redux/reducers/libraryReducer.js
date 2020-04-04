@@ -5,9 +5,11 @@ import {
   EDIT_TRACK,
   DELETE_TRACK
 } from "../actions/types";
-import compareArtists from "../../utils/compareArtists";
-import compareGenres from "../../utils/compareGenres";
-import compareSongs from "../../utils/compareSongs";
+import {
+  compareArtists,
+  compareGenres,
+  compareSongs
+} from "../../utils/compare";
 import insertInPlace from "../../utils/insertInPlace";
 
 const initialState = {
