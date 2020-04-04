@@ -17,38 +17,57 @@ const TrackList = ({
   toggleEditTrackForm,
   toggleDeleteTrackForm
 }) => {
+  if (!songs.length && loadMoreTracks) {
+    loadMoreTracks();
+  }
+  const detectScroll = useScrollDetection(loadMoreTracks);
+  useCheckViewpointComponentsOnUpdate(songs);
+
+  return (
+    <>
+      <div
+        className={styles.libraryWrapper}
+        onScroll={loadMoreTracks ? detectScroll : null}
+      >
+        {songs &&
+          songs.map((track, i) => (
+            <TrackItem
+              key={`${track.id}${track.source}${i}`}
+              track={track}
+              search={search}
+              handlePlay={() => handlePlay(track)}
+              addToLibrary={event => addToLibrary(event, track)}
+              isActive={currentTrackID === track.id}
+              isPlaying={isPlaying}
+              toggleAddToPlaylistForm={toggleAddToPlaylistForm}
+              toggleEditTrackForm={toggleEditTrackForm}
+              toggleDeleteTrackForm={toggleDeleteTrackForm}
+            />
+          ))}
+      </div>
+    </>
+  );
+};
+
+function useScrollDetection(loadMoreTracks) {
+  return function(e) {
+    const eScrollTop = e.target.scrollTop;
+    const eHeight = e.target.getBoundingClientRect().height;
+    const eScrollHeight = e.target.scrollHeight - 10;
+    if (eScrollTop + eHeight >= eScrollHeight) {
+      loadMoreTracks();
+    }
+  };
+}
+
+function useCheckViewpointComponentsOnUpdate(songs) {
   useEffect(() => {
     // This will ensure that components that come into viewport during
     // a filter will be rendered. Lazyload only checks on scroll events,
     // so this way we force lazyload to check visible components
     forceCheck();
   }, [songs]);
-
-  return (
-    <div className={styles.libraryWrapper}>
-      {songs &&
-        songs.map(track => (
-          <TrackItem
-            key={`${track.id}${track.source}`}
-            track={track}
-            search={search}
-            handlePlay={() => handlePlay(track)}
-            addToLibrary={event => addToLibrary(event, track)}
-            isActive={currentTrackID === track.id}
-            isPlaying={isPlaying}
-            toggleAddToPlaylistForm={toggleAddToPlaylistForm}
-            toggleEditTrackForm={toggleEditTrackForm}
-            toggleDeleteTrackForm={toggleDeleteTrackForm}
-          />
-        ))}
-      {search && (
-        <button type="button" onClick={loadMoreTracks}>
-          Load More
-        </button>
-      )}
-    </div>
-  );
-};
+}
 
 TrackList.propTypes = {
   search: PropTypes.bool,
