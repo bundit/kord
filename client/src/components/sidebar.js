@@ -17,7 +17,7 @@ import PlaylistItem from "./playlist-item";
 import SettingsForm from "./settings-form";
 import styles from "../styles/sidebar.module.css";
 
-const Sidebar = ({ user, playlists, updateSpotifyPlaylists }) => {
+const Sidebar = ({ user, playlists, updatePlaylists }) => {
   const [isSettingsFormOpen, setIsSettingsFormOpen] = useState(false);
   const [settingsSource, setSettingsSource] = useState();
   function toggleSettingsForm(source) {
@@ -31,15 +31,6 @@ const Sidebar = ({ user, playlists, updateSpotifyPlaylists }) => {
     } else {
       window.location.href = `/auth/${source}`;
     }
-  }
-
-  async function fetchPlaylistsAndToggleSettingsForm(source) {
-    if (source === "spotify") {
-      await updateSpotifyPlaylists();
-    } else if (source === "soundcloud") {
-      //
-    }
-    toggleSettingsForm(source);
   }
 
   const allPlaylists = flattenPlaylistObject(playlists);
@@ -100,15 +91,17 @@ const Sidebar = ({ user, playlists, updateSpotifyPlaylists }) => {
       <div className={styles.sidebarFooter}>
         <ConnectedSourceButton
           isConnected={user.soundcloud.isConnected}
-          handleSettings={fetchPlaylistsAndToggleSettingsForm}
+          handleClick={toggleSettingsForm}
           handleConnectSource={redirectToConnectSource}
+          handleHover={updatePlaylists}
           source="soundcloud"
           icon={faSoundcloud}
         />
         <ConnectedSourceButton
           isConnected={user.spotify.isConnected}
-          handleSettings={fetchPlaylistsAndToggleSettingsForm}
+          handleClick={toggleSettingsForm}
           handleConnectSource={redirectToConnectSource}
+          handleHover={updatePlaylists}
           source="spotify"
           icon={faSpotify}
         />
@@ -136,13 +129,20 @@ const Sidebar = ({ user, playlists, updateSpotifyPlaylists }) => {
   );
 };
 
+const fetchPlaylists = source => dispatch => {
+  if (source === "spotify") {
+    dispatch(getUserSpotifyPlaylists());
+  } else if (source === "soundcloud") {
+  }
+};
+
 const mapStateToProps = state => ({
   user: state.user,
   playlists: state.library.playlists
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateSpotifyPlaylists: () => dispatch(getUserSpotifyPlaylists())
+  updatePlaylists: source => dispatch(fetchPlaylists(source))
 });
 
 export default connect(

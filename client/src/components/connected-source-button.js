@@ -5,21 +5,23 @@ import styles from "../styles/sidebar.module.css";
 
 const ConnectedSourceButton = ({
   isConnected,
-  handleSettings,
+  handleClick,
   handleConnectSource,
+  handleHover,
   source,
   icon
 }) => (
   <button
     className={`${isConnected && styles.connectedSource}`}
     type="button"
+    onMouseEnter={isConnected ? () => handleHover(source) : null}
     onClick={
       isConnected
-        ? () => handleSettings(source)
+        ? () => handleClick(source)
         : () => handleConnectSource(source)
     }
   >
-    <FontAwesomeIcon size="6x" icon={icon} />{" "}
+    <FontAwesomeIcon size="6x" icon={icon} />
   </button>
 );
 
