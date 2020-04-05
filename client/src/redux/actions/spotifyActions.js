@@ -2,22 +2,11 @@ import SpotifyWebApi from "spotify-web-api-js";
 
 const spotifyApi = new SpotifyWebApi();
 
-// Async try catch wrapper for
-async function tryWrapper(callback) {
-  return async function() {
-    try {
-      return await callback.apply(this, arguments);
-    } catch (e) {
-      console.err(`Error: ${e.stack}`);
-    }
-  };
-}
-
 export const setSpotifyAccessToken = token => dispatch => {
   spotifyApi.setAccessToken(token);
 
   dispatch({
-    type: "SET_SPOTIFY_ACCESS_TOKEN",
+    type: "SET_ACCESS_TOKEN",
     payload: token,
     source: "spotify"
   });
@@ -28,12 +17,21 @@ export const setSpotifyAccessToken = token => dispatch => {
   });
 };
 
+export const refreshSpotifyToken = () => dispatch => {
+  return fetch(`/auth/spotify/refresh`)
+    .then(res => res.json())
+    .then(obj => {
+      dispatch(setSpotifyAccessToken(obj.accessToken));
+    });
+};
+
 export const importSavedSpotifyTracks = (
   limit = 50,
   offset = 0
 ) => async dispatch => {
   let tracks = [];
   let data;
+
   do {
     data = await spotifyApi.getMySavedTracks({ limit, offset });
     const newTracks = mapSpotifyResponseToTrackObjects(data);
@@ -51,24 +49,31 @@ export const importSavedSpotifyTracks = (
 
 export const getUserSpotifyPlaylists = (
   limit = 50,
-  offset = 0
+  offset = 0,
+  tries = 3
 ) => async dispatch => {
-  const data = await spotifyApi.getUserPlaylists({ limit, offset });
-  const playlists = data.items.map(item => ({
-    id: item.id,
-    title: item.name,
-    images: item.images,
-    externalUrl: item.external_urls.spotify,
-    source: "spotify",
-    tracks: [],
-    next: "start",
-    isConnected: false
-  }));
+  spotifyApi.getUserPlaylists({ limit, offset }, (err, data) => {
+    if (err) {
+      return dispatch(errorHandler(err)).then(() =>
+        dispatch(getUserSpotifyPlaylists(limit, offset, --tries))
+      );
+    }
+    const playlists = data.items.map(item => ({
+      id: item.id,
+      title: item.name,
+      images: item.images,
+      externalUrl: item.external_urls.spotify,
+      source: "spotify",
+      tracks: [],
+      next: "start",
+      isConnected: false
+    }));
 
-  dispatch({
-    type: "IMPORT_PLAYLISTS",
-    source: "spotify",
-    payload: playlists
+    dispatch({
+      type: "IMPORT_PLAYLISTS",
+      source: "spotify",
+      payload: playlists
+    });
   });
 };
 
@@ -78,27 +83,49 @@ export const getSpotifyPlaylistTracks = (id, next) => async dispatch => {
   if (!next) {
     return;
   } else if (next === "start") {
-    data = await spotifyApi.getPlaylistTracks(id);
+    data = spotifyApi.getPlaylistTracks(id);
   } else {
-    data = await spotifyApi.getGeneric(next);
+    data = spotifyApi.getGeneric(next);
   }
 
-  const newTracks = mapSpotifyResponseToTrackObjects(data);
+  data.then(
+    data => {
+      const newTracks = mapSpotifyResponseToTrackObjects(data);
 
-  dispatch({
-    type: "IMPORT_PLAYLIST_TRACKS",
-    source: "spotify",
-    playlistId: id,
-    payload: newTracks
-  });
+      dispatch({
+        type: "IMPORT_PLAYLIST_TRACKS",
+        source: "spotify",
+        playlistId: id,
+        payload: newTracks
+      });
 
-  dispatch({
-    type: "SET_NEXT_PLAYLIST_HREF",
-    source: "spotify",
-    playlistId: id,
-    payload: data.next
-  });
+      dispatch({
+        type: "SET_NEXT_PLAYLIST_HREF",
+        source: "spotify",
+        playlistId: id,
+        payload: data.next
+      });
+    },
+    err => {
+      return dispatch(errorHandler(err)).then(() =>
+        dispatch(getSpotifyPlaylistTracks(id, next))
+      );
+    }
+  );
 };
+
+export const getSpotifyProfile = () => async dispatch => {
+  const profile = await spotifyApi.getMe();
+};
+
+function errorHandler(err) {
+  return dispatch => {
+    console.log("error happend");
+    if (err.status === 401) {
+      return dispatch(refreshSpotifyToken());
+    }
+  };
+}
 
 function mapSpotifyResponseToTrackObjects(data) {
   return data.items
@@ -120,7 +147,3 @@ function mapSpotifyResponseToTrackObjects(data) {
       source: "spotify"
     }));
 }
-
-export const getSpotifyProfile = () => async dispatch => {
-  const profile = spotifyApi.getMe();
-};
