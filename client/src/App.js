@@ -14,10 +14,7 @@ import Search from "./components/search-page";
 import Sidebar from "./components/sidebar";
 
 const App = () => {
-  const user = useSelector(state => state.user);
-
   useHashParamDetectionOnLoad();
-  useAutoRefreshTokens(user);
 
   return (
     <BrowserRouter>

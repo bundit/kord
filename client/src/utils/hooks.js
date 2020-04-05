@@ -4,30 +4,6 @@ import { useEffect, useState } from "react";
 import { importSavedSpotifyTracks } from "../redux/actions/spotifyActions";
 import { setAccessToken } from "../redux/actions/userActions";
 
-export function useAutoRefreshTokens(user) {
-  const dispatch = useDispatch();
-  const ms = 1000 * 60 * 56;
-
-  useEffect(() => {
-    let timer;
-    const source = "spotify";
-    if (user.spotify.isConnected) {
-      const makeRequest = function() {
-        fetch(`/auth/${source}/refresh`)
-          .then(res => res.json())
-          .then(obj => {
-            dispatch(setAccessToken(source, obj.accessToken));
-          });
-        timer = setTimeout(makeRequest, ms);
-      };
-      makeRequest();
-    }
-    return () => clearTimeout(timer);
-  }, [user.spotify.isConnected]);
-
-  // More refreshers go here
-}
-
 export function useHashParamDetectionOnLoad() {
   const dispatch = useDispatch();
 
