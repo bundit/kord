@@ -7,14 +7,12 @@ const ConnectedSourceButton = ({
   isConnected,
   handleClick,
   handleConnectSource,
-  handleHover,
   source,
   icon
 }) => (
   <button
     className={`${isConnected && styles.connectedSource}`}
     type="button"
-    onMouseEnter={isConnected ? () => handleHover(source) : null}
     onClick={
       isConnected
         ? () => handleClick(source)
