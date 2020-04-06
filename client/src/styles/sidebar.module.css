@@ -95,7 +95,6 @@
 .sidebarWrapper .sectionWrapper a {
   text-decoration: none;
   padding: 7px 0 7px 30px;
-  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -119,7 +118,7 @@
 .sidebarFooter {
   border-top: 1px #383f41 solid;
   margin-top: auto;
-  height: 80px;
+  min-height: 80px;
   display: flex;
   justify-content: space-around;
   align-items: center;
