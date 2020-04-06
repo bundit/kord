@@ -93,7 +93,6 @@ const Sidebar = ({ user, playlists, updatePlaylists }) => {
           isConnected={user.soundcloud.isConnected}
           handleClick={toggleSettingsForm}
           handleConnectSource={redirectToConnectSource}
-          handleHover={updatePlaylists}
           source="soundcloud"
           icon={faSoundcloud}
         />
@@ -101,7 +100,6 @@ const Sidebar = ({ user, playlists, updatePlaylists }) => {
           isConnected={user.spotify.isConnected}
           handleClick={toggleSettingsForm}
           handleConnectSource={redirectToConnectSource}
-          handleHover={updatePlaylists}
           source="spotify"
           icon={faSpotify}
         />
@@ -123,6 +121,7 @@ const Sidebar = ({ user, playlists, updatePlaylists }) => {
           show={isSettingsFormOpen}
           source={settingsSource}
           onClose={toggleSettingsForm}
+          handleUpdate={updatePlaylists}
         />
       </div>
     </div>

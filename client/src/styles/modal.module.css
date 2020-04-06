@@ -12,16 +12,16 @@
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: 50vh;
+  top: 40vh;
   left: 50vw;
   width: 80vw;
   height: auto;
-  max-height: 50vh;
+  max-height: 70vh;
   margin-top: -25vh;
   margin-left: -40vw;
   /* background-color: #192124; */
   border-radius: 10px;
-  color: #eee;
+  color: #aaa;
   background-color: #151d20;
   z-index: 4;
   overflow: hidden;
@@ -60,8 +60,8 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 25px 0;
-  padding-right: 6px;
+  padding: 0 6px 25px 0;
+  /* padding-right: 6px; */
   align-items: center;
   flex-shrink: 1;
   overflow-y: hidden;
@@ -77,6 +77,7 @@
   width: 100%;
   padding-left: 10px;
   padding-bottom: 50px;
+  margin-top: 5px;
 
   display: flex;
   flex-direction: column;
@@ -110,7 +111,7 @@
   justify-content: flex-end;
   align-self: flex-end;
   min-height: 45px;
-  margin: 10px 25px 0 auto;
+  margin: 20px 25px 0 auto;
 }
 
 .formCancelSubmitButtonGroup button {
@@ -227,6 +228,66 @@
   color: white;
 }
 
+.formTitle {
+  font-weight: 600;
+  padding-left: 10px;
+  margin: 35px 25px 0 25px;
+  padding-bottom: 10px;
+  font-size: 16px;
+  border-bottom: 1px #383f41 solid;
+}
+
+.profileWrap {
+  display: flex;
+  padding: 25px 35px 0 35px;
+}
+
+.profilePicWrap,
+.profilePicWrap img {
+  width: 50px;
+  height: 50px;
+  border-radius: 7px;
+}
+
+.externalIcon {
+  margin-left: auto;
+  color: white;
+  transition: 0.3s ease;
+  opacity: 0;
+}
+
+.profileDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-left: 15px;
+  text-decoration: none;
+  color: inherit;
+  transition: 0.3s ease;
+}
+
+.profileDetails:hover {
+  color: white;
+}
+.profileDetails:hover .externalIcon {
+  opacity: 1;
+}
+.syncButton {
+  padding: 10px;
+  margin-left: auto;
+  color: #aaa;
+  border-radius: 7px;
+  border: 2px #383f41 solid;
+}
+
+.syncButton svg {
+  margin-top: auto;
+}
+
+.rotate {
+  transition: 1s ease;
+  transform: rotate(360deg);
+}
 @media (min-width: 800px) {
   .modal {
     left: 50%;

@@ -1,18 +1,24 @@
-import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { connect, useSelector } from "react-redux";
+import { faSync, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from "react";
 
 import { capitalizeWord } from "../utils/capitalizeWord";
 import FormCheckbox from "./form-checkbox";
 import Modal from "./modal";
+import placeholderImg from "../assets/placeholder.png";
 import styles from "../styles/modal.module.css";
 
-const SettingsForm = ({ show, source, playlists, setSettings, onClose }) => {
+const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
+  const user = useSelector(state => state.user);
+  const playlists = useSelector(state => state.library.playlists);
   const sourcePlaylists = playlists[source];
+  const settings = user[source];
   const [playlistSettings, setPlaylistSettings] = useState(sourcePlaylists);
 
   useEffect(() => {
     setPlaylistSettings(sourcePlaylists);
-  }, [source]); // Safe to omit 'setPlaylistSettings'
+  }, [source, playlists]); // Safe to omit 'setPlaylistSettings'
 
   function onSubmit(e) {
     e.preventDefault();
@@ -33,10 +39,40 @@ const SettingsForm = ({ show, source, playlists, setSettings, onClose }) => {
 
   return (
     <Modal
-      title={`Settings for ${capitalizeWord(source)}`}
+      title={`${capitalizeWord(source)} Connection Settings`}
       show={show}
       onClose={onClose}
     >
+      <div className={styles.profileWrap}>
+        <div className={styles.profilePicWrap}>
+          <img src={settings ? settings.image : placeholderImg} alt="" />
+        </div>
+        <a
+          className={styles.profileDetails}
+          href={settings && settings.profileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div style={{ display: "flex" }}>
+            {settings && settings.username}
+            <span className={styles.externalIcon}>
+              <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
+            </span>
+          </div>
+          <div>{settings && settings.profileUrl}</div>
+        </a>
+
+        <button
+          className={styles.syncButton}
+          type="button"
+          onClick={() => handleUpdate(source)}
+        >
+          <FontAwesomeIcon size="2x" icon={faSync} />
+        </button>
+      </div>
+      <div className={styles.formTitle}>
+        Your {capitalizeWord(source)} playlists
+      </div>
       <form className={styles.modalForm} onSubmit={onSubmit}>
         <div className={styles.formInnerWrapper}>
           {/* TODO: insert user profile here */}
@@ -70,10 +106,6 @@ const SettingsForm = ({ show, source, playlists, setSettings, onClose }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  playlists: state.library.playlists
-});
-
 const mapDispatchToProps = dispatch => ({
   setSettings: (newSettings, source) =>
     dispatch({
@@ -84,6 +116,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(SettingsForm);
