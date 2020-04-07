@@ -125,6 +125,12 @@ export default function(state = initialState, action) {
         queue: action.payload
       };
     }
+    case "SET_QUEUE_INDEX": {
+      return {
+        ...state,
+        index: action.payload
+      };
+    }
     default:
       return state;
   }

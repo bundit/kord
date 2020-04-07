@@ -76,3 +76,10 @@ export function setQueue(newQ) {
     payload: newQ
   };
 }
+
+export function setQueueIndex(i) {
+  return {
+    type: "SET_QUEUE_INDEX",
+    payload: i
+  };
+}
