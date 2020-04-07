@@ -10,7 +10,6 @@ import React, { useState, useRef, useEffect } from "react";
 
 import { formatArtistName } from "../utils/formatArtistName";
 import { getImgUrl } from "../utils/getImgUrl";
-import TrackDropdown from "./track-dropdown";
 import msToDuration from "../utils/msToDuration";
 import placeholderImg from "../assets/placeholder.png";
 import rippleEffect from "../utils/rippleEffect";
@@ -38,15 +37,13 @@ const TrackItem = ({
   handlePlay,
   addToLibrary,
   isActive,
-  isPlaying,
-  toggleAddToPlaylistForm,
-  toggleEditTrackForm,
-  toggleDeleteTrackForm
+  isPlaying
 }) => {
   const { title, duration: ms, artist, genre, source } = track;
   // Keep a reference to detect clicks outside of target area
   const trackItemRef = useRef();
   const [disable, setDisable] = useState(false);
+
   const handleDisable = () => {
     setDisable(true);
   };
@@ -90,7 +87,6 @@ const TrackItem = ({
         <div
           className={`${styles.trackWrapper} ${isActive && styles.playingNow}`}
           onClick={e => {
-            // handlePlay();
             rippleEffect(e);
           }}
           onDoubleClick={handlePlay}
@@ -139,7 +135,6 @@ const TrackItem = ({
                 type="button"
                 onClick={event => {
                   addToLibrary(event, track);
-                  toggleAddToPlaylistForm();
                   handleDisable();
                 }}
                 disabled={disable}
@@ -168,15 +163,6 @@ const TrackItem = ({
             )}
           </div>
         </div>
-        {isDropdownOpen && (
-          <TrackDropdown
-            toggleAddToPlaylistForm={toggleAddToPlaylistForm}
-            toggleDropdown={toggleDropdown}
-            toggleEditTrackForm={toggleEditTrackForm}
-            toggleDeleteTrackForm={toggleDeleteTrackForm}
-            track={track}
-          />
-        )}
       </LazyLoad>
     </div>
   );
@@ -195,10 +181,7 @@ TrackItem.propTypes = {
   addToLibrary: PropTypes.func,
   handlePlay: PropTypes.func.isRequired,
   isActive: PropTypes.bool.isRequired,
-  isPlaying: PropTypes.bool.isRequired,
-  toggleAddToPlaylistForm: PropTypes.func.isRequired,
-  toggleEditTrackForm: PropTypes.func.isRequired,
-  toggleDeleteTrackForm: PropTypes.func.isRequired
+  isPlaying: PropTypes.bool.isRequired
 };
 
 TrackItem.defaultProps = {

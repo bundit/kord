@@ -12,10 +12,7 @@ const TrackList = ({
   addToLibrary,
   loadMoreTracks,
   currentTrackID,
-  isPlaying,
-  toggleAddToPlaylistForm,
-  toggleEditTrackForm,
-  toggleDeleteTrackForm
+  isPlaying
 }) => {
   if (!songs.length && loadMoreTracks) {
     loadMoreTracks();
@@ -35,13 +32,10 @@ const TrackList = ({
               key={`${track.id}${track.source}${i}`}
               track={track}
               search={search}
-              handlePlay={() => handlePlay(track)}
+              handlePlay={() => handlePlay(track, songs)}
               addToLibrary={event => addToLibrary(event, track)}
               isActive={currentTrackID === track.id}
               isPlaying={isPlaying}
-              toggleAddToPlaylistForm={toggleAddToPlaylistForm}
-              toggleEditTrackForm={toggleEditTrackForm}
-              toggleDeleteTrackForm={toggleDeleteTrackForm}
             />
           ))}
       </div>
@@ -77,10 +71,7 @@ TrackList.propTypes = {
   loadMoreTracks: PropTypes.func,
   isPlaying: PropTypes.bool.isRequired,
   currentTrackID: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired,
-  toggleAddToPlaylistForm: PropTypes.func,
-  toggleEditTrackForm: PropTypes.func,
-  toggleDeleteTrackForm: PropTypes.func
+    .isRequired
 };
 
 TrackList.defaultProps = {
