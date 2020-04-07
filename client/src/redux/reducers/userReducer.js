@@ -3,22 +3,30 @@ import { PUSH_LIB_ROUTE, SET_SC_USER } from "../actions/types";
 const initialState = {
   soundcloud: {
     isConnected: false,
-    username: ""
+    username: null,
+    image: null,
+    profileUrl: null
   },
   spotify: {
     isConnected: false,
     token: null,
-    username: ""
+    username: null,
+    image: null,
+    profileUrl: null
   },
   youtube: {
     isConnected: false,
     token: null,
-    username: ""
+    username: null,
+    image: null,
+    profileUrl: null
   },
   mixcloud: {
     isConnected: false,
     token: null,
-    username: ""
+    username: null,
+    image: null,
+    profileUrl: null
   },
   history: {
     library: [],
@@ -84,6 +92,18 @@ export default function(state = initialState, action) {
         [source]: {
           ...state[source],
           isConnected
+        }
+      };
+    }
+    case "SET_PROFILE": {
+      const source = action.source;
+      const newProfile = action.payload;
+
+      return {
+        ...state,
+        [source]: {
+          ...state[source],
+          ...newProfile
         }
       };
     }
