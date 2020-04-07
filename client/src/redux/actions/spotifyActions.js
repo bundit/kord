@@ -6,6 +6,7 @@ import {
   importSongs,
   setNextPlaylistHref
 } from "./libraryActions";
+import { setAccessToken, setConnection, setUserProfile } from "./userActions";
 
 const SPOTIFY = "spotify";
 const spotifyApi = new SpotifyWebApi();
@@ -13,16 +14,8 @@ const spotifyApi = new SpotifyWebApi();
 export const setSpotifyAccessToken = token => dispatch => {
   spotifyApi.setAccessToken(token);
 
-  dispatch({
-    type: "SET_ACCESS_TOKEN",
-    payload: token,
-    source: "spotify"
-  });
-  dispatch({
-    type: "SET_CONNECTION",
-    payload: true,
-    source: "spotify"
-  });
+  dispatch(setAccessToken("spotify", token));
+  dispatch(setConnection("spotify", true));
 };
 
 export const refreshSpotifyToken = () => dispatch => {
@@ -112,15 +105,13 @@ export const setSpotifyProfile = (tries = 3) => dispatch => {
       );
     }
 
-    dispatch({
-      type: "SET_PROFILE",
-      source: "spotify",
-      payload: {
-        username: data.display_name,
-        image: data.images[0].url,
-        profileUrl: data.external_urls.spotify
-      }
-    });
+    const profile = {
+      username: data.display_name,
+      image: data.images[0].url,
+      profileUrl: data.external_urls.spotify
+    };
+
+    dispatch(setUserProfile("spotify", profile));
   });
 };
 

@@ -1,5 +1,5 @@
 import { ADD_TO_SEARCH_HISTORY, IMPORT_SONG } from "./types";
-import { setUserProfile } from "./userActions";
+import { setConnection, setUserProfile } from "./userActions";
 
 const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
 
@@ -47,12 +47,7 @@ export const setSoundcloudProfile = userId => async dispatch => {
   };
 
   dispatch(setUserProfile("soundcloud", await profile));
-
-  dispatch({
-    type: "SET_CONNECTION",
-    payload: true,
-    source: "soundcloud"
-  });
+  dispatch(setConnection("soundcloud", true));
 };
 
 async function fetchScArtists(endpoint) {

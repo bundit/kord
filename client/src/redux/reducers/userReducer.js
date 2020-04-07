@@ -1,4 +1,4 @@
-import { PUSH_LIB_ROUTE, SET_SC_USER } from "../actions/types";
+import { PUSH_LIB_ROUTE } from "../actions/types";
 
 const initialState = {
   soundcloud: {
@@ -68,18 +68,6 @@ export default function(state = initialState, action) {
         [source]: {
           ...state[source],
           token: accessToken
-        }
-      };
-    }
-    case "SET_USERNAME": {
-      const username = action.payload;
-      const source = action.source;
-
-      return {
-        ...state,
-        [source]: {
-          ...state[source],
-          username: username
         }
       };
     }

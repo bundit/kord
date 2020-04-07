@@ -1,8 +1,10 @@
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 
-import { importSavedSpotifyTracks } from "../redux/actions/spotifyActions";
-import { setAccessToken } from "../redux/actions/userActions";
+import {
+  importSavedSpotifyTracks,
+  setSpotifyAccessToken
+} from "../redux/actions/spotifyActions";
 
 export function useHashParamDetectionOnLoad() {
   const dispatch = useDispatch();
@@ -15,8 +17,7 @@ export function useHashParamDetectionOnLoad() {
 
       if (source === "spotify") {
         const spotifyToken = URLParams.get("spotifyToken");
-        dispatch(setAccessToken("spotify", spotifyToken));
-        // setSpotifyAccessToken(accessToken);
+        dispatch(setSpotifyAccessToken(spotifyToken));
 
         dispatch(importSavedSpotifyTracks());
       }
