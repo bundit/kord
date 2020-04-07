@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { faSync, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from "react";
 
 import { capitalizeWord } from "../utils/capitalizeWord";
+import { setSoundcloudProfile } from "../redux/actions/soundcloudActions";
 import FormCheckbox from "./form-checkbox";
 import Modal from "./modal";
 import placeholderImg from "../assets/placeholder.png";
@@ -15,6 +16,13 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
   const sourcePlaylists = playlists[source];
   const settings = user[source];
   const [playlistSettings, setPlaylistSettings] = useState(sourcePlaylists);
+
+  // Soundcloud edit fields
+  const isScConnected = useSelector(state => state.user.soundcloud.isConnected);
+  const [showUsernameInput, setShowUsernameInput] = useState(!isScConnected);
+  const [usernameInput, setUsernameInput] = useState(
+    settings ? settings.username : ""
+  );
 
   useEffect(() => {
     setPlaylistSettings(sourcePlaylists);
@@ -37,6 +45,7 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
     setPlaylistSettings(newSettings);
   }
 
+  const dispatch = useDispatch();
   return (
     <Modal
       title={`${capitalizeWord(source)} Connection Settings`}
@@ -45,22 +54,58 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
     >
       <div className={styles.profileWrap}>
         <div className={styles.profilePicWrap}>
-          <img src={settings ? settings.image : placeholderImg} alt="" />
+          <img
+            src={settings && settings.image ? settings.image : placeholderImg}
+            alt=""
+          />
         </div>
-        <a
-          className={styles.profileDetails}
-          href={settings && settings.profileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <div style={{ display: "flex" }}>
-            {settings && settings.username}
-            <span className={styles.externalIcon}>
-              <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
-            </span>
-          </div>
-          <div>{settings && settings.profileUrl}</div>
-        </a>
+
+        <div className={styles.profileDetails}>
+          {source !== "soundcloud" ? (
+            <a
+              // className={styles.profileDetails}
+              href={settings && settings.profileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div style={{ display: "flex" }}>
+                {settings && settings.username}
+                <span className={styles.externalIcon}>
+                  <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
+                </span>
+              </div>
+              <div>{settings && settings.profileUrl}</div>
+            </a>
+          ) : showUsernameInput ? (
+            <form
+              style={{ width: "300px", display: "flex" }}
+              onSubmit={e => {
+                e.preventDefault();
+                dispatch(setSoundcloudProfile(usernameInput));
+                setShowUsernameInput(false);
+              }}
+            >
+              <input
+                className={styles.usernameInput}
+                type="text"
+                placeholder="Enter Soundcloud Username"
+                onChange={e => setUsernameInput(e.target.value)}
+                value={usernameInput}
+              />
+              <button type="submit">submti</button>
+            </form>
+          ) : (
+            <>
+              <div style={{ display: "flex" }}>
+                {settings && settings.username}
+                <span className={styles.externalIcon}>
+                  <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
+                </span>
+              </div>
+              <div>{settings && settings.profileUrl}</div>
+            </>
+          )}
+        </div>
 
         <button
           className={styles.syncButton}

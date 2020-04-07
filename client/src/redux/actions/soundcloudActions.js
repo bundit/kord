@@ -1,45 +1,11 @@
 import { ADD_TO_SEARCH_HISTORY, IMPORT_SONG } from "./types";
+import { setUserProfile } from "./userActions";
 
 const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
 
 const MAX_LIMIT = 200;
 const LINK = 1;
 const SC_API_BASE_URL = "https://api.soundcloud.com";
-
-async function fetchScSong(id) {
-  const trackEndpoint = `https://api-v2.soundcloud.com/tracks/${id}?client_id=${KEY}`;
-
-  const track = await fetch(trackEndpoint).json();
-
-  return {
-    title: track.title,
-    id: track.id,
-    artist: {
-      name: track.user.username,
-      img: track.user.avatar_url,
-      id: track.user.id
-    },
-    date: track.created_at,
-    duration: track.full_duration,
-    likes: track.likes_count,
-    genre: track.genre,
-    uri: track.uri,
-    wave: track.waveform_url,
-    streamUrl: track.stream_url,
-    streamable: track.streamable,
-    img: track.artwork_url,
-    source: "soundcloud"
-  };
-}
-
-export const importScSong = id => async dispatch => {
-  const song = await fetchScSong(id);
-
-  dispatch({
-    type: IMPORT_SONG,
-    payload: song
-  });
-};
 
 export const importScLikes = username => async dispatch => {
   let nextEndpoint = `${SC_API_BASE_URL}/users/${username}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
@@ -64,6 +30,28 @@ export const importScLikes = username => async dispatch => {
   dispatch({
     type: "IMPORT_SONGS",
     payload: tracks
+  });
+};
+
+export const setSoundcloudProfile = userId => async dispatch => {
+  const endpoint = `${SC_API_BASE_URL}/users/${userId}?client_id=${KEY}`;
+
+  const res = await fetch(endpoint);
+  const data = await res.json();
+
+  const profile = {
+    name: data.full_name,
+    username: data.username,
+    image: data.avatar_url,
+    profileUrl: data.permalink_url
+  };
+
+  dispatch(setUserProfile("soundcloud", await profile));
+
+  dispatch({
+    type: "SET_CONNECTION",
+    payload: true,
+    source: "soundcloud"
   });
 };
 
@@ -163,6 +151,41 @@ export const searchSouncloudTracks = (query, limit = 10) => async dispatch => {
   dispatch({
     type: "SET_NEXT_SC_HREF",
     payload: collection.nextHref
+  });
+};
+
+async function fetchScSong(id) {
+  const trackEndpoint = `https://api-v2.soundcloud.com/tracks/${id}?client_id=${KEY}`;
+
+  const track = await fetch(trackEndpoint).json();
+
+  return {
+    title: track.title,
+    id: track.id,
+    artist: {
+      name: track.user.username,
+      img: track.user.avatar_url,
+      id: track.user.id
+    },
+    date: track.created_at,
+    duration: track.full_duration,
+    likes: track.likes_count,
+    genre: track.genre,
+    uri: track.uri,
+    wave: track.waveform_url,
+    streamUrl: track.stream_url,
+    streamable: track.streamable,
+    img: track.artwork_url,
+    source: "soundcloud"
+  };
+}
+
+export const importScSong = id => async dispatch => {
+  const song = await fetchScSong(id);
+
+  dispatch({
+    type: IMPORT_SONG,
+    payload: song
   });
 };
 

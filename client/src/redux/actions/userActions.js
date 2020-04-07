@@ -1,4 +1,4 @@
-import { setSpotifyAccessToken, setSpotifyProfile } from "./spotifyActions";
+import { setSpotifyAccessToken } from "./spotifyActions";
 
 export const setAccessToken = (source, token) => dispatch => {
   if (source === "spotify") {
@@ -6,8 +6,10 @@ export const setAccessToken = (source, token) => dispatch => {
   }
 };
 
-export const setUserProfile = source => dispatch => {
-  if (source === "spotify") {
-    dispatch(setSpotifyProfile());
-  }
+export const setUserProfile = (source, profile) => {
+  return {
+    type: "SET_PROFILE",
+    source,
+    payload: profile
+  };
 };

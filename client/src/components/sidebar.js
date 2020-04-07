@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, NavLink } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import {
   faMusic,
   faSearch,
@@ -17,7 +17,7 @@ import PlaylistItem from "./playlist-item";
 import SettingsForm from "./settings-form";
 import styles from "../styles/sidebar.module.css";
 
-const Sidebar = ({ user, playlists, updatePlaylists }) => {
+const Sidebar = ({ user, playlists }) => {
   const [isSettingsFormOpen, setIsSettingsFormOpen] = useState(false);
   const [settingsSource, setSettingsSource] = useState();
   function toggleSettingsForm(source) {
@@ -47,6 +47,7 @@ const Sidebar = ({ user, playlists, updatePlaylists }) => {
       />
     ));
 
+  const dispatch = useDispatch();
   return (
     <div className={styles.sidebarWrapper}>
       <div className={styles.sidebarHeader}>
@@ -92,7 +93,7 @@ const Sidebar = ({ user, playlists, updatePlaylists }) => {
         <ConnectedSourceButton
           isConnected={user.soundcloud.isConnected}
           handleClick={toggleSettingsForm}
-          handleConnectSource={redirectToConnectSource}
+          handleConnectSource={toggleSettingsForm}
           source="soundcloud"
           icon={faSoundcloud}
         />
@@ -121,7 +122,7 @@ const Sidebar = ({ user, playlists, updatePlaylists }) => {
           show={isSettingsFormOpen}
           source={settingsSource}
           onClose={toggleSettingsForm}
-          handleUpdate={updatePlaylists}
+          handleUpdate={source => dispatch(fetchPlaylists(source))}
         />
       </div>
     </div>
@@ -140,11 +141,4 @@ const mapStateToProps = state => ({
   playlists: state.library.playlists
 });
 
-const mapDispatchToProps = dispatch => ({
-  updatePlaylists: source => dispatch(fetchPlaylists(source))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Sidebar);
+export default connect(mapStateToProps)(Sidebar);
