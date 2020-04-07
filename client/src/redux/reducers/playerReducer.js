@@ -2,8 +2,6 @@ import {
   PLAY,
   PAUSE,
   SEEK,
-  TOGGLE_EXPANDED_PLAYER,
-  SET_IS_LOADED,
   SET_PLAYER,
   SET_TRACK,
   SET_DURATION,
@@ -11,8 +9,6 @@ import {
   NEXT_TRACK,
   PREV_TRACK,
   ADD_TO_QUEUE,
-  REMOVE_FROM_QUEUE,
-  PLAY_FROM_QUEUE,
   SET_QUEUE
 } from "../actions/types";
 
@@ -27,8 +23,6 @@ const initialState = {
   duration: 0,
   seek: 0,
   isPlaying: false,
-  isExpanded: false,
-  isLoaded: false,
   volume: 1.0,
   index: 0,
   queue: [],
@@ -57,18 +51,6 @@ export default function(state = initialState, action) {
       return {
         ...state,
         seek: newPos
-      };
-    }
-    case TOGGLE_EXPANDED_PLAYER: {
-      return {
-        ...state,
-        isExpanded: !state.isExpanded
-      };
-    }
-    case SET_IS_LOADED: {
-      return {
-        ...state,
-        isLoaded: action.payload
       };
     }
     case SET_PLAYER: {
