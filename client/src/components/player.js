@@ -1,350 +1,183 @@
-import React from "react";
+import { CSSTransition } from "react-transition-group";
+import { connect, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
+import React, { useState, useEffect, useRef } from "react";
 import ReactHowler from "react-howler";
 import raf from "raf";
-import { connect } from "react-redux";
-import { CSSTransition } from "react-transition-group";
 
+import {
+  nextTrack,
+  pause,
+  play,
+  setDuration,
+  setSeek
+} from "../redux/actions/playerActions";
 import ExpandedPlayer from "./expanded-player";
 import MinifiedPlayer from "./minified-player";
-import slideTransition from "../styles/slide.module.css";
 import miniPlayerSlide from "../styles/miniPlayerSlide.module.css";
+import slideTransition from "../styles/slide.module.css";
 
-class Player extends React.Component {
-  constructor(props) {
-    super(props);
+export const Player = ({ current, isPlaying, volume, seek, duration }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [userSeekPos, setUserSeekPos] = useState(0);
+  const [isUserSeeking, setIsUserSeeking] = useState(false);
+  const theRaf = useRef(null);
+  const player = useRef(null);
 
-    this.handlePlayPause = this.handlePlayPause.bind(this);
-    this.handleNext = this.handleNext.bind(this);
-    this.handlePrev = this.handlePrev.bind(this);
-    this.handleToggleExpand = this.handleToggleExpand.bind(this);
-    this.handleSeek = this.handleSeek.bind(this);
-    this.handleOnLoad = this.handleOnLoad.bind(this);
-    this.renderSeekPos = this.renderSeekPos.bind(this);
-    this.handleMouseDownSeek = this.handleMouseDownSeek.bind(this);
-    this.handleMouseUpSeek = this.handleMouseUpSeek.bind(this);
-    this.handleOnChangeUserSeek = this.handleOnChangeUserSeek.bind(this);
+  const dispatch = useDispatch();
 
-    this.state = {
-      userSeekPos: 0,
-      isUserSeeking: false
-    };
-  }
-
-  componentDidMount() {
-    const { setSpotifyAccessToken } = this.props;
-    const { history } = this.props;
-
-    if (window.location.search) {
-      const URLParams = new URLSearchParams(window.location.search);
-      const source = URLParams.get("source");
-
-      if (source === "spotify") {
-        const accessToken = URLParams.get("access_token");
-        setSpotifyAccessToken(accessToken);
-
-        history.push("/more");
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    // Clear the RAF
-    raf.cancel(this.raf);
-  }
-
-  handlePlayPause(event) {
-    const { isPlaying, play, pause } = this.props;
-
+  function handlePlayPause(e) {
     if (isPlaying) {
-      pause();
+      dispatch(pause());
     } else {
-      play();
+      dispatch(play());
     }
-
-    // Don't bubble this event to containers
-    event.stopPropagation();
+    e.stopPropagation();
   }
 
-  handleOnLoad() {
-    const { setDuration, setIsLoaded } = this.props;
-    const { player } = this;
-
-    // Once our track has loaded, we want to set the duration of the file
-    setDuration(player.duration());
-
-    // Set isLoaded to true
+  function handleOnLoad() {
+    dispatch(setDuration(player.current.duration()));
     setIsLoaded(true);
   }
 
-  // Given a positive or negative number, the player will seek based on its current position
-  // handleSeek(15) will move the current seek position 15 seconds forward
-  // handleSeek(-10) will move the current seek position 10 seconds backward
-  // Can be called whether or not player is currently playing
-  handleSeek(s) {
-    const { player } = this;
-    const { isPlaying, setSeek, duration } = this.props;
-
+  function handleSeek(seconds) {
     if (player) {
-      let newSeekPos = player.seek() + s;
+      let newSeekPos = player.current.seek() + seconds;
 
       // Ensure our new seek position is within bounds
       newSeekPos = newSeekPos < 0 ? 0 : newSeekPos;
       newSeekPos = newSeekPos > duration ? duration : newSeekPos;
 
       // Move the player to the new position
-      player.seek(newSeekPos);
+      player.current.seek(newSeekPos);
 
-      // This ensures that we show the updated seek position on the slider
-      // even if we are not currently playing
       if (!isPlaying) {
-        setSeek(newSeekPos);
+        dispatch(setSeek(newSeekPos));
       }
     }
   }
 
-  handleNext() {
-    const { nextTrack } = this.props;
-    nextTrack();
-  }
-
-  handlePrev() {
-    const { prevTrack } = this.props;
-    prevTrack();
-  }
-
-  handleToggleExpand(e) {
-    const { toggleExpandedPlayer } = this.props;
-
-    toggleExpandedPlayer();
-
-    // Stop the event from bubbling
+  function toggleExpand(e) {
+    setIsExpanded(!isExpanded);
     e.stopPropagation();
-  }
-
-  handleMouseDownSeek() {
-    this.setState({
-      isUserSeeking: true
-    });
   }
 
   // When the user has released mouse/touch on slider,
   // we set the isUserSeeking to false to allow the
   // component to be controlled by the player
-  handleMouseUpSeek() {
-    const { player } = this;
-    let { userSeekPos } = this.state;
-    const { setSeek, isLoaded } = this.props;
-
-    // setting e.target.value to state defaults to string
-    userSeekPos = Number(userSeekPos);
+  function handleMouseUpSeek() {
+    const newSeekPos = Number(userSeekPos);
 
     if (isLoaded) {
-      // Set our howler seek position
-      player.seek(userSeekPos);
+      player.current.seek(newSeekPos);
 
-      // Set our state seek position so it can render on slider
-      setSeek(userSeekPos);
+      dispatch(setSeek(newSeekPos));
     }
 
-    // User is done seeking
-    this.setState({
-      isUserSeeking: false
-    });
+    setIsUserSeeking(false);
   }
 
   // This gets fired when the user is manually seeking using the slider
-  handleOnChangeUserSeek(e) {
-    this.setState({
-      userSeekPos: e.target.value
-    });
+  function handleOnChangeUserSeek(e) {
+    if (isUserSeeking) {
+      setUserSeekPos(e.target.value);
+    }
   }
 
-  // This function will be called 'onPlay' by ReactHowler, and only needs to be called
-  // in that scenario because we only need to render frames when the audio track is playing,
-  // otherwise animation should be *static*
-  //
-  // Uses 'raf' (requestAnimationFrame polyfill)
-  // renders the seek position of the currently playing track on input slider
-  renderSeekPos() {
-    const { isPlaying, setSeek, isLoaded } = this.props;
-    const { player } = this;
-
-    // If the player is playing && the track has been loaded
-    if (isPlaying && isLoaded) {
-      const currentPos = player.seek();
+  useEffect(() => {
+    function renderSeekPos() {
+      const currentPos = player.current.seek();
 
       // We need to check if seek is a number because there is a race condition in howler
       // where it will return the howler object if there is a playLock on it.
       if (typeof currentPos === "number") {
-        setSeek(currentPos);
+        dispatch(setSeek(currentPos));
       }
 
-      // Continue rendering
-      this.raf = raf(this.renderSeekPos);
+      theRaf.current = raf(renderSeekPos);
     }
-  }
 
-  render() {
-    const {
-      current,
-      isPlaying,
-      isExpanded,
-      volume,
-      seek,
-      duration
-    } = this.props;
-    const {
-      handlePlayPause,
-      handlePrev,
-      handleNext,
-      handleToggleExpand,
-      handleSeek,
-      handleMouseDownSeek,
-      handleMouseUpSeek,
-      handleOnChangeUserSeek,
-      renderSeekPos
-    } = this;
-    const { isUserSeeking, userSeekPos } = this.state;
-    const KEY =
-      process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
+    if (isPlaying && isLoaded) {
+      renderSeekPos();
+    } else {
+      raf.cancel(theRaf.current);
+    }
 
-    return (
-      <>
-        {current.streamUrl && (
-          <ReactHowler
-            src={`${current.streamUrl}?client_id=${KEY}`}
-            playing={isPlaying}
-            onEnd={handleNext}
-            onPlay={renderSeekPos}
-            onLoad={this.handleOnLoad}
-            preload
-            html5
-            volume={volume}
-            ref={ref => {
-              this.player = ref;
-            }}
-          />
-        )}
-        {/* Expanded music player */}
-        <CSSTransition
-          in={isExpanded}
-          timeout={300}
-          classNames={slideTransition}
-          unmountOnExit
-        >
-          <ExpandedPlayer
-            current={current}
-            handleToggleExpand={handleToggleExpand}
-            handlePlayPause={handlePlayPause}
-            isPlaying={isPlaying}
-            handlePrev={handlePrev}
-            handleNext={handleNext}
-            handleSeek={handleSeek}
-            isUserSeeking={isUserSeeking}
-            userSeekPos={Number(userSeekPos)}
-            seek={seek}
-            duration={duration}
-            handleOnChangeUserSeek={handleOnChangeUserSeek}
-            renderSeekPos={renderSeekPos}
-            handleMouseDownSeek={handleMouseDownSeek}
-            handleMouseUpSeek={handleMouseUpSeek}
-          />
-        </CSSTransition>
-        {/* Mini Player */}
-        <CSSTransition
-          in={!isExpanded}
-          timeout={500}
-          classNames={miniPlayerSlide}
-          unmountOnExit
-        >
-          <MinifiedPlayer
-            current={current}
-            handleToggleExpand={handleToggleExpand}
-            handlePlayPause={handlePlayPause}
-            isPlaying={isPlaying}
-            handlePrev={handlePrev}
-            handleNext={handleNext}
-          />
-        </CSSTransition>
-      </>
-    );
-  }
-}
+    return () => raf.cancel(theRaf);
+  }, [isPlaying, isLoaded]);
+
+  const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
+
+  return (
+    <>
+      {current.streamUrl && (
+        <ReactHowler
+          src={`${current.streamUrl}?client_id=${KEY}`}
+          playing={isPlaying}
+          onEnd={() => dispatch(nextTrack())}
+          onLoad={handleOnLoad}
+          preload
+          html5
+          volume={volume}
+          ref={player}
+        />
+      )}
+      {/* Expanded music player */}
+      <CSSTransition
+        in={isExpanded}
+        timeout={300}
+        classNames={slideTransition}
+        unmountOnExit
+      >
+        <ExpandedPlayer
+          current={current}
+          handleToggleExpand={toggleExpand}
+          handlePlayPause={handlePlayPause}
+          isPlaying={isPlaying}
+          handleSeek={handleSeek}
+          isUserSeeking={isUserSeeking}
+          userSeekPos={Number(userSeekPos)}
+          seek={seek}
+          duration={duration}
+          handleOnChangeUserSeek={handleOnChangeUserSeek}
+          handleMouseDownSeek={() => setIsUserSeeking(true)}
+          handleMouseUpSeek={handleMouseUpSeek}
+        />
+      </CSSTransition>
+      {/* Mini Player */}
+      <CSSTransition
+        in={!isExpanded}
+        timeout={500}
+        classNames={miniPlayerSlide}
+        unmountOnExit
+      >
+        <MinifiedPlayer
+          current={current}
+          handleToggleExpand={toggleExpand}
+          handlePlayPause={handlePlayPause}
+          isPlaying={isPlaying}
+        />
+      </CSSTransition>
+    </>
+  );
+};
 
 Player.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   current: PropTypes.object.isRequired,
-  play: PropTypes.func.isRequired,
-  pause: PropTypes.func.isRequired,
-  prevTrack: PropTypes.func.isRequired,
-  nextTrack: PropTypes.func.isRequired,
   isPlaying: PropTypes.bool.isRequired,
   duration: PropTypes.number.isRequired,
-  setDuration: PropTypes.func.isRequired,
-  isExpanded: PropTypes.bool.isRequired,
-  toggleExpandedPlayer: PropTypes.func.isRequired,
-  isLoaded: PropTypes.bool.isRequired,
-  setIsLoaded: PropTypes.func.isRequired,
   volume: PropTypes.number.isRequired,
-  seek: PropTypes.number.isRequired,
-  setSeek: PropTypes.func.isRequired
+  seek: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
   current: state.player.currentTrack,
   isPlaying: state.player.isPlaying,
-  isExpanded: state.player.isExpanded,
-  isLoaded: state.player.isLoaded,
   volume: state.player.volume,
   seek: state.player.seek,
   duration: state.player.duration
 });
 
-const mapDispatchToProps = dispatch => ({
-  play: () =>
-    dispatch({
-      type: "PLAY"
-    }),
-  toggleExpandedPlayer: () =>
-    dispatch({
-      type: "TOGGLE_EXPANDED_PLAYER"
-    }),
-  setIsLoaded: isLoaded =>
-    dispatch({
-      type: "SET_IS_LOADED",
-      payload: isLoaded
-    }),
-  setDuration: duration =>
-    dispatch({
-      type: "SET_DURATION",
-      payload: duration
-    }),
-  setSeek: newSeek =>
-    dispatch({
-      type: "SET_SEEK",
-      payload: newSeek
-    }),
-  pause: () =>
-    dispatch({
-      type: "PAUSE"
-    }),
-  nextTrack: () =>
-    dispatch({
-      type: "NEXT_TRACK"
-    }),
-  prevTrack: () =>
-    dispatch({
-      type: "PREV_TRACK"
-    }),
-  setSpotifyAccessToken: token =>
-    dispatch({
-      type: "SET_SPOTIFY_ACCESS_TOKEN",
-      payload: token
-    })
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Player);
+export default connect(mapStateToProps)(Player);

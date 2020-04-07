@@ -4,6 +4,7 @@ import {
   faPlay,
   faPauseCircle
 } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
@@ -13,6 +14,7 @@ import { ReactComponent as PauseIcon } from "../assets/pause-button.svg";
 import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import { formatArtistName } from "../utils/formatArtistName";
 import { getImgUrl } from "../utils/getImgUrl";
+import { nextTrack, prevTrack } from "../redux/actions/playerActions";
 import { useMobileDetection } from "../utils/hooks";
 import placeholderImg from "../assets/placeholder.png";
 import styles from "../styles/player.module.css";
@@ -21,11 +23,10 @@ const MinifiedPlayer = ({
   current,
   handleToggleExpand,
   handlePlayPause,
-  isPlaying,
-  handlePrev,
-  handleNext
+  isPlaying
 }) => {
   const isMobile = useMobileDetection();
+  const dispatch = useDispatch();
 
   return (
     <div
@@ -66,7 +67,7 @@ const MinifiedPlayer = ({
         <button
           type="button"
           className={styles.backwardButton}
-          onClick={handlePrev}
+          onClick={() => dispatch(prevTrack())}
         >
           <BackwardIcon />
         </button>
@@ -80,7 +81,7 @@ const MinifiedPlayer = ({
         <button
           type="button"
           className={styles.forwardButton}
-          onClick={handleNext}
+          onClick={() => dispatch(nextTrack())}
         >
           <ForwardIcon />
         </button>
