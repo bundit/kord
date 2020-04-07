@@ -1,8 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { loadMoreResults } from "../redux/actions/searchActions";
+import PropTypes from "prop-types";
+import React from "react";
 
+import { loadMoreResults } from "../redux/actions/soundcloudActions";
 import TrackList from "./track-list";
 
 // For restoring scroll position when component is unmounted

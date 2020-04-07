@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NavLink } from "react-router-dom";
+import { NavLink, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   faAngleLeft,
@@ -9,13 +9,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import React from "react";
-import { Route } from "react-router-dom";
 
 import {
   searchSouncloudTracks,
-  searchSoundcloudArtists,
-  searchSpotify
-} from "../../redux/actions/searchActions";
+  searchSoundcloudArtists
+} from "../../redux/actions/soundcloudActions";
 import CategoryList from "../category-list";
 import SearchBar from "../search-bar";
 import styles from "../../styles/header.module.css";
@@ -29,7 +27,6 @@ function Header({
   fetchQuery,
   searchScTracks,
   searchScArtists,
-  dispatchSearchSpotify,
   setSearchQuery
 }) {
   const { pathname } = location;
@@ -146,9 +143,6 @@ const mapDispatchToProps = dispatch => ({
   },
   searchScArtists: query => {
     dispatch(searchSoundcloudArtists(query));
-  },
-  dispatchSearchSpotify: (query, scope, token) => {
-    dispatch(searchSpotify(query, scope, token));
   },
   setSearchQuery: query =>
     dispatch({
