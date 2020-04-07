@@ -16,13 +16,12 @@
   left: 50vw;
   width: 80vw;
   height: auto;
-  max-height: 70vh;
+  max-height: 60vh;
   margin-top: -25vh;
   margin-left: -40vw;
-  /* background-color: #192124; */
   border-radius: 10px;
   color: #aaa;
-  background-color: #151d20;
+  background-color: #192124;
   z-index: 4;
   overflow: hidden;
 }
@@ -31,8 +30,7 @@
   display: flex;
   align-items: center;
   min-height: 80px;
-  /* background-color: #151d20; */
-  background-color: #121a1d;
+  background-color: #151d20;
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
   border-bottom: 1px #383f41 solid;
@@ -61,11 +59,11 @@
   flex-direction: column;
   flex: 1;
   padding: 0 6px 25px 0;
-  /* padding-right: 6px; */
   align-items: center;
   flex-shrink: 1;
   overflow-y: hidden;
   overflow-x: hidden;
+  background-color: #192124;
 }
 
 .modalForm h2 {
@@ -76,9 +74,8 @@
   flex: 1;
   width: 100%;
   padding-left: 10px;
-  padding-bottom: 50px;
+  padding-bottom: 25px;
   margin-top: 5px;
-
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -150,7 +147,6 @@
 .checkboxLabel,
 .editTextLabel {
   white-space: nowrap;
-  /* overflow: hidden; */
   text-overflow: ellipsis;
   transition: 0.3s ease-out;
   display: flex;
@@ -164,8 +160,10 @@
   display: flex;
   align-items: center;
   margin: 0 25px;
-  padding: 10px 20px;
+  padding: 5px 20px;
   border-radius: 7px;
+  min-height: 30px;
+  box-sizing: border-box;
 }
 
 .checkboxLabel:hover {
@@ -264,6 +262,13 @@
   text-decoration: none;
   color: inherit;
   transition: 0.3s ease;
+  max-width: 300px;
+}
+
+.profileDetails > div {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .profileDetails:hover {
