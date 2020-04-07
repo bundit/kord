@@ -1,5 +1,13 @@
 import SpotifyWebApi from "spotify-web-api-js";
 
+import {
+  importPlaylistTracks,
+  importPlaylists,
+  importSongs,
+  setNextPlaylistHref
+} from "./libraryActions";
+
+const SPOTIFY = "spotify";
 const spotifyApi = new SpotifyWebApi();
 
 export const setSpotifyAccessToken = token => dispatch => {
@@ -41,10 +49,7 @@ export const importSavedSpotifyTracks = (
     //
   } while (data.items.length >= limit);
 
-  dispatch({
-    type: "IMPORT_SONGS",
-    payload: tracks
-  });
+  dispatch(importSongs(tracks));
 };
 
 export const getUserSpotifyPlaylists = (
@@ -69,11 +74,7 @@ export const getUserSpotifyPlaylists = (
       isConnected: false
     }));
 
-    dispatch({
-      type: "IMPORT_PLAYLISTS",
-      source: "spotify",
-      payload: playlists
-    });
+    dispatch(importPlaylists(SPOTIFY, playlists));
   });
 };
 
@@ -92,19 +93,8 @@ export const getSpotifyPlaylistTracks = (id, next) => async dispatch => {
     data => {
       const newTracks = mapSpotifyResponseToTrackObjects(data);
 
-      dispatch({
-        type: "IMPORT_PLAYLIST_TRACKS",
-        source: "spotify",
-        playlistId: id,
-        payload: newTracks
-      });
-
-      dispatch({
-        type: "SET_NEXT_PLAYLIST_HREF",
-        source: "spotify",
-        playlistId: id,
-        payload: data.next
-      });
+      dispatch(importPlaylistTracks(SPOTIFY, id, newTracks));
+      dispatch(setNextPlaylistHref(SPOTIFY, id, data.next));
     },
     err => {
       return dispatch(errorHandler(err)).then(() =>
@@ -114,8 +104,24 @@ export const getSpotifyPlaylistTracks = (id, next) => async dispatch => {
   );
 };
 
-export const getSpotifyProfile = () => async dispatch => {
-  const profile = await spotifyApi.getMe();
+export const setSpotifyProfile = (tries = 3) => dispatch => {
+  spotifyApi.getMe({}, (err, data) => {
+    if (err) {
+      return dispatch(errorHandler(err)).then(() =>
+        dispatch(setSpotifyProfile(--tries))
+      );
+    }
+
+    dispatch({
+      type: "SET_PROFILE",
+      source: "spotify",
+      payload: {
+        username: data.display_name,
+        image: data.images[0].url,
+        profileUrl: data.external_urls.spotify
+      }
+    });
+  });
 };
 
 function errorHandler(err) {
