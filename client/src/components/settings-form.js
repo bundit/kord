@@ -1,10 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { faSync, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSync,
+  faExternalLinkAlt,
+  faPen
+} from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from "react";
 
 import { capitalizeWord } from "../utils/capitalizeWord";
-import { setSoundcloudProfile } from "../redux/actions/soundcloudActions";
+import {
+  getSoundcloudProfile,
+  importScLikes
+} from "../redux/actions/soundcloudActions";
+import { removeLibraryTracks } from "../redux/actions/libraryActions";
 import FormCheckbox from "./form-checkbox";
 import Modal from "./modal";
 import placeholderImg from "../assets/placeholder.png";
@@ -15,14 +23,26 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
   const playlists = useSelector(state => state.library.playlists);
   const sourcePlaylists = playlists[source];
   const settings = user[source];
-  const [playlistSettings, setPlaylistSettings] = useState(sourcePlaylists);
+  const [playlistSettings, setPlaylistSettings] = useState(sourcePlaylists); // TODO this updates redux state but idk why
 
   // Soundcloud edit fields
   const isScConnected = useSelector(state => state.user.soundcloud.isConnected);
-  const [showUsernameInput, setShowUsernameInput] = useState(!isScConnected);
-  const [usernameInput, setUsernameInput] = useState(
-    settings ? settings.username : ""
+  const [showUsernameInput, setShowUsernameInput] = useState(
+    !isScConnected && source === "soundcloud"
   );
+  const [usernameInput, setUsernameInput] = useState("soundcloud.com/");
+
+  useEffect(() => {
+    if (source === "soundcloud") {
+      const scUsername = user.soundcloud.username;
+      setUsernameInput(`soundcloud.com/${scUsername || ""}`);
+      if (!scUsername || !scUsername.length) {
+        setShowUsernameInput(true);
+      }
+    } else {
+      setShowUsernameInput(false);
+    }
+  }, [source]);
 
   useEffect(() => {
     setPlaylistSettings(sourcePlaylists);
@@ -45,6 +65,20 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
     setPlaylistSettings(newSettings);
   }
 
+  function handleSubmitUsername(e) {
+    e.preventDefault();
+    const inputPrefix = usernameInput.slice(0, 15);
+    const inputSuffix = usernameInput.slice(15);
+
+    if (usernameInput.length > 15 && inputPrefix === "soundcloud.com/") {
+      // TODO add more input validation here
+      dispatch(getSoundcloudProfile(inputSuffix));
+      dispatch(removeLibraryTracks("soundcloud"));
+      dispatch(importScLikes(inputSuffix));
+      setShowUsernameInput(false);
+    }
+  }
+
   const dispatch = useDispatch();
   return (
     <Modal
@@ -61,56 +95,65 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
         </div>
 
         <div className={styles.profileDetails}>
-          {source !== "soundcloud" ? (
-            <a
-              // className={styles.profileDetails}
-              href={settings && settings.profileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div style={{ display: "flex" }}>
-                {settings && settings.username}
-                <span className={styles.externalIcon}>
-                  <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
-                </span>
-              </div>
-              <div>{settings && settings.profileUrl}</div>
-            </a>
-          ) : showUsernameInput ? (
-            <form
-              style={{ width: "300px", display: "flex" }}
-              onSubmit={e => {
-                e.preventDefault();
-                dispatch(setSoundcloudProfile(usernameInput));
-                setShowUsernameInput(false);
-              }}
-            >
-              <input
-                className={styles.usernameInput}
-                type="text"
-                placeholder="Enter Soundcloud Username"
-                onChange={e => setUsernameInput(e.target.value)}
-                value={usernameInput}
-              />
-              <button type="submit">submti</button>
-            </form>
-          ) : (
+          {!showUsernameInput ? (
             <>
-              <div style={{ display: "flex" }}>
-                {settings && settings.username}
-                <span className={styles.externalIcon}>
+              {source === "soundcloud" ? (
+                <button
+                  className={styles.editUsernameButton}
+                  onClick={() => setShowUsernameInput(true)}
+                >
+                  {settings && settings.username}{" "}
+                  <FontAwesomeIcon icon={faPen} size="sm" />
+                </button>
+              ) : (
+                <div>{settings && settings.username}</div>
+              )}
+
+              <div className={styles.profileLinkWrapper}>
+                <a
+                  href={settings && settings.profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.profileAnchor}
+                >
+                  <span>{settings && settings.profileUrl}</span>
+
                   <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
-                </span>
+                </a>
               </div>
-              <div>{settings && settings.profileUrl}</div>
             </>
+          ) : (
+            <form
+              className={styles.usernameForm}
+              onSubmit={handleSubmitUsername}
+            >
+              <label
+                htmlFor="soundcloudURL"
+                className={styles.usernameInputLabel}
+              >
+                <span>Enter your Soundcloud Profile URL</span>
+                <span style={{ display: "flex" }}>
+                  <input
+                    id="soundcloudURL"
+                    className={styles.usernameInput}
+                    type="text"
+                    placeholder="Enter Soundcloud Profile URL"
+                    onChange={e => setUsernameInput(e.target.value)}
+                    value={usernameInput}
+                  />
+                  <button type="submit" style={{ marginLeft: "auto" }}>
+                    Submit
+                  </button>
+                </span>
+              </label>
+            </form>
           )}
         </div>
 
         <button
           className={styles.syncButton}
           type="button"
-          onClick={() => handleUpdate(source)}
+          onClick={() => handleUpdate(source, usernameInput.slice(15))}
         >
           <FontAwesomeIcon size="2x" icon={faSync} />
         </button>
@@ -152,6 +195,8 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  // TODO implement this
+  // This is not doing anything lol
   setSettings: (newSettings, source) =>
     dispatch({
       type: "SET_SETTINGS",

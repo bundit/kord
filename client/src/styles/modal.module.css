@@ -86,7 +86,9 @@
   flex: 1;
   margin-right: 20px;
   height: inherit;
-  padding: 5px 10px;
+}
+
+.modal input[type="text"] {
   border-radius: 7px;
   background: #bbb;
   box-sizing: border-box;
@@ -94,23 +96,45 @@
   transition: 0.4s ease;
 }
 
-.modalForm input[type="text"]:focus {
+.modal input[type="text"]:focus {
   background: white;
 }
 
-.modalForm input[type="text"]::placeholder {
+.modal input[type="text"]::placeholder {
   color: black;
 }
 
+.usernameForm {
+  width: 300px;
+  display: flex;
+  height: 100%;
+}
+
+.usernameInputLabel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+}
+
+.usernameInputLabel button {
+  color: inherit;
+  border-radius: 7px;
+  border: 1px #383f41 solid;
+}
+
 .usernameInput {
+  margin-right: auto;
   transition: 0.4s ease;
   width: 150px;
+  padding: 3px 10px;
 }
 
 .usernameInput:focus {
   outline: none;
   background-color: #fff;
-  width: 250px;
+  width: 230px;
 }
 
 .usernameInput:hover {
@@ -118,7 +142,7 @@
   background-color: #fff;
 }
 
-.usernameInput .formLabel {
+.formLabel {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -276,40 +300,71 @@
   transform: translateX(-50%);
 }
 
-.externalIcon {
-  margin-left: auto;
-  color: white;
-  transition: 0.3s ease;
-  opacity: 0;
-}
-
 .profileDetails {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   margin-left: 15px;
-
-  transition: 0.3s ease;
   max-width: 300px;
 }
 
-.profileDetails > a {
+.profileAnchor {
   text-decoration: none;
   color: inherit;
 }
 
-.profileDetails div {
+.profileDetails svg {
+  opacity: 0;
+  margin-left: 5px;
+  color: white;
+}
+
+.editUsernameButton {
+  display: flex;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+
+.editUsernameButton:hover {
+  cursor: pointer;
+}
+
+.editUsernameButton:active {
+  outline: none;
+}
+
+.editUsernameButton,
+.editUsernameButton svg,
+.profileAnchor,
+.profileAnchor svg {
+  transition: 0.3s ease;
+}
+
+.editUsernameButton:hover {
+  color: white;
+}
+
+.editUsernameButton:hover svg {
+  opacity: 1;
+}
+
+.profileLinkWrapper {
+  max-width: inherit;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: inherit;
 }
 
-.profileDetails:hover {
+.profileAnchor:hover {
   color: white;
 }
-.profileDetails:hover .externalIcon {
+
+.profileAnchor:hover svg {
   opacity: 1;
 }
+
 .syncButton {
   padding: 10px;
   margin-left: auto;

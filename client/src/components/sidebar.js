@@ -11,6 +11,7 @@ import React, { useState } from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
+import { getUserSoundcloudPlaylists } from "../redux/actions/soundcloudActions";
 import { getUserSpotifyPlaylists } from "../redux/actions/spotifyActions";
 import ConnectedSourceButton from "./connected-source-button";
 import PlaylistItem from "./playlist-item";
@@ -122,17 +123,20 @@ const Sidebar = ({ user, playlists }) => {
           show={isSettingsFormOpen}
           source={settingsSource}
           onClose={toggleSettingsForm}
-          handleUpdate={source => dispatch(fetchPlaylists(source))}
+          handleUpdate={(source, username) =>
+            dispatch(fetchPlaylists(source, username))
+          }
         />
       </div>
     </div>
   );
 };
 
-const fetchPlaylists = source => dispatch => {
+const fetchPlaylists = (source, username) => dispatch => {
   if (source === "spotify") {
     dispatch(getUserSpotifyPlaylists());
   } else if (source === "soundcloud") {
+    dispatch(getUserSoundcloudPlaylists(username));
   }
 };
 
