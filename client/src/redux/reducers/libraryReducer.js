@@ -276,6 +276,15 @@ export default function(state = initialState, action) {
       };
     }
 
+    case "REMOVE_LIBRARY_TRACKS": {
+      const source = action.payload;
+
+      return {
+        ...state,
+        songs: state.songs.filter(track => track.source === source)
+      };
+    }
+
     default:
       return state;
   }

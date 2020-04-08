@@ -37,3 +37,10 @@ export function setNextPlaylistHref(source, playlistId, nextHref) {
     payload: nextHref
   };
 }
+
+export function removeLibraryTracks(source) {
+  return {
+    type: "REMOVE_LIBRARY_TRACKS",
+    payload: source
+  };
+}
