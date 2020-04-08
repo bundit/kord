@@ -1,4 +1,5 @@
 import { ADD_TO_SEARCH_HISTORY, IMPORT_SONG } from "./types";
+import { importPlaylists } from "./libraryActions";
 import { setConnection, setUserProfile } from "./userActions";
 
 const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
@@ -6,6 +7,18 @@ const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
 const MAX_LIMIT = 200;
 const LINK = 1;
 const SC_API_BASE_URL = "https://api.soundcloud.com";
+
+export const getSoundcloudProfile = userId => async dispatch => {
+  const endpoint = `${SC_API_BASE_URL}/users/${userId}?client_id=${KEY}`;
+
+  const res = await fetch(endpoint);
+  const json = await res.json();
+
+  const profile = mapJsonToProfileObject(json);
+
+  dispatch(setUserProfile("soundcloud", profile));
+  dispatch(setConnection("soundcloud", true));
+};
 
 export const importScLikes = username => async dispatch => {
   let nextEndpoint = `${SC_API_BASE_URL}/users/${username}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
@@ -33,21 +46,16 @@ export const importScLikes = username => async dispatch => {
   });
 };
 
-export const setSoundcloudProfile = userId => async dispatch => {
-  const endpoint = `${SC_API_BASE_URL}/users/${userId}?client_id=${KEY}`;
+export const getUserSoundcloudPlaylists = username => dispatch => {
+  const playlistEndpoint = `${SC_API_BASE_URL}/users/${username}/playlists?client_id=${KEY}`;
 
-  const res = await fetch(endpoint);
-  const data = await res.json();
+  fetch(playlistEndpoint)
+    .then(res => res.json())
+    .then(data => {
+      const newPlaylists = mapCollectionToPlaylists(data);
 
-  const profile = {
-    name: data.full_name,
-    username: data.username,
-    image: data.avatar_url,
-    profileUrl: data.permalink_url
-  };
-
-  dispatch(setUserProfile("soundcloud", await profile));
-  dispatch(setConnection("soundcloud", true));
+      dispatch(importPlaylists("soundcloud", newPlaylists));
+    });
 };
 
 async function fetchScArtists(endpoint) {
@@ -78,25 +86,7 @@ export async function fetchScTracks(endpoint) {
   const res = await fetch(`${endpoint}&linked_partitioning=1`);
   const data = await res.json();
 
-  const tracks = data.collection.map(track => ({
-    title: track.title,
-    id: track.id,
-    artist: {
-      name: track.user.username,
-      img: track.user.avatar_url,
-      id: track.user.id
-    },
-    date: track.created_at,
-    duration: track.duration,
-    likes: track.likes_count,
-    genre: track.genre,
-    uri: track.uri,
-    wave: track.waveform_url,
-    streamUrl: track.stream_url,
-    streamable: track.streamable,
-    img: track.artwork_url,
-    source: "soundcloud"
-  }));
+  const tracks = mapCollectionToTracks(data.collection);
 
   return {
     tracks,
@@ -184,26 +174,48 @@ export const importScSong = id => async dispatch => {
   });
 };
 
-// export const searchSpotify = (
-//   query,
-//   scope,
-//   token,
-//   limit = 10
-// ) => async dispatch => {
-//   const url = `https://api.spotify.com/v1/search?q=${query}&type=${scope}&limit=${limit}`;
-//   const options = {
-//     method: "GET",
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//       Accept: "application/json",
-//       "Content-Type": "application/json"
-//     }
-//   };
-//
-//   // const collection = await fetch(url, options);
-//   fetch(url, options)
-//     .then(res => (res.status === 200 ? res.json() : res))
-//     .then(json => console.log(json))
-//     .then(i => (window.search = i))
-//     .catch(object => console.log(object.type, object.message));
-// };
+function mapCollectionToTracks(collection) {
+  return collection.map(track => ({
+    title: track.title,
+    id: track.id,
+    artist: {
+      name: track.user.username,
+      img: track.user.avatar_url,
+      id: track.user.id
+    },
+    date: track.created_at,
+    duration: track.duration,
+    likes: track.likes_count,
+    genre: track.genre,
+    uri: track.uri,
+    wave: track.waveform_url,
+    streamUrl: track.stream_url,
+    streamable: track.streamable,
+    img: track.artwork_url,
+    source: "soundcloud"
+  }));
+}
+
+function mapCollectionToPlaylists(collection) {
+  return collection.map(item => ({
+    id: item.id,
+    title: item.title,
+    images: item.artwork_url,
+    externalUrl: item.permalink_url,
+    source: "soundcloud",
+    tracks: mapCollectionToTracks(item.tracks),
+    next: "start",
+    isConnected: false
+  }));
+}
+
+function mapJsonToProfileObject(json) {
+  return {
+    fullName: json.full_name,
+    username: json.permalink,
+    displayName: json.username,
+    id: json.id,
+    image: json.avatar_url,
+    profileUrl: json.permalink_url
+  };
+}
