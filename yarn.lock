@@ -2011,6 +2011,11 @@ passport-oauth1@1.x.x:
     passport-strategy "1.x.x"
     utils-merge "1.x.x"
 
+passport-oauth2-refresh@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/passport-oauth2-refresh/-/passport-oauth2-refresh-2.0.0.tgz#7b19c77ff3cc000819c69f6ad9e318450f57b85e"
+  integrity sha512-yXvCB6nem/O+WThhiyI3TlPXpzSGY+9+hy9OTx9QF8e9GInplyRHxHaaOhFylKvnof9UmWHAufQFZk8cO1Fb2g==
+
 passport-oauth2@1.x.x:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/passport-oauth2/-/passport-oauth2-1.5.0.tgz#64babbb54ac46a4dcab35e7f266ed5294e3c4108"

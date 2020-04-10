@@ -18,6 +18,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "passport-mixcloud": "^0.0.2",
+    "passport-oauth2-refresh": "^2.0.0",
     "passport-spotify": "^1.1.0",
     "pg": "^7.18.2",
     "request": "^2.88.2"
