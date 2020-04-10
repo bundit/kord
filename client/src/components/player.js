@@ -1,5 +1,5 @@
 import { CSSTransition } from "react-transition-group";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React, { useState, useEffect, useRef } from "react";
 import ReactHowler from "react-howler";
@@ -14,6 +14,7 @@ import {
 } from "../redux/actions/playerActions";
 import ExpandedPlayer from "./expanded-player";
 import MinifiedPlayer from "./minified-player";
+import SpotifyPlayer from "./spotify-player";
 import miniPlayerSlide from "../styles/miniPlayerSlide.module.css";
 import slideTransition from "../styles/slide.module.css";
 
@@ -24,8 +25,14 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   const [isUserSeeking, setIsUserSeeking] = useState(false);
   const theRaf = useRef(null);
   const player = useRef(null);
+  const spotifyPlayer = useRef(null);
 
+  const spotifyToken = useSelector(state => state.user.spotify.token);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setDuration(current.duration / 1000));
+  }, [current]);
 
   function handlePlayPause(e) {
     if (isPlaying) {
@@ -37,7 +44,9 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   }
 
   function handleOnLoad() {
-    dispatch(setDuration(player.current.duration()));
+    if (current.source === "soundcloud") {
+      dispatch(setDuration(player.current.duration()));
+    }
     setIsLoaded(true);
   }
 
@@ -69,9 +78,13 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   function handleMouseUpSeek() {
     const newSeekPos = Number(userSeekPos);
 
-    if (isLoaded) {
+    if (isLoaded && current.source === "soundcloud") {
       player.current.seek(newSeekPos);
+      dispatch(setSeek(newSeekPos));
+    }
 
+    if (spotifyPlayer.current && spotifyPlayer.current.isReady) {
+      spotifyPlayer.current.seek(newSeekPos * 1000);
       dispatch(setSeek(newSeekPos));
     }
 
@@ -86,8 +99,14 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   }
 
   useEffect(() => {
-    function renderSeekPos() {
-      const currentPos = player.current.seek();
+    async function renderSeekPos() {
+      let currentPos;
+
+      if (current.source === "soundcloud") {
+        currentPos = player.current.seek();
+      } else if (current.source === "spotify") {
+        currentPos = spotifyPlayer.current.seek() / 1000;
+      }
 
       // We need to check if seek is a number because there is a race condition in howler
       // where it will return the howler object if there is a playLock on it.
@@ -97,15 +116,14 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
 
       theRaf.current = raf(renderSeekPos);
     }
-
-    if (isPlaying && isLoaded) {
+    if (isPlaying && (isLoaded || spotifyPlayer.current.isReady)) {
       renderSeekPos();
     } else {
       raf.cancel(theRaf.current);
     }
 
     return () => raf.cancel(theRaf);
-  }, [isPlaying, isLoaded]);
+  }, [isPlaying, isLoaded, spotifyPlayer, current.source]);
 
   const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
 
@@ -114,7 +132,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
       {current.streamUrl && (
         <ReactHowler
           src={`${current.streamUrl}?client_id=${KEY}`}
-          playing={isPlaying}
+          playing={isPlaying && current.source === "soundcloud"}
           onEnd={() => dispatch(nextTrack())}
           onLoad={handleOnLoad}
           preload
@@ -123,6 +141,14 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
           ref={player}
         />
       )}
+      <SpotifyPlayer
+        playerRef={spotifyPlayer}
+        accessToken={spotifyToken}
+        isPlaying={isPlaying}
+        onEnd={() => dispatch(nextTrack())}
+        volume={volume}
+        track={current}
+      />
       {/* Expanded music player */}
       <CSSTransition
         in={isExpanded}
