@@ -75,7 +75,7 @@ class SpotifyP {
     try {
       this.player.connect();
     } catch (e) {
-      console.err(`Error connecting spotify player: ${e}`);
+      console.error(`Error connecting spotify player: ${e}`);
     }
 
     this.isReady = true;
@@ -83,7 +83,7 @@ class SpotifyP {
 
   load(trackId, tries = 3) {
     if (!tries) {
-      console.err(`Couldn't load track ${trackId}`);
+      console.error(`Couldn't load track ${trackId}`);
       return;
     }
     if (this.isReady && this.deviceId) {
@@ -103,7 +103,7 @@ class SpotifyP {
           })
         }
       ).catch(e => {
-        console.err(`Error loading track ${trackId}: ${e}`);
+        console.error(`Error loading track ${trackId}: ${e}`);
       });
     } else {
       setTimeout(() => this.load(trackId, --tries), 300);
@@ -112,7 +112,7 @@ class SpotifyP {
 
   play(tries = 3) {
     if (!tries) {
-      console.err(`Error playing spotify track`);
+      console.error(`Error playing spotify track`);
     }
 
     if (this.isReady && this.player) {
@@ -230,6 +230,9 @@ class SpotifyP {
 function addSpotifySdkToDom() {
   const spotifyScript = document.createElement("script");
   spotifyScript.id = "spotify-script";
+  spotifyScript.type = "text/javascript";
+  spotifyScript.async = false;
+  spotifyScript.defer = false;
   spotifyScript.src = "https://sdk.scdn.co/spotify-player.js";
   document.head.appendChild(spotifyScript);
 }
