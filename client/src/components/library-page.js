@@ -21,7 +21,7 @@ const Library = ({ songs, artists, playlists, currentTrackID, isPlaying }) => {
   const dispatch = useDispatch();
 
   function handlePlayTrack(track, tracklist) {
-    const index = songs.findIndex(song => song.id === track.id);
+    const index = tracklist.findIndex(song => song.id == track.id);
 
     dispatch(setTrack(track));
     dispatch(setQueueIndex(index));
