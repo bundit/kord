@@ -31,8 +31,9 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(setSeek(0));
     dispatch(setDuration(current.duration / 1000));
-  }, [current]);
+  }, [current]); // Song was changed
 
   function handlePlayPause(e) {
     if (isPlaying) {
@@ -51,7 +52,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   }
 
   function handleSeek(seconds) {
-    if (player) {
+    if (player.current) {
       let newSeekPos = player.current.seek() + seconds;
 
       // Ensure our new seek position is within bounds
@@ -99,10 +100,11 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   }
 
   useEffect(() => {
-    async function renderSeekPos() {
+    raf.cancel(theRaf.current);
+    function renderSeekPos() {
       let currentPos;
 
-      if (current.source === "soundcloud") {
+      if (current.source === "soundcloud" && player.current) {
         currentPos = player.current.seek();
       } else if (current.source === "spotify") {
         currentPos = spotifyPlayer.current.seek() / 1000;
@@ -116,20 +118,18 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
 
       theRaf.current = raf(renderSeekPos);
     }
-    if (isPlaying && (isLoaded || spotifyPlayer.current.isReady)) {
-      renderSeekPos();
-    } else {
-      raf.cancel(theRaf.current);
-    }
 
+    if (isPlaying) {
+      renderSeekPos();
+    }
     return () => raf.cancel(theRaf);
-  }, [isPlaying, isLoaded, spotifyPlayer, current.source]);
+  }, [isPlaying, current]); // Stop or start RAF when play/pause and song changes
 
   const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
 
   return (
     <>
-      {current.streamUrl && (
+      {current.source === "soundcloud" && (
         <ReactHowler
           src={`${current.streamUrl}?client_id=${KEY}`}
           playing={isPlaying && current.source === "soundcloud"}
@@ -143,6 +143,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
       )}
       <SpotifyPlayer
         playerRef={spotifyPlayer}
+        playerName="Kord Player - All your music in one place"
         accessToken={spotifyToken}
         isPlaying={isPlaying}
         onEnd={() => dispatch(nextTrack())}
