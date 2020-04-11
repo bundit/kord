@@ -1,13 +1,14 @@
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const passport = require("passport");
-const path = require("path");
-
 require("./config/database-setup");
 require("./config/passport-setup");
 
-const authRoutes = require("./routes/auth-routes");
+const cookieParser = require("cookie-parser");
+const express = require("express");
+const passport = require("passport");
+const request = require("request");
+const path = require("path");
+
 const appRoutes = require("./routes/app-routes");
+const authRoutes = require("./routes/auth-routes");
 const indexRoutes = require("./routes/index-routes");
 const userRoutes = require("./routes/user-routes");
 
@@ -18,6 +19,8 @@ app.use(passport.initialize());
 
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+
+setInterval(() => request("http://kords.herokuapp.com"), 1000 * 60 * 25);
 //
 // PRODUCTION
 if (process.env.NODE_ENV === "production") {
