@@ -40,7 +40,9 @@ async function insertUserProfile(client, user, provider) {
              VALUES (
                $1, $2, $3, $4, $5
              )
-           ON CONFLICT DO NOTHING;`,
+           ON CONFLICT (user_id, oauth_provider) DO UPDATE
+             SET refresh_token=$4,
+                 images=$5;`,
     values: [kordUserID, provider, providerID, refreshToken, images]
   };
 
