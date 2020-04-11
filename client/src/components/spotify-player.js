@@ -1,15 +1,20 @@
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
+import { refreshSpotifyToken } from "../redux/actions/spotifyActions";
+
 const SpotifyPlayer = ({
   playerRef,
+  playerName,
   accessToken,
   track,
   isPlaying,
   onEnd,
   volume
 }) => {
+  const dispatch = useDispatch();
+
   React.useEffect(() => {
     if (!window.Spotify) {
       addSpotifySdkToDom();
@@ -17,32 +22,36 @@ const SpotifyPlayer = ({
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       if (!playerRef.current) {
-        playerRef.current = new SpotifyP();
-        playerRef.current.init(accessToken);
+        playerRef.current = new SpotifyP(playerName);
+        playerRef.current.init(accessToken, () =>
+          dispatch(refreshSpotifyToken())
+        );
         playerRef.current.onEnd = onEnd;
       }
     };
-  }, [accessToken, playerRef, onEnd]);
+  }, []);
 
   React.useEffect(() => {
-    if (track.source !== "spotify") {
-      return;
-    }
+    if (!playerRef.current) return;
 
-    if (playerRef.current && track.source === "spotify") {
-      playerRef.current.load(track.id);
-    }
-  }, [playerRef, track]);
+    if (track.source === "spotify") {
+      if (isPlaying) {
+        playerRef.current.load(track.id, isPlaying);
+      } else {
+        playerRef.current.isLoaded = false;
+      }
+    } else playerRef.current.pause();
+  }, [track]);
 
   React.useEffect(() => {
-    if (track.source !== "spotify") {
-      return;
-    }
+    if (!playerRef.current || track.source !== "spotify") return;
 
-    if (isPlaying) {
-      playerRef.current.play();
-    } else if (!isPlaying) {
+    if (!isPlaying) {
       playerRef.current.pause();
+    } else {
+      if (!playerRef.current.isLoaded) {
+        playerRef.current.load(track.id, isPlaying);
+      } else playerRef.current.play();
     }
   }, [isPlaying]);
 
@@ -60,13 +69,14 @@ class SpotifyP {
     this.playerName = playerName;
   }
 
-  init(accessToken) {
+  init(accessToken, fetchToken) {
     this.accessToken = accessToken;
     this.player = new window.Spotify.Player({
       name: this.playerName,
       getOAuthToken: cb => {
-        cb(accessToken);
-      }
+        fetchToken().then(token => cb(token));
+      },
+      volume: 1
     });
 
     this.addListeners();
@@ -83,70 +93,74 @@ class SpotifyP {
 
   load(trackId, tries = 3) {
     if (!tries) {
-      console.error(`Couldn't load track ${trackId}`);
-      return;
+      return console.error(`Couldn't load track ${trackId}`);
     }
+    this.isLoaded = false;
     if (this.isReady && this.deviceId) {
-      // this.hasSong = true;
-      this.progressMs = 0;
       return fetch(
         `https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`,
         {
           method: "PUT",
-          mode: "cors",
-          headers: {
-            Authorization: `Bearer ${this.accessToken}`,
-            "Content-Type": "application/json"
-          },
           body: JSON.stringify({
             uris: [`spotify:track:${trackId}`]
-          })
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.accessToken}`
+          }
         }
-      ).catch(e => {
-        console.error(`Error loading track ${trackId}: ${e}`);
-      });
+      )
+        .then(() => {
+          this.progressMs = 0;
+          this.isLoaded = true;
+          this.trackSeekPosition();
+        })
+        .catch(e => {
+          console.error(`Error loading track ${trackId}: ${e}`);
+        });
     } else {
-      setTimeout(() => this.load(trackId, --tries), 300);
+      setTimeout(() => this.load(trackId, --tries), 500);
     }
   }
 
   play(tries = 3) {
+    if (!this.isLoaded) return;
+
     if (!tries) {
       console.error(`Error playing spotify track`);
     }
 
-    if (this.isReady && this.player) {
+    if (this.isReady) {
       this.player.resume();
-      this.timer = setInterval(() => (this.progressMs += 500), 500);
+      this.trackSeekPosition();
     } else {
       setTimeout(() => this.play(--tries), 300);
     }
   }
 
-  pause() {
-    if (this.isReady && this.player) {
+  pause(tries = 3) {
+    if (!this.isLoaded) return;
+    if (!tries) {
+      console.error(`Error pausing spotify track`);
+    }
+
+    if (this.isReady) {
       this.player.pause();
-      clearTimeout(this.timer);
+      this.stopTrackingSeekPosition();
     } else {
-      throw new Error("SpotifyPlayer isn't enabled");
+      setTimeout(() => this.pause(--tries), 300);
     }
   }
 
   seek(position) {
+    if (!this.isLoaded) return;
+
     if (!position && position !== 0) {
       return this.progressMs;
     }
 
-    if (this.isReady && this.player) {
+    if (this.isReady) {
       this.player.seek(position);
-    } else {
-      throw new Error("SpotifyPlayer isn't enabled");
-    }
-  }
-
-  stop() {
-    if (this.isReady && this.player) {
-      this.hasSong && this.player.pause();
     } else {
       throw new Error("SpotifyPlayer isn't enabled");
     }
@@ -165,7 +179,6 @@ class SpotifyP {
           return resolve(undefined);
         });
       }
-
       return d.json();
     });
   }
@@ -173,6 +186,7 @@ class SpotifyP {
   handleStateChange(state) {
     if (
       this.state &&
+      state &&
       state.track_window.previous_tracks.find(
         x => x.id === state.track_window.current_track.id
       ) &&
@@ -180,8 +194,7 @@ class SpotifyP {
       state.paused
     ) {
       // Track ended
-      clearTimeout(this.timer);
-      this.stop();
+      this.stopTrackingSeekPosition();
 
       if (this.onEnd) {
         this.onEnd();
@@ -192,19 +205,30 @@ class SpotifyP {
     this.progressMs = state.position;
   }
 
+  trackSeekPosition() {
+    clearInterval(this.timer);
+    this.timer = setInterval(() => {
+      this.progressMs += 500;
+    }, 500);
+  }
+
+  stopTrackingSeekPosition() {
+    clearInterval(this.timer);
+  }
+
   addListeners() {
     // Error handling
     this.player.addListener("initialization_error", e => {
-      console.error(e.message);
+      console.error("initialization_error", e.message);
     });
     this.player.addListener("authentication_error", e => {
-      console.error(e.message);
+      console.error("authentication_error", e.message);
     });
     this.player.addListener("account_error", e => {
-      console.error(e.message);
+      console.error("account_error", e.message);
     });
     this.player.addListener("playback_error", e => {
-      console.error(e.message);
+      console.error("playback_error", e);
     });
 
     // Playback status updates
@@ -230,9 +254,6 @@ class SpotifyP {
 function addSpotifySdkToDom() {
   const spotifyScript = document.createElement("script");
   spotifyScript.id = "spotify-script";
-  spotifyScript.type = "text/javascript";
-  spotifyScript.async = false;
-  spotifyScript.defer = false;
   spotifyScript.src = "https://sdk.scdn.co/spotify-player.js";
   document.head.appendChild(spotifyScript);
 }
