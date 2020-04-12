@@ -21,12 +21,18 @@ const SpotifyPlayer = ({
     }
 
     window.onSpotifyWebPlaybackSDKReady = () => {
+      function fetchToken() {
+        return dispatch(refreshSpotifyToken());
+      }
+
       if (!playerRef.current) {
-        playerRef.current = new SpotifyP(playerName);
-        playerRef.current.init(accessToken, () =>
-          dispatch(refreshSpotifyToken())
+        playerRef.current = new SpotifyWebPlaybackSdk(
+          playerName,
+          accessToken,
+          fetchToken,
+          onEnd
         );
-        playerRef.current.onEnd = onEnd;
+        playerRef.current.initPlayer();
       }
     };
   }, []);
@@ -58,30 +64,29 @@ const SpotifyPlayer = ({
   return <></>;
 };
 
-class SpotifyP {
-  constructor(playerName) {
-    this.deviceId = "";
-    this.accessToken = "";
-    this.isReady = false;
-    this.isDone = false;
-    this.hasSong = false;
-    this.timer = null;
+class SpotifyWebPlaybackSdk {
+  constructor(playerName, accessToken, fetchToken, onTrackEnd) {
     this.playerName = playerName;
+    this.accessToken = accessToken;
+    this.fetchToken = fetchToken;
+    this.onTrackEnd = onTrackEnd;
+
+    this.deviceId = "";
+    this.isReady = false;
+    this.timer = null;
+
+    this.fetchAndSetToken = this.fetchAndSetToken.bind(this);
   }
 
-  init(accessToken, fetchToken) {
-    this.accessToken = accessToken;
+  initPlayer() {
     this.player = new window.Spotify.Player({
       name: this.playerName,
-      getOAuthToken: cb => {
-        fetchToken().then(token => cb(token));
-      },
+      getOAuthToken: this.fetchAndSetToken,
       volume: 1
     });
 
     this.addListeners();
 
-    // Connect to the player!
     try {
       this.player.connect();
     } catch (e) {
@@ -91,43 +96,62 @@ class SpotifyP {
     this.isReady = true;
   }
 
+  fetchAndSetToken(cb) {
+    return this.fetchToken().then(token => {
+      this.setAccessToken(token);
+      if (cb) cb(token);
+    });
+  }
+
+  setAccessToken(token) {
+    this.accessToken = token;
+  }
+
   load(trackId, tries = 3) {
+    this.isLoaded = false;
+
     if (!tries) {
       return console.error(`Couldn't load track ${trackId}`);
     }
-    this.isLoaded = false;
-    if (this.isReady && this.deviceId) {
-      return fetch(
-        `https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`,
-        {
-          method: "PUT",
-          body: JSON.stringify({
-            uris: [`spotify:track:${trackId}`]
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${this.accessToken}`
-          }
+
+    if (this.isReady) {
+      this.loadTrackToPlayer(trackId).then(res => {
+        if (res.status === 401) {
+          return this.fetchAndSetToken().then(() =>
+            this.load(trackId, --tries)
+          );
         }
-      )
-        .then(() => {
-          this.progressMs = 0;
-          this.isLoaded = true;
-          this.trackSeekPosition();
-        })
-        .catch(e => {
-          console.error(`Error loading track ${trackId}: ${e}`);
-        });
+
+        this.isLoaded = true;
+        this.progressMs = 0;
+        this.trackSeekPosition();
+      });
     } else {
       setTimeout(() => this.load(trackId, --tries), 500);
     }
+  }
+
+  loadTrackToPlayer(trackId) {
+    return fetch(
+      `https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          uris: [`spotify:track:${trackId}`]
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.accessToken}`
+        }
+      }
+    );
   }
 
   play(tries = 3) {
     if (!this.isLoaded) return;
 
     if (!tries) {
-      console.error(`Error playing spotify track`);
+      return console.error(`Error playing spotify track`);
     }
 
     if (this.isReady) {
@@ -140,8 +164,9 @@ class SpotifyP {
 
   pause(tries = 3) {
     if (!this.isLoaded) return;
+
     if (!tries) {
-      console.error(`Error pausing spotify track`);
+      return console.error(`Error pausing spotify track`);
     }
 
     if (this.isReady) {
@@ -196,8 +221,8 @@ class SpotifyP {
       // Track ended
       this.stopTrackingSeekPosition();
 
-      if (this.onEnd) {
-        this.onEnd();
+      if (this.onTrackEnd) {
+        this.onTrackEnd();
       }
     }
 
@@ -207,6 +232,7 @@ class SpotifyP {
 
   trackSeekPosition() {
     clearInterval(this.timer);
+
     this.timer = setInterval(() => {
       this.progressMs += 500;
     }, 500);
@@ -217,7 +243,6 @@ class SpotifyP {
   }
 
   addListeners() {
-    // Error handling
     this.player.addListener("initialization_error", e => {
       console.error("initialization_error", e.message);
     });
@@ -237,13 +262,16 @@ class SpotifyP {
       this.handleStateChange(state)
     );
 
-    // Ready
     this.player.addListener("ready", data => {
-      console.log("Ready with Device ID: ", data.device_id);
+      let d = new Date();
+      console.log(
+        `Ready with Device ID: ${
+          data.device_id
+        } @${d.getHours()}:${d.getMinutes()}`
+      );
       this.deviceId = data.device_id;
     });
 
-    // Not Ready
     this.player.addListener("not_ready", data => {
       console.log("Device ID has gone offline", data.device_id);
       this.deviceId = "";
