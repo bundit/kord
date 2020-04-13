@@ -5,6 +5,7 @@ import {
   faExternalLinkAlt,
   faPen
 } from "@fortawesome/free-solid-svg-icons";
+import { useAlert } from "react-alert";
 import React, { useState, useEffect } from "react";
 
 import { capitalizeWord } from "../utils/capitalizeWord";
@@ -24,6 +25,7 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
   const sourcePlaylists = playlists[source];
   const settings = user[source];
   const [playlistSettings, setPlaylistSettings] = useState(sourcePlaylists); // TODO this updates redux state but idk why
+  const alert = useAlert();
 
   // Soundcloud edit fields
   const isScConnected = useSelector(state => state.user.soundcloud.isConnected);
@@ -72,10 +74,22 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
 
     if (usernameInput.length > 15 && inputPrefix === "soundcloud.com/") {
       // TODO add more input validation here
-      dispatch(getSoundcloudProfile(inputSuffix));
-      dispatch(removeLibraryTracks("soundcloud"));
-      dispatch(importScLikes(inputSuffix));
-      setShowUsernameInput(false);
+      dispatch(getSoundcloudProfile(inputSuffix))
+        .then(() => dispatch(removeLibraryTracks("soundcloud")))
+        .then(() => dispatch(importScLikes(inputSuffix)))
+        .then(
+          success => {
+            alert.success(`Soundcloud profile ${inputSuffix} connected`);
+            setShowUsernameInput(false);
+          },
+          status => {
+            if (status === 404) {
+              alert.error(`User ${inputSuffix} not found`);
+            }
+          }
+        );
+    } else {
+      alert.error("Invalid Soundcloud profile URL");
     }
   }
 
