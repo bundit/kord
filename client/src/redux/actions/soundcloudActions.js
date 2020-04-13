@@ -11,39 +11,48 @@ const SC_API_BASE_URL = "https://api.soundcloud.com";
 export const getSoundcloudProfile = userId => async dispatch => {
   const endpoint = `${SC_API_BASE_URL}/users/${userId}?client_id=${KEY}`;
 
-  const res = await fetch(endpoint);
-  const json = await res.json();
+  return fetch(endpoint)
+    .then(res => {
+      if (res.status < 200 || res.status >= 300) {
+        return Promise.reject(res.status);
+      }
+      return res.json();
+    })
+    .then(json => {
+      const profile = mapJsonToProfileObject(json);
 
-  const profile = mapJsonToProfileObject(json);
-
-  dispatch(setUserProfile("soundcloud", profile));
-  dispatch(setConnection("soundcloud", true));
+      dispatch(setUserProfile("soundcloud", profile));
+      dispatch(setConnection("soundcloud", true));
+    });
 };
 
 export const importScLikes = username => async dispatch => {
   let nextEndpoint = `${SC_API_BASE_URL}/users/${username}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
   const tracks = [];
-  let res;
-
+  let promise;
   let count = 0;
+
   do {
-    // We must use the previous request's result to make the next request
-    // eslint-disable-next-line no-await-in-loop
-    res = await fetchScTracks(nextEndpoint);
-
-    // Add the results to list of songs
-    tracks.push(...res.tracks);
-
-    // Set the endpoint to the next pagination
-    nextEndpoint = res.nextHref;
-    count += 1;
-  } while (res.nextHref && count < 1);
+    promise = fetchScTracks(nextEndpoint).then(
+      res => {
+        tracks.push(...res.tracks);
+        nextEndpoint = res.nextHref;
+      },
+      status => {
+        return Promise.reject(status);
+        nextEndpoint = null;
+      }
+    );
+    count++;
+  } while (nextEndpoint && count < 1);
 
   // Send the payload to reducer
   dispatch({
     type: "IMPORT_SONGS",
     payload: tracks
   });
+
+  return promise;
 };
 
 export const getUserSoundcloudPlaylists = username => dispatch => {
@@ -84,6 +93,10 @@ export const searchSoundcloudArtists = (query, limit = 5) => async dispatch => {
 
 export async function fetchScTracks(endpoint) {
   const res = await fetch(`${endpoint}&linked_partitioning=1`);
+  if (res.status < 200 || res.status >= 300) {
+    return Promise.reject(res.status);
+  }
+
   const data = await res.json();
 
   const tracks = mapCollectionToTracks(data.collection);
@@ -175,6 +188,10 @@ export const importScSong = id => async dispatch => {
 };
 
 function mapCollectionToTracks(collection) {
+  if (!collection) {
+    throw new Error("Collection is invalid");
+  }
+
   return collection.map(track => ({
     title: track.title,
     id: track.id,
@@ -197,6 +214,10 @@ function mapCollectionToTracks(collection) {
 }
 
 function mapCollectionToPlaylists(collection) {
+  if (!collection) {
+    throw new Error("Invalid soundcloud collection object");
+  }
+
   return collection.map(item => ({
     id: item.id,
     title: item.title,
