@@ -7,12 +7,19 @@ import {
   faCompass
 } from "@fortawesome/free-solid-svg-icons";
 import { faSoundcloud, faSpotify } from "@fortawesome/free-brands-svg-icons";
+import { useAlert } from "react-alert";
 import React, { useState } from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
-import { getUserSoundcloudPlaylists } from "../redux/actions/soundcloudActions";
-import { getUserSpotifyPlaylists } from "../redux/actions/spotifyActions";
+import {
+  getSoundcloudProfile,
+  getUserSoundcloudPlaylists
+} from "../redux/actions/soundcloudActions";
+import {
+  getUserSpotifyPlaylists,
+  setSpotifyProfile
+} from "../redux/actions/spotifyActions";
 import ConnectedSourceButton from "./connected-source-button";
 import PlaylistItem from "./playlist-item";
 import SettingsForm from "./settings-form";
@@ -48,7 +55,23 @@ const Sidebar = ({ user, playlists }) => {
       />
     ));
 
+  function handleUpdateProfile(source, username) {
+    dispatch(fetchPlaylists(source, username))
+      .then(() => dispatch(fetchProfile(source, username)))
+      .then(() => {
+        alert.success("Profile Refreshed");
+      })
+      .catch(e => {
+        if (e.status === 0) {
+          alert.error("Connection Error");
+        } else {
+          alert.error(`Unhandled Error${e.status}`);
+        }
+      });
+  }
+
   const dispatch = useDispatch();
+  const alert = useAlert();
   return (
     <div className={styles.sidebarWrapper}>
       <div className={styles.sidebarHeader}>
@@ -123,9 +146,7 @@ const Sidebar = ({ user, playlists }) => {
           show={isSettingsFormOpen}
           source={settingsSource}
           onClose={toggleSettingsForm}
-          handleUpdate={(source, username) =>
-            dispatch(fetchPlaylists(source, username))
-          }
+          handleUpdate={handleUpdateProfile}
         />
       </div>
     </div>
@@ -134,9 +155,17 @@ const Sidebar = ({ user, playlists }) => {
 
 const fetchPlaylists = (source, username) => dispatch => {
   if (source === "spotify") {
-    dispatch(getUserSpotifyPlaylists());
+    return dispatch(getUserSpotifyPlaylists());
   } else if (source === "soundcloud") {
-    dispatch(getUserSoundcloudPlaylists(username));
+    return dispatch(getUserSoundcloudPlaylists(username));
+  }
+};
+
+const fetchProfile = (source, user) => dispatch => {
+  if (source === "spotify") {
+    return dispatch(setSpotifyProfile());
+  } else if (source === "soundcloud") {
+    return dispatch(getSoundcloudProfile(user));
   }
 };
 
