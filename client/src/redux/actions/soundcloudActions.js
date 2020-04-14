@@ -14,7 +14,7 @@ export const getSoundcloudProfile = userId => async dispatch => {
   return fetch(endpoint)
     .then(res => {
       if (res.status < 200 || res.status >= 300) {
-        return Promise.reject(res.status);
+        return Promise.reject(res);
       }
       return res.json();
     })
@@ -58,8 +58,14 @@ export const importScLikes = username => async dispatch => {
 export const getUserSoundcloudPlaylists = username => dispatch => {
   const playlistEndpoint = `${SC_API_BASE_URL}/users/${username}/playlists?client_id=${KEY}`;
 
-  fetch(playlistEndpoint)
-    .then(res => res.json())
+  return fetch(playlistEndpoint)
+    .then(res => {
+      if (res.status < 200 || res.status >= 300) {
+        return Promise.reject(res);
+      }
+
+      return res.json();
+    })
     .then(data => {
       const newPlaylists = mapCollectionToPlaylists(data);
 
