@@ -77,17 +77,17 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
       dispatch(getSoundcloudProfile(inputSuffix))
         .then(() => dispatch(removeLibraryTracks("soundcloud")))
         .then(() => dispatch(importScLikes(inputSuffix)))
-        .then(
-          success => {
-            alert.success(`Soundcloud profile ${inputSuffix} connected`);
-            setShowUsernameInput(false);
-          },
-          status => {
-            if (status === 404) {
-              alert.error(`User ${inputSuffix} not found`);
-            }
+        .then(function success() {
+          alert.success(`Soundcloud profile ${inputSuffix} connected`);
+          setShowUsernameInput(false);
+        })
+        .catch(e => {
+          if (e.status === 404) {
+            alert.error(`User ${inputSuffix} not found`);
+          } else {
+            alert.error(`Uncaught error ${e.status} handleSubmitUsername`);
           }
-        );
+        });
     } else {
       alert.error("Invalid Soundcloud profile URL");
     }
