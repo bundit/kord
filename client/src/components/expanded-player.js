@@ -17,6 +17,7 @@ import { getImgUrl } from "../utils/getImgUrl";
 import { nextTrack, prevTrack } from "../redux/actions/playerActions";
 import placeholderImg from "../assets/placeholder.png";
 import secondsToFormatted from "../utils/secondsToFormatted";
+import progressBarStyles from "../styles/mobileProgressBar.module.css";
 import styles from "../styles/player.module.css";
 
 const ExpandedPlayer = ({
@@ -60,6 +61,7 @@ const ExpandedPlayer = ({
             min="0"
             max={duration}
             step="any"
+            className={progressBarStyles.mobileSeekRange}
             value={isUserSeeking ? userSeekPos : seek}
             onChange={handleOnChangeUserSeek}
             onMouseDown={handleMouseDownSeek}
