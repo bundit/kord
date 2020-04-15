@@ -19,21 +19,20 @@ import miniPlayerSlide from "../styles/miniPlayerSlide.module.css";
 import slideTransition from "../styles/slide.module.css";
 
 export const Player = ({ current, isPlaying, volume, seek, duration }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isSpotifySdkReady, setIsSpotifySdkReady] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [userSeekPos, setUserSeekPos] = useState(0);
   const [isUserSeeking, setIsUserSeeking] = useState(false);
-  const theRaf = useRef(null);
-  const player = useRef(null);
+
+  const soundcloudPlayer = useRef(null);
   const spotifyPlayer = useRef(null);
 
   const spotifyToken = useSelector(state => state.user.spotify.token);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setSeek(0));
-    dispatch(setDuration(current.duration / 1000));
-  }, [current]); // Song was changed
+  useSetDurationOnTrackChange(current);
+  usePauseIfSdkNotReady(current, isPlaying, isSpotifySdkReady);
+  useRenderSeekPosition(current, isPlaying, soundcloudPlayer, spotifyPlayer);
 
   function handlePlayPause(e) {
     if (isPlaying) {
@@ -44,52 +43,21 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
     e.stopPropagation();
   }
 
-  function handleOnLoad() {
-    if (current.source === "soundcloud") {
-      dispatch(setDuration(player.current.duration()));
-    }
-    setIsLoaded(true);
+  function handleSpotifyReady() {
+    setIsSpotifySdkReady(true);
   }
 
-  function handleSeek(seconds) {
-    if (player.current) {
-      let newSeekPos = player.current.seek() + seconds;
+  function handleSpotifyNotReady() {
+    setIsSpotifySdkReady(false);
+  }
 
-      // Ensure our new seek position is within bounds
-      newSeekPos = newSeekPos < 0 ? 0 : newSeekPos;
-      newSeekPos = newSeekPos > duration ? duration : newSeekPos;
-
-      // Move the player to the new position
-      player.current.seek(newSeekPos);
-
-      if (!isPlaying) {
-        dispatch(setSeek(newSeekPos));
-      }
-    }
+  function handleOnEnd() {
+    dispatch(nextTrack());
   }
 
   function toggleExpand(e) {
     setIsExpanded(!isExpanded);
     e.stopPropagation();
-  }
-
-  // When the user has released mouse/touch on slider,
-  // we set the isUserSeeking to false to allow the
-  // component to be controlled by the player
-  function handleMouseUpSeek() {
-    const newSeekPos = Number(userSeekPos);
-
-    if (isLoaded && current.source === "soundcloud") {
-      player.current.seek(newSeekPos);
-      dispatch(setSeek(newSeekPos));
-    }
-
-    if (spotifyPlayer.current && spotifyPlayer.current.isReady) {
-      spotifyPlayer.current.seek(newSeekPos * 1000);
-      dispatch(setSeek(newSeekPos));
-    }
-
-    setIsUserSeeking(false);
   }
 
   // This gets fired when the user is manually seeking using the slider
@@ -99,31 +67,45 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
     }
   }
 
-  useEffect(() => {
-    raf.cancel(theRaf.current);
-    function renderSeekPos() {
-      let currentPos;
+  function handleSeek(seconds) {
+    if (soundcloudPlayer.current) {
+      let newSeekPos = soundcloudPlayer.current.seek() + seconds;
 
-      if (current.source === "soundcloud" && player.current) {
-        currentPos = player.current.seek();
-      } else if (current.source === "spotify") {
-        currentPos = spotifyPlayer.current.seek() / 1000;
+      // Ensure our new seek position is within bounds
+      newSeekPos = newSeekPos < 0 ? 0 : newSeekPos;
+      newSeekPos = newSeekPos > duration ? duration : newSeekPos;
+
+      // Move the player to the new position
+      soundcloudPlayer.current.seek(newSeekPos);
+
+      if (!isPlaying) {
+        dispatch(setSeek(newSeekPos));
       }
+    }
+  }
 
-      // We need to check if seek is a number because there is a race condition in howler
-      // where it will return the howler object if there is a playLock on it.
-      if (typeof currentPos === "number") {
-        dispatch(setSeek(currentPos));
-      }
+  function handleMouseDownSeek() {
+    setIsUserSeeking(true);
+  }
 
-      setTimeout(() => (theRaf.current = raf(renderSeekPos)), 300);
+  // When the user has released mouse/touch on slider,
+  // we set the isUserSeeking to false to allow the
+  // component to be controlled by the player
+  function handleMouseUpSeek() {
+    const newSeekPos = Number(userSeekPos);
+
+    if (current.source === "soundcloud") {
+      soundcloudPlayer.current.seek(newSeekPos);
+      dispatch(setSeek(newSeekPos));
     }
 
-    if (isPlaying) {
-      renderSeekPos();
+    if (isSpotifySdkReady && current.source === "spotify") {
+      spotifyPlayer.current.seek(newSeekPos * 1000);
+      dispatch(setSeek(newSeekPos));
     }
-    return () => raf.cancel(theRaf);
-  }, [isPlaying, current]); // Stop or start RAF when play/pause and song changes
+
+    setIsUserSeeking(false);
+  }
 
   const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
 
@@ -133,22 +115,23 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
         <ReactHowler
           src={`${current.streamUrl}?client_id=${KEY}`}
           playing={isPlaying && current.source === "soundcloud"}
-          onEnd={() => dispatch(nextTrack())}
-          onLoad={handleOnLoad}
+          onEnd={handleOnEnd}
           preload
           html5
           volume={volume}
-          ref={player}
+          ref={soundcloudPlayer}
         />
       )}
       <SpotifyPlayer
         playerRef={spotifyPlayer}
         playerName="Kord Player - All your music in one place"
         accessToken={spotifyToken}
-        isPlaying={isPlaying}
-        onEnd={() => dispatch(nextTrack())}
+        isPlaying={isPlaying && current.source === "spotify"}
+        onEnd={handleOnEnd}
         volume={volume}
         track={current}
+        onReady={handleSpotifyReady}
+        onNotReady={handleSpotifyNotReady}
       />
       {/* Expanded music player */}
       <CSSTransition
@@ -168,7 +151,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
           seek={seek}
           duration={duration}
           handleOnChangeUserSeek={handleOnChangeUserSeek}
-          handleMouseDownSeek={() => setIsUserSeeking(true)}
+          handleMouseDownSeek={handleMouseDownSeek}
           handleMouseUpSeek={handleMouseUpSeek}
         />
       </CSSTransition>
@@ -189,13 +172,75 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
           isUserSeeking={isUserSeeking}
           userSeekPos={Number(userSeekPos)}
           handleOnChangeUserSeek={handleOnChangeUserSeek}
-          handleMouseDownSeek={() => setIsUserSeeking(true)}
+          handleMouseDownSeek={handleMouseDownSeek}
           handleMouseUpSeek={handleMouseUpSeek}
         />
       </CSSTransition>
     </>
   );
 };
+
+function useSetDurationOnTrackChange(current) {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setSeek(0));
+    dispatch(setDuration(current.duration / 1000));
+  }, [current, dispatch]); // Song was changed
+}
+
+function usePauseIfSdkNotReady(current, isPlaying, isSpotifySdkReady) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Prevent play if player is not ready
+    if (current.source === "spotify") {
+      if (isPlaying && !isSpotifySdkReady) {
+        dispatch(pause());
+      }
+    }
+  }, [isPlaying, current, isSpotifySdkReady, dispatch]);
+}
+
+function useRenderSeekPosition(
+  current,
+  isPlaying,
+  soundcloudPlayer,
+  spotifyPlayer
+) {
+  const theRaf = useRef(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    raf.cancel(theRaf.current);
+
+    function renderSeekPos() {
+      let currentPos;
+      try {
+        if (current.source === "soundcloud") {
+          currentPos = soundcloudPlayer.current.seek();
+        } else if (current.source === "spotify") {
+          currentPos = spotifyPlayer.current.seek() / 1000;
+        } else return raf.cancel(theRaf.current);
+      } catch (e) {
+        return raf.cancel(theRaf.current);
+      }
+
+      // We need to check if seek is a number because there is a race condition in howler
+      // where it will return the howler object if there is a playLock on it.
+      if (typeof currentPos === "number") {
+        dispatch(setSeek(currentPos));
+      }
+
+      setTimeout(() => (theRaf.current = raf(renderSeekPos)), 300);
+    }
+
+    if (isPlaying) {
+      renderSeekPos();
+    } else raf.cancel(theRaf.current);
+
+    return () => raf.cancel(theRaf);
+  }, [current, isPlaying, soundcloudPlayer, spotifyPlayer, dispatch]); // Stop or start RAF when play/pause and song changes
+}
 
 Player.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
