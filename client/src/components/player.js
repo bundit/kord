@@ -116,7 +116,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
         dispatch(setSeek(currentPos));
       }
 
-      theRaf.current = raf(renderSeekPos);
+      setTimeout(() => (theRaf.current = raf(renderSeekPos)), 300);
     }
 
     if (isPlaying) {
@@ -184,6 +184,13 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
           handleToggleExpand={toggleExpand}
           handlePlayPause={handlePlayPause}
           isPlaying={isPlaying}
+          seek={seek}
+          duration={duration}
+          isUserSeeking={isUserSeeking}
+          userSeekPos={Number(userSeekPos)}
+          handleOnChangeUserSeek={handleOnChangeUserSeek}
+          handleMouseDownSeek={() => setIsUserSeeking(true)}
+          handleMouseUpSeek={handleMouseUpSeek}
         />
       </CSSTransition>
     </>

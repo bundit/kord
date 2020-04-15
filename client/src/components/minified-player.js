@@ -17,78 +17,112 @@ import { getImgUrl } from "../utils/getImgUrl";
 import { nextTrack, prevTrack } from "../redux/actions/playerActions";
 import { useMobileDetection } from "../utils/hooks";
 import placeholderImg from "../assets/placeholder.png";
+import progressBarStyles from "../styles/progressBar.module.css";
 import styles from "../styles/player.module.css";
 
 const MinifiedPlayer = ({
   current,
   handleToggleExpand,
   handlePlayPause,
-  isPlaying
+  isPlaying,
+  isUserSeeking,
+  userSeekPos,
+  seek,
+  duration,
+  handleOnChangeUserSeek,
+  handleMouseDownSeek,
+  handleMouseUpSeek
 }) => {
   const isMobile = useMobileDetection();
   const dispatch = useDispatch();
 
+  const progress = (isUserSeeking ? userSeekPos : seek) / duration;
+  const progressPercent = `${progress * 100}%`;
   return (
-    <div
-      className={`${styles.playerWrapper} ${styles.miniPlayer}`}
-      tabIndex={isMobile ? 0 : null}
-      role="button"
-      onClick={isMobile ? handleToggleExpand : null}
-    >
-      <button
-        type="button"
-        onClick={handleToggleExpand}
-        className={styles.miniPlayerExpandButton}
+    <div className={styles.playerAndSeekContainer}>
+      <div className={progressBarStyles.progressContainer}>
+        <input
+          className={progressBarStyles.desktopSeekBar}
+          type="range"
+          min="0"
+          max={duration}
+          step="any"
+          value={isUserSeeking ? userSeekPos : seek}
+          onChange={handleOnChangeUserSeek}
+          onMouseDown={handleMouseDownSeek}
+          onMouseUp={handleMouseUpSeek}
+        />
+        {seek !== 0 && (
+          <span
+            className={progressBarStyles.progressBar}
+            style={{
+              width: progressPercent,
+              transition: `${isUserSeeking ? null : "0.3s ease"}`
+            }}
+          ></span>
+        )}
+      </div>
+      <div
+        className={`${styles.playerWrapper} ${styles.miniPlayer}`}
+        tabIndex={isMobile ? 0 : null}
+        role="button"
+        onClick={isMobile ? handleToggleExpand : null}
       >
-        <FontAwesomeIcon icon={faAngleUp} />
-      </button>
-      <div className={styles.nowPlaying}>
-        <div className={styles.miniPlayerImageWrap}>
-          <img
-            src={current.img ? getImgUrl(current, "md") : placeholderImg}
-            alt="album-art"
-          />
-        </div>
-        <div className={styles.titleWrapper}>
-          <div className={styles.nowPlayingTitle}>{current.title}</div>
-          <div className={styles.nowPlayingArtist}>
-            {formatArtistName(current.artist)}
+        <button
+          type="button"
+          onClick={handleToggleExpand}
+          className={styles.miniPlayerExpandButton}
+        >
+          <FontAwesomeIcon icon={faAngleUp} />
+        </button>
+        <div className={styles.nowPlaying}>
+          <div className={styles.miniPlayerImageWrap}>
+            <img
+              src={current.img ? getImgUrl(current, "md") : placeholderImg}
+              alt="album-art"
+            />
+          </div>
+          <div className={styles.titleWrapper}>
+            <div className={styles.nowPlayingTitle}>{current.title}</div>
+            <div className={styles.nowPlayingArtist}>
+              {formatArtistName(current.artist)}
+            </div>
           </div>
         </div>
-      </div>
-      <button
-        type="button"
-        onClick={handlePlayPause}
-        className={styles.miniPlayerPlayButton}
-      >
-        <FontAwesomeIcon icon={isPlaying ? faPauseCircle : faPlay} />
-      </button>
-      <div className={styles.desktopButtonGroup}>
         <button
           type="button"
-          className={styles.backwardButton}
-          onClick={() => dispatch(prevTrack())}
-        >
-          <BackwardIcon />
-        </button>
-        <button
-          type="button"
-          className={styles.desktopPlayPauseButton}
           onClick={handlePlayPause}
+          className={styles.miniPlayerPlayButton}
         >
-          {isPlaying ? <PauseIcon /> : <PlayIcon />}
+          <FontAwesomeIcon icon={isPlaying ? faPauseCircle : faPlay} />
         </button>
-        <button
-          type="button"
-          className={styles.forwardButton}
-          onClick={() => dispatch(nextTrack())}
-        >
-          <ForwardIcon />
-        </button>
-      </div>
+        <div className={styles.desktopButtonGroup}>
+          <button
+            type="button"
+            className={styles.backwardButton}
+            onClick={() => dispatch(prevTrack())}
+          >
+            <BackwardIcon />
+          </button>
+          <button
+            type="button"
+            className={styles.desktopPlayPauseButton}
+            onClick={handlePlayPause}
+          >
+            {isPlaying ? <PauseIcon /> : <PlayIcon />}
+          </button>
+          <button
+            type="button"
+            className={styles.forwardButton}
+            onClick={() => dispatch(nextTrack())}
+          >
+            <ForwardIcon />
+          </button>
+        </div>
 
-      <div className={styles.volumeSlider}>
-        <input type="range" className={styles.slider} />
+        <div className={styles.volumeSlider}>
+          <input type="range" className={styles.slider} />
+        </div>
       </div>
     </div>
   );

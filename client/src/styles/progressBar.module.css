@@ -1,0 +1,127 @@
+.progressContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 0px;
+}
+
+.progressContainer * {
+  transition: 0.3s ease;
+}
+
+.progressBar {
+  pointer-events: none;
+  background-color: #fb1;
+  height: 1px;
+  position: absolute;
+  bottom: 0px;
+  z-index: 2;
+}
+
+.desktopSeekBar {
+  display: none;
+}
+
+.progressContainer:hover input[type="range"].desktopSeekBar,
+.progressContainer:hover .progressBar {
+  transform: scaleY(10);
+  background-color: #ffd46b;
+}
+
+input[type="range"].desktopSeekBar {
+  -webkit-appearance: none;
+  width: 100%;
+}
+
+input[type="range"].desktopSeekBar:focus {
+  outline: none;
+}
+
+input[type="range"].desktopSeekBar::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  background: #383f41;
+}
+
+input[type="range"].desktopSeekBar::-webkit-slider-thumb {
+  height: 1px;
+  width: 10px;
+  background: #383f41;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+input[type="range"].desktopSeekBar:focus::-webkit-slider-runnable-track {
+  background: #383f41;
+}
+
+input[type="range"].desktopSeekBar::-moz-range-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  background: #383f41;
+}
+
+input[type="range"].desktopSeekBar::-moz-range-thumb {
+  height: 1px;
+  width: 10px;
+  background: #383f41;
+  cursor: pointer;
+}
+
+input[type="range"].desktopSeekBar::-ms-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+input[type="range"].desktopSeekBar::-ms-fill-lower {
+  background: #fcfcfc;
+}
+
+input[type="range"].desktopSeekBar::-ms-fill-upper {
+  background: #383f41;
+  border: 0.2px solid #010101;
+}
+
+input[type="range"].desktopSeekBar::-ms-thumb {
+  height: 1px;
+  width: 10px;
+  background: #383f41;
+  cursor: pointer;
+  height: 5px;
+}
+
+input[type="range"].desktopSeekBar:focus::-ms-fill-lower {
+  background: #383f41;
+}
+
+input[type="range"].desktopSeekBar:focus::-ms-fill-upper {
+  background: #383f41;
+}
+
+@media (min-width: 800px) {
+  .progressContainer {
+    position: absolute;
+    top: -10px;
+    width: 100%;
+    height: 20px;
+    z-index: 1;
+  }
+
+  .progressBar {
+    height: 1px;
+    position: absolute;
+    bottom: 10px;
+  }
+
+  .desktopSeekBar {
+    display: inline;
+    position: absolute;
+    bottom: 7px;
+  }
+}
