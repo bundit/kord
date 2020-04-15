@@ -10,6 +10,8 @@ const SpotifyPlayer = ({
   accessToken,
   track,
   isPlaying,
+  onReady,
+  onNotReady,
   onEnd,
   volume
 }) => {
@@ -29,10 +31,12 @@ const SpotifyPlayer = ({
         playerRef.current = new SpotifyWebPlaybackSdk(
           playerName,
           accessToken,
-          fetchToken,
-          onEnd
+          fetchToken
         );
         playerRef.current.initPlayer();
+        playerRef.current.onTrackEnd = onEnd;
+        playerRef.current.onReady = onReady;
+        playerRef.current.onNotReady = onNotReady;
       }
     };
   }, []);
@@ -65,14 +69,12 @@ const SpotifyPlayer = ({
 };
 
 class SpotifyWebPlaybackSdk {
-  constructor(playerName, accessToken, fetchToken, onTrackEnd) {
+  constructor(playerName, accessToken, fetchToken) {
     this.playerName = playerName;
     this.accessToken = accessToken;
     this.fetchToken = fetchToken;
-    this.onTrackEnd = onTrackEnd;
 
-    this.deviceId = "";
-    this.isReady = false;
+    this.deviceId = null;
     this.timer = null;
 
     this.fetchAndSetToken = this.fetchAndSetToken.bind(this);
@@ -87,20 +89,16 @@ class SpotifyWebPlaybackSdk {
 
     this.addListeners();
 
-    try {
-      this.player.connect();
-    } catch (e) {
-      console.error(`Error connecting spotify player: ${e}`);
-    }
-
-    this.isReady = true;
+    return this.player.connect();
   }
 
   fetchAndSetToken(cb) {
-    return this.fetchToken().then(token => {
-      this.setAccessToken(token);
-      if (cb) cb(token);
-    });
+    return this.fetchToken()
+      .then(token => {
+        this.setAccessToken(token);
+        if (cb) cb(token);
+      })
+      .catch(e => console.error(`Error refreshing spotify player ${e}`));
   }
 
   setAccessToken(token) {
@@ -114,12 +112,19 @@ class SpotifyWebPlaybackSdk {
       return console.error(`Couldn't load track ${trackId}`);
     }
 
-    if (this.isReady) {
-      this.loadTrackToPlayer(trackId).then(res => {
+    if (this.deviceId) {
+      return this.loadTrackToPlayer(trackId).then(res => {
         if (res.status === 401) {
+          // Expired token
           return this.fetchAndSetToken().then(() =>
             this.load(trackId, --tries)
           );
+        } else if (res.status === 404) {
+          console.log("error 404 on track PUT, trying to reinitialize");
+          return this.initPlayer().then(() => {
+            console.log("Spoitfy player reinitialized");
+            return this.load(trackId, --tries);
+          });
         }
 
         this.isLoaded = true;
@@ -154,7 +159,7 @@ class SpotifyWebPlaybackSdk {
       return console.error(`Error playing spotify track`);
     }
 
-    if (this.isReady) {
+    if (this.deviceId) {
       this.player.resume();
       this.trackSeekPosition();
     } else {
@@ -169,7 +174,7 @@ class SpotifyWebPlaybackSdk {
       return console.error(`Error pausing spotify track`);
     }
 
-    if (this.isReady) {
+    if (this.deviceId) {
       this.player.pause();
       this.stopTrackingSeekPosition();
     } else {
@@ -184,7 +189,7 @@ class SpotifyWebPlaybackSdk {
       return this.progressMs;
     }
 
-    if (this.isReady) {
+    if (this.deviceId) {
       this.player.seek(position);
     } else {
       throw new Error("SpotifyPlayer isn't enabled");
@@ -206,28 +211,6 @@ class SpotifyWebPlaybackSdk {
       }
       return d.json();
     });
-  }
-
-  handleStateChange(state) {
-    if (
-      this.state &&
-      state &&
-      state.track_window.previous_tracks.find(
-        x => x.id === state.track_window.current_track.id
-      ) &&
-      !this.state.paused &&
-      state.paused
-    ) {
-      // Track ended
-      this.stopTrackingSeekPosition();
-
-      if (this.onTrackEnd) {
-        this.onTrackEnd();
-      }
-    }
-
-    this.state = state;
-    this.progressMs = state.position;
   }
 
   trackSeekPosition() {
@@ -270,12 +253,38 @@ class SpotifyWebPlaybackSdk {
         } @${d.getHours()}:${d.getMinutes()}`
       );
       this.deviceId = data.device_id;
+
+      if (this.onReady) this.onReady();
     });
 
     this.player.addListener("not_ready", data => {
       console.log("Device ID has gone offline", data.device_id);
-      this.deviceId = "";
+      this.deviceId = null;
+
+      if (this.onNotReady) this.onNotReady();
     });
+  }
+
+  handleStateChange(state) {
+    if (
+      this.state &&
+      state &&
+      state.track_window.previous_tracks.find(
+        x => x.id === state.track_window.current_track.id
+      ) &&
+      !this.state.paused &&
+      state.paused
+    ) {
+      // Track ended
+      this.stopTrackingSeekPosition();
+
+      if (this.onTrackEnd) {
+        this.onTrackEnd();
+      }
+    }
+
+    this.state = state;
+    this.progressMs = state.position;
   }
 }
 
