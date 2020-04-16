@@ -1,13 +1,14 @@
-import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 
 import { refreshSpotifyToken } from "../redux/actions/spotifyActions";
+import { usePrevious } from "../utils/hooks";
 
 const SpotifyPlayer = ({
-  playerRef,
+  forwardRef,
   playerName,
-  accessToken,
   track,
   isPlaying,
   onReady,
@@ -16,63 +17,81 @@ const SpotifyPlayer = ({
   volume
 }) => {
   const dispatch = useDispatch();
+  const player = useRef(null);
 
-  React.useEffect(() => {
-    if (!window.Spotify) {
-      addSpotifySdkToDom();
-    }
+  useSpotifyWebPlaybackSdkScript();
 
+  useEffect(() => {
     window.onSpotifyWebPlaybackSDKReady = () => {
       function fetchToken() {
         return dispatch(refreshSpotifyToken());
       }
 
-      if (!playerRef.current) {
-        playerRef.current = new SpotifyWebPlaybackSdk(
-          playerName,
-          accessToken,
-          fetchToken
-        );
-        playerRef.current.initPlayer();
-        playerRef.current.onTrackEnd = onEnd;
-        playerRef.current.onReady = onReady;
-        playerRef.current.onNotReady = onNotReady;
+      if (!player.current) {
+        player.current = new SpotifyWebPlaybackSdk(playerName, fetchToken);
+        player.current.initPlayer();
+        player.current.onTrackEnd = onEnd;
+        player.current.onReady = onReady;
+        player.current.onNotReady = onNotReady;
+
+        if (forwardRef) {
+          forwardRef.current = player.current;
+        }
       }
     };
   }, []);
 
-  React.useEffect(() => {
-    if (!playerRef.current) return;
+  const prevTrack = usePrevious(track);
 
-    if (track.source === "spotify") {
-      if (isPlaying) {
-        playerRef.current.load(track.id, isPlaying);
+  useEffect(() => {
+    const spotifyPlayer = player.current;
+
+    if (!spotifyPlayer) return;
+
+    const trackHasChanged = prevTrack !== track;
+    const trackHasLoaded = spotifyPlayer.isLoaded;
+
+    if (isPlaying) {
+      if (trackHasChanged) {
+        // Is playing and track changed, load new song
+        spotifyPlayer.load(track.id);
       } else {
-        playerRef.current.isLoaded = false;
+        if (trackHasLoaded) {
+          // Is playing but track already loaded, resume playing
+          spotifyPlayer.play();
+        } else {
+          // Is playing but hasn't loaded, load the new track
+          spotifyPlayer.load(track.id);
+        }
       }
-    } else playerRef.current.pause();
-  }, [track]);
-
-  React.useEffect(() => {
-    if (!playerRef.current || track.source !== "spotify") return;
-
-    if (!isPlaying) {
-      playerRef.current.pause();
     } else {
-      if (!playerRef.current.isLoaded) {
-        playerRef.current.load(track.id, isPlaying);
-      } else playerRef.current.play();
+      if (trackHasChanged) {
+        // Isn't playing but track has changed, set isLoaded to false
+        spotifyPlayer.isLoaded = false;
+        spotifyPlayer.pause();
+      } else {
+        // Track hasnt changed, just pause
+        spotifyPlayer.pause();
+      }
     }
-  }, [isPlaying]);
+  }, [track, isPlaying]);
 
   return <></>;
 };
 
+function useSpotifyWebPlaybackSdkScript() {
+  useEffect(() => {
+    if (!window.Spotify) {
+      addSpotifySdkToDom();
+    }
+  }, []);
+}
+
 class SpotifyWebPlaybackSdk {
-  constructor(playerName, accessToken, fetchToken) {
+  constructor(playerName, fetchToken) {
     this.playerName = playerName;
-    this.accessToken = accessToken;
     this.fetchToken = fetchToken;
+    this.accessToken = null;
 
     this.deviceId = null;
     this.timer = null;
@@ -106,6 +125,7 @@ class SpotifyWebPlaybackSdk {
   }
 
   load(trackId, tries = 3) {
+    console.log("loading");
     this.isLoaded = false;
 
     if (!tries) {

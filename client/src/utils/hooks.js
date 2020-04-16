@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 
 import {
   importSavedSpotifyTracks,
@@ -38,4 +38,12 @@ export function useMobileDetection() {
   }, []);
 
   return isMobile;
+}
+
+export function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 }
