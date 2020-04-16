@@ -1,5 +1,5 @@
 import { CSSTransition } from "react-transition-group";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import React, { useState, useEffect, useRef } from "react";
 import ReactHowler from "react-howler";
@@ -27,7 +27,6 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   const soundcloudPlayer = useRef(null);
   const spotifyPlayer = useRef(null);
 
-  const spotifyToken = useSelector(state => state.user.spotify.token);
   const dispatch = useDispatch();
 
   useSetDurationOnTrackChange(current);
@@ -123,9 +122,8 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
         />
       )}
       <SpotifyPlayer
-        playerRef={spotifyPlayer}
+        forwardRef={spotifyPlayer}
         playerName="Kord Player - All your music in one place"
-        accessToken={spotifyToken}
         isPlaying={isPlaying && current.source === "spotify"}
         onEnd={handleOnEnd}
         volume={volume}
