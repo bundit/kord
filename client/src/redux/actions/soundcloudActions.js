@@ -1,5 +1,5 @@
 import { ADD_TO_SEARCH_HISTORY, IMPORT_SONG } from "./types";
-import { importPlaylists } from "./libraryActions";
+import { importPlaylists, importSongs } from "./libraryActions";
 import { setConnection, setUserProfile } from "./userActions";
 
 const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
@@ -26,7 +26,7 @@ export const getSoundcloudProfile = userId => async dispatch => {
     });
 };
 
-export const importScLikes = username => async dispatch => {
+export const importScLikes = username => dispatch => {
   let nextEndpoint = `${SC_API_BASE_URL}/users/${username}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
   const tracks = [];
   let promise;
@@ -46,13 +46,7 @@ export const importScLikes = username => async dispatch => {
     count++;
   } while (nextEndpoint && count < 1);
 
-  // Send the payload to reducer
-  dispatch({
-    type: "IMPORT_SONGS",
-    payload: tracks
-  });
-
-  return promise;
+  return promise.then(() => dispatch(importSongs(tracks)));
 };
 
 export const getUserSoundcloudPlaylists = username => dispatch => {

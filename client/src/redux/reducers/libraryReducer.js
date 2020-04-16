@@ -27,14 +27,17 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case "IMPORT_SONGS": {
-      const newLib = [...state.songs, ...action.payload]
+      const newTracksList = [...state.songs, ...action.payload]
         .sort((track1, track2) => compareSongs(track1, track2))
         .filter(
           (track, index, arr) =>
             arr.findIndex(element => track.id === element.id) === index
         );
 
-      const newArtists = [...state.artists, ...newLib.map(song => song.artist)]
+      const newArtists = [
+        ...state.artists,
+        ...newTracksList.map(song => song.artist)
+      ]
         .sort((artist1, artist2) => compareArtists(artist1, artist2))
         .filter(
           (artist, index, arr) =>
@@ -42,7 +45,10 @@ export default function(state = initialState, action) {
             index
         );
 
-      const newGenres = [...state.genres, ...newLib.map(song => song.genre)]
+      const newGenres = [
+        ...state.genres,
+        ...newTracksList.map(song => song.genre)
+      ]
         .sort((genre1, genre2) => compareGenres(genre1, genre2))
         .filter(
           (genre, index, arr) =>
@@ -54,7 +60,7 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        songs: newLib,
+        songs: newTracksList,
         artists: newArtists,
         genres: newGenres
       };
