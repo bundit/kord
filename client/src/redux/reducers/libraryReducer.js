@@ -287,7 +287,7 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        songs: state.songs.filter(track => track.source === source)
+        songs: state.songs.filter(track => track.source !== source)
       };
     }
 
