@@ -18,7 +18,6 @@
   align-items: center;
   border-top: 1px #383f41 solid;
   box-sizing: border-box;
-  border-radius: 7px;
 }
 
 .miniPlayer button {
@@ -55,7 +54,7 @@
   display: none;
 }
 .desktopButtonGroup {
-  width: 150px;
+  width: 200px;
 }
 
 .miniPlayerImageWrap,
@@ -275,6 +274,3 @@ input[type="range"].slider:focus::-ms-fill-lower {
 input[type="range"].slider:focus::-ms-fill-upper {
   background: #444444;
 }
-/* input[type="range"].slider::-moz-range-progress {
-  background: red;
-} */

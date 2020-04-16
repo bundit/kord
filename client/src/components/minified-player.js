@@ -18,6 +18,7 @@ import { nextTrack, prevTrack } from "../redux/actions/playerActions";
 import { useMobileDetection } from "../utils/hooks";
 import placeholderImg from "../assets/placeholder.png";
 import progressBarStyles from "../styles/progressBar.module.css";
+import secondsToFormatted from "../utils/secondsToFormatted";
 import styles from "../styles/player.module.css";
 
 const MinifiedPlayer = ({
@@ -52,18 +53,13 @@ const MinifiedPlayer = ({
           onMouseDown={handleMouseDownSeek}
           onMouseUp={handleMouseUpSeek}
         />
-        {seek !== 0 && (
-          <span
-            className={progressBarStyles.progressBar}
-            style={{
-              width: progressPercent,
-              transition: `${isUserSeeking ? null : "0.3s ease"}`
-            }}
-          ></span>
-        )}
+        <span
+          className={progressBarStyles.progressBar}
+          style={{ width: progressPercent }}
+        ></span>
       </div>
       <div
-        className={`${styles.playerWrapper} ${styles.miniPlayer}`}
+        className={`${styles.playerWrapper} ${styles.miniPlayer} ${progressBarStyles.playerWrapper}`}
         tabIndex={isMobile ? 0 : null}
         role="button"
         onClick={isMobile ? handleToggleExpand : null}
@@ -97,6 +93,9 @@ const MinifiedPlayer = ({
           <FontAwesomeIcon icon={isPlaying ? faPauseCircle : faPlay} />
         </button>
         <div className={styles.desktopButtonGroup}>
+          <span className={progressBarStyles.timeContainer}>
+            {secondsToFormatted(isUserSeeking ? userSeekPos : seek || 0)}
+          </span>
           <button
             type="button"
             className={styles.backwardButton}
@@ -118,6 +117,9 @@ const MinifiedPlayer = ({
           >
             <ForwardIcon />
           </button>
+          <span className={progressBarStyles.timeContainer}>
+            {secondsToFormatted(duration || 0)}
+          </span>
         </div>
 
         <div className={styles.volumeSlider}>
