@@ -10,7 +10,8 @@ import {
   pause,
   play,
   setDuration,
-  setSeek
+  setSeek,
+  setVolume
 } from "../redux/actions/playerActions";
 import ExpandedPlayer from "./expanded-player";
 import MinifiedPlayer from "./minified-player";
@@ -23,6 +24,8 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [userSeekPos, setUserSeekPos] = useState(0);
   const [isUserSeeking, setIsUserSeeking] = useState(false);
+  const [userVolumeValue, setUserVolumeValue] = useState(volume);
+  const [isUserSettingVolume, setIsUserSettingVolume] = useState(false);
 
   const soundcloudPlayer = useRef(null);
   const spotifyPlayer = useRef(null);
@@ -106,6 +109,22 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
     setIsUserSeeking(false);
   }
 
+  function handleOnChangeVolume(e) {
+    if (isUserSettingVolume) {
+      setUserVolumeValue(e.target.value);
+    }
+  }
+
+  function handleMouseDownVolume() {
+    setIsUserSettingVolume(true);
+  }
+
+  function handleMouseUpVolume() {
+    const newVolumeValue = Number(userVolumeValue);
+
+    dispatch(setVolume(newVolumeValue));
+  }
+
   const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
 
   return (
@@ -167,11 +186,17 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
           isPlaying={isPlaying}
           seek={seek}
           duration={duration}
+          volume={volume}
           isUserSeeking={isUserSeeking}
           userSeekPos={Number(userSeekPos)}
           handleOnChangeUserSeek={handleOnChangeUserSeek}
           handleMouseDownSeek={handleMouseDownSeek}
           handleMouseUpSeek={handleMouseUpSeek}
+          isUserSettingVolume={isUserSettingVolume}
+          userVolumeValue={userVolumeValue}
+          handleOnChangeVolume={handleOnChangeVolume}
+          handleMouseDownVolume={handleMouseDownVolume}
+          handleMouseUpVolume={handleMouseUpVolume}
         />
       </CSSTransition>
     </>
