@@ -131,6 +131,12 @@ export default function(state = initialState, action) {
         index: action.payload
       };
     }
+    case "SET_VOLUME": {
+      return {
+        ...state,
+        volume: action.payload
+      };
+    }
     default:
       return state;
   }

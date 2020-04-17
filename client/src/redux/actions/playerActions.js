@@ -83,3 +83,10 @@ export function setQueueIndex(i) {
     payload: i
   };
 }
+
+export function setVolume(newVolume) {
+  return {
+    type: "SET_VOLUME",
+    payload: newVolume
+  };
+}
