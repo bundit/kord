@@ -24,6 +24,11 @@ store.subscribe(() => {
         search: [],
         more: []
       }
+    },
+    player: {
+      ...state.player,
+      isPlaying: false,
+      seek: 0
     }
   });
 });
