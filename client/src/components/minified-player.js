@@ -2,7 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleUp,
   faPlay,
-  faPauseCircle
+  faPauseCircle,
+  faVolumeMute,
+  faVolumeDown,
+  faVolumeUp
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
@@ -45,6 +48,21 @@ const MinifiedPlayer = ({
 
   const progress = (isUserSeeking ? userSeekPos : seek) / duration;
   const progressPercent = `${progress * 100}%`;
+
+  const currentVolumeValue = Number(
+    isUserSettingVolume ? userVolumeValue : volume
+  );
+  const sliderWidth = 125; // px
+
+  const volumeWidth = currentVolumeValue * sliderWidth;
+  const volumeRight = sliderWidth - volumeWidth;
+
+  const volumeIcon =
+    currentVolumeValue === 0
+      ? faVolumeMute
+      : currentVolumeValue < 0.5
+      ? faVolumeDown
+      : faVolumeUp;
   return (
     <div className={styles.playerAndSeekContainer}>
       <div className={progressBarStyles.progressContainer}>
@@ -129,7 +147,13 @@ const MinifiedPlayer = ({
         </div>
 
         <div className={styles.volumeWrapper}>
-          <span className={styles.volumeLowerFill}></span>
+          <span className={styles.volumeIconWrapper}>
+            <FontAwesomeIcon icon={volumeIcon} size="sm" />
+          </span>
+          <span
+            className={styles.volumeLowerFill}
+            style={{ width: volumeWidth, right: volumeRight }}
+          ></span>
           <input
             type="range"
             className={styles.volumeSlider}
