@@ -28,7 +28,11 @@ const SpotifyPlayer = ({
       }
 
       if (!player.current) {
-        player.current = new SpotifyWebPlaybackSdk(playerName, fetchToken);
+        player.current = new SpotifyWebPlaybackSdk(
+          playerName,
+          fetchToken,
+          volume
+        );
         player.current.initPlayer();
         player.current.onTrackEnd = onEnd;
         player.current.onReady = onReady;
@@ -38,7 +42,7 @@ const SpotifyPlayer = ({
           forwardRef.current = player.current;
         }
       }
-    };
+    }; //eslint-disable-next-line
   }, []);
 
   const prevTrack = usePrevious(track);
@@ -73,8 +77,15 @@ const SpotifyPlayer = ({
         // Track hasnt changed, just pause
         spotifyPlayer.pause();
       }
-    }
+      // Omit prevTrack, it can only change if track changes
+    } //eslint-disable-next-line
   }, [track, isPlaying]);
+
+  useEffect(() => {
+    if (player.current) {
+      player.current.setVolume(volume);
+    }
+  }, [volume]);
 
   return <></>;
 };
@@ -88,9 +99,10 @@ function useSpotifyWebPlaybackSdkScript() {
 }
 
 class SpotifyWebPlaybackSdk {
-  constructor(playerName, fetchToken) {
+  constructor(playerName, fetchToken, volume) {
     this.playerName = playerName;
     this.fetchToken = fetchToken;
+    this.volume = volume;
     this.accessToken = null;
 
     this.deviceId = null;
@@ -103,7 +115,7 @@ class SpotifyWebPlaybackSdk {
     this.player = new window.Spotify.Player({
       name: this.playerName,
       getOAuthToken: this.fetchAndSetToken,
-      volume: 1
+      volume: this.volume || 1
     });
 
     this.addListeners();
@@ -214,6 +226,12 @@ class SpotifyWebPlaybackSdk {
     } else {
       throw new Error("SpotifyPlayer isn't enabled");
     }
+  }
+
+  setVolume(volume) {
+    this.volume = volume;
+
+    this.player.setVolume(volume);
   }
 
   getPlaybackState() {
