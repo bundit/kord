@@ -16,7 +16,7 @@ import { formatArtistName } from "../utils/formatArtistName";
 import { getImgUrl } from "../utils/getImgUrl";
 import { nextTrack, prevTrack } from "../redux/actions/playerActions";
 import { useMobileDetection } from "../utils/hooks";
-import placeholderImg from "../assets/placeholder.png";
+import placeholderImg from "../assets/track-placeholder.jpg";
 import progressBarStyles from "../styles/progressBar.module.css";
 import secondsToFormatted from "../utils/secondsToFormatted";
 import styles from "../styles/player.module.css";
@@ -29,10 +29,16 @@ const MinifiedPlayer = ({
   isUserSeeking,
   userSeekPos,
   seek,
+  volume,
   duration,
   handleOnChangeUserSeek,
   handleMouseDownSeek,
-  handleMouseUpSeek
+  handleMouseUpSeek,
+  isUserSettingVolume,
+  userVolumeValue,
+  handleOnChangeVolume,
+  handleMouseDownVolume,
+  handleMouseUpVolume
 }) => {
   const isMobile = useMobileDetection();
   const dispatch = useDispatch();
@@ -122,8 +128,19 @@ const MinifiedPlayer = ({
           </span>
         </div>
 
-        <div className={styles.volumeSlider}>
-          <input type="range" className={styles.slider} />
+        <div className={styles.volumeWrapper}>
+          <span className={styles.volumeLowerFill}></span>
+          <input
+            type="range"
+            className={styles.volumeSlider}
+            value={isUserSettingVolume ? userVolumeValue : volume}
+            min="0"
+            max="1"
+            step="0.05"
+            onChange={handleOnChangeVolume}
+            onMouseDown={handleMouseDownVolume}
+            onMouseUp={handleMouseUpVolume}
+          />
         </div>
       </div>
     </div>
