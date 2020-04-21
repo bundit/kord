@@ -17,7 +17,7 @@ router.get(
       "user-top-read",
       "playlist-read-collaborative",
       "user-read-currently-playing",
-      // "playlist-read-private",
+      "playlist-read-private",
       "user-follow-read",
       "user-read-recently-played",
       "playlist-modify-private",
