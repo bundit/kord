@@ -13,15 +13,15 @@ router.use("/spotify", spotifyAuthRoutes);
 
 router.get("/token", (req, res, next) => {
   passport.authenticate("jwt", (err, user, info) => {
-    const expires = Date.now() + parseInt(process.env.JWT_TOKEN_EXPIRE, 10);
-
     if (err) {
-      return res.send(err);
+      return res.status(403).json({ message: info });
     }
 
     if (!user) {
-      return res.send(`user is not logged in & info = ${info}`);
+      return res.status(401).json({ message: info });
     }
+
+    const expires = Date.now() + parseInt(process.env.JWT_TOKEN_EXPIRE, 10);
 
     const newToken = jwt.sign(
       {
@@ -38,25 +38,24 @@ router.get("/token", (req, res, next) => {
       // secure: process.env.NODE_ENV === "production"
     });
 
-    return res.send("OK");
+    return res.status(200).json({ message: "success" });
   })(req, res, next);
 });
 
 router.get("/:provider/refresh", (req, res, next) => {
   passport.authenticate("jwt", async (err, user, info) => {
-    const userCookie = req.cookies.kordUser;
-    const kordUser = jwtDecode(userCookie);
-    const { provider } = req.params;
-
     if (err) {
-      return res.send(err);
+      return res.status(403).json({ message: info });
     }
 
     if (!user) {
-      return res.send(`user is not logged in & info = ${info}`);
+      return res.status(401).json({ message: info });
     }
 
-    // const
+    const { provider } = req.params;
+    const userCookie = req.cookies.kordUser;
+    const kordUser = jwtDecode(userCookie);
+
     const query = {
       text: `SELECT *
              FROM (users JOIN user_profiles
@@ -64,16 +63,16 @@ router.get("/:provider/refresh", (req, res, next) => {
              WHERE users.email=$1 AND user_profiles.oauth_provider=$2`,
       values: [kordUser.email, provider]
     };
-    // const data = db.query(query);
+
     const {
       rows: [firstRow]
     } = await db.query(query);
 
     if (!firstRow) {
-      return res.send("Error: provider connection does not exist");
+      return res.status(404).json({ message: "User not found" });
     }
 
-    refresh.requestNewAccessToken(
+    return refresh.requestNewAccessToken(
       firstRow.oauth_provider,
       firstRow.refresh_token,
       (error, accessToken) => {
