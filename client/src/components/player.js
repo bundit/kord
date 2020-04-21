@@ -251,10 +251,11 @@ function useRenderSeekPosition(
       // We need to check if seek is a number because there is a race condition in howler
       // where it will return the howler object if there is a playLock on it.
       if (typeof currentPos === "number") {
+        currentPos = parseFloat(currentPos.toFixed(1));
         dispatch(setSeek(currentPos));
       }
 
-      setTimeout(() => (theRaf.current = raf(renderSeekPos)), 300);
+      theRaf.current = raf(renderSeekPos);
     }
 
     if (isPlaying) {
