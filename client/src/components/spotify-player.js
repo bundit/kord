@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
@@ -18,13 +19,18 @@ const SpotifyPlayer = ({
 }) => {
   const dispatch = useDispatch();
   const player = useRef(null);
+  const history = useHistory();
 
   useSpotifyWebPlaybackSdkScript();
 
   useEffect(() => {
     window.onSpotifyWebPlaybackSDKReady = () => {
       function fetchToken() {
-        return dispatch(refreshSpotifyToken());
+        return dispatch(refreshSpotifyToken()).catch(e => {
+          if (e.status === 401) {
+            history.push("/login");
+          }
+        });
       }
 
       if (!player.current) {
@@ -42,7 +48,7 @@ const SpotifyPlayer = ({
           forwardRef.current = player.current;
         }
       }
-    }; //eslint-disable-next-line
+    };
   }, []);
 
   const prevTrack = usePrevious(track);
@@ -69,13 +75,12 @@ const SpotifyPlayer = ({
         }
       }
     } else {
+      spotifyPlayer.pause();
       if (trackHasChanged) {
         // Isn't playing but track has changed, set isLoaded to false
         spotifyPlayer.isLoaded = false;
-        spotifyPlayer.pause();
       } else {
         // Track hasnt changed, just pause
-        spotifyPlayer.pause();
       }
       // Omit prevTrack, it can only change if track changes
     } //eslint-disable-next-line
