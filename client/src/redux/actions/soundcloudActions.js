@@ -26,27 +26,28 @@ export const getSoundcloudProfile = userId => async dispatch => {
     });
 };
 
-export const importScLikes = username => dispatch => {
+export const importScLikes = username => async dispatch => {
   let nextEndpoint = `${SC_API_BASE_URL}/users/${username}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
   const tracks = [];
-  let promise;
-  let count = 0;
+  let res;
 
-  do {
-    promise = fetchScTracks(nextEndpoint).then(
-      res => {
-        tracks.push(...res.tracks);
-        nextEndpoint = res.nextHref;
-      },
-      status => {
-        return Promise.reject(status);
-        nextEndpoint = null;
-      }
-    );
-    count++;
-  } while (nextEndpoint && count < 1);
+  try {
+    do {
+      res = await fetchScTracks(nextEndpoint).then(res => {
+        if (res.status < 200 || res.status >= 300) {
+          return Promise.reject(res);
+        }
+        return res;
+      });
 
-  return promise.then(() => dispatch(importSongs(tracks)));
+      tracks.push(...res.tracks);
+      nextEndpoint = res.nextHref;
+    } while (nextEndpoint);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+
+  dispatch(importSongs(tracks));
 };
 
 export const getUserSoundcloudPlaylists = username => dispatch => {

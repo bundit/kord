@@ -81,11 +81,13 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
           alert.success(`Soundcloud profile ${inputSuffix} connected`);
           setShowUsernameInput(false);
         })
-        .catch(e => {
-          if (e.status === 404) {
+        .catch(status => {
+          if (status === 404) {
             alert.error(`User ${inputSuffix} not found`);
+          } else if (status === 401) {
+            alert.error(`Soundcloud Error: Could not link`);
           } else {
-            alert.error(`Uncaught error ${e.status} handleSubmitUsername`);
+            alert.error(`Uncaught error ${status}`);
           }
         });
     } else {
