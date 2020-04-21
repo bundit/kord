@@ -74,7 +74,6 @@
 .trackWrapper {
   cursor: pointer;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: flex-start;
   min-height: 75px;
@@ -88,7 +87,6 @@
   position: relative;
   overflow: hidden;
   font-size: 12px;
-  transition: 0.3s ease-out;
   border-radius: 7px;
 }
 
@@ -101,24 +99,43 @@
   text-decoration: none;
 }
 
+.trackWrapper:focus,
+.trackWrapper:hover {
+  transition: 0.3s ease-out;
+  background-color: #2f3638;
+}
+
+.trackWrapper:hover .singleSource {
+  opacity: 1;
+}
+
 .titleWrapper {
+  pointer-events: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  pointer-events: none;
   flex-grow: 1;
+}
+
+.titleWrapper > div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stackedArtistName {
   color: #ffd46b;
 }
 
-.singleArtistName,
-.singleGenre,
-.singleTime,
+.singleSource {
+  transition: 0.3s ease-out;
+  opacity: 0;
+}
+
 .ellipsisV {
-  display: none;
-  margin-right: auto;
+  transition: 0.3s ease;
+  opacity: 0;
+  width: 100px;
   text-align: left;
 }
 
@@ -200,6 +217,7 @@
 }
 
 .playingNow {
+  transition: 0.3s ease-out;
   background-color: #2f3638;
 }
 
@@ -209,6 +227,7 @@
 
 .trackRightControls {
   margin-left: auto;
+  min-width: 45px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -230,19 +249,16 @@
 }
 
 .trackImageWrap img {
-  /* border: 1px grey solid; */
   width: inherit;
   height: inherit;
   box-sizing: border-box;
 }
 
 .trackImage {
-  /* border-radius: 0.5rem; */
   border-radius: 7px;
 }
 
 .artistImage {
-  /* border-radius: 50%; */
   border-radius: 7px;
 }
 
@@ -311,12 +327,13 @@
 }
 
 @media (min-width: 800px) {
-  .trackWrapper:focus,
-  .trackWrapper:hover {
-    background-color: #2f3638;
+  .singleSource {
+    margin-right: 30px;
   }
+
   .libraryWrapper {
-    padding: 2rem 2rem;
+    padding: 2rem 2rem 0 2rem;
+    margin-bottom: 80px;
   }
 
   .mobileCategoryList {
@@ -362,50 +379,17 @@
     display: none;
   }
 }
-.singleArtistName {
-  color: #ffd46b;
-}
 
 @media (min-width: 1025px) {
-  .ellipsisH,
-  .duration {
-    display: none;
-  }
-  .singleTime,
-  .ellipsisV {
-    display: block;
-  }
-
   .dropDownButton {
     margin-left: 0;
-  }
-
-  .singleTime {
-    width: 60px;
-    margin-right: 20px;
   }
 }
 
 @media (min-width: 1400px) {
-  .singleArtistName {
-    display: block;
-    width: 300px;
-  }
-
-  .stackedArtistName {
-    display: none;
-  }
-
-  .singleTime {
-    margin-right: auto;
-  }
 }
 
 @media (min-width: 1600px) {
-  .singleGenre {
-    width: 250px;
-    display: inline;
-  }
 }
 
 @keyframes mainBar {

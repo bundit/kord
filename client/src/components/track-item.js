@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import {
-  faPlus,
-  faEllipsisH,
-  faEllipsisV
-} from "@fortawesome/free-solid-svg-icons";
+  faSpotify,
+  faSoundcloud,
+  faYoutube
+} from "@fortawesome/free-brands-svg-icons";
 import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import React, { useState, useRef, useEffect } from "react";
@@ -11,7 +12,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { formatArtistName } from "../utils/formatArtistName";
 import { getImgUrl } from "../utils/getImgUrl";
 import msToDuration from "../utils/msToDuration";
-import placeholderImg from "../assets/placeholder.png";
+import placeholderImg from "../assets/track-placeholder.jpg";
 import rippleEffect from "../utils/rippleEffect";
 import styles from "../styles/library.module.css";
 
@@ -81,6 +82,8 @@ const TrackItem = ({
     []
   );
 
+  if (track.source === "soundcloud" && !track.streamable) return null;
+
   return (
     <div className={styles.relativeWrapper} ref={trackItemRef}>
       <LazyLoad height={60} overflow={true} offset={200}>
@@ -120,14 +123,23 @@ const TrackItem = ({
             <div>
               <strong>{title}</strong>
             </div>
-            <div className={styles.stackedArtistName}>
-              {artistName.toString()}
-            </div>
+            <div className={styles.stackedArtistName}>{artistName}</div>
           </div>
-          <div className={styles.singleArtistName}>{artistName.toString()}</div>
-          <div className={styles.singleGenre}>{genre}</div>
-          <div className={styles.singleSource}>{source}</div>
-          <div className={styles.singleTime}>{msToDuration(ms)}</div>
+          <div
+            className={styles.singleSource}
+            style={{ opacity: isActive && 1 }}
+          >
+            <FontAwesomeIcon
+              icon={
+                source === "spotify"
+                  ? faSpotify
+                  : source === "soundcloud"
+                  ? faSoundcloud
+                  : faYoutube
+              }
+              size="2x"
+            />
+          </div>
           <div className={styles.trackRightControls}>
             <div className={styles.duration}>{msToDuration(ms)}</div>
             {search && (
@@ -142,25 +154,25 @@ const TrackItem = ({
                 <FontAwesomeIcon icon={faPlus} />
               </button>
             )}
-            {!search && (
+            {/* {!search && (
               <button
                 type="button"
                 onClick={e => {
-                  toggleDropdown();
-                  e.stopPropagation();
+              toggleDropdown();
+              e.stopPropagation();
                 }}
                 className={`${styles.dropDownButton} ${
-                  isDropdownOpen ? styles.activeDropDown : ""
+              isDropdownOpen ? styles.activeDropDown : ""
                 }`}
               >
                 <span className={styles.ellipsisH}>
-                  <FontAwesomeIcon icon={faEllipsisH} />
+              <FontAwesomeIcon icon={faEllipsisH} />
                 </span>
                 <span className={styles.ellipsisV}>
-                  <FontAwesomeIcon size="2x" icon={faEllipsisV} />
+              <FontAwesomeIcon size="2x" icon={faEllipsisV} />
                 </span>
               </button>
-            )}
+            )} */}
           </div>
         </div>
       </LazyLoad>
