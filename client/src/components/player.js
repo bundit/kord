@@ -1,5 +1,6 @@
 import { CSSTransition } from "react-transition-group";
 import { connect, useDispatch } from "react-redux";
+import { useAlert } from "react-alert";
 import PropTypes from "prop-types";
 import React, { useState, useEffect, useRef } from "react";
 import ReactHowler from "react-howler";
@@ -29,7 +30,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
 
   const soundcloudPlayer = useRef(null);
   const spotifyPlayer = useRef(null);
-
+  const alert = useAlert();
   const dispatch = useDispatch();
 
   useSetDurationOnTrackChange(current);
@@ -125,6 +126,10 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
     dispatch(setVolume(newVolumeValue));
   }
 
+  function handleSpotifyAccountError() {
+    alert.error("Error: Spotify Premium Required");
+  }
+
   const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
 
   return (
@@ -149,6 +154,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
         track={current}
         onReady={handleSpotifyReady}
         onNotReady={handleSpotifyNotReady}
+        onAccountError={handleSpotifyAccountError}
       />
       {/* Expanded music player */}
       <CSSTransition

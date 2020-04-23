@@ -15,6 +15,7 @@ const SpotifyPlayer = ({
   onReady,
   onNotReady,
   onEnd,
+  onAccountError,
   volume
 }) => {
   const dispatch = useDispatch();
@@ -43,13 +44,19 @@ const SpotifyPlayer = ({
         player.current.onTrackEnd = onEnd;
         player.current.onReady = onReady;
         player.current.onNotReady = onNotReady;
+        player.current.onAccountError = onAccountError;
 
         if (forwardRef) {
           forwardRef.current = player.current;
         }
       }
     };
-    return () => player.current.disconnectPlayer();
+    return () => {
+      if (player.current) {
+        player.current.disconnectPlayer();
+      }
+      // componentDidMount
+    }; // eslint-disable-next-line
   }, []);
 
   const prevTrack = usePrevious(track);
@@ -149,9 +156,8 @@ class SpotifyWebPlaybackSdk {
   }
 
   load(trackId, tries = 3) {
-    console.log("loading");
     this.isLoaded = false;
-
+    this.currentTrack = trackId;
     if (!tries) {
       return console.error(`Couldn't load track ${trackId}`);
     }
@@ -163,6 +169,8 @@ class SpotifyWebPlaybackSdk {
           return this.fetchAndSetToken().then(() =>
             this.load(trackId, --tries)
           );
+        } else if (res.status === 403) {
+          return this.handleAccountError();
         } else if (res.status === 404) {
           console.log("error 404 on track PUT, trying to reinitialize");
           this.disconnectPlayer();
@@ -285,9 +293,11 @@ class SpotifyWebPlaybackSdk {
       console.error("authentication_error", e.message);
     });
     this.player.addListener("account_error", e => {
+      this.handleAccountError();
       console.error("account_error", e.message);
     });
     this.player.addListener("playback_error", e => {
+      this.load(this.currentTrack);
       console.error("playback_error", e);
     });
 
@@ -336,7 +346,16 @@ class SpotifyWebPlaybackSdk {
     }
 
     this.state = state;
-    this.progressMs = state.position;
+
+    if (state.position) {
+      this.progressMs = state.position;
+    }
+  }
+
+  handleAccountError() {
+    if (this.onAccountError) {
+      this.onAccountError();
+    }
   }
 }
 
