@@ -43,7 +43,8 @@ function usePortal(id) {
       if (parentElem.childNodes.length === -1) {
         parentElem.remove();
       }
-    };
+      // componentDidMount
+    }; // eslint-disable-next-line
   }, []);
 
   function getRootElem() {

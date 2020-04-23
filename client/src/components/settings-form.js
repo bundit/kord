@@ -44,11 +44,11 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
     } else {
       setShowUsernameInput(false);
     }
-  }, [source]);
+  }, [source, user]);
 
   useEffect(() => {
     setPlaylistSettings(sourcePlaylists);
-  }, [source, playlists]); // Safe to omit 'setPlaylistSettings'
+  }, [source, playlists, sourcePlaylists]);
 
   function onSubmit(e) {
     e.preventDefault();
