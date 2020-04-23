@@ -1,10 +1,4 @@
-import {
-  SEARCH,
-  SEARCH_ARTISTS,
-  LOAD_MORE_RESULTS,
-  SET_NEXT_HREF,
-  ADD_TO_SEARCH_HISTORY
-} from "../actions/types";
+import { ADD_TO_SEARCH_HISTORY } from "../actions/types";
 
 const initialState = {
   library: {
@@ -33,20 +27,6 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case "SEARCH_LIB_SONGS": {
-      return {
-        ...state,
-        library: {
-          songResults: action.payload
-        }
-      };
-    }
-    case "SEARCH_LIB_ARTISTS": {
-      return {
-        ...state,
-        artistResults: action.payload
-      };
-    }
     case "SEARCH_SC_SONGS": {
       return {
         ...state,
