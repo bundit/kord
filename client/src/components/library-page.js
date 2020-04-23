@@ -21,6 +21,8 @@ const Library = ({ songs, artists, playlists, currentTrackID, isPlaying }) => {
   const dispatch = useDispatch();
 
   function handlePlayTrack(track, tracklist) {
+    // Casting is needed sometimes
+    // eslint-disable-next-line
     const index = tracklist.findIndex(song => song.id == track.id);
 
     dispatch(setTrack(track));
