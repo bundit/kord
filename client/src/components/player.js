@@ -131,7 +131,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
     <>
       {current.source === "soundcloud" && (
         <ReactHowler
-          src={`${current.streamUrl}?client_id=${KEY}`}
+          src={`https://api.soundcloud.com/tracks/${current.id}/stream?client_id=${KEY}`}
           playing={isPlaying && current.source === "soundcloud"}
           onEnd={handleOnEnd}
           preload
