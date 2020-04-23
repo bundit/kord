@@ -1,4 +1,5 @@
 import { forceCheck } from "react-lazyload";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
 
@@ -14,6 +15,8 @@ const TrackList = ({
   currentTrackID,
   isPlaying
 }) => {
+  const queueIndex = useSelector(state => state.player.index);
+
   if (!songs.length && loadMoreTracks) {
     loadMoreTracks();
   }
@@ -34,7 +37,7 @@ const TrackList = ({
               search={search}
               handlePlay={() => handlePlay(track, songs)}
               addToLibrary={event => addToLibrary(event, track)}
-              isActive={currentTrackID === track.id}
+              isActive={currentTrackID === track.id && i === queueIndex}
               isPlaying={isPlaying}
             />
           ))}

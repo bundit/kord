@@ -137,8 +137,7 @@ function mapSpotifyResponseToTrackObjects(data) {
     .map(track => ({
       album: {
         title: track.album.name,
-        id: track.album.id,
-        externalUrl: track.album.external_urls.spotify
+        id: track.album.id
       },
       id: track.id,
       duration: track.duration_ms,
@@ -157,7 +156,6 @@ function mapSpotifyResponseToPlaylists(data) {
     id: item.id,
     title: item.name,
     images: item.images,
-    externalUrl: item.external_urls.spotify,
     source: "spotify",
     tracks: [],
     next: "start",
