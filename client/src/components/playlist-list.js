@@ -1,5 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare as farPlusSquare } from "@fortawesome/free-regular-svg-icons";
 import PropTypes from "prop-types";
 import React from "react";
 
@@ -7,7 +5,7 @@ import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
 import PlaylistItem from "./playlist-item";
 import styles from "../styles/library.module.css";
 
-const ListOfPlaylists = ({ playlists, toggleNewPlaylistForm }) => {
+const ListOfPlaylists = ({ playlists }) => {
   const allPlaylists = flattenPlaylistObject(playlists);
 
   const playlistComponents = allPlaylists
