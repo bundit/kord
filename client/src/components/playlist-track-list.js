@@ -20,7 +20,9 @@ const PlaylistTracklist = ({
   });
 
   useEffect(() => {
-    const playlistIndex = playlists[source].findIndex(p => p.id == id); // Use double eq for number ids (soundcloud)
+    // Casting needed sometimes
+    // eslint-disable-next-line
+    const playlistIndex = playlists[source].findIndex(p => p.id == id);
     const thePlaylist = playlists[source][playlistIndex];
     setCurrentPlaylist(thePlaylist);
   }, [id, playlists, source]);
