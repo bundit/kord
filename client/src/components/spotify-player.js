@@ -49,6 +49,7 @@ const SpotifyPlayer = ({
         }
       }
     };
+    return () => player.current.disconnectPlayer();
   }, []);
 
   const prevTrack = usePrevious(track);
@@ -128,6 +129,12 @@ class SpotifyWebPlaybackSdk {
     return this.player.connect();
   }
 
+  disconnectPlayer() {
+    if (this.player) {
+      this.player.disconnect();
+    }
+  }
+
   fetchAndSetToken(cb) {
     return this.fetchToken()
       .then(token => {
@@ -158,6 +165,8 @@ class SpotifyWebPlaybackSdk {
           );
         } else if (res.status === 404) {
           console.log("error 404 on track PUT, trying to reinitialize");
+          this.disconnectPlayer();
+
           return this.initPlayer().then(() => {
             console.log("Spoitfy player reinitialized");
             return this.load(trackId, --tries);
@@ -284,9 +293,9 @@ class SpotifyWebPlaybackSdk {
 
     // Playback status updates
     this.player.removeListener("player_state_changed");
-    this.player.addListener("player_state_changed", state =>
-      this.handleStateChange(state)
-    );
+    this.player.addListener("player_state_changed", state => {
+      this.handleStateChange(state);
+    });
 
     this.player.addListener("ready", data => {
       let d = new Date();
