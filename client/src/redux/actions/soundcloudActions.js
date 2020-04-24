@@ -226,6 +226,7 @@ function mapCollectionToPlaylists(collection) {
     externalUrl: item.permalink_url,
     source: "soundcloud",
     tracks: mapCollectionToTracks(item.tracks),
+    total: item.tracks.length,
     next: "start",
     isConnected: false
   }));

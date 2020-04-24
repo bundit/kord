@@ -55,10 +55,7 @@ export const importSavedSpotifyTracks = (
   dispatch(importSongs(tracks));
 };
 
-export const getUserSpotifyPlaylists = (
-  limit = 50,
-  offset = 0
-) => async dispatch => {
+export const getUserSpotifyPlaylists = (limit = 50, offset = 0) => dispatch => {
   return spotifyApi
     .getUserPlaylists({ limit, offset })
     .then(data => {
@@ -73,7 +70,7 @@ export const getUserSpotifyPlaylists = (
     });
 };
 
-export const getSpotifyPlaylistTracks = (id, next) => async dispatch => {
+export const getSpotifyPlaylistTracks = (id, next) => dispatch => {
   let data;
 
   if (!next) {
@@ -158,6 +155,7 @@ function mapSpotifyResponseToPlaylists(data) {
     images: item.images,
     source: "spotify",
     tracks: [],
+    total: item.tracks.total,
     next: "start",
     isConnected: false
   }));
