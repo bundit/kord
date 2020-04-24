@@ -1,76 +1,99 @@
-import { forceCheck } from "react-lazyload";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useState, useRef } from "react";
 
+import { usePrevious } from "../utils/hooks";
 import TrackItem from "./track-item";
 import styles from "../styles/library.module.css";
 
 const TrackList = ({
-  search,
+  trackListId,
   songs,
   handlePlay,
-  addToLibrary,
   loadMoreTracks,
   currentTrackID,
   isPlaying
 }) => {
+  const incrementValue = 15;
+  const [numShowTracks, setNumShowTracks] = useState(incrementValue);
+  const prevTracklistId = usePrevious(trackListId);
+  const scrollContainer = useRef(null);
   const queueIndex = useSelector(state => state.player.index);
 
-  if (!songs.length && loadMoreTracks) {
-    loadMoreTracks();
+  React.useEffect(() => {
+    if (!songs.length && loadMoreTracks) {
+      loadMoreTracks();
+    }
+  }, [songs, loadMoreTracks]);
+
+  React.useEffect(() => {
+    if (prevTracklistId === trackListId) return;
+
+    setNumShowTracks(incrementValue);
+    if (scrollContainer.current) {
+      scrollContainer.current.scrollTo({ top: 0, left: 0 });
+    }
+  }, [prevTracklistId, trackListId]);
+
+  function showMoreTracks() {
+    setNumShowTracks(numShowTracks + incrementValue);
   }
-  const detectScroll = useScrollDetection(loadMoreTracks);
-  useCheckViewpointComponentsOnUpdate(songs);
+
+  const loadTracksOnScroll = useLoadTracksOnScroll(
+    songs,
+    numShowTracks,
+    showMoreTracks,
+    loadMoreTracks
+  );
+
+  function handlePlayTrack(track) {
+    handlePlay(track, songs);
+  }
 
   return (
-    <>
-      <div
-        className={styles.libraryWrapper}
-        onScroll={loadMoreTracks ? detectScroll : null}
-      >
-        {songs &&
-          songs.map((track, i) => (
+    <div
+      ref={scrollContainer}
+      className={styles.libraryWrapper}
+      onScroll={loadTracksOnScroll}
+    >
+      {songs &&
+        songs
+          .slice(0, numShowTracks)
+          .map((track, i) => (
             <TrackItem
               key={`${track.id}${track.source}${i}`}
               track={track}
-              search={search}
-              handlePlay={() => handlePlay(track, songs)}
-              addToLibrary={event => addToLibrary(event, track)}
+              handlePlay={handlePlayTrack}
               isActive={currentTrackID === track.id && i === queueIndex}
               isPlaying={isPlaying}
             />
           ))}
-      </div>
-    </>
+    </div>
   );
 };
 
-function useScrollDetection(loadMoreTracks) {
+function useLoadTracksOnScroll(
+  tracks,
+  numCurrentlyShown,
+  showMoreTracks,
+  loadMoreTracks
+) {
   return function(e) {
     const eScrollTop = e.target.scrollTop;
     const eHeight = e.target.getBoundingClientRect().height;
     const eScrollHeight = e.target.scrollHeight - 10;
     if (eScrollTop + eHeight >= eScrollHeight) {
-      loadMoreTracks();
+      showMoreTracks();
+      if (tracks.length < numCurrentlyShown) {
+        loadMoreTracks();
+      }
     }
   };
 }
 
-function useCheckViewpointComponentsOnUpdate(songs) {
-  useEffect(() => {
-    // This will ensure that components that come into viewport during
-    // a filter will be rendered. Lazyload only checks on scroll events,
-    // so this way we force lazyload to check visible components
-    forceCheck();
-  }, [songs]);
-}
-
 TrackList.propTypes = {
-  search: PropTypes.bool,
   songs: PropTypes.arrayOf(PropTypes.object),
-  handlePlay: PropTypes.func,
-  addToLibrary: PropTypes.func,
+  handlePlay: PropTypes.func.isRequired,
   loadMoreTracks: PropTypes.func,
   isPlaying: PropTypes.bool.isRequired,
   currentTrackID: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
@@ -78,14 +101,9 @@ TrackList.propTypes = {
 };
 
 TrackList.defaultProps = {
-  search: false,
   songs: [],
   handlePlay: () => {},
-  addToLibrary: () => {},
-  loadMoreTracks: () => {},
-  toggleAddToPlaylistForm: () => {},
-  toggleEditTrackForm: () => {},
-  toggleDeleteTrackForm: () => {}
+  loadMoreTracks: null
 };
 
 export default TrackList;

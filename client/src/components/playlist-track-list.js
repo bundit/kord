@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { getSpotifyPlaylistTracks } from "../redux/actions/spotifyActions";
 import TrackList from "./track-list";
@@ -13,31 +13,24 @@ const PlaylistTracklist = ({
   currentTrackID,
   dispatchLoadMoreTracks
 }) => {
-  const [currentPlaylist, setCurrentPlaylist] = useState({
-    id: 0,
-    next: null,
-    tracks: []
-  });
-
-  useEffect(() => {
-    // Casting needed sometimes
-    // eslint-disable-next-line
-    const playlistIndex = playlists[source].findIndex(p => p.id == id);
-    const thePlaylist = playlists[source][playlistIndex];
-    setCurrentPlaylist(thePlaylist);
-  }, [id, playlists, source]);
+  // eslint-disable-next-line
+  const playlistIndex = playlists[source].findIndex(p => p.id == id);
+  const currentPlaylist = playlists[source][playlistIndex];
 
   const tracks = currentPlaylist ? currentPlaylist.tracks : [];
 
+  function handleLoadMoreTracks() {
+    dispatchLoadMoreTracks(source, id, currentPlaylist.next);
+  }
+
   return (
     <TrackList
+      trackListId={id}
       songs={tracks}
       handlePlay={handlePlay}
       currentTrackID={currentTrackID}
       isPlaying={isPlaying}
-      loadMoreTracks={() =>
-        dispatchLoadMoreTracks(source, id, currentPlaylist.next)
-      }
+      loadMoreTracks={handleLoadMoreTracks}
     />
   );
 };
