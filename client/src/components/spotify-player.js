@@ -347,7 +347,7 @@ class SpotifyWebPlaybackSdk {
 
     this.state = state;
 
-    if (state.position) {
+    if (state) {
       this.progressMs = state.position;
     }
   }
