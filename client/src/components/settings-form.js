@@ -96,6 +96,19 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
   }
 
   const dispatch = useDispatch();
+
+  function showInput() {
+    setShowUsernameInput(true);
+  }
+
+  function handleInputChange(e) {
+    setUsernameInput(e.target.value);
+  }
+
+  function handleSync() {
+    handleUpdate(source, usernameInput.slice(15));
+  }
+
   return (
     <Modal
       title={`${capitalizeWord(source)} Connection Settings`}
@@ -116,9 +129,9 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
               {source === "soundcloud" ? (
                 <button
                   className={styles.editUsernameButton}
-                  onClick={() => setShowUsernameInput(true)}
+                  onClick={showInput}
                 >
-                  {settings && settings.username}{" "}
+                  {settings && settings.username}
                   <FontAwesomeIcon icon={faPen} size="sm" />
                 </button>
               ) : (
@@ -154,7 +167,7 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
                     className={styles.usernameInput}
                     type="text"
                     placeholder="Enter Soundcloud Profile URL"
-                    onChange={e => setUsernameInput(e.target.value)}
+                    onChange={handleInputChange}
                     value={usernameInput}
                   />
                   <button type="submit" style={{ marginLeft: "auto" }}>
@@ -169,7 +182,7 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
         <button
           className={styles.syncButton}
           type="button"
-          onClick={() => handleUpdate(source, usernameInput.slice(15))}
+          onClick={handleSync}
         >
           <FontAwesomeIcon size="2x" icon={faSync} />
         </button>
@@ -189,7 +202,8 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
                 value={
                   playlistSettings[i] ? playlistSettings[i].isConnected : null
                 }
-                onChange={() => toggleCheckbox(i)}
+                numTracks={playlist.total}
+                onChange={toggleCheckbox}
               />
             ))}
         </div>
