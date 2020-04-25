@@ -1,6 +1,7 @@
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import React from "react";
 
+import { getSoundcloudLikes } from "../redux/actions/soundcloudActions";
 import { getSpotifyPlaylistTracks } from "../redux/actions/spotifyActions";
 import TrackList from "./track-list";
 
@@ -10,9 +11,9 @@ const PlaylistTracklist = ({
   isPlaying,
   playlists,
   handlePlay,
-  currentTrackID,
-  dispatchLoadMoreTracks
+  currentTrackID
 }) => {
+  const dispatch = useDispatch();
   // eslint-disable-next-line
   const playlistIndex = playlists[source].findIndex(p => p.id == id);
   const currentPlaylist = playlists[source][playlistIndex];
@@ -20,7 +21,9 @@ const PlaylistTracklist = ({
   const tracks = currentPlaylist ? currentPlaylist.tracks : [];
 
   function handleLoadMoreTracks() {
-    dispatchLoadMoreTracks(source, id, currentPlaylist.next);
+    dispatch(
+      loadMoreTracks(source, id, currentPlaylist && currentPlaylist.next)
+    );
   }
 
   return (
@@ -36,17 +39,15 @@ const PlaylistTracklist = ({
 };
 
 const loadMoreTracks = (source, id, next) => dispatch => {
+  if (!next) {
+    return;
+  }
+
   if (source === "spotify") {
     return dispatch(getSpotifyPlaylistTracks(id, next));
+  } else if (source === "soundcloud" && id === "likes") {
+    return dispatch(getSoundcloudLikes(next));
   }
 };
 
-const mapDispatchToProps = dispatch => ({
-  dispatchLoadMoreTracks: (source, id, next) =>
-    dispatch(loadMoreTracks(source, id, next))
-});
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(PlaylistTracklist);
+export default PlaylistTracklist;

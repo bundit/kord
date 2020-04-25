@@ -1,3 +1,6 @@
+import { getSoundcloudProfile } from "./soundcloudActions";
+import { setSpotifyProfile } from "./spotifyActions";
+
 export const setAccessToken = (source, token) => {
   return {
     type: "SET_ACCESS_TOKEN",
@@ -20,4 +23,12 @@ export const setUserProfile = (source, profile) => {
     source,
     payload: profile
   };
+};
+
+export const fetchProfile = (source, user) => dispatch => {
+  if (source === "spotify") {
+    return dispatch(setSpotifyProfile());
+  } else if (source === "soundcloud") {
+    return dispatch(getSoundcloudProfile(user));
+  }
 };

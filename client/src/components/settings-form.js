@@ -10,10 +10,12 @@ import React, { useState, useEffect } from "react";
 
 import { capitalizeWord } from "../utils/capitalizeWord";
 import {
-  getSoundcloudProfile,
-  importScLikes
-} from "../redux/actions/soundcloudActions";
-import { removeLibraryTracks } from "../redux/actions/libraryActions";
+  clearTrash,
+  fetchPlaylists,
+  movePlaylistsToTrash,
+  restorePlaylistsFromTrash
+} from "../redux/actions/libraryActions";
+import { getSoundcloudProfile } from "../redux/actions/soundcloudActions";
 import FormCheckbox from "./form-checkbox";
 import Modal from "./modal";
 import placeholderImg from "../assets/placeholder.png";
@@ -26,6 +28,7 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
   const settings = user[source];
   const [playlistSettings, setPlaylistSettings] = useState(sourcePlaylists); // TODO this updates redux state but idk why
   const alert = useAlert();
+  const dispatch = useDispatch();
 
   // Soundcloud edit fields
   const isScConnected = useSelector(state => state.user.soundcloud.isConnected);
@@ -74,28 +77,29 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
 
     if (usernameInput.length > 15 && inputPrefix === "soundcloud.com/") {
       // TODO add more input validation here
+      dispatch(movePlaylistsToTrash("soundcloud"));
+
       dispatch(getSoundcloudProfile(inputSuffix))
-        .then(() => dispatch(removeLibraryTracks("soundcloud")))
-        .then(() => dispatch(importScLikes(inputSuffix)))
-        .then(function success() {
-          alert.success(`Soundcloud profile ${inputSuffix} connected`);
+        .then(() => dispatch(fetchPlaylists(source, inputSuffix)))
+        .then(() => {
+          dispatch(clearTrash("soundcloud"));
           setShowUsernameInput(false);
+          alert.success(`Soundcloud profile ${inputSuffix} connected`);
         })
-        .catch(status => {
-          if (status === 404) {
+        .catch(e => {
+          dispatch(restorePlaylistsFromTrash("soundcloud"));
+          if (e.status === 404) {
             alert.error(`User ${inputSuffix} not found`);
-          } else if (status === 401) {
+          } else if (e.status === 401) {
             alert.error(`Soundcloud Error: Could not link`);
           } else {
-            alert.error(`Uncaught error ${status}`);
+            alert.error(`Uncaught error ${e}`);
           }
         });
     } else {
       alert.error("Invalid Soundcloud profile URL");
     }
   }
-
-  const dispatch = useDispatch();
 
   function showInput() {
     setShowUsernameInput(true);
@@ -106,7 +110,7 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
   }
 
   function handleSync() {
-    handleUpdate(source, usernameInput.slice(15));
+    return handleUpdate(source, usernameInput.slice(15));
   }
 
   return (

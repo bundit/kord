@@ -1,5 +1,5 @@
 import { ADD_TO_SEARCH_HISTORY, IMPORT_SONG } from "./types";
-import { importPlaylists, importSongs } from "./libraryActions";
+import { importLikes, importPlaylists } from "./libraryActions";
 import { setConnection, setUserProfile } from "./userActions";
 
 const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
@@ -20,34 +20,45 @@ export const getSoundcloudProfile = userId => async dispatch => {
     })
     .then(json => {
       const profile = mapJsonToProfileObject(json);
+      const beginHref = `${SC_API_BASE_URL}/users/${json.permalink}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
 
+      const userLikes = {
+        id: "likes",
+        title: "Soundcloud Likes",
+        images: null,
+        source: "soundcloud",
+        tracks: [],
+        total: json.public_favorites_count,
+        next: beginHref,
+        isConnected: false
+      };
+
+      dispatch(importLikes("soundcloud", userLikes));
       dispatch(setUserProfile("soundcloud", profile));
       dispatch(setConnection("soundcloud", true));
     });
 };
 
-export const importScLikes = username => async dispatch => {
-  let nextEndpoint = `${SC_API_BASE_URL}/users/${username}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
-  const tracks = [];
-  let res;
+export const getSoundcloudLikes = next => dispatch => {
+  return fetch(next)
+    .then(res => {
+      if (res.status < 200 || res.status >= 300) {
+        return Promise.reject(res);
+      }
 
-  try {
-    do {
-      res = await fetchScTracks(nextEndpoint).then(res => {
-        if (res.status < 200 || res.status >= 300) {
-          return Promise.reject(res);
-        }
-        return res;
-      });
+      return res.json();
+    })
+    .then(json => {
+      const tracks = mapCollectionToTracks(json.collection);
+      const next = json.next_href;
 
-      tracks.push(...res.tracks);
-      nextEndpoint = res.nextHref;
-    } while (nextEndpoint);
-  } catch (error) {
-    return Promise.reject(error);
-  }
+      const likes = {
+        tracks,
+        next
+      };
 
-  dispatch(importSongs(tracks));
+      dispatch(importLikes("soundcloud", likes));
+    });
 };
 
 export const getUserSoundcloudPlaylists = username => dispatch => {
@@ -227,7 +238,6 @@ function mapCollectionToPlaylists(collection) {
     source: "soundcloud",
     tracks: mapCollectionToTracks(item.tracks),
     total: item.tracks.length,
-    next: "start",
     isConnected: false
   }));
 }

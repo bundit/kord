@@ -73,9 +73,7 @@ export const getUserSpotifyPlaylists = (limit = 50, offset = 0) => dispatch => {
 export const getSpotifyPlaylistTracks = (id, next) => dispatch => {
   let data;
 
-  if (!next) {
-    return;
-  } else if (next === "start") {
+  if (next === "start") {
     data = spotifyApi.getPlaylistTracks(id);
   } else {
     data = spotifyApi.getGeneric(next);

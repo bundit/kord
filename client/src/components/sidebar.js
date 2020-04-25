@@ -11,15 +11,9 @@ import { useAlert } from "react-alert";
 import React, { useState } from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
+import { fetchPlaylists } from "../redux/actions/libraryActions";
+import { fetchProfile } from "../redux/actions/userActions";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
-import {
-  getSoundcloudProfile,
-  getUserSoundcloudPlaylists
-} from "../redux/actions/soundcloudActions";
-import {
-  getUserSpotifyPlaylists,
-  setSpotifyProfile
-} from "../redux/actions/spotifyActions";
 import ConnectedSourceButton from "./connected-source-button";
 import PlaylistItem from "./playlist-item";
 import SettingsForm from "./settings-form";
@@ -56,8 +50,8 @@ const Sidebar = ({ user, playlists }) => {
     ));
 
   function handleUpdateProfile(source, username) {
-    dispatch(fetchPlaylists(source, username))
-      .then(() => dispatch(fetchProfile(source, username)))
+    return dispatch(fetchProfile(source, username))
+      .then(() => dispatch(fetchPlaylists(source, username)))
       .then(() => {
         alert.success("Profile Refreshed");
       })
@@ -151,22 +145,6 @@ const Sidebar = ({ user, playlists }) => {
       </div>
     </div>
   );
-};
-
-const fetchPlaylists = (source, username) => dispatch => {
-  if (source === "spotify") {
-    return dispatch(getUserSpotifyPlaylists());
-  } else if (source === "soundcloud") {
-    return dispatch(getUserSoundcloudPlaylists(username));
-  }
-};
-
-const fetchProfile = (source, user) => dispatch => {
-  if (source === "spotify") {
-    return dispatch(setSpotifyProfile());
-  } else if (source === "soundcloud") {
-    return dispatch(getSoundcloudProfile(user));
-  }
 };
 
 const mapStateToProps = state => ({
