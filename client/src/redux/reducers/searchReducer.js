@@ -1,127 +1,83 @@
 import { ADD_TO_SEARCH_HISTORY } from "../actions/types";
 
 const initialState = {
-  library: {
-    songResults: [],
-    artistResults: []
-  },
+  query: "",
   soundcloud: {
-    songResults: [],
-    artistResults: [],
-    nextHref: null
+    tracks: {},
+    artists: {}
   },
   spotify: {
-    songResults: [],
-    artistResults: [],
-    nextHref: null
+    tracks: {},
+    artists: {}
   },
   youtube: {
-    songResults: [],
-    nextHref: null
+    tracks: {}
   },
   mixcloud: {
-    songResults: []
+    tracks: {}
   },
   history: []
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case "SEARCH_SC_SONGS": {
+    case "SET_QUERY": {
       return {
         ...state,
-        soundcloud: {
-          songResults: action.payload
+        query: action.payload
+      };
+    }
+
+    case "SET_TRACK_RESULTS": {
+      const source = action.source;
+      const trackResults = action.payload;
+      return {
+        ...state,
+        [source]: {
+          ...state[source],
+          tracks: trackResults
         }
       };
     }
-    case "LOAD_MORE_SC_SONGS": {
+
+    case "SET_MORE_TRACK_RESULTS": {
+      const source = action.source;
+      const newTracks = action.payload;
       return {
         ...state,
-        soundcloud: {
-          songResults: [...state.soundcloud.songResults, ...action.payload]
+        [source]: {
+          ...state[source],
+          tracks: {
+            list: [...state[source].list, ...newTracks.list],
+            next: newTracks.next
+          }
         }
       };
     }
-    case "SET_NEXT_SC_HREF": {
+
+    case "SET_ARTIST_RESULTS": {
+      const source = action.source;
+      const artistResults = action.payload;
       return {
         ...state,
-        soundcloud: {
-          ...state.soundcloud,
-          nextHref: action.payload
+        [source]: {
+          ...state[source],
+          artists: artistResults
         }
       };
     }
-    case "SEARCH_SC_ARTISTS": {
-      return {
-        ...state,
-        soundcloud: {
-          artistResults: action.payload
-        }
-      };
-    }
-    case "SEARCH_SPOTIFY_SONGS": {
-      return {
-        ...state,
-        spotify: {
-          songResults: action.payload
-        }
-      };
-    }
-    case "LOAD_MORE_SPOTIFY_SONGS": {
-      return {
-        ...state,
-        spotify: {
-          songResults: [...state.spotify.songResults, ...action.payload]
-        }
-      };
-    }
-    case "SEARCH_SPOTIFY_ARTISTS": {
-      return {
-        ...state,
-        spotify: {
-          artistResults: action.payload
-        }
-      };
-    }
-    case "SEARCH_YOUTUBE_SONGS": {
-      return {
-        ...state,
-        youtube: {
-          songResults: action.payload
-        }
-      };
-    }
-    case "LOAD_MORE_YOUTUBE_SONGS": {
-      return {
-        ...state,
-        youtube: {
-          songResults: [...state.youtube.songResults, ...action.payload]
-        }
-      };
-    }
-    case "SEARCH_MIXCLOUD_SONGS": {
-      return {
-        ...state,
-        mixcloud: {
-          songResults: action.payload
-        }
-      };
-    }
-    case "LOAD_MORE_MIXCLOUD_SONGS": {
-      return {
-        ...state,
-        mixcloud: {
-          songResults: [...state.mixcloud.songResults, ...action.payload]
-        }
-      };
-    }
+
     case ADD_TO_SEARCH_HISTORY: {
+      const newQuery = action.payload;
+      let history = state.history.slice();
+      history = history.filter(query => query !== newQuery);
+
       return {
         ...state,
-        history: [action.payload, ...state.history]
+        history: [newQuery, ...history]
       };
     }
+
     default:
       return state;
   }
