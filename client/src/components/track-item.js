@@ -22,57 +22,60 @@ const TrackItem = ({ track, handlePlay, isActive, isPlaying }) => {
     handlePlay(track);
   }
 
-  if (track.source === "soundcloud" && !track.streamable) return null;
+  const isStreamable = track.streamable || track.streamable === null;
 
   return (
-    <div
-      className={`${styles.trackWrapper} ${isActive && styles.playingNow}`}
-      onClick={e => {
-        rippleEffect(e);
-      }}
-      onDoubleClick={handlePlayTrack}
-      role="button"
-      tabIndex="0"
-      onKeyPress={handlePlayTrack}
-    >
-      <div className={styles.trackImageWrap}>
-        <img
-          className={styles.trackImage}
-          src={track.img ? getImgUrl(track, "sm") : placeholderImg}
-          alt="track"
-        />
-        {isActive && (
-          <div className={styles.overlay}>
-            <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />
-            <div
-              className={`${styles.bar} ${styles.midBar} ${!isPlaying &&
-                styles.paused}`}
-            />
-            <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />
-          </div>
-        )}
-      </div>
-
-      <div className={styles.titleWrapper}>
-        <div>
-          <strong>{title}</strong>
+    <div style={{ position: "relative" }}>
+      <div
+        className={`${styles.trackWrapper} ${isActive &&
+          styles.playingNow} ${!isStreamable && styles.notStreamable}`}
+        onClick={e => {
+          rippleEffect(e);
+        }}
+        onDoubleClick={handlePlayTrack}
+        role="button"
+        tabIndex="0"
+        onKeyPress={handlePlayTrack}
+      >
+        <div className={styles.trackImageWrap}>
+          <img
+            className={styles.trackImage}
+            src={track.img ? getImgUrl(track, "sm") : placeholderImg}
+            alt="track"
+          />
+          {isActive && (
+            <div className={styles.overlay}>
+              <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />
+              <div
+                className={`${styles.bar} ${styles.midBar} ${!isPlaying &&
+                  styles.paused}`}
+              />
+              <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />
+            </div>
+          )}
         </div>
-        <div className={styles.stackedArtistName}>{artistName}</div>
-      </div>
-      <div className={styles.singleSource} style={{ opacity: isActive && 1 }}>
-        <FontAwesomeIcon
-          icon={
-            source === "spotify"
-              ? faSpotify
-              : source === "soundcloud"
-              ? faSoundcloud
-              : faYoutube
-          }
-          size="2x"
-        />
-      </div>
-      <div className={styles.trackRightControls}>
-        <div className={styles.duration}>{msToDuration(ms)}</div>
+
+        <div className={styles.titleWrapper}>
+          <div>
+            <strong>{title}</strong>
+          </div>
+          <div className={styles.stackedArtistName}>{artistName}</div>
+        </div>
+        <div className={styles.singleSource} style={{ opacity: isActive && 1 }}>
+          <FontAwesomeIcon
+            icon={
+              source === "spotify"
+                ? faSpotify
+                : source === "soundcloud"
+                ? faSoundcloud
+                : faYoutube
+            }
+            size="2x"
+          />
+        </div>
+        <div className={styles.trackRightControls}>
+          <div className={styles.duration}>{msToDuration(ms)}</div>
+        </div>
       </div>
     </div>
   );

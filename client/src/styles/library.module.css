@@ -6,63 +6,6 @@
   overflow: auto;
 }
 
-.searchForm {
-  padding-left: 45px;
-  width: 400px;
-  box-sizing: border-box;
-}
-
-.searchBar {
-  float: left;
-  display: block;
-  height: 35px;
-  width: 130px;
-  margin: 1rem auto;
-  padding-left: 20px;
-  border-radius: 7px;
-  border: none;
-  background-color: #bbb;
-  box-sizing: border-box;
-  transition: 0.4s ease;
-}
-
-.searchBar::placeholder {
-  color: black;
-}
-
-.searchBar:focus {
-  outline: none;
-  background-color: #fff;
-  width: 350px;
-}
-
-.searchBar:hover {
-  cursor: text;
-  background-color: #fff;
-}
-
-.searchIcon,
-.xButton {
-  position: fixed;
-  left: 4.5rem;
-  top: 7rem;
-  color: #aaa;
-  width: 2rem;
-  height: 2rem;
-}
-
-.xButton {
-  right: 4.5rem;
-  left: auto;
-  background-color: transparent;
-  border: none;
-}
-
-.relativeWrapper {
-  position: relative;
-  max-width: 1300px;
-}
-
 .artistLink {
   color: black;
   font-size: 14px;
@@ -221,6 +164,11 @@
   background-color: #2f3638;
 }
 
+.notStreamable {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .duration {
   color: #bbb;
 }
@@ -333,6 +281,7 @@
 
   .libraryWrapper {
     padding: 2rem 2rem 0 2rem;
+    margin-top: 80px;
     margin-bottom: 80px;
   }
 
