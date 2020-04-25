@@ -1,11 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NavLink, Route } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   faAngleLeft,
   faAngleRight,
-  faCogs,
-  faExpand
+  faCogs
 } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import React from "react";
@@ -14,7 +13,6 @@ import {
   searchSouncloudTracks,
   searchSoundcloudArtists
 } from "../../redux/actions/soundcloudActions";
-import CategoryList from "../category-list";
 import SearchBar from "../search-bar";
 import styles from "../../styles/header.module.css";
 
@@ -92,29 +90,6 @@ function Header({
             </button>
           </div>
         </div>
-
-        <Route
-          path="(/app/library|/app/search|/app/explore)"
-          render={() => (
-            <div className={styles.titleHeader}>
-              <div>
-                <h1>{title}</h1>
-                <span>No fluff. Just your music.</span>
-              </div>
-              <div style={{ marginLeft: "auto" }}>
-                <FontAwesomeIcon size="2x" icon={faExpand} />
-              </div>
-            </div>
-          )}
-        />
-        <Route
-          path="/app/library"
-          render={() => (
-            <CategoryList
-              categories={["Playlists", "Songs", "Artists", "Genres", "Albums"]}
-            />
-          )}
-        />
       </header>
     </>
   );

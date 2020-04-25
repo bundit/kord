@@ -3,18 +3,15 @@ import { connect, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
-import { formatArtistName } from "../utils/formatArtistName";
 import {
   setQueue,
   setQueueIndex,
   setTrack
 } from "../redux/actions/playerActions";
 import { useMobileDetection } from "../utils/hooks";
-import ArtistList from "./artist-list";
 import CategoryList from "./category-list";
 import ListOfPlaylists from "./playlist-list";
 import PlaylistTracklist from "./playlist-track-list";
-import TrackList from "./track-list";
 
 const Library = ({ songs, artists, playlists, currentTrackID, isPlaying }) => {
   const isMobile = useMobileDetection();
@@ -45,38 +42,6 @@ const Library = ({ songs, artists, playlists, currentTrackID, isPlaying }) => {
               location={location}
               render={() => (
                 <Switch>
-                  <Route
-                    exact
-                    path="/app/library/songs"
-                    render={() => (
-                      <TrackList
-                        songs={songs}
-                        handlePlay={handlePlayTrack}
-                        currentTrackID={currentTrackID}
-                        isPlaying={isPlaying}
-                      />
-                    )}
-                  />
-                  <Route
-                    exact
-                    path="/app/library/artists"
-                    render={() => <ArtistList artists={artists} />}
-                  />
-                  <Route
-                    path="/app/library/artists/:artist"
-                    render={props => (
-                      <TrackList
-                        songs={songs.filter(
-                          song =>
-                            formatArtistName(song.artist) ===
-                            props.match.params.artist
-                        )}
-                        handlePlay={handlePlayTrack}
-                        currentTrackID={currentTrackID}
-                        isPlaying={isPlaying}
-                      />
-                    )}
-                  />
                   <Route
                     exact
                     path="/app/library/playlists"
