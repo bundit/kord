@@ -1,43 +1,51 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NavLink } from "react-router-dom";
-import { connect } from "react-redux";
-import {
-  faAngleLeft,
-  faAngleRight,
-  faCogs
-} from "@fortawesome/free-solid-svg-icons";
+import { NavLink, useHistory } from "react-router-dom";
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
-import {
-  searchSouncloudTracks,
-  searchSoundcloudArtists
-} from "../../redux/actions/soundcloudActions";
+import { searchMusic, setQuery } from "../../redux/actions/searchActions";
 import SearchBar from "../search-bar";
 import styles from "../../styles/header.module.css";
 
-function Header({
-  history,
-  location,
-  libQuery,
-  setLibQuery,
-  resetQuery,
-  fetchQuery,
-  searchScTracks,
-  searchScArtists,
-  setSearchQuery
-}) {
+function Header({ location }) {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const { pathname } = location;
   const baseUrls = ["Library", "Search", "More", ""];
 
+  const query = useSelector(state => state.search.query);
+
+  function handleSearchChange(e) {
+    dispatch(setQuery(e.target.value));
+  }
+
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+    // TODO
+
+    dispatch(searchMusic(query));
+  }
+
+  function handleResetQuery() {
+    dispatch(setQuery(""));
+  }
+
+  function handleGoBack() {
+    history.goBack();
+  }
+
+  function handleGoForward() {
+    history.goForward();
+  }
+
   // Get only last route
   let title = pathname.slice(pathname.lastIndexOf("/") + 1);
-
   // Make it capitalized
   if (title.length > 0) {
     title = `${title[0].toUpperCase()}${title.slice(1)}`;
   }
-
   // Previous route within tab
   const prevRoute = pathname.slice(0, pathname.lastIndexOf("/"));
 
@@ -66,29 +74,29 @@ function Header({
       <header className={styles.deskHeader}>
         <div className={styles.deskHeaderContainer}>
           <div className={styles.navGroup}>
-            <button type="button" onClick={() => history.goBack()}>
+            <button type="button" onClick={handleGoBack}>
               <FontAwesomeIcon size="lg" icon={faAngleLeft} />
             </button>
             <button
               disabed={window.history.next}
               type="button"
-              onClick={() => history.goForward()}
+              onClick={handleGoForward}
             >
               <FontAwesomeIcon size="lg" icon={faAngleRight} />
             </button>
           </div>
           <SearchBar
             placeholder="Search for Music"
-            query={libQuery}
-            onChange={e => setLibQuery(e.target.value)}
-            onSubmit={() => console.log("handle submit search")}
-            onReset={resetQuery}
+            query={query}
+            onChange={handleSearchChange}
+            onSubmit={handleSearchSubmit}
+            onReset={handleResetQuery}
           />
-          <div className={styles.settingIconContainer}>
+          {/* <div className={styles.settingIconContainer}>
             <button type="button" onClick={() => history.push("/settings")}>
               <FontAwesomeIcon size="3x" icon={faCogs} />
             </button>
-          </div>
+          </div> */}
         </div>
       </header>
     </>
@@ -101,32 +109,4 @@ Header.propTypes = {
   }).isRequired
 };
 
-const mapStateToProps = state => ({
-  libQuery: state.form.query,
-  fetchQuery: state.search.query
-});
-
-const mapDispatchToProps = dispatch => ({
-  setLibQuery: query =>
-    dispatch({
-      type: "SET_LIB_QUERY",
-      payload: query
-    }),
-  resetQuery: () => dispatch({ type: "RESET_LIB_QUERY" }),
-  searchScTracks: query => {
-    dispatch(searchSouncloudTracks(query));
-  },
-  searchScArtists: query => {
-    dispatch(searchSoundcloudArtists(query));
-  },
-  setSearchQuery: query =>
-    dispatch({
-      type: "SET_SEARCH_QUERY",
-      query
-    })
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Header);
+export default Header;
