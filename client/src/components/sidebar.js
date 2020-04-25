@@ -11,6 +11,7 @@ import { useAlert } from "react-alert";
 import React, { useState } from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
+import { capitalizeWord } from "../utils/capitalizeWord";
 import { fetchPlaylists } from "../redux/actions/libraryActions";
 import { fetchProfile } from "../redux/actions/userActions";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
@@ -43,7 +44,7 @@ const Sidebar = ({ user, playlists }) => {
       <PlaylistItem
         sidebar
         key={`sidebar ${playlist.source} ${playlist.title} ${playlist.id}`}
-        title={playlist.title}
+        title={capitalizeWord(playlist.title)}
         id={playlist.id}
         source={playlist.source}
       />

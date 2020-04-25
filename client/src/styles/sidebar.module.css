@@ -17,10 +17,6 @@
   flex: 0 0 1 0;
 }
 
-.sidebarWrapper * {
-  font-size: 16px;
-}
-
 .sidebarHeader {
   min-height: 80px;
   max-height: 80px;
@@ -53,7 +49,6 @@
 .sectionWrapper {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
   box-sizing: border-box;
 }
 
@@ -73,7 +68,7 @@
   padding-left: 15px;
   color: #ccc;
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 300;
   border-bottom: 1px #383f41 solid;
   padding-bottom: 10px;
 }
@@ -81,7 +76,7 @@
 .sidebarNavLink {
   color: #aaa;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .sidebarNavLink svg {
