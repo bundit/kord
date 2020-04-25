@@ -1,9 +1,9 @@
 import SpotifyWebApi from "spotify-web-api-js";
 
 import {
+  importLikes,
   importPlaylistTracks,
   importPlaylists,
-  importSongs,
   setNextPlaylistHref
 } from "./libraryActions";
 import { setAccessToken, setConnection, setUserProfile } from "./userActions";
@@ -33,26 +33,45 @@ export const refreshSpotifyToken = () => dispatch => {
     });
 };
 
+export const setSpotifyProfile = () => dispatch => {
+  return spotifyApi
+    .getMe({})
+    .then(data => {
+      const profile = {
+        username: data.display_name,
+        image: data.images[0].url,
+        profileUrl: data.external_urls.spotify
+      };
+
+      dispatch(setUserProfile("spotify", profile));
+    })
+    .then(() => dispatch(importSavedSpotifyTracks()))
+    .catch(e => {
+      return dispatch(errorHandler(e)).then(() =>
+        dispatch(setSpotifyProfile())
+      );
+    });
+};
+
 export const importSavedSpotifyTracks = (
   limit = 50,
   offset = 0
-) => async dispatch => {
-  let tracks = [];
-  let data;
+) => dispatch => {
+  return spotifyApi.getMySavedTracks({ limit, offset }).then(data => {
+    const newTracks = mapSpotifyResponseToTrackObjects(data);
 
-  try {
-    do {
-      data = await spotifyApi.getMySavedTracks({ limit, offset });
-      const newTracks = mapSpotifyResponseToTrackObjects(data);
-      tracks.push(...newTracks);
+    const userLikes = {
+      title: "Spotify Likes",
+      id: "likes",
+      tracks: newTracks,
+      next: data.next,
+      total: data.total,
+      source: "spotify",
+      isConnected: false
+    };
 
-      offset += limit;
-    } while (data.items.length >= limit);
-  } catch (e) {
-    return dispatch(importSavedSpotifyTracks(limit, offset));
-  }
-
-  dispatch(importSongs(tracks));
+    dispatch(importLikes("spotify", userLikes));
+  });
 };
 
 export const getUserSpotifyPlaylists = (limit = 50, offset = 0) => dispatch => {
@@ -89,25 +108,6 @@ export const getSpotifyPlaylistTracks = (id, next) => dispatch => {
     .catch(err => {
       return dispatch(errorHandler(err)).then(() =>
         dispatch(getSpotifyPlaylistTracks(id, next))
-      );
-    });
-};
-
-export const setSpotifyProfile = () => dispatch => {
-  return spotifyApi
-    .getMe({})
-    .then(data => {
-      const profile = {
-        username: data.display_name,
-        image: data.images[0].url,
-        profileUrl: data.external_urls.spotify
-      };
-
-      dispatch(setUserProfile("spotify", profile));
-    })
-    .catch(e => {
-      return dispatch(errorHandler(e)).then(() =>
-        dispatch(setSpotifyProfile())
       );
     });
 };

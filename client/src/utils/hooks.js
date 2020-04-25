@@ -2,8 +2,8 @@ import { useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
 
 import {
-  importSavedSpotifyTracks,
-  setSpotifyAccessToken
+  setSpotifyAccessToken,
+  setSpotifyProfile
 } from "../redux/actions/spotifyActions";
 
 export function useHashParamDetectionOnLoad() {
@@ -18,11 +18,12 @@ export function useHashParamDetectionOnLoad() {
       if (source === "spotify") {
         const spotifyToken = URLParams.get("spotifyToken");
         dispatch(setSpotifyAccessToken(spotifyToken));
-
-        dispatch(importSavedSpotifyTracks());
+        dispatch(setSpotifyProfile()).catch(e => {
+          console.error(`There was an error: ${e.status}`);
+        });
       }
-    }
-  }, [dispatch]);
+    } // eslint-disable-next-line
+  }, []);
 }
 
 export function useMobileDetection() {
