@@ -12,7 +12,8 @@ const initialState = {
     token: null,
     username: null,
     image: null,
-    profileUrl: null
+    profileUrl: null,
+    market: null
   },
   youtube: {
     isConnected: false,

@@ -40,12 +40,15 @@ export const setSpotifyProfile = () => dispatch => {
       const profile = {
         username: data.display_name,
         image: data.images[0].url,
-        profileUrl: data.external_urls.spotify
+        profileUrl: data.external_urls.spotify,
+        country: data.country
       };
 
       dispatch(setUserProfile("spotify", profile));
+
+      return data.country;
     })
-    .then(() => dispatch(importSavedSpotifyTracks()))
+    .then(country => dispatch(importSavedSpotifyTracks(country)))
     .catch(e => {
       return dispatch(errorHandler(e)).then(() =>
         dispatch(setSpotifyProfile())
@@ -54,10 +57,11 @@ export const setSpotifyProfile = () => dispatch => {
 };
 
 export const importSavedSpotifyTracks = (
+  market = "US",
   limit = 50,
   offset = 0
 ) => dispatch => {
-  return spotifyApi.getMySavedTracks({ limit, offset }).then(data => {
+  return spotifyApi.getMySavedTracks({ limit, offset, market }).then(data => {
     const newTracks = mapSpotifyResponseToTrackObjects(data);
 
     const userLikes = {
@@ -89,11 +93,15 @@ export const getUserSpotifyPlaylists = (limit = 50, offset = 0) => dispatch => {
     });
 };
 
-export const getSpotifyPlaylistTracks = (id, next) => dispatch => {
+export const getSpotifyPlaylistTracks = (
+  id,
+  next,
+  market = "US"
+) => dispatch => {
   let data;
 
   if (next === "start") {
-    data = spotifyApi.getPlaylistTracks(id);
+    data = spotifyApi.getPlaylistTracks(id, { market });
   } else {
     data = spotifyApi.getGeneric(next);
   }
@@ -142,6 +150,7 @@ function mapSpotifyResponseToTrackObjects(data) {
         name: artist.name
       })),
       img: track.album.images,
+      streamable: track.is_playable,
       source: "spotify"
     }));
 }
