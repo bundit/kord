@@ -20,9 +20,12 @@ const Library = ({ songs, artists, playlists, currentTrackID, isPlaying }) => {
   function handlePlayTrack(track, tracklist) {
     // Casting is needed sometimes
     // eslint-disable-next-line
-    const index = tracklist.findIndex(song => song.id == track.id);
+    let index = tracklist.findIndex(song => song.id == track.id);
 
-    dispatch(setTrack(track));
+    while (!tracklist[index].streamable && index < tracklist.length) {
+      index++;
+    }
+    dispatch(setTrack(tracklist[index]));
     dispatch(setQueueIndex(index));
     dispatch(setQueue(tracklist));
   }
