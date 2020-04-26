@@ -155,7 +155,7 @@ class SpotifyWebPlaybackSdk {
     this.accessToken = token;
   }
 
-  load(trackId, tries = 3) {
+  load(trackId, positionMs = 0, tries = 3) {
     this.isLoaded = false;
     this.currentTrack = trackId;
     if (!tries) {
@@ -163,7 +163,7 @@ class SpotifyWebPlaybackSdk {
     }
 
     if (this.deviceId) {
-      return this.loadTrackToPlayer(trackId).then(res => {
+      return this.loadTrackToPlayer(trackId, positionMs).then(res => {
         if (res.status === 401) {
           // Expired token
           return this.fetchAndSetToken().then(() =>
@@ -190,13 +190,14 @@ class SpotifyWebPlaybackSdk {
     }
   }
 
-  loadTrackToPlayer(trackId) {
+  loadTrackToPlayer(trackId, positionMs = 0) {
     return fetch(
       `https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`,
       {
         method: "PUT",
         body: JSON.stringify({
-          uris: [`spotify:track:${trackId}`]
+          uris: [`spotify:track:${trackId}`],
+          position_ms: positionMs
         }),
         headers: {
           "Content-Type": "application/json",
@@ -297,7 +298,7 @@ class SpotifyWebPlaybackSdk {
       console.error("account_error", e.message);
     });
     this.player.addListener("playback_error", e => {
-      this.load(this.currentTrack);
+      this.load(this.currentTrack, this.progressMs);
       console.error("playback_error", e);
     });
 
