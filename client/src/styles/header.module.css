@@ -35,13 +35,12 @@
 }
 
 .deskHeader {
-  position: sticky;
-  /* TODO FIX THIS FIXED THING */
+  position: fixed;
+  width: 100%;
   z-index: 1;
   top: 0;
   display: none;
   flex-direction: column;
-  position: sticky;
   background: #151d20;
   box-sizing: border-box;
 }
@@ -53,25 +52,6 @@
   padding: 10px;
   display: flex;
   align-items: flex-start;
-}
-
-.titleHeader {
-  display: flex;
-  padding-left: 30px;
-  padding-bottom: 10px;
-}
-
-.titleHeader h1 {
-  font-family: "Open Sans";
-  font-weight: 600;
-  font-size: 60px;
-  color: white;
-  margin-bottom: 0;
-}
-
-.titleHeader span {
-  padding-left: 20px;
-  color: #ffd46b;
 }
 
 .navGroup {
@@ -94,14 +74,6 @@
 
 .navGroup button:hover {
   background-color: #666;
-}
-
-.settingIconContainer {
-  margin-left: auto;
-}
-
-.settingIconContainer button {
-  color: #666;
 }
 
 @media (min-width: 800px) {
