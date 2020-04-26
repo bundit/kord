@@ -14,7 +14,7 @@ const TrackList = ({
   currentTrackID,
   isPlaying
 }) => {
-  const incrementValue = 15;
+  const incrementValue = 30;
   const [numShowTracks, setNumShowTracks] = useState(incrementValue);
   const prevTracklistId = usePrevious(trackListId);
   const scrollContainer = useRef(null);
@@ -46,8 +46,8 @@ const TrackList = ({
     loadMoreTracks
   );
 
-  function handlePlayTrack(track) {
-    handlePlay(track, songs);
+  function handlePlayTrack(index) {
+    handlePlay(index, songs);
   }
 
   return (
@@ -58,15 +58,16 @@ const TrackList = ({
     >
       {songs &&
         songs
-          .slice(0, numShowTracks)
-          .map((track, i) => (
-            <TrackItem
-              key={`${track.id}${track.source}${i}`}
-              track={track}
-              handlePlay={handlePlayTrack}
-              isActive={currentTrackID === track.id && i === queueIndex}
-              isPlaying={isPlaying}
-            />
+        .slice(0, numShowTracks)
+        .map((track, i) => (
+          <TrackItem
+            key={`${track.id}${track.source}${i}`}
+            track={track}
+            handlePlay={handlePlayTrack}
+            isActive={currentTrackID === track.id && i === queueIndex}
+            isPlaying={isPlaying}
+            index={i}
+          />
           ))}
     </div>
   );

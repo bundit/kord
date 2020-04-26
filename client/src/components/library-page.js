@@ -17,14 +17,11 @@ const Library = ({ songs, artists, playlists, currentTrackID, isPlaying }) => {
   const isMobile = useMobileDetection();
   const dispatch = useDispatch();
 
-  function handlePlayTrack(track, tracklist) {
-    // Casting is needed sometimes
-    // eslint-disable-next-line
-    let index = tracklist.findIndex(song => song.id == track.id);
-
+  function handlePlayTrack(index, tracklist) {
     while (!tracklist[index].streamable && index < tracklist.length) {
       index++;
     }
+
     dispatch(setTrack(tracklist[index]));
     dispatch(setQueueIndex(index));
     dispatch(setQueue(tracklist));

@@ -14,12 +14,12 @@ import placeholderImg from "../assets/track-placeholder.jpg";
 import rippleEffect from "../utils/rippleEffect";
 import styles from "../styles/library.module.css";
 
-const TrackItem = ({ track, handlePlay, isActive, isPlaying }) => {
+const TrackItem = ({ track, handlePlay, isActive, isPlaying, index }) => {
   const { title, duration: ms, artist, source } = track;
   const artistName = formatArtistName(artist);
 
   function handlePlayTrack() {
-    handlePlay(track);
+    handlePlay(index);
   }
 
   const isStreamable = track.streamable || track.streamable === null;
