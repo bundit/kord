@@ -3,18 +3,30 @@ import { ADD_TO_SEARCH_HISTORY } from "../actions/types";
 const initialState = {
   query: "",
   soundcloud: {
-    tracks: {},
-    artists: {}
+    tracks: {
+      list: [],
+      next: null
+    },
+    artists: []
   },
   spotify: {
-    tracks: {},
-    artists: {}
+    tracks: {
+      list: [],
+      next: null
+    },
+    artists: []
   },
   youtube: {
-    tracks: {}
+    tracks: {
+      list: [],
+      next: null
+    }
   },
   mixcloud: {
-    tracks: {}
+    tracks: {
+      list: [],
+      next: null
+    }
   },
   history: []
 };
