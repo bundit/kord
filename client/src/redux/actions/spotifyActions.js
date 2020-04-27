@@ -1,5 +1,6 @@
 import SpotifyWebApi from "spotify-web-api-js";
 
+import { fetchGeneric } from "./soundcloudActions";
 import {
   importLikes,
   importPlaylistTracks,
@@ -7,6 +8,7 @@ import {
   setNextPlaylistHref
 } from "./libraryActions";
 import { setAccessToken, setConnection, setUserProfile } from "./userActions";
+import { setArtistResults, setTrackResults } from "./searchActions";
 
 const SPOTIFY = "spotify";
 const spotifyApi = new SpotifyWebApi();
@@ -19,36 +21,21 @@ export const setSpotifyAccessToken = token => dispatch => {
 };
 
 export const refreshSpotifyToken = () => dispatch => {
-  return fetch(`/auth/spotify/refresh`)
-    .then(res => {
-      if (res.status < 200 || res.status >= 300) {
-        return Promise.reject(res);
-      }
-
-      return res.json();
-    })
-    .then(obj => {
-      dispatch(setSpotifyAccessToken(obj.accessToken));
-      return obj.accessToken;
-    });
+  return fetchGeneric(`/auth/spotify/refresh`).then(json => {
+    dispatch(setSpotifyAccessToken(json.accessToken));
+    return json.accessToken;
+  });
 };
 
 export const setSpotifyProfile = () => dispatch => {
   return spotifyApi
     .getMe({})
-    .then(data => {
-      const profile = {
-        username: data.display_name,
-        image: data.images[0].url,
-        profileUrl: data.external_urls.spotify,
-        country: data.country
-      };
+    .then(json => {
+      const profile = mapJsonToProfile(json);
 
       dispatch(setUserProfile("spotify", profile));
-
-      return data.country;
     })
-    .then(country => dispatch(importSavedSpotifyTracks(country)))
+    .then(() => dispatch(importSavedSpotifyTracks()))
     .catch(e => {
       return dispatch(errorHandler(e)).then(() =>
         dispatch(setSpotifyProfile())
@@ -57,19 +44,19 @@ export const setSpotifyProfile = () => dispatch => {
 };
 
 export const importSavedSpotifyTracks = (
-  market = "US",
   limit = 50,
-  offset = 0
+  offset = 0,
+  market = "from_token"
 ) => dispatch => {
-  return spotifyApi.getMySavedTracks({ limit, offset, market }).then(data => {
-    const newTracks = mapSpotifyResponseToTrackObjects(data);
+  return spotifyApi.getMySavedTracks({ limit, offset, market }).then(json => {
+    const newTracks = mapJsonToTracks(json);
 
     const userLikes = {
       title: "Spotify Likes",
       id: "likes",
       tracks: newTracks,
-      next: data.next,
-      total: data.total,
+      next: json.next,
+      total: json.total,
       source: "spotify",
       isConnected: false
     };
@@ -81,8 +68,8 @@ export const importSavedSpotifyTracks = (
 export const getUserSpotifyPlaylists = (limit = 50, offset = 0) => dispatch => {
   return spotifyApi
     .getUserPlaylists({ limit, offset })
-    .then(data => {
-      const playlists = mapSpotifyResponseToPlaylists(data);
+    .then(json => {
+      const playlists = mapJsonToPlaylists(json);
 
       dispatch(importPlaylists(SPOTIFY, playlists));
     })
@@ -96,28 +83,49 @@ export const getUserSpotifyPlaylists = (limit = 50, offset = 0) => dispatch => {
 export const getSpotifyPlaylistTracks = (
   id,
   next,
-  market = "US"
+  market = "from_token"
 ) => dispatch => {
-  let data;
+  let json;
 
   if (next === "start") {
-    data = spotifyApi.getPlaylistTracks(id, { market });
+    json = spotifyApi.getPlaylistTracks(id, { market });
   } else {
-    data = spotifyApi.getGeneric(next);
+    json = spotifyApi.getGeneric(next);
   }
 
-  return data
-    .then(data => {
-      const newTracks = mapSpotifyResponseToTrackObjects(data);
+  return json
+    .then(json => {
+      const newTracks = mapJsonToTracks(json);
 
       dispatch(importPlaylistTracks(SPOTIFY, id, newTracks));
-      dispatch(setNextPlaylistHref(SPOTIFY, id, data.next));
+      dispatch(setNextPlaylistHref(SPOTIFY, id, json.next));
     })
     .catch(err => {
       return dispatch(errorHandler(err)).then(() =>
         dispatch(getSpotifyPlaylistTracks(id, next))
       );
     });
+};
+
+export const searchSpotify = (
+  query,
+  types = ["track", "artist", "album"],
+  market = "from_token"
+) => dispatch => {
+  spotifyApi
+    .search(query, types, { market })
+    .then(({ tracks, artists, album }) => {
+      const trackList = mapJsonToTracks(tracks, true);
+      const nextTrackHref = tracks.next;
+      dispatch(
+        setTrackResults("spotify", { list: trackList, next: nextTrackHref })
+      );
+
+      const artistList = mapJsonToArtists(artists);
+      dispatch(setArtistResults("spotify", artistList));
+    });
+
+  //TODO do something with albums maybe
 };
 
 function errorHandler(err, tries = 3) {
@@ -134,29 +142,48 @@ function errorHandler(err, tries = 3) {
   };
 }
 
-function mapSpotifyResponseToTrackObjects(data) {
-  return data.items
-    .map(trackData => trackData.track)
-    .map(track => ({
-      album: {
-        title: track.album.name,
-        id: track.album.id
-      },
-      id: track.id,
-      duration: track.duration_ms,
-      title: track.name,
-      artist: track.artists.map(artist => ({
-        id: artist.id,
-        name: artist.name
-      })),
-      img: track.album.images,
-      streamable: track.is_playable,
-      source: "spotify"
-    }));
+function mapJsonToProfile(json) {
+  return {
+    username: json.display_name,
+    image: json.images[0].url,
+    profileUrl: json.external_urls.spotify
+  };
 }
 
-function mapSpotifyResponseToPlaylists(data) {
-  return data.items.map(item => ({
+function mapJsonToTracks(json, search = false) {
+  if (!search) {
+    json = json.items.map(trackData => trackData.track);
+  } else json = json.items;
+
+  return json.map(track => ({
+    album: {
+      title: track.album.name,
+      id: track.album.id
+    },
+    id: track.id,
+    duration: track.duration_ms,
+    title: track.name,
+    artist: track.artists.map(artist => ({
+      id: artist.id,
+      name: artist.name
+    })),
+    img: track.album.images,
+    streamable: track.is_playable,
+    source: "spotify"
+  }));
+}
+
+function mapJsonToArtists(json) {
+  return json.items.map(artist => ({
+    name: artist.name,
+    id: artist.id,
+    numFollowers: artist.followers.total,
+    img: artist.images
+  }));
+}
+
+function mapJsonToPlaylists(json) {
+  return json.items.map(item => ({
     id: item.id,
     title: item.name,
     images: item.images,
