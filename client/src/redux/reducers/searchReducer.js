@@ -2,14 +2,14 @@ import { ADD_TO_SEARCH_HISTORY } from "../actions/types";
 
 const initialState = {
   query: "",
-  soundcloud: {
+  spotify: {
     tracks: {
       list: [],
       next: null
     },
     artists: []
   },
-  spotify: {
+  soundcloud: {
     tracks: {
       list: [],
       next: null
@@ -55,12 +55,13 @@ export default function(state = initialState, action) {
     case "SET_MORE_TRACK_RESULTS": {
       const source = action.source;
       const newTracks = action.payload;
+
       return {
         ...state,
         [source]: {
           ...state[source],
           tracks: {
-            list: [...state[source].list, ...newTracks.list],
+            list: [...state[source].tracks.list, ...newTracks.list],
             next: newTracks.next
           }
         }

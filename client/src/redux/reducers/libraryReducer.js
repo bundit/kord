@@ -1,7 +1,7 @@
 const initialState = {
   playlists: {
-    soundcloud: [],
     spotify: [],
+    soundcloud: [],
     youtube: [],
     mixcloud: []
   }
