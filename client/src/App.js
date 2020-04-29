@@ -8,7 +8,7 @@ import Footer from "./components/layout/footer";
 import Header from "./components/layout/header";
 import Library from "./components/library-page";
 import NavHistory from "./components/nav-history";
-import Search from "./components/search-page";
+import SearchPage from "./components/search-page";
 import Sidebar from "./components/sidebar";
 
 const options = {
@@ -30,7 +30,7 @@ const App = () => {
           <main className="content">
             <Route component={Header} />
             <Switch>
-              <Route exact path="/app/search" component={Search} />
+              <Route path="/app/search" component={SearchPage} />
               <Route path="/app/library" component={Library} />
             </Switch>
             <Route component={Footer} />
