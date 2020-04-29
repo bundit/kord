@@ -1,3 +1,8 @@
+import {
+  loadMoreSoundcloudTracks,
+  searchSoundcloudTracks
+} from "./soundcloudActions";
+import { searchSpotify } from "./spotifyActions";
 import store from "../store";
 
 export function setQuery(query) {
@@ -38,7 +43,23 @@ export function addToSearchHistory(query) {
   };
 }
 
-export const searchMusic = query => dispatch => {
+export const searchForMusic = query => dispatch => {
   const user = store.getState().user;
-  // TODO query music here
+
+  if (user.soundcloud.isConnected) {
+    dispatch(searchSoundcloudTracks(query));
+    // dispatch(searchSoundcloudArtists(query));
+  }
+
+  if (user.spotify.isConnected) {
+    dispatch(searchSpotify(query));
+  }
+};
+
+export const loadMoreTrackResults = source => dispatch => {
+  if (source === "soundcloud") {
+    return dispatch(loadMoreSoundcloudTracks());
+  } else if (source === "spotify") {
+    // return dispatch(loadMoreSpotifyTracks());
+  }
 };
