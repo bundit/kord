@@ -1,3 +1,4 @@
+import { cacheValue, loadCachedValue } from "../../utils/sessionStorage";
 import { importLikes, importPlaylists } from "./libraryActions";
 import {
   setArtistResults,
@@ -60,14 +61,23 @@ export const getUserSoundcloudPlaylists = username => dispatch => {
   });
 };
 
-export const searchSoundcloudTracks = (query, limit = 20) => dispatch => {
+export const searchSoundcloudTracks = (query, limit = 50) => dispatch => {
   const trackSearchEndpoint = `https://api.soundcloud.com/tracks?q=${query}&limit=${limit}&format=json&client_id=${KEY}&linked_partitioning=1`;
+  const storageKey = `SC:${query}:artists`;
+
+  const cachedSearch = loadCachedValue(storageKey);
+  if (cachedSearch) {
+    return dispatch(setTrackResults("soundcloud", cachedSearch));
+  }
 
   return fetchGeneric(trackSearchEndpoint).then(json => {
-    const tracks = mapCollectionToTracks(json.collection);
-    const next = json.next_href;
+    const tracks = {
+      list: mapCollectionToTracks(json.collection),
+      next: json.next_href
+    };
 
-    dispatch(setTrackResults("soundcloud", { list: tracks, next }));
+    dispatch(setTrackResults("soundcloud", tracks));
+    cacheValue(storageKey, tracks);
   });
 };
 
