@@ -18,7 +18,8 @@ const TrackItem = ({ track, handlePlay, isActive, isPlaying, index }) => {
   const { title, duration: ms, artist, source } = track;
   const artistName = formatArtistName(artist);
 
-  function handlePlayTrack() {
+  function handlePlayTrack(e) {
+    e.target.blur();
     handlePlay(index);
   }
 
@@ -29,9 +30,7 @@ const TrackItem = ({ track, handlePlay, isActive, isPlaying, index }) => {
       <div
         className={`${styles.trackWrapper} ${isActive &&
           styles.playingNow} ${!isStreamable && styles.notStreamable}`}
-        onClick={e => {
-          rippleEffect(e);
-        }}
+        onClick={rippleEffect}
         onDoubleClick={handlePlayTrack}
         role="button"
         tabIndex="0"
