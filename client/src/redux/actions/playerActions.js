@@ -11,6 +11,15 @@ import {
   SET_TRACK
 } from "./types";
 
+export const handlePlayTrack = (index, tracklist) => dispatch => {
+  while (!tracklist[index].streamable && index < tracklist.length) {
+    index++;
+  }
+  dispatch(setTrack(tracklist[index]));
+  dispatch(setQueueIndex(index));
+  dispatch(setQueue(tracklist));
+};
+
 export function play() {
   return {
     type: PLAY

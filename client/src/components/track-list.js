@@ -1,24 +1,32 @@
-import { useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React, { useState, useRef } from "react";
 
+import { handlePlayTrack } from "../redux/actions/playerActions";
 import { usePrevious } from "../utils/hooks";
 import TrackItem from "./track-item";
 import styles from "../styles/library.module.css";
 
 const TrackList = ({
+  search,
+  hasNext,
   trackListId,
   songs,
-  handlePlay,
   loadMoreTracks,
   currentTrackID,
   isPlaying
 }) => {
-  const incrementValue = 30;
+  const incrementValue = search ? 5 : 25;
   const [numShowTracks, setNumShowTracks] = useState(incrementValue);
   const prevTracklistId = usePrevious(trackListId);
   const scrollContainer = useRef(null);
   const queueIndex = useSelector(state => state.player.index);
+  const searchHasMoreToShow =
+    search && (hasNext || numShowTracks < songs.length);
+  const listHeight = Math.min(songs.length, numShowTracks);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     if (!songs.length && loadMoreTracks) {
@@ -46,30 +54,59 @@ const TrackList = ({
     loadMoreTracks
   );
 
-  function handlePlayTrack(index) {
-    handlePlay(index, songs);
+  function dispatchPlayTrack(index) {
+    dispatch(handlePlayTrack(index, songs));
+  }
+
+  function searchHandleLoad() {
+    if (numShowTracks < songs.length) {
+      showMoreTracks();
+    } else {
+      loadMoreTracks();
+      showMoreTracks();
+    }
   }
 
   return (
-    <div
-      ref={scrollContainer}
-      className={styles.libraryWrapper}
-      onScroll={loadTracksOnScroll}
-    >
-      {songs &&
-        songs
-        .slice(0, numShowTracks)
-        .map((track, i) => (
-          <TrackItem
-            key={`${track.id}${track.source}${i}`}
-            track={track}
-            handlePlay={handlePlayTrack}
-            isActive={currentTrackID === track.id && i === queueIndex}
-            isPlaying={isPlaying}
-            index={i}
-          />
-          ))}
-    </div>
+    <>
+      <div
+        ref={scrollContainer}
+        className={`${styles.libraryWrapper} ${search && styles.searchWrapper}`}
+        onScroll={loadTracksOnScroll}
+        style={
+          search && {
+            height: `${65 * listHeight}px`,
+            overflowY: "hidden"
+          }
+        }
+      >
+        {songs &&
+          songs
+            .slice(0, numShowTracks)
+            .map((track, i) => (
+              <TrackItem
+                key={`${search ? "Search" : "Lib"}:${track.source}:${
+                  track.id
+                }:${i}`}
+                track={track}
+                handlePlay={dispatchPlayTrack}
+                isActive={currentTrackID === track.id && i === queueIndex}
+                isPlaying={isPlaying}
+                index={i}
+              />
+            ))}
+      </div>
+      {searchHasMoreToShow && (
+        <button
+          type="button"
+          onClick={searchHandleLoad}
+          className={styles.showMoreButton}
+        >
+          {"Show More "}
+          <FontAwesomeIcon icon={faAngleDown} />
+        </button>
+      )}
+    </>
   );
 };
 
