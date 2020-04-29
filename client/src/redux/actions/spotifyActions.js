@@ -1,5 +1,6 @@
 import SpotifyWebApi from "spotify-web-api-js";
 
+import { cacheValue, loadCachedValue } from "../../utils/sessionStorage";
 import { fetchGeneric } from "./soundcloudActions";
 import {
   importLikes,
@@ -8,7 +9,11 @@ import {
   setNextPlaylistHref
 } from "./libraryActions";
 import { setAccessToken, setConnection, setUserProfile } from "./userActions";
-import { setArtistResults, setTrackResults } from "./searchActions";
+import {
+  setArtistResults,
+  setMoreTrackResults,
+  setTrackResults
+} from "./searchActions";
 
 const SPOTIFY = "spotify";
 const spotifyApi = new SpotifyWebApi();
@@ -109,23 +114,73 @@ export const getSpotifyPlaylistTracks = (
 
 export const searchSpotify = (
   query,
+  limit = 20,
+  offset = 0,
   types = ["track", "artist", "album"],
   market = "from_token"
 ) => dispatch => {
-  spotifyApi
-    .search(query, types, { market })
-    .then(({ tracks, artists, album }) => {
-      const trackList = mapJsonToTracks(tracks, true);
-      const nextTrackHref = tracks.next;
-      dispatch(
-        setTrackResults("spotify", { list: trackList, next: nextTrackHref })
-      );
+  const storageKey = `SPOT:${query}`;
 
-      const artistList = mapJsonToArtists(artists);
-      dispatch(setArtistResults("spotify", artistList));
-    });
+  const cachedSearch = loadCachedValue(storageKey);
+  if (cachedSearch) {
+    const payload = parseSpotifyResults(cachedSearch);
+    return dispatch(setSpotifyResults(payload));
+  }
 
-  //TODO do something with albums maybe
+  return spotifyApi.search(query, types, { market }).then(json => {
+    const payload = parseSpotifyResults(json);
+
+    dispatch(setSpotifyResults(payload));
+    cacheValue(storageKey, json);
+  });
+};
+
+function parseSpotifyResults(json) {
+  const { tracks, artists, album } = json;
+
+  let tracksPayload, artistsPayload;
+
+  if (tracks) {
+    tracksPayload = {
+      list: mapJsonToTracks(tracks, true),
+      next: tracks.next,
+      total: tracks.total
+    };
+  }
+
+  if (artists) {
+    artistsPayload = mapJsonToArtists(artists);
+  }
+
+  return { tracksPayload, artistsPayload };
+}
+
+const setSpotifyResults = payload => dispatch => {
+  const { tracksPayload, artistsPayload } = payload;
+
+  if (!tracksPayload && !artistsPayload) {
+    return Promise.reject({ message: "No search results" });
+  }
+
+  if (tracksPayload) {
+    dispatch(setTrackResults("spotify", tracksPayload));
+  }
+
+  if (artistsPayload) {
+    dispatch(setArtistResults("spotify", artistsPayload));
+  }
+
+  return Promise.resolve({ message: "Results set" });
+};
+
+export const loadMoreSpotifyTracks = next => dispatch => {
+  if (!next) return;
+
+  spotifyApi.getGeneric(next).then(json => {
+    const { tracksPayload } = parseSpotifyResults(json);
+
+    dispatch(setMoreTrackResults("spotify", tracksPayload));
+  });
 };
 
 function errorHandler(err, tries = 3) {
