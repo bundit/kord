@@ -6,6 +6,12 @@
   overflow: auto;
 }
 
+/* .searchWrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: ;
+} */
+
 .artistLink {
   color: black;
   font-size: 14px;
@@ -18,8 +24,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  min-height: 75px;
+  min-height: 65px;
   width: 100%;
   max-width: 1310px;
   padding: 1rem 2rem;
@@ -31,6 +36,7 @@
   overflow: hidden;
   font-size: 12px;
   border-radius: 7px;
+  /* border-bottom: 1px dotted #999; */
 }
 
 .trackWrapper:focus {
@@ -285,6 +291,47 @@
     margin-bottom: 80px;
   }
 
+  .searchPageWrapper {
+    margin: 80px 0;
+    overflow-y: scroll;
+  }
+
+  .searchListContainer {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .searchWrapper {
+    text-align: left;
+    padding-top: 0;
+    margin: 0;
+    flex: 0 1 auto;
+    transition: 0.4s ease-in;
+  }
+
+  .searchTitle {
+    text-align: left;
+    padding-left: 20px;
+    color: #eee;
+    font-weight: 600;
+    font-size: 25px;
+  }
+
+  .showMoreButton {
+    color: black;
+    background-color: #ce9300;
+    border: 1px #444 solid;
+    border-radius: 7px;
+    padding: 10px;
+    transition: 0.3s ease-out;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+
+  .showMoreButton:hover {
+    background-color: #fb1;
+  }
+
   .mobileCategoryList {
     display: none;
   }
@@ -339,6 +386,17 @@
 }
 
 @media (min-width: 1600px) {
+  .searchPageWrapper {
+    display: flex;
+  }
+
+  .searchPageWrapper:first-child {
+    margin-right: 25px;
+  }
+
+  .searchWrapper {
+    width: 600px;
+  }
 }
 
 @keyframes mainBar {
