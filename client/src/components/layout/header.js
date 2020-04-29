@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
-import { searchMusic, setQuery } from "../../redux/actions/searchActions";
+import { setQuery } from "../../redux/actions/searchActions";
 import SearchBar from "../search-bar";
 import styles from "../../styles/header.module.css";
 
@@ -23,9 +23,8 @@ function Header({ location }) {
 
   function handleSearchSubmit(e) {
     e.preventDefault();
-    // TODO
 
-    dispatch(searchMusic(query));
+    history.push(`/app/search/${query}`);
   }
 
   function handleResetQuery() {
