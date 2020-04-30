@@ -15,7 +15,7 @@ const SearchResults = () => {
 
   useEffect(() => {
     dispatch(searchForMusic(query));
-  }, [query]);
+  }, [query, dispatch]);
 
   const resultsComponents = [];
 
