@@ -23,6 +23,9 @@ import styles from "../styles/sidebar.module.css";
 const Sidebar = ({ user, playlists }) => {
   const [isSettingsFormOpen, setIsSettingsFormOpen] = useState(false);
   const [settingsSource, setSettingsSource] = useState();
+  const dispatch = useDispatch();
+  const alert = useAlert();
+
   function toggleSettingsForm(source) {
     setSettingsSource(source);
     setIsSettingsFormOpen(!isSettingsFormOpen);
@@ -65,8 +68,6 @@ const Sidebar = ({ user, playlists }) => {
       });
   }
 
-  const dispatch = useDispatch();
-  const alert = useAlert();
   return (
     <div className={styles.sidebarWrapper}>
       <div className={styles.sidebarHeader}>
@@ -80,6 +81,7 @@ const Sidebar = ({ user, playlists }) => {
         <h2>App</h2>
         <NavLink
           to="/app/library"
+          exact
           className={styles.sidebarNavLink}
           activeClassName={styles.activeNavLink}
         >

@@ -65,18 +65,25 @@
 }
 
 .sectionWrapper h2 {
-  padding-left: 15px;
+  padding-left: 5px;
+  margin: 12px;
+  margin-bottom: 0;
   color: #ccc;
   font-size: 17px;
   font-weight: 300;
-  border-bottom: 1px #383f41 solid;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
 }
 
 .sidebarNavLink {
-  color: #aaa;
-  font-weight: 400;
+  color: #999;
   font-size: 14px;
+  text-decoration: none;
+  padding: 7px 0 7px 18px;
+  margin: 0 12px;
+  border-radius: 7px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: 0.4s ease-out;
 }
 
 .sidebarNavLink svg {
@@ -87,27 +94,9 @@
   color: white;
 }
 
-.sidebarWrapper .sectionWrapper a {
-  text-decoration: none;
-  padding: 7px 0 7px 30px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 .activeNavLink {
-  transition: 0.5s ease;
-  background: linear-gradient(to left, #121a1d, #1e2629);
   color: white;
-  font-weight: 600;
-  transform: translateX(3px);
-  border-radius: 6px;
-}
-
-.activePlaylistLink {
-  transition: 0.5s ease;
-  color: white;
-  font-weight: 600;
-  transform: translateX(3px);
+  background-color: #232a2d;
 }
 
 .sidebarFooter {
@@ -136,7 +125,7 @@
 }
 
 .connectedSource > svg {
-  color: #ffd46b;
+  color: #ffc842;
 }
 
 .connectedSource:hover {

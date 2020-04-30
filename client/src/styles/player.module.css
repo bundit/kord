@@ -162,11 +162,11 @@
 }
 
 .volumeWrapper:hover .volumeLowerFill {
-  background-color: #ffd46b;
+  background-color: #ffc842;
 }
 
 .volumeWrapper:hover svg {
-  color: #ffd46b;
+  color: #ffc842;
 }
 
 .volumeIconWrapper {

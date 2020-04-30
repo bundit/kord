@@ -11,7 +11,7 @@ const PlaylistItem = ({ title, source, id, sidebar }) => (
   <NavLink
     to={`/app/library/playlists/${source}/${id}/${title}`}
     className={sidebar ? sidebarStyles.sidebarNavLink : styles.trackWrapper}
-    activeClassName={sidebar && sidebarStyles.activePlaylistLink}
+    activeClassName={sidebar && sidebarStyles.activeNavLink}
   >
     <div className={styles.titleWrapper}>
       <div>{title}</div>

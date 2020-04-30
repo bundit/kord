@@ -16,7 +16,7 @@
   position: absolute;
   bottom: 0px;
   z-index: 2;
-  transition: 0.5s ease-out;
+  transition: 0.4s ease-out;
 }
 
 .desktopSeekBar {
@@ -26,7 +26,7 @@
 .progressContainer:hover input[type="range"].desktopSeekBar,
 .progressContainer:hover .progressBar {
   transform: scaleY(10);
-  background-color: #ffd46b;
+  background-color: #ffc842;
 }
 
 .progressContainer:hover ~ .playerWrapper .timeContainer {
@@ -34,7 +34,8 @@
 }
 
 .timeContainer {
-  transition: 0.3s ease;
+  font-size: 11px;
+  transition: 0.3s linear;
   color: #bbb;
 }
 
