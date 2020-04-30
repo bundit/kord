@@ -10,10 +10,10 @@ const PlaylistTracklist = ({
   id,
   isPlaying,
   playlists,
-  handlePlay,
   currentTrackID
 }) => {
   const dispatch = useDispatch();
+
   // eslint-disable-next-line
   const playlistIndex = playlists[source].findIndex(p => p.id == id);
   const currentPlaylist = playlists[source][playlistIndex];
@@ -28,9 +28,9 @@ const PlaylistTracklist = ({
 
   return (
     <TrackList
+      title={currentPlaylist.title}
       trackListId={`${id}${source}`}
       songs={tracks}
-      handlePlay={handlePlay}
       currentTrackID={currentTrackID}
       isPlaying={isPlaying}
       loadMoreTracks={handleLoadMoreTracks}

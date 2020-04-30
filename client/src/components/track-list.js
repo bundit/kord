@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React, { useState, useRef } from "react";
 
-import { handlePlayTrack } from "../redux/actions/playerActions";
+import { capitalizeWord } from "../utils/capitalizeWord";
+import { playTrack } from "../redux/actions/playerActions";
 import { usePrevious } from "../utils/hooks";
 import TrackItem from "./track-item";
 import styles from "../styles/library.module.css";
 
 const TrackList = ({
   search,
+  title,
   hasNext,
   trackListId,
   songs,
@@ -41,7 +43,7 @@ const TrackList = ({
     if (scrollContainer.current) {
       scrollContainer.current.scrollTo({ top: 0, left: 0 });
     }
-  }, [prevTracklistId, trackListId]);
+  }, [prevTracklistId, trackListId, incrementValue]);
 
   function showMoreTracks() {
     setNumShowTracks(numShowTracks + incrementValue);
@@ -55,7 +57,7 @@ const TrackList = ({
   );
 
   function dispatchPlayTrack(index) {
-    dispatch(handlePlayTrack(index, songs));
+    dispatch(playTrack(index, songs));
   }
 
   function searchHandleLoad() {
@@ -68,45 +70,50 @@ const TrackList = ({
   }
 
   return (
-    <>
-      <div
-        ref={scrollContainer}
-        className={`${styles.libraryWrapper} ${search && styles.searchWrapper}`}
-        onScroll={loadTracksOnScroll}
-        style={
-          search && {
-            height: `${65 * listHeight}px`,
-            overflowY: "hidden"
+    <div
+      ref={scrollContainer}
+      className={styles.pageWrapper}
+      onScroll={loadTracksOnScroll}
+    >
+      <div className={styles.listContainer}>
+        <h2 className={styles.listTitle}>{capitalizeWord(title)}</h2>
+        <div
+          className={`${styles.libraryWrapper}`}
+          style={
+            search && {
+              height: `${65 * listHeight}px`,
+              overflowY: "hidden"
+            }
           }
-        }
-      >
-        {songs &&
-          songs
-            .slice(0, numShowTracks)
-            .map((track, i) => (
-              <TrackItem
-                key={`${search ? "Search" : "Lib"}:${track.source}:${
-                  track.id
-                }:${i}`}
-                track={track}
-                handlePlay={dispatchPlayTrack}
-                isActive={currentTrackID === track.id && i === queueIndex}
-                isPlaying={isPlaying}
-                index={i}
-              />
-            ))}
-      </div>
-      {searchHasMoreToShow && (
-        <button
-          type="button"
-          onClick={searchHandleLoad}
-          className={styles.showMoreButton}
         >
-          {"Show More "}
-          <FontAwesomeIcon icon={faAngleDown} />
-        </button>
-      )}
-    </>
+          {songs &&
+            songs
+              .slice(0, numShowTracks)
+              .map((track, i) => (
+                <TrackItem
+                  key={`${search ? "Search" : "Lib"}:${track.source}:${
+                    track.id
+                  }:${i}`}
+                  track={track}
+                  handlePlay={dispatchPlayTrack}
+                  isActive={currentTrackID === track.id && i === queueIndex}
+                  isPlaying={isPlaying}
+                  index={i}
+                />
+              ))}
+        </div>
+        {searchHasMoreToShow && (
+          <button
+            type="button"
+            onClick={searchHandleLoad}
+            className={styles.showMoreButton}
+          >
+            {"Show More "}
+            <FontAwesomeIcon icon={faAngleDown} />
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
 

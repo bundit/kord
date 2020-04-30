@@ -11,7 +11,7 @@ import {
   SET_TRACK
 } from "./types";
 
-export const handlePlayTrack = (index, tracklist) => dispatch => {
+export const playTrack = (index, tracklist) => dispatch => {
   while (!tracklist[index].streamable && index < tracklist.length) {
     index++;
   }

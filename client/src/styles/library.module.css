@@ -1,16 +1,51 @@
+.pageWrapper {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-top: 61px;
+  margin-bottom: 135px;
+}
+
 .libraryWrapper {
-  flex: 1;
   display: flex;
   flex-direction: column;
   background-color: #192124;
   overflow: auto;
+  border-radius: 7px;
+  margin: 0;
+  background-color: #1e2629;
+  text-align: left;
 }
 
-/* .searchWrapper {
-  display: flex;
-  flex-direction: column;
-  max-width: ;
-} */
+.listContainer {
+  text-align: center;
+  border-radius: 7px;
+  background-color: #1e2629;
+  margin: 2rem 0;
+}
+
+.listTitle {
+  text-align: left;
+  padding-left: 2rem;
+  color: #ccc;
+  font-weight: 300;
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.showMoreButton {
+  color: black;
+  background-color: #ce9300;
+  border: 1px #444 solid;
+  border-radius: 7px;
+  padding: 10px;
+  transition: 0.3s ease-out;
+  cursor: pointer;
+  margin: 12px 0;
+}
+
+.showMoreButton:hover {
+  background-color: #fb1;
+}
 
 .artistLink {
   color: black;
@@ -286,50 +321,22 @@
   }
 
   .libraryWrapper {
-    padding: 2rem 2rem 0 2rem;
-    margin-top: 80px;
-    margin-bottom: 80px;
-  }
-
-  .searchPageWrapper {
-    margin: 80px 0;
-    overflow-y: scroll;
-  }
-
-  .searchListContainer {
+    margin: 1rem 2rem 0 2rem;
     padding: 1rem;
-    text-align: center;
   }
 
-  .searchWrapper {
-    text-align: left;
-    padding-top: 0;
-    margin: 0;
-    flex: 0 1 auto;
-    transition: 0.4s ease-in;
+  .listTitle {
+    padding-left: 3.4rem;
   }
 
-  .searchTitle {
-    text-align: left;
-    padding-left: 20px;
-    color: #eee;
-    font-weight: 600;
-    font-size: 25px;
+  .pageWrapper {
+    margin: 80px 0;
   }
 
-  .showMoreButton {
-    color: black;
-    background-color: #ce9300;
-    border: 1px #444 solid;
-    border-radius: 7px;
-    padding: 10px;
-    transition: 0.3s ease-out;
-    cursor: pointer;
-    margin-top: 12px;
-  }
-
-  .showMoreButton:hover {
-    background-color: #fb1;
+  .listContainer {
+    margin: 3rem;
+    padding: 1rem 0 2rem 0;
+    background-color: #1e2629;
   }
 
   .mobileCategoryList {
@@ -383,20 +390,19 @@
 }
 
 @media (min-width: 1400px) {
+  .pageWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .listContainer {
+    flex: 1;
+    margin-right: 30px;
+  }
 }
 
 @media (min-width: 1600px) {
-  .searchPageWrapper {
-    display: flex;
-  }
-
-  .searchPageWrapper:first-child {
-    margin-right: 25px;
-  }
-
-  .searchWrapper {
-    width: 600px;
-  }
 }
 
 @keyframes mainBar {

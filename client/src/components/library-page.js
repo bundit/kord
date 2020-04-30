@@ -1,13 +1,8 @@
 import { Route, Switch } from "react-router-dom";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
-import {
-  setQueue,
-  setQueueIndex,
-  setTrack
-} from "../redux/actions/playerActions";
 import { useMobileDetection } from "../utils/hooks";
 import CategoryList from "./category-list";
 import ListOfPlaylists from "./playlist-list";
@@ -15,17 +10,6 @@ import PlaylistTracklist from "./playlist-track-list";
 
 const Library = ({ songs, artists, playlists, currentTrackID, isPlaying }) => {
   const isMobile = useMobileDetection();
-  const dispatch = useDispatch();
-
-  function handlePlayTrack(index, tracklist) {
-    while (!tracklist[index].streamable && index < tracklist.length) {
-      index++;
-    }
-
-    dispatch(setTrack(tracklist[index]));
-    dispatch(setQueueIndex(index));
-    dispatch(setQueue(tracklist));
-  }
 
   const categories = ["Playlists", "Artists", "Songs", "Albums", "Genres"];
   return (
@@ -55,7 +39,6 @@ const Library = ({ songs, artists, playlists, currentTrackID, isPlaying }) => {
                         {...props.match.params}
                         playlists={playlists}
                         isPlaying={isPlaying}
-                        handlePlay={handlePlayTrack}
                         currentTrackID={currentTrackID}
                       />
                     )}
