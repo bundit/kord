@@ -28,7 +28,7 @@ const PlaylistTracklist = ({
 
   return (
     <TrackList
-      title={currentPlaylist.title}
+      title={currentPlaylist && currentPlaylist.title}
       trackListId={`${id}${source}`}
       songs={tracks}
       currentTrackID={currentTrackID}
