@@ -16,25 +16,26 @@ const SC_API_BASE_URL = "https://api.soundcloud.com";
 export const getSoundcloudProfile = userId => dispatch => {
   const endpoint = `${SC_API_BASE_URL}/users/${userId}?client_id=${KEY}`;
 
-  return fetchGeneric(endpoint).then(json => {
-    const profile = mapJsonToProfile(json);
-    const beginHref = `${SC_API_BASE_URL}/users/${json.permalink}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
+  return fetchGeneric(endpoint)
+    .then(json => {
+      const profile = mapJsonToProfile(json);
+      const beginHref = `${SC_API_BASE_URL}/users/${json.permalink}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
 
-    const userLikes = {
-      id: "likes",
-      title: "Soundcloud Likes",
-      images: null,
-      source: "soundcloud",
-      tracks: [],
-      total: json.public_favorites_count,
-      next: beginHref,
-      isConnected: false
-    };
+      const userLikes = {
+        id: "likes",
+        title: "Soundcloud Likes",
+        images: null,
+        source: "soundcloud",
+        tracks: [],
+        total: json.public_favorites_count,
+        next: beginHref,
+        isConnected: false
+      };
 
-    dispatch(importLikes("soundcloud", userLikes));
-    dispatch(setUserProfile("soundcloud", profile));
-    dispatch(setConnection("soundcloud", true));
-  });
+      dispatch(importLikes("soundcloud", userLikes));
+      dispatch(setUserProfile("soundcloud", profile));
+    })
+    .then(() => dispatch(setConnection("soundcloud", true)));
 };
 
 export const getSoundcloudLikes = next => dispatch => {

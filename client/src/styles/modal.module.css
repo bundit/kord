@@ -371,10 +371,24 @@
   color: #aaa;
   border-radius: 7px;
   border: 2px #383f41 solid;
+  transition: 0.3s ease;
+  outline: none;
+}
+
+.syncButton:disabled {
+  color: #383f41;
 }
 
 .syncButton svg {
   margin-top: auto;
+}
+
+.syncButton:active {
+  background-color: #eee;
+}
+
+.syncButton:disabled:active {
+  background-color: inherit;
 }
 
 .rotate {

@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { connect, useDispatch, useSelector } from "react-redux";
 import {
   faSync,
   faExternalLinkAlt,
   faPen
 } from "@fortawesome/free-solid-svg-icons";
 import { useAlert } from "react-alert";
+import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 
 import { capitalizeWord } from "../utils/capitalizeWord";
@@ -13,7 +13,8 @@ import {
   clearTrash,
   fetchPlaylists,
   movePlaylistsToTrash,
-  restorePlaylistsFromTrash
+  restorePlaylistsFromTrash,
+  setPlaylistConnections
 } from "../redux/actions/libraryActions";
 import { getSoundcloudProfile } from "../redux/actions/soundcloudActions";
 import FormCheckbox from "./form-checkbox";
@@ -21,21 +22,27 @@ import Modal from "./modal";
 import placeholderImg from "../assets/placeholder.png";
 import styles from "../styles/modal.module.css";
 
-const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
+const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   const user = useSelector(state => state.user);
   const playlists = useSelector(state => state.library.playlists);
-  const sourcePlaylists = playlists[source];
-  const settings = user[source];
-  const [playlistSettings, setPlaylistSettings] = useState(sourcePlaylists); // TODO this updates redux state but idk why
+  const isConnected = source && user[source] ? user[source].isConnected : null;
   const alert = useAlert();
   const dispatch = useDispatch();
+  const sourcePlaylists = playlists[source];
+  const settings = user[source];
+  const [playlistSettings, setPlaylistSettings] = useState([]);
+  const [hasSynced, setHasSynced] = useState(false);
 
-  // Soundcloud edit fields
-  const isScConnected = useSelector(state => state.user.soundcloud.isConnected);
   const [showUsernameInput, setShowUsernameInput] = useState(
-    !isScConnected && source === "soundcloud"
+    !isConnected && source === "soundcloud"
   );
   const [usernameInput, setUsernameInput] = useState("soundcloud.com/");
+
+  useEffect(() => {
+    if (source) {
+      setHasSynced(!isConnected);
+    }
+  }, [source, isConnected]);
 
   useEffect(() => {
     if (source === "soundcloud") {
@@ -50,12 +57,23 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
   }, [source, user]);
 
   useEffect(() => {
-    setPlaylistSettings(sourcePlaylists);
+    if (sourcePlaylists) {
+      const settings = sourcePlaylists.map(
+        ({ title, id, isConnected, total }) => ({
+          title,
+          id,
+          isConnected,
+          total
+        })
+      );
+      setPlaylistSettings(settings);
+    }
   }, [source, playlists, sourcePlaylists]);
 
   function onSubmit(e) {
     e.preventDefault();
-    setSettings(playlistSettings, source);
+
+    dispatch(setPlaylistConnections(source, playlistSettings));
     onClose();
   }
 
@@ -109,8 +127,14 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
     setUsernameInput(e.target.value);
   }
 
-  function handleSync() {
-    return handleUpdate(source, usernameInput.slice(15));
+  function handleSync(e) {
+    if (!hasSynced && isConnected) {
+      setHasSynced(true);
+
+      return handleUpdate(source, usernameInput.slice(15)).catch(e => {
+        alert.error(`Error syncing: ${e}`);
+      });
+    }
   }
 
   return (
@@ -187,6 +211,7 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
           className={styles.syncButton}
           type="button"
           onClick={handleSync}
+          disabled={hasSynced}
         >
           <FontAwesomeIcon size="2x" icon={faSync} />
         </button>
@@ -203,9 +228,7 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
                 title={playlist.title}
                 i={i}
                 key={i}
-                value={
-                  playlistSettings[i] ? playlistSettings[i].isConnected : null
-                }
+                value={playlist.isConnected}
                 numTracks={playlist.total}
                 onChange={toggleCheckbox}
               />
@@ -228,18 +251,4 @@ const SettingsForm = ({ show, source, setSettings, onClose, handleUpdate }) => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  // TODO implement this
-  // This is not doing anything lol
-  setSettings: (newSettings, source) =>
-    dispatch({
-      type: "SET_SETTINGS",
-      payload: newSettings,
-      source
-    })
-});
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(SettingsForm);
+export default SettingsForm;
