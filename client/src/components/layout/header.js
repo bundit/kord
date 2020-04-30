@@ -5,7 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
-import { setQuery } from "../../redux/actions/searchActions";
+import {
+  addToSearchHistory,
+  setQuery
+} from "../../redux/actions/searchActions";
 import SearchBar from "../search-bar";
 import styles from "../../styles/header.module.css";
 
@@ -25,6 +28,7 @@ function Header({ location }) {
     e.preventDefault();
 
     history.push(`/app/search/${query}`);
+    dispatch(addToSearchHistory(query));
   }
 
   function handleResetQuery() {

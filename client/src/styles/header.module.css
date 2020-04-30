@@ -1,13 +1,15 @@
 .header {
   /* Mobile Header */
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
   height: 4rem;
   border-bottom: 1px #383f41 solid;
   background: #151d20;
   padding-top: 1rem;
+  z-index: 1;
 }
 
 .mobileContainer {
