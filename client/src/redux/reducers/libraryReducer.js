@@ -107,6 +107,25 @@ export default function(state = initialState, action) {
       };
     }
 
+    case "SET_PLAYLIST_CONNECTIONS": {
+      const source = action.source;
+      const newSettings = action.payload;
+      const updateSettings = state.playlists[source].slice();
+
+      newSettings.forEach(updated => {
+        const index = updateSettings.findIndex(old => old.id === updated.id);
+        updateSettings[index].isConnected = updated.isConnected;
+      });
+
+      return {
+        ...state,
+        playlists: {
+          ...state.playlists,
+          [source]: updateSettings
+        }
+      };
+    }
+
     case "MOVE_PLAYLISTS_TO_TRASH": {
       const source = action.payload;
       const playlists = state.playlists[source];

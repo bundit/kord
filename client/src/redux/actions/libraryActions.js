@@ -70,6 +70,14 @@ export function clearTrash(source) {
   };
 }
 
+export const setPlaylistConnections = (source, newSettings) => {
+  return {
+    type: "SET_PLAYLIST_CONNECTIONS",
+    source,
+    payload: newSettings
+  };
+};
+
 export const fetchPlaylists = (source, username) => dispatch => {
   if (source === "spotify") {
     return dispatch(getUserSpotifyPlaylists());
