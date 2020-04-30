@@ -72,20 +72,20 @@ const TrackList = ({
   return (
     <div
       ref={scrollContainer}
-      className={styles.pageWrapper}
+      className={!search ? styles.pageWrapper : null}
       onScroll={loadTracksOnScroll}
     >
-      <div className={styles.listContainer}>
-        <h2 className={styles.listTitle}>{capitalizeWord(title)}</h2>
-        <div
-          className={`${styles.libraryWrapper}`}
-          style={
-            search && {
-              height: `${65 * listHeight}px`,
-              overflowY: "hidden"
-            }
+      <div
+        className={styles.listContainer}
+        style={
+          search && {
+            height: `${65 * listHeight + 150}px`,
+            overflowY: "hidden"
           }
-        >
+        }
+      >
+        <h2 className={styles.listTitle}>{capitalizeWord(title)}</h2>
+        <div className={`${styles.libraryWrapper}`}>
           {songs &&
             songs
               .slice(0, numShowTracks)

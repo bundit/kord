@@ -17,6 +17,7 @@
 }
 
 .listContainer {
+  transition: 0.4s ease-in-out;
   text-align: center;
   border-radius: 7px;
   background-color: #1e2629;
@@ -398,7 +399,8 @@
 
   .listContainer {
     flex: 1;
-    margin-right: 30px;
+    width: 550px;
+    margin-right: 0px;
   }
 }
 
