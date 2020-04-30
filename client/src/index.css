@@ -31,6 +31,10 @@ body {
   background-color: white;
 }
 
+h2 {
+  font-family: Pacifico;
+}
+
 .content {
   height: 100vh;
   display: flex;
