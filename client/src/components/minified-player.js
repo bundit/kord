@@ -8,7 +8,7 @@ import {
   faVolumeUp
 } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useState, useRef } from "react";
 
 import { ReactComponent as BackwardIcon } from "../assets/backward.svg";
 import { ReactComponent as ForwardIcon } from "../assets/forward.svg";
@@ -43,6 +43,10 @@ const MinifiedPlayer = ({
   handlePrev,
   handleNext
 }) => {
+  const [hoverOffset, setHoverOffset] = useState(0);
+  const [isUserHovering, setIsUserHovering] = useState(false);
+  const seekWrap = useRef(null);
+
   const isMobile = useMobileDetection();
 
   const progress = (isUserSeeking ? userSeekPos : seek) / duration;
@@ -63,9 +67,34 @@ const MinifiedPlayer = ({
       ? faVolumeDown
       : faVolumeUp;
 
+  const hoverRatio =
+    Number(hoverOffset) /
+    Number(seekWrap.current ? seekWrap.current.offsetWidth : 1);
+  const timeRatio = hoverRatio * duration;
+
+  function getPositionOnHover(e) {
+    setIsUserHovering(true);
+
+    const parentEl = e.target.getClientRects()[0];
+
+    if (parentEl) {
+      const elementLeftOffset = e.target.offsetLeft + e.clientX - parentEl.left;
+      setHoverOffset(elementLeftOffset);
+    }
+  }
+
+  function handleMouseOut() {
+    setIsUserHovering(false);
+  }
+
   return (
     <div className={styles.playerAndSeekContainer}>
-      <div className={progressBarStyles.progressContainer}>
+      <div
+        className={progressBarStyles.progressContainer}
+        ref={seekWrap}
+        onMouseMove={getPositionOnHover}
+        onMouseOut={handleMouseOut}
+      >
         <input
           className={progressBarStyles.desktopSeekBar}
           type="range"
@@ -81,6 +110,17 @@ const MinifiedPlayer = ({
           className={progressBarStyles.progressBar}
           style={{ width: progressPercent }}
         ></span>
+        <span
+          className={progressBarStyles.seekToolTip}
+          style={{ left: `${hoverOffset - 20}px` }}
+        >
+          <span
+            className={`${progressBarStyles.hoverTime} ${isUserHovering &&
+              progressBarStyles.isHovering}`}
+          >
+            {secondsToFormatted(timeRatio)}
+          </span>
+        </span>
       </div>
       <div
         className={`${styles.playerWrapper} ${styles.miniPlayer} ${progressBarStyles.playerWrapper}`}

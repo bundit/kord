@@ -5,18 +5,15 @@
   height: 0px;
 }
 
-.progressContainer * {
-  transition: 0.3s ease;
-}
-
 .progressBar {
-  pointer-events: none;
-  background-color: #fb1;
-  height: 1px;
   position: absolute;
+  height: 1px;
   bottom: 0px;
-  z-index: 2;
+  left: 0;
   transition: 0.4s ease-out;
+  background-color: #fb1;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .desktopSeekBar {
@@ -40,6 +37,7 @@
 }
 
 input[type="range"].desktopSeekBar {
+  transition: 0.4s ease-out;
   -webkit-appearance: none;
   width: 100%;
 }
@@ -113,6 +111,36 @@ input[type="range"].desktopSeekBar:focus::-ms-fill-lower {
 
 input[type="range"].desktopSeekBar:focus::-ms-fill-upper {
   background: #383f41;
+}
+
+.seekToolTip {
+  position: absolute;
+  width: 50px;
+  height: 40px;
+  bottom: 15px;
+  text-align: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hoverTime {
+  position: absolute;
+  width: 50px;
+  height: 25px;
+  bottom: 5px;
+  left: 0;
+  padding: 2px 4px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-weight: 600;
+  color: #ffd46b;
+  background-color: #121a1d;
+  transition: 0.25s ease-in;
+  transform: translateY(40px);
+}
+
+.isHovering {
+  transform: translateY(0px);
 }
 
 @media (min-width: 800px) {

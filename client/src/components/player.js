@@ -215,7 +215,7 @@ function useSetDurationOnTrackChange(current) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setSeek(0));
-    dispatch(setDuration(current.duration / 1000));
+    dispatch(setDuration(Math.round(current.duration / 1000)));
   }, [current, dispatch]); // Song was changed
 }
 
