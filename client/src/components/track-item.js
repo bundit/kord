@@ -1,11 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import {
   faSpotify,
   faSoundcloud,
   faYoutube
 } from "@fortawesome/free-brands-svg-icons";
-import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
-import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import PropTypes from "prop-types";
 import React from "react";
 

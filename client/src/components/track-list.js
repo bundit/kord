@@ -75,17 +75,17 @@ const TrackList = ({
       className={!search ? styles.pageWrapper : null}
       onScroll={loadTracksOnScroll}
     >
-      <div
-        className={styles.listContainer}
-        style={
-          search && {
-            height: `${65 * listHeight + 150}px`,
-            overflowY: "hidden"
-          }
-        }
-      >
+      <div className={styles.listContainer}>
         <h2 className={styles.listTitle}>{capitalizeWord(title)}</h2>
-        <div className={`${styles.libraryWrapper}`}>
+        <div
+          className={`${styles.libraryWrapper}`}
+          style={
+            search && {
+              height: `${65 * listHeight}px`,
+              overflowY: "hidden"
+            }
+          }
+        >
           {songs &&
             songs
               .slice(0, numShowTracks)
@@ -129,7 +129,7 @@ function useLoadTracksOnScroll(
     const eScrollHeight = e.target.scrollHeight - 10;
     if (eScrollTop + eHeight >= eScrollHeight) {
       showMoreTracks();
-      if (tracks.length < numCurrentlyShown) {
+      if (tracks.length <= numCurrentlyShown) {
         loadMoreTracks();
       }
     }
