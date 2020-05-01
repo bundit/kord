@@ -4,6 +4,8 @@ import {
   faSoundcloud,
   faYoutube
 } from "@fortawesome/free-brands-svg-icons";
+import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import PropTypes from "prop-types";
 import React from "react";
 
@@ -17,13 +19,14 @@ import styles from "../styles/library.module.css";
 const TrackItem = ({ track, handlePlay, isActive, isPlaying, index }) => {
   const { title, duration: ms, artist, source } = track;
   const artistName = formatArtistName(artist);
+  const isStreamable = track.streamable || track.streamable === null;
 
   function handlePlayTrack(e) {
     e.target.blur();
-    handlePlay(index);
+    if (isStreamable) {
+      handlePlay(index);
+    }
   }
-
-  const isStreamable = track.streamable || track.streamable === null;
 
   return (
     <div style={{ position: "relative" }}>
@@ -42,14 +45,29 @@ const TrackItem = ({ track, handlePlay, isActive, isPlaying, index }) => {
             src={track.img ? getImgUrl(track, "sm") : placeholderImg}
             alt="track"
           />
-          {isActive && (
+          {isStreamable && (
             <div className={styles.overlay}>
-              <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />
-              <div
-                className={`${styles.bar} ${styles.midBar} ${!isPlaying &&
-                  styles.paused}`}
-              />
-              <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />
+              {isPlaying && isActive ? (
+                <>
+                  <div
+                    className={`${styles.bar} ${!isPlaying && styles.paused}`}
+                  />
+                  <div
+                    className={`${styles.bar} ${styles.midBar} ${!isPlaying &&
+                      styles.paused}`}
+                  />
+                  <div
+                    className={`${styles.bar} ${!isPlaying && styles.paused}`}
+                  />
+                </>
+              ) : (
+                <button
+                  onClick={handlePlayTrack}
+                  className={styles.trackPlayButton}
+                >
+                  <FontAwesomeIcon icon={faPlay} size="lg" />
+                </button>
+              )}
             </div>
           )}
         </div>

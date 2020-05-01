@@ -57,7 +57,6 @@
 }
 
 .trackWrapper {
-  cursor: pointer;
   display: flex;
   align-items: center;
   min-height: 65px;
@@ -72,7 +71,6 @@
   overflow: hidden;
   font-size: 12px;
   border-radius: 7px;
-  /* border-bottom: 1px dotted #999; */
 }
 
 .trackWrapper:focus {
@@ -233,7 +231,8 @@
 
 .trackImageWrap,
 .trackImageWrap,
-.overlay {
+.overlay,
+.trackPlayButton {
   height: 3rem;
   width: 3rem;
 }
@@ -244,12 +243,14 @@
   box-sizing: border-box;
 }
 
-.trackImage {
+.trackImage,
+.artistImage {
   border-radius: 7px;
 }
 
-.artistImage {
-  border-radius: 7px;
+.playingNow .overlay,
+.trackWrapper:hover .overlay {
+  opacity: 1;
 }
 
 .overlay {
@@ -259,8 +260,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(0, 0, 0, 0.3);
+  background-color: rgb(0, 0, 0, 0.5);
   border-radius: 0.5rem;
+  opacity: 0;
+  transition: 0.3s ease-out;
+}
+
+.trackPlayButton {
+  transition: 0.3s ease;
+  cursor: pointer;
+  color: white;
+  opacity: 1;
+  font-size: 14px;
+  outline: none;
+}
+
+.trackPlayButton:hover {
+  transform: scale(1.2);
+}
+
+.trackPlayButton:active {
+  transform: scale(1);
 }
 
 .bar {
@@ -274,7 +294,7 @@
 
 .midBar {
   height: 0.8rem;
-  width: 0.2;
+  width: 0.2rem;
   animation: secBar ease-in-out 0.8s infinite;
 }
 
