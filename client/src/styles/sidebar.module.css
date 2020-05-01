@@ -132,6 +132,10 @@
   transform: scale(1.1);
 }
 
+.connectedSource:active {
+  transform: scale(1);
+}
+
 @media (min-width: 800px) {
   .sidebarWrapper {
     display: flex;
