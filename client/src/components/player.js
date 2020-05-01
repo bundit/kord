@@ -10,6 +10,7 @@ import {
   nextTrack,
   pause,
   play,
+  prevTrack,
   setDuration,
   setSeek,
   setVolume
@@ -70,43 +71,40 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
     }
   }
 
+  function handlePrevTrack() {
+    if (seek < 5) {
+      dispatch(prevTrack());
+    } else handleSeek(0);
+  }
+
+  function handleNextTrack() {
+    dispatch(nextTrack());
+  }
+
   function handleSeek(seconds) {
-    if (soundcloudPlayer.current) {
-      let newSeekPos = soundcloudPlayer.current.seek() + seconds;
+    if (seconds < 0) seconds = 0;
+    if (seconds > duration) seconds = duration;
 
-      // Ensure our new seek position is within bounds
-      newSeekPos = newSeekPos < 0 ? 0 : newSeekPos;
-      newSeekPos = newSeekPos > duration ? duration : newSeekPos;
-
-      // Move the player to the new position
-      soundcloudPlayer.current.seek(newSeekPos);
-
-      if (!isPlaying) {
-        dispatch(setSeek(newSeekPos));
-      }
+    if (current.source === "soundcloud") {
+      soundcloudPlayer.current.seek(seconds);
+      dispatch(setSeek(seconds));
     }
+
+    if (isSpotifySdkReady && current.source === "spotify") {
+      spotifyPlayer.current.seek(seconds * 1000);
+    }
+
+    dispatch(setSeek(seconds));
   }
 
   function handleMouseDownSeek() {
     setIsUserSeeking(true);
   }
 
-  // When the user has released mouse/touch on slider,
-  // we set the isUserSeeking to false to allow the
-  // component to be controlled by the player
   function handleMouseUpSeek() {
     const newSeekPos = Number(userSeekPos);
 
-    if (current.source === "soundcloud") {
-      soundcloudPlayer.current.seek(newSeekPos);
-      dispatch(setSeek(newSeekPos));
-    }
-
-    if (isSpotifySdkReady && current.source === "spotify") {
-      spotifyPlayer.current.seek(newSeekPos * 1000);
-      dispatch(setSeek(newSeekPos));
-    }
-
+    handleSeek(newSeekPos);
     setIsUserSeeking(false);
   }
 
@@ -176,6 +174,8 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
           handleOnChangeUserSeek={handleOnChangeUserSeek}
           handleMouseDownSeek={handleMouseDownSeek}
           handleMouseUpSeek={handleMouseUpSeek}
+          handlePrev={handlePrevTrack}
+          handleNext={handleNextTrack}
         />
       </CSSTransition>
       {/* Mini Player */}
@@ -203,6 +203,8 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
           handleOnChangeVolume={handleOnChangeVolume}
           handleMouseDownVolume={handleMouseDownVolume}
           handleMouseUpVolume={handleMouseUpVolume}
+          handlePrev={handlePrevTrack}
+          handleNext={handleNextTrack}
         />
       </CSSTransition>
     </>
@@ -276,9 +278,14 @@ Player.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   current: PropTypes.object.isRequired,
   isPlaying: PropTypes.bool.isRequired,
-  duration: PropTypes.number.isRequired,
+  duration: PropTypes.number,
   volume: PropTypes.number.isRequired,
-  seek: PropTypes.number.isRequired
+  seek: PropTypes.number
+};
+
+Player.defaultProps = {
+  duration: 0,
+  seek: 0
 };
 
 const mapStateToProps = state => ({

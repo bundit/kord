@@ -7,7 +7,6 @@ import {
   faVolumeDown,
   faVolumeUp
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
@@ -17,7 +16,6 @@ import { ReactComponent as PauseIcon } from "../assets/pause-button.svg";
 import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import { formatArtistName } from "../utils/formatArtistName";
 import { getImgUrl } from "../utils/getImgUrl";
-import { nextTrack, prevTrack } from "../redux/actions/playerActions";
 import { useMobileDetection } from "../utils/hooks";
 import placeholderImg from "../assets/track-placeholder.jpg";
 import progressBarStyles from "../styles/progressBar.module.css";
@@ -41,10 +39,11 @@ const MinifiedPlayer = ({
   userVolumeValue,
   handleOnChangeVolume,
   handleMouseDownVolume,
-  handleMouseUpVolume
+  handleMouseUpVolume,
+  handlePrev,
+  handleNext
 }) => {
   const isMobile = useMobileDetection();
-  const dispatch = useDispatch();
 
   const progress = (isUserSeeking ? userSeekPos : seek) / duration;
   const progressPercent = `${progress * 100}%`;
@@ -63,6 +62,7 @@ const MinifiedPlayer = ({
       : currentVolumeValue < 0.5
       ? faVolumeDown
       : faVolumeUp;
+
   return (
     <div className={styles.playerAndSeekContainer}>
       <div className={progressBarStyles.progressContainer}>
@@ -72,7 +72,7 @@ const MinifiedPlayer = ({
           min="0"
           max={duration}
           step="any"
-          value={isUserSeeking ? userSeekPos : seek}
+          value={isUserSeeking ? userSeekPos : seek || 0}
           onChange={handleOnChangeUserSeek}
           onMouseDown={handleMouseDownSeek}
           onMouseUp={handleMouseUpSeek}
@@ -123,7 +123,7 @@ const MinifiedPlayer = ({
           <button
             type="button"
             className={styles.backwardButton}
-            onClick={() => dispatch(prevTrack())}
+            onClick={handlePrev}
           >
             <BackwardIcon />
           </button>
@@ -137,7 +137,7 @@ const MinifiedPlayer = ({
           <button
             type="button"
             className={styles.forwardButton}
-            onClick={() => dispatch(nextTrack())}
+            onClick={handleNext}
           >
             <ForwardIcon />
           </button>
