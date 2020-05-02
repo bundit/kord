@@ -25,8 +25,7 @@ const initialState = {
   isPlaying: false,
   volume: 1.0,
   index: 0,
-  queue: [],
-  player: null
+  queue: []
 };
 
 export default function(state = initialState, action) {
@@ -37,14 +36,16 @@ export default function(state = initialState, action) {
         isPlaying: true
       };
     }
+
     case PAUSE: {
       return {
         ...state,
         isPlaying: false
       };
     }
+
     case SEEK: {
-      let newPos = state.position + action.payload;
+      let newPos = state.seek + action.payload;
       newPos = newPos < 0 ? 0 : newPos;
       newPos = newPos > state.trackLength ? state.trackLength : newPos;
 
@@ -53,12 +54,14 @@ export default function(state = initialState, action) {
         seek: newPos
       };
     }
+
     case SET_PLAYER: {
       return {
         ...state,
         player: action.payload
       };
     }
+
     case SET_TRACK: {
       return {
         ...state,
@@ -67,49 +70,67 @@ export default function(state = initialState, action) {
         isLoaded: false
       };
     }
+
     case SET_DURATION: {
       return {
         ...state,
         duration: action.payload
       };
     }
+
     case SET_SEEK: {
       return {
         ...state,
         seek: action.payload
       };
     }
-    case NEXT_TRACK: {
-      const nextIndex = state.index + 1;
-      const nextTrack = state.queue[nextIndex];
-      const queueLength = state.queue.length;
 
-      if (nextIndex >= queueLength) return initialState;
+    case NEXT_TRACK: {
+      let nextIndex = state.index;
+      const queue = state.queue;
+
+      do {
+        nextIndex++;
+      } while (nextIndex < queue.length && !queue[nextIndex].streamable);
+
+      const nextTrack = state.queue[nextIndex];
+
+      if (nextIndex >= queue.length) {
+        return {
+          ...initialState,
+          isPlaying: false,
+          volume: state.volume
+        };
+      }
 
       return {
         ...state,
         currentTrack: nextTrack,
-        position: 0,
         duration: nextTrack.duration,
-        index: nextIndex,
-        isLoaded: false
+        index: nextIndex
       };
     }
-    case PREV_TRACK: {
-      const prevIndex = state.index - 1;
-      const prevTrack = state.queue[prevIndex];
 
-      if (prevIndex < 0) return state;
+    case PREV_TRACK: {
+      let prevIndex = state.index;
+      const queue = state.queue;
+
+      do {
+        prevIndex--;
+      } while (prevIndex > 0 && !queue[prevIndex].streamable);
+
+      if (prevIndex < 0) prevIndex = 0;
+
+      const prevTrack = state.queue[prevIndex];
 
       return {
         ...state,
         currentTrack: prevTrack,
-        position: 0,
         duration: prevTrack.duration,
-        index: prevIndex,
-        isLoaded: false
+        index: prevIndex
       };
     }
+
     case ADD_TO_QUEUE: {
       const newQ = state.queue;
       newQ.push(action.payload);
@@ -119,24 +140,28 @@ export default function(state = initialState, action) {
         queue: newQ
       };
     }
+
     case SET_QUEUE: {
       return {
         ...state,
         queue: action.payload
       };
     }
+
     case "SET_QUEUE_INDEX": {
       return {
         ...state,
         index: action.payload
       };
     }
+
     case "SET_VOLUME": {
       return {
         ...state,
         volume: action.payload
       };
     }
+
     default:
       return state;
   }
