@@ -285,18 +285,17 @@
 }
 
 .bar {
-  width: 0.2rem;
+  min-width: 4px;
   height: 1.9rem;
   background-color: white;
-  margin: 0.25rem;
-  border-radius: 0.5rem;
-  animation: mainBar ease-in-out 0.8s infinite;
+  margin: auto 3px;
+  border-radius: 3px;
+  animation: mainBar ease-in-out 0.9s infinite;
 }
 
 .midBar {
-  height: 0.8rem;
-  width: 0.2rem;
-  animation: secBar ease-in-out 0.8s infinite;
+  height: 1.9rem;
+  animation: secBar ease-in-out 0.9s infinite;
 }
 
 .paused {
