@@ -1,41 +1,71 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import { NavLink } from "react-router-dom";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import PropTypes from "prop-types";
+import React from "react";
 
-import styles from "../styles/library.module.css";
+import { capitalizeWord } from "../utils/capitalizeWord";
+import { getImgUrl } from "../utils/getImgUrl";
+import { playTrack } from "../redux/actions/playerActions";
 import sidebarStyles from "../styles/sidebar.module.css";
+import styles from "../styles/library.module.css";
 
-const PlaylistItem = ({ title, source, id, sidebar }) => (
-  <NavLink
-    to={`/app/library/playlists/${source}/${id}/${title}`}
-    className={sidebar ? sidebarStyles.sidebarNavLink : styles.trackWrapper}
-    activeClassName={sidebar && sidebarStyles.activeNavLink}
-  >
-    <div className={styles.titleWrapper}>
-      <div>{title}</div>
-    </div>
-    <div
-      style={{
-        marginLeft: "auto",
-        display: "inherit",
-        flexDirection: "inherit"
-      }}
+const PlaylistItem = ({ playlist, sidebar }) => {
+  const { source, id, title } = playlist;
+  const dispatch = useDispatch();
+
+  function handlePlayPlaylist(e) {
+    dispatch(playTrack(0, playlist.tracks));
+
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  return (
+    <NavLink
+      to={`/app/library/playlists/${source}/${id}/${title}`}
+      className={sidebar ? sidebarStyles.sidebarNavLink : styles.playlistItem}
+      activeClassName={sidebar && sidebarStyles.activeNavLink}
     >
       {!sidebar && (
-        <>
-          <button type="button" onClick={e => e.preventDefault()}>
-            <FontAwesomeIcon icon={faEllipsisV} />
-          </button>
-        </>
+        <div className={styles.playlistImageWrap}>
+          <img src={getImgUrl(playlist, "lg")} alt={`${title}-art`} />
+          <div className={styles.playlistImageOverlay}>
+            {playlist.total ? (
+              <button
+                type="button"
+                className={styles.playlistPlayButton}
+                onClick={handlePlayPlaylist}
+              >
+                <FontAwesomeIcon icon={faPlay} size="4x" />
+              </button>
+            ) : null}
+          </div>
+        </div>
       )}
-    </div>
-  </NavLink>
-);
+      <div className={styles.playlistInfoWrap}>
+        {!sidebar ? (
+          <div>
+            <h3>{capitalizeWord(title)}</h3>
+            <span>{`${playlist.total} Tracks`}</span>
+          </div>
+        ) : (
+          <div>{capitalizeWord(title)}</div>
+        )}
+      </div>
+    </NavLink>
+  );
+};
 
 PlaylistItem.propTypes = {
-  title: PropTypes.string.isRequired
+  playlist: PropTypes.object,
+  sidebar: PropTypes.bool
+};
+
+PlaylistItem.defaultProps = {
+  playlist: {},
+  sidebar: false
 };
 
 export default PlaylistItem;
