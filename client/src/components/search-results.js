@@ -1,3 +1,4 @@
+import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import React, { useEffect } from "react";
@@ -12,9 +13,13 @@ const SearchResults = () => {
   const results = useSelector(state => state.search);
   const { query } = useParams();
   const dispatch = useDispatch();
+  const alert = useAlert();
 
   useEffect(() => {
-    dispatch(searchForMusic(query));
+    dispatch(searchForMusic(query)).catch(e => {
+      alert.error("Search Error");
+    });
+    // eslint-disable-next-line
   }, [query, dispatch]);
 
   const resultsComponents = [];

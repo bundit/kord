@@ -45,15 +45,17 @@ export function addToSearchHistory(query) {
 
 export const searchForMusic = query => dispatch => {
   const user = store.getState().user;
+  const requests = [];
 
   if (user.soundcloud.isConnected) {
-    dispatch(searchSoundcloudTracks(query));
-    // dispatch(searchSoundcloudArtists(query));
+    requests.push(searchSoundcloudTracks);
   }
 
   if (user.spotify.isConnected) {
-    dispatch(searchSpotify(query));
+    requests.push(searchSpotify);
   }
+
+  return Promise.all(requests.map(request => dispatch(request(query))));
 };
 
 export const loadMoreTrackResults = source => dispatch => {
