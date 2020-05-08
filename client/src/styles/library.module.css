@@ -1,15 +1,18 @@
 .pageWrapper {
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
   margin-top: 61px;
   margin-bottom: 135px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .libraryWrapper {
   display: flex;
   flex-direction: column;
   background-color: #192124;
-  overflow: auto;
   border-radius: 7px;
   margin: 0;
   background-color: #1e2629;
@@ -18,11 +21,14 @@
 }
 
 .listContainer {
+  height: max-content;
+  width: 100%;
   transition: 0.4s ease-in-out;
   text-align: center;
   border-radius: 7px;
   background-color: #1e2629;
-  margin: 2rem 0;
+  padding: 1rem 0 2rem 0;
+  box-sizing: content-box;
 }
 
 .listTitle {
@@ -37,7 +43,7 @@
 .showMoreButton {
   color: black;
   background-color: #ce9300;
-  border: 1px #444 solid;
+  font-weight: 600;
   border-radius: 7px;
   padding: 10px;
   transition: 0.3s ease-out;
@@ -451,11 +457,15 @@
 
   .pageWrapper {
     margin: 80px 0;
+    display: grid;
+    grid-auto-rows: min-content;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    grid-row-gap: 3rem;
+    grid-column-gap: 3rem;
+    padding: 3rem;
   }
 
   .listContainer {
-    margin: 3rem;
-    padding: 1rem 0 2rem 0;
     background-color: #1e2629;
   }
 
@@ -510,16 +520,6 @@
 }
 
 @media (min-width: 1400px) {
-  .pageWrapper {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .listContainer {
-    flex: 1;
-    min-width: 550px;
-    margin-right: 0px;
-  }
 }
 
 @media (min-width: 1600px) {
