@@ -147,7 +147,7 @@ function mapCollectionToPlaylists(collection) {
   return collection.map(item => ({
     id: item.id,
     title: item.title,
-    images: item.artwork_url,
+    img: item.artwork_url,
     externalUrl: item.permalink_url,
     source: "soundcloud",
     tracks: mapCollectionToTracks(item.tracks),

@@ -241,7 +241,7 @@ function mapJsonToPlaylists(json) {
   return json.items.map(item => ({
     id: item.id,
     title: item.name,
-    images: item.images,
+    img: item.images,
     source: "spotify",
     tracks: [],
     total: item.tracks.total,
