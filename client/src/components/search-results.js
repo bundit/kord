@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 
 import { searchForMusic } from "../redux/actions/searchActions";
 import SearchTrackList from "./search-track-list";
+import styles from "../styles/library.module.css";
 
 const SearchResults = () => {
   const isPlaying = useSelector(state => state.player.isPlaying);
@@ -41,7 +42,7 @@ const SearchResults = () => {
     }
   });
 
-  return resultsComponents;
+  return <div className={styles.pageWrapper}>{resultsComponents}</div>;
 };
 
 export default SearchResults;
