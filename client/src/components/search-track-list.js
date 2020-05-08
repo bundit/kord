@@ -9,19 +9,18 @@ import { loadMoreSpotifyTracks } from "../redux/actions/spotifyActions";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
 
-const searchIncrementAmount = 5;
+const searchIncrementAmount = 10;
 
 const SearchTrackList = ({ source, tracks, currentTrackId, isPlaying }) => {
   const dispatch = useDispatch();
-  const [numShowTracks, setNumShowTracks] = useState(searchIncrementAmount);
-  const searchHasMoreToShow = tracks.next || numShowTracks < tracks.length;
+  const [numShowTracks, setNumShowTracks] = useState(0);
+  const searchHasMoreToShow = tracks.next || numShowTracks < tracks.list.length;
   const listHeight = Math.min(tracks.list.length, numShowTracks);
 
-  function handleLoadMoreTracks() {
-    if (tracks.next) {
-      dispatch(loadMoreTracks(source, tracks.next));
-    }
-  }
+  React.useEffect(() => {
+    setTimeout(handleShowMore, 1000);
+    // eslint-disable-next-line
+  }, []);
 
   function handleShowMore() {
     if (numShowTracks >= tracks.list.length) {
@@ -31,14 +30,20 @@ const SearchTrackList = ({ source, tracks, currentTrackId, isPlaying }) => {
     setNumShowTracks(numShowTracks + searchIncrementAmount);
   }
 
+  function handleLoadMoreTracks() {
+    if (tracks.next) {
+      dispatch(loadMoreTracks(source, tracks.next));
+    }
+  }
+
   return (
     <div className={styles.listContainer}>
       <h2 className={styles.listTitle}>{capitalizeWord(source)}</h2>
       <div
         className={`${styles.libraryWrapper}`}
         style={{
-          height: `${65 * listHeight}px`
-          // overflowY: "hidden"
+          height: `${65 * listHeight}px`,
+          overflowY: "hidden"
         }}
       >
         <TrackList
@@ -48,16 +53,24 @@ const SearchTrackList = ({ source, tracks, currentTrackId, isPlaying }) => {
           isPlaying={isPlaying}
         />
       </div>
-      {searchHasMoreToShow && (
+      {
         <button
           type="button"
           onClick={handleShowMore}
-          className={styles.showMoreButton}
+          className={
+            searchHasMoreToShow ? styles.showMoreButton : styles.endOfResults
+          }
         >
-          {"Show More "}
-          <FontAwesomeIcon icon={faAngleDown} />
+          {searchHasMoreToShow ? (
+            <>
+              {"Show More "}
+              <FontAwesomeIcon icon={faAngleDown} />
+            </>
+          ) : (
+            "End of results"
+          )}
         </button>
-      )}
+      }
     </div>
   );
 };

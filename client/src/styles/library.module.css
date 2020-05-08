@@ -31,6 +31,10 @@
   box-sizing: content-box;
 }
 
+.listContainer > button {
+  outline: none;
+}
+
 .listTitle {
   text-align: left;
   padding-left: 2rem;
@@ -53,6 +57,10 @@
 
 .showMoreButton:hover {
   background-color: #fb1;
+}
+
+.endOfResults {
+  color: #ccc;
 }
 
 .artistLink {
