@@ -19,7 +19,7 @@ export const getSoundcloudProfile = userId => dispatch => {
   return fetchGeneric(endpoint)
     .then(json => {
       const profile = mapJsonToProfile(json);
-      const beginHref = `${SC_API_BASE_URL}/users/${json.permalink}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
+      const beginHref = `${SC_API_BASE_URL}/users/${json.id}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
 
       const userLikes = {
         id: "likes",
@@ -104,7 +104,7 @@ function fetchScArtists(endpoint) {
 }
 
 export function fetchGeneric(endpoint) {
-  return fetch(endpoint).then(res => {
+  return fetch(endpoint, { mode: "cors" }).then(res => {
     if (res.status < 200 || res.status >= 300) {
       return Promise.reject(res);
     }
