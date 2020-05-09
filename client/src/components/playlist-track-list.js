@@ -2,8 +2,7 @@ import { useDispatch } from "react-redux";
 import React, { useRef, useState } from "react";
 
 import { capitalizeWord } from "../utils/capitalizeWord";
-import { getSoundcloudLikes } from "../redux/actions/soundcloudActions";
-import { getSpotifyPlaylistTracks } from "../redux/actions/spotifyActions";
+import { loadPlaylistTracks } from "../redux/actions/libraryActions";
 import { usePrevious } from "../utils/hooks";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
@@ -25,13 +24,13 @@ const PlaylistTracklist = ({
   const currentPlaylist = playlists[source][playlistIndex] || {};
   const tracks = currentPlaylist.tracks || [];
 
-  const handleLoadMoreTracks = React.useCallback(() => {
+  const dispatchLoadMoreTracks = React.useCallback(() => {
     const { source, id, next } = currentPlaylist;
-    dispatch(loadMoreTracks(source, id, next));
+    dispatch(loadPlaylistTracks(source, id, next));
   }, [dispatch, currentPlaylist]);
 
   useResetOnPlaylistChange(currentPlaylist, setNumShowTracks, scrollContainer);
-  useLoadTracksIfEmpty(tracks, handleLoadMoreTracks);
+  useLoadTracksIfEmpty(tracks, dispatchLoadMoreTracks);
 
   function showMoreTracks() {
     setNumShowTracks(numShowTracks + playlistIncrementAmount);
@@ -41,7 +40,7 @@ const PlaylistTracklist = ({
     tracks,
     numShowTracks,
     showMoreTracks,
-    handleLoadMoreTracks
+    dispatchLoadMoreTracks
   );
 
   return (
@@ -104,22 +103,10 @@ function useLoadTracksOnScroll(
 
 function useLoadTracksIfEmpty(tracks, handleLoadMoreTracks) {
   React.useEffect(() => {
-    if (!tracks.length && loadMoreTracks) {
+    if (!tracks.length) {
       handleLoadMoreTracks();
     }
   }, [tracks, handleLoadMoreTracks]);
 }
-
-const loadMoreTracks = (source, id, next) => dispatch => {
-  if (!next) {
-    return;
-  }
-
-  if (source === "spotify") {
-    return dispatch(getSpotifyPlaylistTracks(id, next));
-  } else if (source === "soundcloud" && id === "likes") {
-    return dispatch(getSoundcloudLikes(next));
-  }
-};
 
 export default PlaylistTracklist;

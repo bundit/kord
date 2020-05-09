@@ -1,5 +1,11 @@
-import { getUserSoundcloudPlaylists } from "./soundcloudActions";
-import { getUserSpotifyPlaylists } from "./spotifyActions";
+import {
+  getSoundcloudLikes,
+  getUserSoundcloudPlaylists
+} from "./soundcloudActions";
+import {
+  getSpotifyPlaylistTracks,
+  getUserSpotifyPlaylists
+} from "./spotifyActions";
 
 export function importSongs(songs) {
   return {
@@ -83,5 +89,17 @@ export const fetchPlaylists = (source, username) => dispatch => {
     return dispatch(getUserSpotifyPlaylists());
   } else if (source === "soundcloud") {
     return dispatch(getUserSoundcloudPlaylists(username));
+  }
+};
+
+export const loadPlaylistTracks = (source, id, next) => dispatch => {
+  if (!next) {
+    return;
+  }
+
+  if (source === "spotify") {
+    return dispatch(getSpotifyPlaylistTracks(id, next));
+  } else if (source === "soundcloud" && id === "likes") {
+    return dispatch(getSoundcloudLikes(next));
   }
 };
