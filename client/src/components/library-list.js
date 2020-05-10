@@ -26,7 +26,10 @@ const LibraryList = () => {
   });
 
   return (
-    <div className={styles.pageWrapper} style={{ flexDirection: "column" }}>
+    <div
+      className={styles.pageWrapper}
+      style={{ display: "flex", flexDirection: "column" }}
+    >
       {components}
     </div>
   );
