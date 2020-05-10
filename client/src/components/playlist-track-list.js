@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 
 import { capitalizeWord } from "../utils/capitalizeWord";
 import { loadPlaylistTracks } from "../redux/actions/libraryActions";
+import { playTrack } from "../redux/actions/playerActions";
 import { usePrevious } from "../utils/hooks";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
@@ -43,6 +44,10 @@ const PlaylistTracklist = ({
     dispatchLoadMoreTracks
   );
 
+  function dispatchPlayTrack(index) {
+    dispatch(playTrack(index, tracks, currentPlaylist.next));
+  }
+
   return (
     <div
       className={`${styles.pageWrapper} ${styles.tracksScrollContainer}`}
@@ -58,6 +63,7 @@ const PlaylistTracklist = ({
             tracks={tracks.slice(0, numShowTracks)}
             currentTrackID={currentTrackID}
             isPlaying={isPlaying}
+            handlePlay={dispatchPlayTrack}
           />
         </div>
       </div>

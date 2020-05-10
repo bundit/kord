@@ -5,13 +5,15 @@ import React from "react";
 import { playTrack } from "../redux/actions/playerActions";
 import TrackItem from "./track-item";
 
-const TrackList = ({ search, tracks, currentTrackID, isPlaying }) => {
+const TrackList = ({
+  search,
+  tracks,
+  handlePlay,
+  currentTrackID,
+  isPlaying
+}) => {
   const queueIndex = useSelector(state => state.player.index);
   const dispatch = useDispatch();
-
-  function dispatchPlayTrack(index) {
-    dispatch(playTrack(index, tracks));
-  }
 
   return (
     tracks &&
@@ -19,7 +21,7 @@ const TrackList = ({ search, tracks, currentTrackID, isPlaying }) => {
       <TrackItem
         key={`${search ? "Search" : "Lib"}:${track.source}:${track.id}:${i}`}
         track={track}
-        handlePlay={dispatchPlayTrack}
+        handlePlay={handlePlay}
         isActive={currentTrackID === track.id && i === queueIndex}
         isPlaying={isPlaying}
         index={i}

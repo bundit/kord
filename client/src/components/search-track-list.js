@@ -1,11 +1,12 @@
-import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
 import React, { useState } from "react";
 
 import { capitalizeWord } from "../utils/capitalizeWord";
 import { loadMoreSoundcloudTracks } from "../redux/actions/soundcloudActions";
 import { loadMoreSpotifyTracks } from "../redux/actions/spotifyActions";
+import { playTrack } from "../redux/actions/playerActions";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
 
@@ -36,6 +37,10 @@ const SearchTrackList = ({ source, tracks, currentTrackId, isPlaying }) => {
     }
   }
 
+  function dispatchPlayTrack(index) {
+    dispatch(playTrack(index, tracks.list, tracks.next));
+  }
+
   return (
     <div className={styles.listContainer}>
       <h2 className={styles.listTitle}>{capitalizeWord(source)}</h2>
@@ -51,6 +56,7 @@ const SearchTrackList = ({ source, tracks, currentTrackId, isPlaying }) => {
           tracks={tracks.list.slice(0, numShowTracks)}
           currentTrackID={currentTrackId}
           isPlaying={isPlaying}
+          handlePlay={dispatchPlayTrack}
         />
       </div>
       {

@@ -10,14 +10,23 @@ import {
   SET_SEEK,
   SET_TRACK
 } from "./types";
+import { fetchGeneric, mapCollectionToTracks } from "./soundcloudActions";
+import { mapJsonToTracks, spotifyApi } from "./spotifyActions";
+import store from "../store";
 
-export const playTrack = (index, tracklist) => dispatch => {
-  while (!tracklist[index].streamable && index < tracklist.length) {
+export const playTrack = (index, tracklist, nextHref) => dispatch => {
+  while (index < tracklist.length && !tracklist[index].streamable) {
     index++;
   }
-  dispatch(setTrack(tracklist[index]));
+  const currentTrack = tracklist[index];
+
+  dispatch(setTrack(currentTrack));
   dispatch(setQueueIndex(index));
   dispatch(setQueue(tracklist));
+  dispatch(setNextQueueHref(nextHref));
+  dispatch(setContext(currentTrack.source));
+
+  console.log(currentTrack.source);
 };
 
 export function play() {
@@ -60,11 +69,27 @@ export function setSeek(time) {
   };
 }
 
-export function nextTrack() {
+function next() {
   return {
     type: NEXT_TRACK
   };
 }
+
+export const nextTrack = () => dispatch => {
+  let state = store.getState();
+  let index = state.player.index;
+  const queue = state.player.queue;
+
+  do {
+    index++;
+  } while (index < queue.length && !queue[index].streamable);
+
+  if (index >= queue.length) {
+    return dispatch(loadMoreQueueTracks()).then(() => dispatch(next()));
+  }
+
+  return dispatch(next());
+};
 
 export function prevTrack() {
   return {
@@ -99,3 +124,60 @@ export function setVolume(newVolume) {
     payload: newVolume
   };
 }
+
+function setNextQueueHref(nextHref) {
+  return {
+    type: "SET_NEXT_QUEUE_HREF",
+    payload: nextHref
+  };
+}
+
+function setContext(source) {
+  return {
+    type: "SET_CONTEXT",
+    payload: source
+  };
+}
+
+export function appendQueue(tracks) {
+  return {
+    type: "APPEND_QUEUE",
+    payload: Array.isArray(tracks) ? tracks : [tracks]
+  };
+}
+
+const loadMoreQueueTracks = () => dispatch => {
+  const playerState = store.getState().player;
+  const { nextHref, context } = playerState;
+
+  if (!nextHref) {
+    return Promise.resolve("No more results");
+  }
+
+  let promise;
+  let tracks;
+  let next;
+
+  if (context === "spotify") {
+    promise = spotifyApi.getGeneric(nextHref).then(json => {
+      tracks = json.tracks
+        ? mapJsonToTracks(json.tracks, true)
+        : mapJsonToTracks(json);
+      next = json.tracks ? json.tracks.next : json.next;
+
+      return { tracks, next };
+    });
+  } else if (context === "soundcloud") {
+    promise = fetchGeneric(nextHref).then(data => {
+      tracks = mapCollectionToTracks(data.collection);
+      next = data.next_href;
+
+      return { tracks, next };
+    });
+  }
+
+  return promise.then(({ tracks, next }) => {
+    dispatch(appendQueue(tracks));
+    dispatch(setNextQueueHref(next));
+  });
+};

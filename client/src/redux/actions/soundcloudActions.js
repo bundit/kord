@@ -113,7 +113,7 @@ export function fetchGeneric(endpoint) {
   });
 }
 
-function mapCollectionToTracks(collection) {
+export function mapCollectionToTracks(collection) {
   if (!collection) {
     throw new Error("Collection is invalid");
   }

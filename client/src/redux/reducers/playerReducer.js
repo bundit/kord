@@ -25,7 +25,9 @@ const initialState = {
   isPlaying: false,
   volume: 1.0,
   index: 0,
-  queue: []
+  queue: [],
+  context: null,
+  nextHref: null
 };
 
 export default function(state = initialState, action) {
@@ -159,6 +161,27 @@ export default function(state = initialState, action) {
       return {
         ...state,
         volume: action.payload
+      };
+    }
+
+    case "SET_NEXT_QUEUE_HREF": {
+      return {
+        ...state,
+        nextHref: action.payload
+      };
+    }
+
+    case "SET_CONTEXT": {
+      return {
+        ...state,
+        context: action.payload
+      };
+    }
+
+    case "APPEND_QUEUE": {
+      return {
+        ...state,
+        queue: [...state.queue, ...action.payload]
       };
     }
 

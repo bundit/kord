@@ -16,7 +16,7 @@ import {
 } from "./searchActions";
 
 const SPOTIFY = "spotify";
-const spotifyApi = new SpotifyWebApi();
+export const spotifyApi = new SpotifyWebApi();
 
 export const setSpotifyAccessToken = token => dispatch => {
   spotifyApi.setAccessToken(token);
@@ -136,6 +136,7 @@ export const searchSpotify = (
 };
 
 function parseSpotifyResults(json) {
+  // eslint-disable-next-line
   const { tracks, artists, album } = json;
 
   let tracksPayload, artistsPayload;
@@ -205,7 +206,7 @@ function mapJsonToProfile(json) {
   };
 }
 
-function mapJsonToTracks(json, search = false) {
+export function mapJsonToTracks(json, search = false) {
   if (!search) {
     json = json.items.map(trackData => trackData.track);
   } else json = json.items;
