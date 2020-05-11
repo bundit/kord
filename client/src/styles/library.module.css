@@ -16,6 +16,7 @@
   border-radius: 7px;
   margin: 0;
   background-color: #1e2629;
+  background-color: inherit;
   text-align: left;
   transition: 0.3s ease-in;
 }

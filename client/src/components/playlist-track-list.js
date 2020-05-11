@@ -54,7 +54,10 @@ const PlaylistTracklist = ({
       ref={scrollContainer}
       onScroll={loadTracksOnScroll}
     >
-      <div className={styles.listContainer}>
+      <div
+        className={styles.listContainer}
+        style={{ backgroundColor: "inherit" }}
+      >
         <h2 className={styles.listTitle}>
           {capitalizeWord(currentPlaylist.title)}
         </h2>
