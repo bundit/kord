@@ -14,12 +14,14 @@ import { ReactComponent as BackwardIcon } from "../assets/backward.svg";
 import { ReactComponent as ForwardIcon } from "../assets/forward.svg";
 import { ReactComponent as PauseIcon } from "../assets/pause-button.svg";
 import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
-import { formatArtistName } from "../utils/formatArtistName";
+import {
+  formatArtistName,
+  secondsToFormatted
+} from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import { useMobileDetection } from "../utils/hooks";
 import placeholderImg from "../assets/track-placeholder.jpg";
 import progressBarStyles from "../styles/progressBar.module.css";
-import secondsToFormatted from "../utils/secondsToFormatted";
 import styles from "../styles/player.module.css";
 
 const MinifiedPlayer = ({

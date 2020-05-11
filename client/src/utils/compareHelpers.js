@@ -1,6 +1,5 @@
-import { formatArtistName } from "./formatArtistName";
+import { formatArtistName } from "./formattingHelpers";
 
-// Compare Songs
 export function compareSongs(song1, song2) {
   const titleCompare = song1.title
     .toLowerCase()
@@ -25,7 +24,6 @@ export function compareSongs(song1, song2) {
   return sourceCompare;
 }
 
-// Comapre Artists
 export function compareArtists(artist1, artist2) {
   artist1 = formatArtistName(artist1);
   artist2 = formatArtistName(artist2);
@@ -33,7 +31,6 @@ export function compareArtists(artist1, artist2) {
   return artist1.toLowerCase().localeCompare(artist2.toLowerCase());
 }
 
-// Compare Genres
 export function compareGenres(genre1, genre2) {
   return genre1.toLowerCase().localeCompare(genre2.toLowerCase());
 }

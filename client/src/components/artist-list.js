@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
 
-import { formatArtistName } from "../utils/formatArtistName";
+import { formatArtistName } from "../utils/formattingHelpers";
 import ArtistItem from "./artist-item";
 import styles from "../styles/library.module.css";
 

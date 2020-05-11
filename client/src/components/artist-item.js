@@ -3,7 +3,7 @@ import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import React from "react";
 
-import { formatArtistName } from "../utils/formatArtistName";
+import { formatArtistName } from "../utils/formattingHelpers";
 import placeholderImg from "../assets/placeholder.png";
 import styles from "../styles/library.module.css";
 

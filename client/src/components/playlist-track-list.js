@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import React, { useRef, useState } from "react";
 
-import { capitalizeWord } from "../utils/capitalizeWord";
+import { capitalizeWord } from "../utils/formattingHelpers";
 import { loadPlaylistTracks } from "../redux/actions/libraryActions";
 import { playTrack } from "../redux/actions/playerActions";
 import { usePrevious } from "../utils/hooks";

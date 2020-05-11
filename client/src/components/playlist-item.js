@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
-import { capitalizeWord } from "../utils/capitalizeWord";
+import { capitalizeWord } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import { loadPlaylistTracks } from "../redux/actions/libraryActions";
 import { playTrack } from "../redux/actions/playerActions";

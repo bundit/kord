@@ -11,11 +11,13 @@ import {
 import PropTypes from "prop-types";
 import React from "react";
 
-import { formatArtistName } from "../utils/formatArtistName";
+import {
+  formatArtistName,
+  secondsToFormatted
+} from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import placeholderImg from "../assets/placeholder.png";
 import progressBarStyles from "../styles/mobileProgressBar.module.css";
-import secondsToFormatted from "../utils/secondsToFormatted";
 import styles from "../styles/player.module.css";
 
 const ExpandedPlayer = ({

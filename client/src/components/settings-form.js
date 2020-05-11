@@ -8,7 +8,7 @@ import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 
-import { capitalizeWord } from "../utils/capitalizeWord";
+import { capitalizeWord } from "../utils/formattingHelpers";
 import {
   clearTrash,
   fetchPlaylists,

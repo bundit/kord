@@ -3,7 +3,7 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import React, { useState } from "react";
 
-import { capitalizeWord } from "../utils/capitalizeWord";
+import { capitalizeWord } from "../utils/formattingHelpers";
 import { loadMoreSoundcloudTracks } from "../redux/actions/soundcloudActions";
 import { loadMoreSpotifyTracks } from "../redux/actions/spotifyActions";
 import { playTrack } from "../redux/actions/playerActions";

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import React from "react";
 
-import { capitalizeWord } from "../utils/capitalizeWord";
+import { capitalizeWord } from "../utils/formattingHelpers";
 import PlaylistList from "./playlist-list";
 import styles from "../styles/library.module.css";
 

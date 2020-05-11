@@ -8,9 +8,8 @@ import {
 import PropTypes from "prop-types";
 import React from "react";
 
-import { formatArtistName } from "../utils/formatArtistName";
+import { formatArtistName, msToDuration } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
-import msToDuration from "../utils/msToDuration";
 import placeholderImg from "../assets/track-placeholder.jpg";
 import rippleEffect from "../utils/rippleEffect";
 import styles from "../styles/library.module.css";
