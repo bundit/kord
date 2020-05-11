@@ -1,11 +1,11 @@
 /* Slide animation for modal */
 .enter {
-  transform: translateY(400%);
+  transform: translateY(300%);
 }
 
 .enterActive {
   transform: translateY(0);
-  transition: transform 200ms linear;
+  transition: transform 0.25s ease-out;
 }
 
 .exit {
@@ -13,6 +13,6 @@
 }
 
 .exitActive {
-  transform: translateY(400%);
-  transition: transform 200ms linear;
+  transform: translateY(300%);
+  transition: transform 0.4s ease-in;
 }

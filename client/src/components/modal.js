@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import slideTransition from "../styles/slideModal.module.css";
+import fadeTransition from "../styles/fadeModal.module.css";
 import styles from "../styles/modal.module.css";
 import usePortal from "../utils/usePortal";
 
@@ -20,16 +21,21 @@ const Modal = ({
 
   return createPortal(
     <>
-      {show && (
+      <CSSTransition
+        in={show}
+        timeout={300}
+        classNames={fadeTransition}
+        unmountOnExit
+      >
         <div
           className={styles.backdrop}
           role="presentation"
-          onClick={isBackdropClosable ? () => onClose() : null}
+          onClick={isBackdropClosable ? onClose : null}
         />
-      )}
+      </CSSTransition>
       <CSSTransition
         in={show}
-        timeout={200}
+        timeout={350}
         classNames={slideTransition}
         unmountOnExit
       >
@@ -48,7 +54,6 @@ const Modal = ({
               <FontAwesomeIcon icon={faTimes} size="2x" />
             </button>
           </div>
-
           {children}
         </div>
       </CSSTransition>
