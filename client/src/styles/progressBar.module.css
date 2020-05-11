@@ -10,7 +10,7 @@
   height: 1px;
   bottom: 0px;
   left: 0;
-  transition: 0.4s ease-out;
+  transition: 0.3s ease-out;
   background-color: #fb1;
   pointer-events: none;
   z-index: 2;
@@ -32,12 +32,12 @@
 
 .timeContainer {
   font-size: 11px;
-  transition: 0.3s linear;
+  transition: 0.2s linear;
   color: #bbb;
 }
 
 input[type="range"].desktopSeekBar {
-  transition: 0.4s ease-out;
+  transition: 0.3s ease-out;
   -webkit-appearance: none;
   width: 100%;
 }

@@ -20,8 +20,9 @@
   box-sizing: border-box;
 }
 
-.miniPlayer button {
-  transition: 0.15s ease;
+.miniPlayer button,
+.miniPlayer button svg {
+  transition: 0.3s ease;
   padding: 0;
 }
 .miniPlayer button:hover svg {
@@ -31,11 +32,10 @@
   outline: none;
 }
 .miniPlayer button:hover {
-  transform: scale(1.1);
   cursor: pointer;
 }
 .miniPlayer button:active {
-  transform: scale(1);
+  transform: scale(0.9);
 }
 .miniPlayerExpandButton,
 .miniPlayerPlayButton,
@@ -44,7 +44,6 @@
   height: 30px;
   width: 30px;
   border-radius: 7px;
-  /* border: 1px #383f41 solid; */
 }
 
 .desktopPlayPauseButton {
