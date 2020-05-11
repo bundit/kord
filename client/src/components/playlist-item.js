@@ -33,7 +33,7 @@ const PlaylistItem = ({ playlist, sidebar }) => {
     <NavLink
       to={`/app/library/playlists/${source}/${id}/${title}`}
       className={sidebar ? sidebarStyles.sidebarNavLink : styles.playlistItem}
-      activeClassName={sidebar && sidebarStyles.activeNavLink}
+      activeClassName={sidebar ? sidebarStyles.activeNavLink : null}
     >
       {!sidebar && (
         <div className={styles.playlistImageWrap}>

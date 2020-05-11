@@ -1,8 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
-import { playTrack } from "../redux/actions/playerActions";
 import TrackItem from "./track-item";
 
 const TrackList = ({
@@ -13,7 +12,6 @@ const TrackList = ({
   isPlaying
 }) => {
   const queueIndex = useSelector(state => state.player.index);
-  const dispatch = useDispatch();
 
   return (
     tracks &&

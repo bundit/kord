@@ -118,7 +118,7 @@ const MinifiedPlayer = ({
             className={`${progressBarStyles.hoverTime} ${isUserHovering &&
               progressBarStyles.isHovering}`}
           >
-            {secondsToFormatted(timeRatio)}
+            {secondsToFormatted(timeRatio || 0)}
           </span>
         </span>
       </div>

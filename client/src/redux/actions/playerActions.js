@@ -25,8 +25,6 @@ export const playTrack = (index, tracklist, nextHref) => dispatch => {
   dispatch(setQueue(tracklist));
   dispatch(setNextQueueHref(nextHref));
   dispatch(setContext(currentTrack.source));
-
-  console.log(currentTrack.source);
 };
 
 export function play() {
