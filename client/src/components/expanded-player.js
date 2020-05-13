@@ -43,10 +43,7 @@ const ExpandedPlayer = ({
     >
       <FontAwesomeIcon icon={faAngleDown} size="2x" />
     </button>
-    <img
-      src={current.img ? getImgUrl(current, "lg") : placeholderImg}
-      alt="album-artwork.jpg"
-    />
+    <img src={getImgUrl(current, "lg")} alt="album-artwork.jpg" />
     {/* SEEK INPUT */}
     <div className={styles.volumeContainer}>
       <span>
@@ -83,7 +80,7 @@ const ExpandedPlayer = ({
       </button>
       {/* <button type="button" onClick={() => handleSeek(-15)}>
           <FontAwesomeIcon icon={faFastBackward} size="2x" />
-        </button> */}
+      </button> */}
       <button type="button" onClick={handlePlayPause}>
         <FontAwesomeIcon
           size="6x"
@@ -92,13 +89,14 @@ const ExpandedPlayer = ({
       </button>
       {/* <button type="button" onClick={() => handleSeek(15)}>
           <FontAwesomeIcon icon={faFastForward} size="2x" />
-        </button> */}
+      </button> */}
       <button type="button" onClick={handleNext}>
         <FontAwesomeIcon icon={faForward} size="3x" />
       </button>
     </div>
   </div>
 );
+
 ExpandedPlayer.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   current: PropTypes.object.isRequired,
@@ -109,10 +107,14 @@ ExpandedPlayer.propTypes = {
   isUserSeeking: PropTypes.bool.isRequired,
   userSeekPos: PropTypes.number.isRequired,
   seek: PropTypes.number.isRequired,
-  duration: PropTypes.number.isRequired,
+  duration: PropTypes.number,
   handleOnChangeUserSeek: PropTypes.func.isRequired,
   handleMouseDownSeek: PropTypes.func.isRequired,
   handleMouseUpSeek: PropTypes.func.isRequired
+};
+
+ExpandedPlayer.defaultProps = {
+  duration: 0
 };
 
 export default ExpandedPlayer;

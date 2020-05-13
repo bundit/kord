@@ -20,7 +20,6 @@ import {
 } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import { useMobileDetection } from "../utils/hooks";
-import placeholderImg from "../assets/track-placeholder.jpg";
 import progressBarStyles from "../styles/progressBar.module.css";
 import styles from "../styles/player.module.css";
 
@@ -139,10 +138,7 @@ const MinifiedPlayer = ({
         </button>
         <div className={styles.nowPlaying}>
           <div className={styles.miniPlayerImageWrap}>
-            <img
-              src={current.img ? getImgUrl(current, "md") : placeholderImg}
-              alt="album-art"
-            />
+            <img src={getImgUrl(current, "md")} alt="album-art" />
           </div>
           <div className={styles.titleWrapper}>
             <div className={styles.nowPlayingTitle}>{current.title}</div>

@@ -10,7 +10,6 @@ import React from "react";
 
 import { formatArtistName, msToDuration } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
-import placeholderImg from "../assets/track-placeholder.jpg";
 import rippleEffect from "../utils/rippleEffect";
 import styles from "../styles/library.module.css";
 
@@ -40,7 +39,7 @@ const TrackItem = ({ track, handlePlay, isActive, isPlaying, index }) => {
         <div className={styles.trackImageWrap}>
           <img
             className={styles.trackImage}
-            src={track.img ? getImgUrl(track, "sm") : placeholderImg}
+            src={getImgUrl(track, "sm")}
             alt="track"
           />
           {isStreamable && (
