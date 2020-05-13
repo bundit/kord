@@ -12,6 +12,7 @@ const appRoutes = require("./routes/app-routes");
 const authRoutes = require("./routes/auth-routes");
 const indexRoutes = require("./routes/index-routes");
 const userRoutes = require("./routes/user-routes");
+const apiRoutes = require("./routes/api-routes");
 
 const app = express();
 const isProduction = app.get("env") === "production";
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/api", apiRoutes);
 
 if (isProduction) {
   app.use("/", indexRoutes);

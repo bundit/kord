@@ -33,9 +33,9 @@ router.get("/token", (req, res, next) => {
 
     res.cookie("kordUser", newToken, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7
-      // maxAge: expires
-      // secure: process.env.NODE_ENV === "production"
+      maxAge: process.env.JWT_TOKEN_EXPIRE,
+      secure: process.env.NODE_ENV === "production",
+      overwrite: true
     });
 
     return res.status(200).json({ message: "success" });
