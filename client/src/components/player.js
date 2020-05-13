@@ -128,7 +128,18 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
     alert.error("Error: Spotify Premium Required");
   }
 
-  const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
+  function handleSoundcloudLoadError(id, err) {
+    if (soundcloudPlayer.current) {
+      if (err === 2 || err === 3) {
+        soundcloudPlayer.current.initHowler();
+      }
+      if (err === 4) {
+        handleNextTrack();
+      }
+    }
+  }
+
+  const KEY = process.env.REACT_APP_SC_KEY;
 
   return (
     <>
@@ -141,6 +152,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
           html5
           volume={volume}
           ref={soundcloudPlayer}
+          onLoadError={handleSoundcloudLoadError}
         />
       )}
       <SpotifyPlayer
