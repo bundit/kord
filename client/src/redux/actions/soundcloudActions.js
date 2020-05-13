@@ -7,9 +7,9 @@ import {
 } from "./searchActions";
 import { setConnection, setUserProfile } from "./userActions";
 
-const KEY = process.env.REACT_APP_SC_KEY || process.env.SOUNDCLOUD_CLIENT_ID;
+const KEY = process.env.REACT_APP_SC_KEY;
+const LIKES_KEY = process.env.REACT_APP_SC_V2_KEY;
 
-const MAX_LIMIT = 200;
 const LINK = 1;
 const SC_API_BASE_URL = "https://api.soundcloud.com";
 
@@ -19,7 +19,7 @@ export const getSoundcloudProfile = userId => dispatch => {
   return fetchGeneric(endpoint)
     .then(json => {
       const profile = mapJsonToProfile(json);
-      const beginHref = `${SC_API_BASE_URL}/users/${json.id}/favorites?client_id=${KEY}&limit=${MAX_LIMIT}&linked_partitioning=${LINK}`;
+      const beginHref = `https://api-v2.soundcloud.com/users/${json.id}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
 
       const userLikes = {
         id: "likes",
@@ -39,7 +39,11 @@ export const getSoundcloudProfile = userId => dispatch => {
 };
 
 export const getSoundcloudLikes = next => dispatch => {
-  return fetchGeneric(next).then(json => {
+  const proxyHref = `/api?url=${encodeURIComponent(
+    `${next}&client_id=${LIKES_KEY}`
+  )}`;
+
+  return fetchGeneric(proxyHref).then(json => {
     const tracks = mapCollectionToTracks(json.collection);
     const next = json.next_href;
 
@@ -118,25 +122,27 @@ export function mapCollectionToTracks(collection) {
     throw new Error("Collection is invalid");
   }
 
-  return collection.map(track => ({
-    title: track.title,
-    id: track.id,
-    artist: {
-      name: track.user.username,
-      img: track.user.avatar_url,
-      id: track.user.id
-    },
-    // date: track.created_at,
-    duration: track.duration,
-    // likes: track.likes_count,
-    // genre: track.genre,
-    // uri: track.uri,
-    // wave: track.waveform_url,
-    // streamUrl: track.stream_url,
-    streamable: track.streamable,
-    img: track.artwork_url,
-    source: "soundcloud"
-  }));
+  return collection
+    .map(track => track.track || track.playlist || track)
+    .map(track => ({
+      title: track.title,
+      id: track.id,
+      duration: track.duration,
+      streamable: track.streamable,
+      img: track.artwork_url,
+      source: "soundcloud",
+      artist: {
+        name: track.user.username,
+        img: track.user.avatar_url,
+        id: track.user.id
+      }
+      // date: track.created_at,
+      // likes: track.likes_count,
+      // genre: track.genre,
+      // uri: track.uri,
+      // wave: track.waveform_url,
+      // streamUrl: track.stream_url,
+    }));
 }
 
 function mapCollectionToPlaylists(collection) {

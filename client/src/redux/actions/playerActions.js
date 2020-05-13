@@ -146,7 +146,7 @@ export function appendQueue(tracks) {
 
 const loadMoreQueueTracks = () => dispatch => {
   const playerState = store.getState().player;
-  const { nextHref, context } = playerState;
+  let { nextHref, context } = playerState;
 
   if (!nextHref) {
     return Promise.resolve("No more results");
@@ -166,6 +166,12 @@ const loadMoreQueueTracks = () => dispatch => {
       return { tracks, next };
     });
   } else if (context === "soundcloud") {
+    if (nextHref.includes("api-v2")) {
+      nextHref = `/api?url=${encodeURIComponent(
+        `${nextHref}&client_id=${process.env.REACT_APP_SC_V2_KEY}`
+      )}`;
+    }
+
     promise = fetchGeneric(nextHref).then(data => {
       tracks = mapCollectionToTracks(data.collection);
       next = data.next_href;
