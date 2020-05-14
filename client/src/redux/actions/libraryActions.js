@@ -4,8 +4,10 @@ import {
 } from "./soundcloudActions";
 import {
   getSpotifyPlaylistTracks,
-  getUserSpotifyPlaylists
+  getUserSpotifyPlaylists,
+  importSavedSpotifyTracks
 } from "./spotifyActions";
+import store from "../store";
 
 export function importSongs(songs) {
   return {
@@ -92,6 +94,16 @@ export const fetchPlaylists = (source, username) => dispatch => {
   }
 };
 
+export const loadLikes = source => dispatch => {
+  if (source === "spotify") {
+    return dispatch(importSavedSpotifyTracks());
+  } else if (source === "soundcloud") {
+    const userId = store.getState().user.soundcloud.id;
+
+    return dispatch(getSoundcloudLikes(null, userId));
+  }
+};
+
 export const loadPlaylistTracks = (source, id, next) => dispatch => {
   if (!next) {
     return;
@@ -103,3 +115,11 @@ export const loadPlaylistTracks = (source, id, next) => dispatch => {
     return dispatch(getSoundcloudLikes(next));
   }
 };
+
+export function clearPlaylistTracks(source, playlistId) {
+  return {
+    type: "CLEAR_PLAYLIST_TRACKS",
+    source,
+    payload: playlistId
+  };
+}

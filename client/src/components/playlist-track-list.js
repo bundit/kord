@@ -1,9 +1,18 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay, faSync } from "@fortawesome/free-solid-svg-icons";
+import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
 import React, { useRef, useState } from "react";
 
 import { capitalizeWord } from "../utils/formattingHelpers";
-import { loadPlaylistTracks } from "../redux/actions/libraryActions";
+import {
+  clearPlaylistTracks,
+  loadLikes,
+  loadPlaylistTracks
+} from "../redux/actions/libraryActions";
+import { getImgUrl } from "../utils/getImgUrl";
 import { playTrack } from "../redux/actions/playerActions";
+import { timeSince } from "../utils/dateHelpers";
 import { usePrevious } from "../utils/hooks";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
@@ -18,8 +27,10 @@ const PlaylistTracklist = ({
   currentTrackID
 }) => {
   const dispatch = useDispatch();
+  const alert = useAlert();
   const scrollContainer = useRef(null);
   const [numShowTracks, setNumShowTracks] = useState(playlistIncrementAmount);
+  const [hasRefreshed, setHasRefreshed] = useState(false);
   // eslint-disable-next-line
   const playlistIndex = playlists[source].findIndex(p => p.id == id);
   const currentPlaylist = playlists[source][playlistIndex] || {};
@@ -27,8 +38,27 @@ const PlaylistTracklist = ({
 
   const dispatchLoadMoreTracks = React.useCallback(() => {
     const { source, id, next } = currentPlaylist;
-    dispatch(loadPlaylistTracks(source, id, next));
-  }, [dispatch, currentPlaylist]);
+    let promise;
+
+    if (id === "likes") {
+      promise = dispatch(loadLikes(source));
+    } else {
+      promise = dispatch(loadPlaylistTracks(source, id, next));
+    }
+    if (promise) {
+      promise
+        .then(() => {
+          if (hasRefreshed) {
+            alert.success("Playlist refreshed");
+          }
+        })
+        .catch(e => alert.error("Error loading tracks"));
+    }
+  }, [currentPlaylist, hasRefreshed, dispatch, alert]);
+
+  React.useEffect(() => {
+    setHasRefreshed(false);
+  }, [id]);
 
   useResetOnPlaylistChange(currentPlaylist, setNumShowTracks, scrollContainer);
   useLoadTracksIfEmpty(tracks, dispatchLoadMoreTracks);
@@ -48,29 +78,92 @@ const PlaylistTracklist = ({
     dispatch(playTrack(index, tracks, currentPlaylist.next));
   }
 
+  function handleRefresh() {
+    setHasRefreshed(true);
+    dispatch(clearPlaylistTracks(source, currentPlaylist.id));
+  }
+
   return (
-    <div
-      className={`${styles.pageWrapper} ${styles.tracksScrollContainer}`}
-      ref={scrollContainer}
-      onScroll={loadTracksOnScroll}
-    >
+    !isEmptyObject(currentPlaylist) && (
       <div
-        className={styles.listContainer}
-        style={{ backgroundColor: "inherit" }}
+        className={`${styles.pageWrapper} ${styles.tracksScrollContainer}`}
+        ref={scrollContainer}
+        onScroll={loadTracksOnScroll}
       >
-        <h2 className={styles.listTitle}>
-          {capitalizeWord(currentPlaylist.title)}
-        </h2>
-        <div className={`${styles.libraryWrapper}`}>
-          <TrackList
-            tracks={tracks.slice(0, numShowTracks)}
-            currentTrackID={currentTrackID}
-            isPlaying={isPlaying}
-            handlePlay={dispatchPlayTrack}
-          />
+        <div
+          className={styles.listContainer}
+          style={{ backgroundColor: "inherit" }}
+        >
+          <div className={styles.playlistHeader}>
+            <div
+              className={styles.playlistImageWrap}
+              style={{
+                width: "200px",
+                height: "200px",
+                paddingTop: 0,
+                marginLeft: "20px"
+              }}
+            >
+              <img
+                src={getImgUrl(currentPlaylist, "lg")}
+                alt={`${currentPlaylist.title}-art`}
+              />
+            </div>
+
+            <div className={styles.listTitleWrapper}>
+              <div style={{ display: "flex", alignItems: "flex-start" }}>
+                <h2
+                  className={styles.listTitle}
+                  style={{ paddingLeft: 0, marginTop: "0px" }}
+                >
+                  {capitalizeWord(currentPlaylist.title)}
+                </h2>
+                <button
+                  className={styles.syncButton}
+                  type="button"
+                  onClick={handleRefresh}
+                  disabled={hasRefreshed}
+                >
+                  <FontAwesomeIcon size="2x" icon={faSync} />
+                </button>
+              </div>
+              <div>{`${currentPlaylist.source.toUpperCase()} PLAYLIST`}</div>
+              <div>{`${currentPlaylist.total} Tracks`}</div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  marginTop: "auto"
+                }}
+              >
+                <button
+                  type="button"
+                  className={styles.playlistPlayButton}
+                  style={{
+                    borderRadius: "50%",
+                    backgroundColor: "#fb1",
+                    color: "black",
+                    marginLeft: "0"
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPlay} size="2x" />
+                </button>
+                <div>Last synced: {timeSince(currentPlaylist.dateSynced)} </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={`${styles.libraryWrapper}`}>
+            <TrackList
+              tracks={tracks.slice(0, numShowTracks)}
+              currentTrackID={currentTrackID}
+              isPlaying={isPlaying}
+              handlePlay={dispatchPlayTrack}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    )
   );
 };
 
@@ -116,6 +209,10 @@ function useLoadTracksIfEmpty(tracks, handleLoadMoreTracks) {
       handleLoadMoreTracks();
     }
   }, [tracks, handleLoadMoreTracks]);
+}
+
+function isEmptyObject(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
 export default PlaylistTracklist;

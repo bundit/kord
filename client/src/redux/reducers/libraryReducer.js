@@ -126,6 +126,31 @@ export default function(state = initialState, action) {
       };
     }
 
+    case "CLEAR_PLAYLIST_TRACKS": {
+      const source = action.source;
+      const playlistId = action.payload;
+
+      const updatedPlaylists = state.playlists[source].map(playlist => {
+        if (playlist.id === playlistId) {
+          return {
+            ...playlist,
+            next: "start",
+            tracks: [],
+            dateSynced: new Date()
+          };
+        }
+        return playlist;
+      });
+
+      return {
+        ...state,
+        playlists: {
+          ...state.playlists,
+          [source]: updatedPlaylists
+        }
+      };
+    }
+
     case "MOVE_PLAYLISTS_TO_TRASH": {
       const source = action.payload;
       const playlists = state.playlists[source];
