@@ -1,4 +1,5 @@
 import { cacheValue, loadCachedValue } from "../../utils/sessionStorage";
+import { getCurrentTime } from "../../utils/dateHelpers";
 import { importLikes, importPlaylists } from "./libraryActions";
 import {
   setArtistResults,
@@ -29,7 +30,8 @@ export const getSoundcloudProfile = userId => dispatch => {
         tracks: [],
         total: json.public_favorites_count,
         next: beginHref,
-        isConnected: false
+        isConnected: false,
+        dateSynced: new Date()
       };
 
       dispatch(importLikes("soundcloud", userLikes));
@@ -38,7 +40,11 @@ export const getSoundcloudProfile = userId => dispatch => {
     .then(() => dispatch(setConnection("soundcloud", true)));
 };
 
-export const getSoundcloudLikes = next => dispatch => {
+export const getSoundcloudLikes = (next, userId) => dispatch => {
+  if (!next) {
+    next = `https://api-v2.soundcloud.com/users/${userId}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
+  }
+
   const proxyHref = `/api?url=${encodeURIComponent(
     `${next}&client_id=${LIKES_KEY}`
   )}`;
@@ -158,7 +164,8 @@ function mapCollectionToPlaylists(collection) {
     source: "soundcloud",
     tracks: mapCollectionToTracks(item.tracks),
     total: item.tracks.length,
-    isConnected: false
+    isConnected: false,
+    dateSynced: new Date()
   }));
 }
 

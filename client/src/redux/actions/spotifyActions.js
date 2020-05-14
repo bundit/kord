@@ -63,7 +63,8 @@ export const importSavedSpotifyTracks = (
       next: json.next,
       total: json.total,
       source: "spotify",
-      isConnected: false
+      isConnected: false,
+      dateSynced: new Date()
     };
 
     dispatch(importLikes("spotify", userLikes));
@@ -247,6 +248,7 @@ function mapJsonToPlaylists(json) {
     tracks: [],
     total: item.tracks.total,
     next: "start",
-    isConnected: false
+    isConnected: false,
+    dateSynced: new Date()
   }));
 }
