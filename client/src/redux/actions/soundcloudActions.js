@@ -62,6 +62,8 @@ export const getSoundcloudLikes = (next, userId) => dispatch => {
     };
 
     dispatch(importLikes("soundcloud", likes));
+
+    return likes;
   });
 };
 
@@ -79,9 +81,11 @@ export const getSoundcloudPlaylistTracks = (id, next) => dispatch => {
   const playlistEndpoint = `https://api.soundcloud.com/playlists/${id}/?client_id=${KEY}`;
 
   return fetchGeneric(playlistEndpoint).then(data => {
-    const newTracks = mapCollectionToTracks(data.tracks);
+    const tracks = mapCollectionToTracks(data.tracks);
 
-    dispatch(importPlaylistTracks("soundcloud", id, newTracks));
+    dispatch(importPlaylistTracks("soundcloud", id, tracks));
+
+    return { tracks };
   });
 };
 

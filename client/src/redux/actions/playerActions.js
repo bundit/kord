@@ -11,6 +11,7 @@ import {
   SET_TRACK
 } from "./types";
 import { fetchGeneric, mapCollectionToTracks } from "./soundcloudActions";
+import { loadPlaylistTracks } from "./libraryActions";
 import { mapJsonToTracks, spotifyApi } from "./spotifyActions";
 import store from "../store";
 
@@ -136,6 +137,20 @@ function setContext(source) {
     payload: source
   };
 }
+
+export const playPlaylist = playlist => dispatch => {
+  const { source, id, next, tracks, total } = playlist;
+
+  if (total === 0) return;
+
+  if (!tracks.length) {
+    dispatch(loadPlaylistTracks(source, id, next)).then(({ tracks, next }) => {
+      dispatch(playTrack(0, tracks, next));
+    });
+  } else {
+    dispatch(playTrack(0, tracks, next));
+  }
+};
 
 export function appendQueue(tracks) {
   return {

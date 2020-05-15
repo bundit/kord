@@ -11,7 +11,7 @@ import {
   loadPlaylistTracks
 } from "../redux/actions/libraryActions";
 import { getImgUrl } from "../utils/getImgUrl";
-import { playTrack } from "../redux/actions/playerActions";
+import { playPlaylist, playTrack } from "../redux/actions/playerActions";
 import { timeSince } from "../utils/dateHelpers";
 import { usePrevious } from "../utils/hooks";
 import LoadingSpinner from "./loading-spinner";
@@ -105,10 +105,14 @@ const PlaylistTracklist = ({
 
   function handleRefresh() {
     setHasRefreshed(true);
-
-    // setTimeout(() => {
     dispatch(clearPlaylistTracks(source, currentPlaylist.id));
-    // }, 1000);
+  }
+
+  function handlePlayPlaylist(e) {
+    dispatch(playPlaylist(currentPlaylist));
+
+    e.stopPropagation();
+    e.preventDefault();
   }
 
   return (
@@ -166,11 +170,13 @@ const PlaylistTracklist = ({
               >
                 <button
                   type="button"
+                  onClick={handlePlayPlaylist}
                   className={styles.playlistPlayButton}
                   style={{
                     borderRadius: "50%",
-                    backgroundColor: "#fb1",
-                    color: "black",
+                    background:
+                      "linear-gradient(330deg, rgba(255,187,17,1) 0%, rgba(255,200,66,1) 70%, rgba(255,255,255,1) 100%)",
+                    color: "#192124",
                     marginLeft: "0",
                     cursor: "pointer"
                   }}

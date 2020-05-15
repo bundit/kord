@@ -7,23 +7,16 @@ import React from "react";
 
 import { capitalizeWord } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
-import { loadPlaylistTracks } from "../redux/actions/libraryActions";
-import { playTrack } from "../redux/actions/playerActions";
+import { playPlaylist } from "../redux/actions/playerActions";
 import sidebarStyles from "../styles/sidebar.module.css";
 import styles from "../styles/library.module.css";
 
 const PlaylistItem = ({ playlist, sidebar }) => {
-  const { source, id, title, next } = playlist;
+  const { source, id, title } = playlist;
   const dispatch = useDispatch();
 
   function handlePlayPlaylist(e) {
-    if (!playlist.tracks.length) {
-      dispatch(loadPlaylistTracks(source, id, next)).then(() =>
-        dispatch(playTrack(0, playlist.tracks))
-      );
-    } else {
-      dispatch(playTrack(0, playlist.tracks));
-    }
+    dispatch(playPlaylist(playlist));
 
     e.stopPropagation();
     e.preventDefault();

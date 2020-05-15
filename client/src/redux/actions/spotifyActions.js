@@ -54,13 +54,14 @@ export const importSavedSpotifyTracks = (
   market = "from_token"
 ) => dispatch => {
   return spotifyApi.getMySavedTracks({ limit, offset, market }).then(json => {
-    const newTracks = mapJsonToTracks(json);
+    const tracks = mapJsonToTracks(json);
+    const next = json.next;
 
     const userLikes = {
       title: "Spotify Likes",
       id: "likes",
-      tracks: newTracks,
-      next: json.next,
+      tracks: tracks,
+      next: next,
       total: json.total,
       source: "spotify",
       isConnected: false,
@@ -68,6 +69,8 @@ export const importSavedSpotifyTracks = (
     };
 
     dispatch(importLikes("spotify", userLikes));
+
+    return { tracks, next };
   });
 };
 
@@ -101,10 +104,13 @@ export const getSpotifyPlaylistTracks = (
 
   return json
     .then(json => {
-      const newTracks = mapJsonToTracks(json);
+      const tracks = mapJsonToTracks(json);
+      const next = json.next;
 
-      dispatch(importPlaylistTracks(SPOTIFY, id, newTracks));
-      dispatch(setNextPlaylistHref(SPOTIFY, id, json.next));
+      dispatch(importPlaylistTracks(SPOTIFY, id, tracks));
+      dispatch(setNextPlaylistHref(SPOTIFY, id, next));
+
+      return { tracks, next };
     })
     .catch(err => {
       return dispatch(errorHandler(err)).then(() =>
