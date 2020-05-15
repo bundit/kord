@@ -1,6 +1,9 @@
 import { cacheValue, loadCachedValue } from "../../utils/sessionStorage";
-import { getCurrentTime } from "../../utils/dateHelpers";
-import { importLikes, importPlaylists } from "./libraryActions";
+import {
+  importLikes,
+  importPlaylistTracks,
+  importPlaylists
+} from "./libraryActions";
 import {
   setArtistResults,
   setMoreTrackResults,
@@ -69,6 +72,16 @@ export const getUserSoundcloudPlaylists = username => dispatch => {
     const newPlaylists = mapCollectionToPlaylists(data);
 
     dispatch(importPlaylists("soundcloud", newPlaylists));
+  });
+};
+
+export const getSoundcloudPlaylistTracks = (id, next) => dispatch => {
+  const playlistEndpoint = `https://api.soundcloud.com/playlists/${id}/?client_id=${KEY}`;
+
+  return fetchGeneric(playlistEndpoint).then(data => {
+    const newTracks = mapCollectionToTracks(data.tracks);
+
+    dispatch(importPlaylistTracks("soundcloud", id, newTracks));
   });
 };
 

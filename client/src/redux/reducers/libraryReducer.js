@@ -70,7 +70,8 @@ export default function(state = initialState, action) {
       const loadedTracks = action.payload;
 
       const newPlaylistList = state.playlists[source].map(playlist => {
-        if (playlist.id === playlistId) {
+        //eslint-disable-next-line
+        if (playlist.id == playlistId) {
           playlist.tracks = [...playlist.tracks, ...loadedTracks];
         }
 
