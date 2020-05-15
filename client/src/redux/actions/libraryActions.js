@@ -1,5 +1,6 @@
 import {
   getSoundcloudLikes,
+  getSoundcloudPlaylistTracks,
   getUserSoundcloudPlaylists
 } from "./soundcloudActions";
 import {
@@ -106,13 +107,17 @@ export const loadLikes = source => dispatch => {
 
 export const loadPlaylistTracks = (source, id, next) => dispatch => {
   if (!next) {
-    return;
+    return Promise.resolve();
   }
 
   if (source === "spotify") {
     return dispatch(getSpotifyPlaylistTracks(id, next));
-  } else if (source === "soundcloud" && id === "likes") {
-    return dispatch(getSoundcloudLikes(next));
+  } else if (source === "soundcloud") {
+    if ("id" === "likes") {
+      return dispatch(getSoundcloudLikes(next));
+    } else {
+      return dispatch(getSoundcloudPlaylistTracks(id, next));
+    }
   }
 };
 

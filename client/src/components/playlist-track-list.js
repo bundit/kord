@@ -14,6 +14,7 @@ import { getImgUrl } from "../utils/getImgUrl";
 import { playTrack } from "../redux/actions/playerActions";
 import { timeSince } from "../utils/dateHelpers";
 import { usePrevious } from "../utils/hooks";
+import LoadingSpinner from "./loading-spinner";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
 
@@ -31,34 +32,58 @@ const PlaylistTracklist = ({
   const scrollContainer = useRef(null);
   const [numShowTracks, setNumShowTracks] = useState(playlistIncrementAmount);
   const [hasRefreshed, setHasRefreshed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   // eslint-disable-next-line
   const playlistIndex = playlists[source].findIndex(p => p.id == id);
   const currentPlaylist = playlists[source][playlistIndex] || {};
   const tracks = currentPlaylist.tracks || [];
 
-  const dispatchLoadMoreTracks = React.useCallback(() => {
-    const { source, id, next } = currentPlaylist;
-    let promise;
+  const { next, total } = currentPlaylist;
 
-    if (id === "likes") {
-      promise = dispatch(loadLikes(source));
-    } else {
-      promise = dispatch(loadPlaylistTracks(source, id, next));
+  const dispatchLoadMoreTracks = React.useCallback(() => {
+    if (isLoading || !next || total === 0) {
+      return;
     }
-    if (promise) {
+    setIsLoading(true);
+
+    setTimeout(() => {
+      let promise;
+      if (id === "likes" && tracks.length === 0) {
+        promise = dispatch(loadLikes(source));
+      } else {
+        promise = dispatch(loadPlaylistTracks(source, id, next));
+      }
+
       promise
         .then(() => {
           if (hasRefreshed) {
             alert.success("Playlist refreshed");
+            setHasRefreshed(true);
           }
         })
-        .catch(e => alert.error("Error loading tracks"));
-    }
-  }, [currentPlaylist, hasRefreshed, dispatch, alert]);
+        .catch(e => {
+          alert.error("Error loading tracks");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }, 1000);
+  }, [
+    isLoading,
+    next,
+    total,
+    id,
+    tracks.length,
+    source,
+    hasRefreshed,
+    dispatch,
+    alert
+  ]);
 
   React.useEffect(() => {
     setHasRefreshed(false);
-  }, [id]);
+    setIsLoading(false);
+  }, [id, source]);
 
   useResetOnPlaylistChange(currentPlaylist, setNumShowTracks, scrollContainer);
   useLoadTracksIfEmpty(tracks, dispatchLoadMoreTracks);
@@ -80,7 +105,10 @@ const PlaylistTracklist = ({
 
   function handleRefresh() {
     setHasRefreshed(true);
+
+    // setTimeout(() => {
     dispatch(clearPlaylistTracks(source, currentPlaylist.id));
+    // }, 1000);
   }
 
   return (
@@ -143,7 +171,8 @@ const PlaylistTracklist = ({
                     borderRadius: "50%",
                     backgroundColor: "#fb1",
                     color: "black",
-                    marginLeft: "0"
+                    marginLeft: "0",
+                    cursor: "pointer"
                   }}
                 >
                   <FontAwesomeIcon icon={faPlay} size="2x" />
@@ -160,6 +189,7 @@ const PlaylistTracklist = ({
               isPlaying={isPlaying}
               handlePlay={dispatchPlayTrack}
             />
+            {isLoading && <LoadingSpinner />}
           </div>
         </div>
       </div>
