@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpotify, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
-import Kord3D from "../assets/kord-3d.svg";
+import Kord3D from "../assets/circle-logo.svg";
 
 import styles from "./styles/login.module.css";
 
@@ -17,7 +17,7 @@ const LoginPanel = ({ login }) => {
         <Link to="/">
           <h1>
             <Kord3D />
-            {" v0.3"}
+            {/* {" v0.3"} */}
           </h1>
         </Link>
       </div>
@@ -26,13 +26,13 @@ const LoginPanel = ({ login }) => {
       <div className={styles.loginListWrapper}>
         <a href="/auth/spotify" className={styles.oAuthLink}>
           <span style={{ color: "#1DB954" }}>
-            <FontAwesomeIcon icon={faSpotify} size="3x" />
+            <FontAwesomeIcon icon={faSpotify} size="2x" />
           </span>
           <span>{`${text} with Spotify`}</span>
         </a>
         <a href="/auth/youtube" className={styles.oAuthLink}>
           <span style={{ color: "red" }}>
-            <FontAwesomeIcon icon={faYoutube} size="3x" />
+            <FontAwesomeIcon icon={faYoutube} size="2x" />
           </span>
           <span>{`${text} with Youtube`}</span>
         </a>

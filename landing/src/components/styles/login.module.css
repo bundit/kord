@@ -1,14 +1,12 @@
 .loginWrapper {
-  min-width: 300px;
-  max-width: 400px;
-  padding: 5rem;
-  background: white;
-  margin: 0 auto;
-  border-radius: 2rem;
-  margin-top: 30vh;
+  width: 300px;
+  padding: 2rem;
+  background: #fff9eb;
+  border-radius: 7px;
   box-shadow: 1px 3px 10px #a2740080;
   text-align: center;
-  box-shadow: inset 0px 0px 20px rgb(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 20px rgb(0, 0, 0, 0.5);
+  margin: auto;
 }
 
 .loginWrapper a {
@@ -17,37 +15,34 @@
 
 .loginHeaderWrapper {
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
 .loginHeaderWrapper h1 {
   font-size: 2rem;
   display: inline;
-  width: 200px;
+  text-align: center;
   color: grey;
-  padding-left: 35px;
-  /* text gradient clip */
-  /* background-image: linear-gradient(to left bottom, #3188aa, #663cb6);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent; */
+  margin: 0 auto;
+  width: 100%;
+}
+
+.loginHeaderWrapper a {
+  width: 100%;
 }
 
 .loginHeaderWrapper svg {
   transition: 0.2s ease;
-  fill: black;
-  width: 60%;
+  height: 60px;
 }
 
 .loginHeaderWrapper:hover svg {
-  fill: #663cb6;
+  transform: scale(1.05);
 }
 
 .loginWrapper h3 {
   font-weight: 600;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 }
 
 .loginListWrapper {
@@ -60,25 +55,25 @@
 
 .oAuthLink {
   display: flex;
-  width: 300px;
+  width: 220px;
   background: white;
   color: black;
-  padding: 16px 14px 18px;
-  border-radius: 15px;
+  padding: 12px 10px 14px;
+  border-radius: 7px;
   justify-content: space-around;
   align-items: center;
   transition: 150ms ease-in-out;
   margin-bottom: 2rem;
-  box-shadow: 1px 1px 5px rgb(0, 0, 0, 0.3);
+  box-shadow: 3px 3px 5px rgb(0, 0, 0, 0.2);
+  border: 1px #999 solid;
 }
 
 .oAuthLink:hover {
-  box-shadow: 0px 5px 10px rgb(0, 0, 0, 0.3);
-  transform: translate(0, -7px);
+  box-shadow: none;
 }
 
 .oAuthLink:active {
-  transition: 0s;
+  transition: 0.3s;
   background-color: whitesmoke;
 }
 
@@ -100,6 +95,6 @@
 
 .loginListWrapper,
 .otherPanelWrapper {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
