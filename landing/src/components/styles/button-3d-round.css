@@ -1,12 +1,7 @@
 html {
-  /* border: 0;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: auto; */
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
 }
 
 *,
@@ -21,6 +16,9 @@ html {
 .button .bottom {
   background-color: #4e1cae;
 }
+.button * {
+  border-radius: 7px;
+}
 /* border color  */
 .button .top {
   border: 2px solid white;
@@ -34,11 +32,16 @@ html {
   /* background-color: #f3f3f3; */
   background-color: white;
 }
+.button:active .bottom {
+  background-color: #4e1cae;
+}
+
 /* text color hover */
 .button:hover .top .label {
   /* color: #2acdc1; */
   color: #4e1cae;
 }
+
 /* border on hover */
 /* .button-border {
   background-color: #4e1cae;
@@ -53,7 +56,7 @@ html {
   text-decoration: none;
   position: relative;
   margin-top: 40px;
-  border-radius: 1rem;
+  border-radius: 7px;
 }
 
 .button .bottom {
@@ -62,16 +65,12 @@ html {
   top: 7px;
   width: 100%;
   height: 100%;
-  /* background-color: #2acdc1; */
-  /* color: white; */
-  /* background-color: #4e1cae; */
-  /* background-color: #55a1be; */
   display: block;
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
-  border-radius: 1rem;
+  border-radius: 7px;
 }
 
 .button .top {
@@ -80,10 +79,8 @@ html {
   top: 0;
   width: 100%;
   height: 100%;
-  padding: 24px 34px 22px 34px;
-  /* border color not hovered */
-  /* border: 2px solid white; */
-  border-radius: 1rem;
+  padding: 20px 30px 18px 30px;
+  border-radius: 7px;
 }
 
 .top {
@@ -94,10 +91,7 @@ html {
 .button .top .label {
   font-family: sans-serif;
   font-weight: 600;
-  /* color: #04049d; */
-  /* text color not hovered */
-  /* color: white; */
-  font-size: 13px;
+  font-size: 12px;
   line-height: 110%;
   letter-spacing: 2px;
   text-align: center;
@@ -116,8 +110,6 @@ html {
 .button:hover .bottom {
   left: 0;
   top: 0;
-  /* background color on hover */
-  /* background-color: #f3f3f3; */
 }
 
 .button:hover .top .label {
@@ -127,8 +119,9 @@ html {
 
 .button-border {
   position: absolute;
+  border-radius: 7px;
   /* border on hover */
-  /* background-color: #2acdc1; */
+  background-color: #2acdc1;
   -webkit-transition: all 0.25s ease-out;
   -moz-transition: all 0.25s ease-out;
   -o-transition: all 0.25s ease-out;
@@ -137,23 +130,23 @@ html {
 
 .button:hover .top .button-border-left,
 .button:hover .top .button-border-right {
-  height: calc(100% + 2px);
+  height: calc(100% - 4px);
 }
 
 .button:hover .top .button-border-top,
 .button:hover .top .button-border-bottom {
-  width: calc(100% + 2px);
+  width: calc(100% - 4px);
 }
 
 .button-border-left {
   left: -2px;
-  bottom: -2px;
+  bottom: 2px;
   width: 2px;
   height: 0;
 }
 
 .button-border-top {
-  left: -2px;
+  left: 2px;
   top: -2px;
   width: 0;
   height: 2px;
@@ -161,13 +154,13 @@ html {
 
 .button-border-right {
   right: -2px;
-  top: -2px;
+  top: 2px;
   width: 2px;
   height: 0;
 }
 
 .button-border-bottom {
-  right: -2px;
+  right: 2px;
   bottom: -2px;
   width: 0;
   height: 2px;
