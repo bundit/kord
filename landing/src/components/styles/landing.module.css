@@ -88,12 +88,13 @@
 
 .slogan {
   text-shadow: 2px 2px #a2740080;
-  font-size: 35px;
+  font-size: 45px;
   color: #fff;
   font-weight: 300;
   margin-top: 100px;
   margin-bottom: 20px;
   line-height: 1.25;
+  padding: 0 10px;
 }
 
 .landingBlurb {
@@ -109,57 +110,83 @@
 
 .p2 {
   background: #fff9eb;
-  padding: 100px 0;
+  padding: 50px 0;
   box-sizing: border-box;
   text-align: center;
-  border-radius: 7px 7px 0 0;
-  border-radius: 1rem 1rem 0 0;
+  border-radius: 7px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 
 .p2 h1 {
-  color: #555;
+  color: #444;
   font-weight: 300;
   margin-bottom: 10px;
-  font-size: 35px;
+  font-size: 30px;
+  padding: 0 20px;
 }
 
 .p2Blurb {
+  padding: 10px 20px;
+  color: #555;
+  margin-top: 0;
 }
 
 .sectionContainer {
   display: grid;
-  grid-template-columns: repeat(1, minmax(200px, 1fr));
-  grid-template-rows: auto;
-  padding: 30px;
+  grid-template-columns: repeat(2, 150px);
+  grid-template-rows: repeat(2, 150px);
+
+  padding: 15px;
   margin: 0 auto;
   justify-content: center;
+  align-items: center;
 }
 
-.sectionContainer > div {
+.sourceCard {
   border-radius: 7px;
-  height: 200px;
   padding: 20px;
-  transition: 0.3s ease-out;
-  min-width: 200px;
-  max-width: 300px;
-  margin: 0 auto;
+  height: 100%;
+  color: #555;
 }
 
-.sectionContainer > div:before {
-  content: "";
-  display: inline-block;
-  /* padding-bottom: calc(100% / 1 / 4); */
-}
-
-.sectionContainer > div:hover {
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+.sourceCard:hover {
+  transition: 0.3s ease;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.4);
   background-color: white;
+}
+
+.sourceCard:after {
+  content: "";
+  display: block;
+  height: 0;
+  width: 0;
+  padding-top: calc(2 / 16 * 100%);
+}
+
+.sourceCard svg {
+  font-size: 3em;
+}
+
+.spotify:hover {
+  color: #1db954;
+}
+
+.soundcloud:hover {
+  color: #f50;
+}
+
+.youtube:hover {
+  color: #ff0000;
+}
+
+.mixcloud:hover {
+  color: rgb(80, 0, 255);
 }
 
 @media (min-width: 330px) {
   .slogan {
-    font-size: 40px;
-    padding: 0 20px;
+    font-size: 50px;
+    padding: 0 10px;
   }
 }
 
@@ -168,27 +195,52 @@
     text-shadow: 3px 3px #a2740080;
     font-size: 60px;
   }
+
+  .p2Blurb {
+    padding: 10px 30px;
+  }
 }
 
 @media (min-width: 600px) {
   .sectionContainer {
-    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 150px);
+    grid-template-rows: 150px;
+  }
+
+  .sourceCard svg {
+    font-size: 4em;
   }
 }
 
 @media (min-width: 750px) {
+  .p1Content {
+    padding: 200px 0;
+  }
+  .p3Content {
+    padding-top: 100px;
+    padding-bottom: 150px;
+  }
   .slogan {
     font-size: 70px;
-  }
-
-  .p1Content {
-    padding: 150px 0;
   }
 }
 
 @media (min-width: 900px) {
+  .p1Content {
+    padding: 250px 0;
+  }
+  .p3Content {
+    padding-top: 150px;
+    padding-bottom: 200px;
+  }
+  .p2 h1 {
+    font-size: 35px;
+  }
+
   .sectionContainer {
-    grid-template-columns: repeat(4, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 200px);
+    grid-template-rows: 200px;
+    padding: 30px 0;
   }
 }
 
@@ -198,6 +250,10 @@
   }
 
   .p1Content {
-    padding: 200px 0;
+    padding: 300px 0;
+  }
+  .p3Content {
+    padding-top: 200px;
+    padding-bottom: 250px;
   }
 }

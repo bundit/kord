@@ -38,7 +38,7 @@ const particleParams = {
       enable_auto: true,
       // distance: 100,
       color: "#fff",
-      opacity: 0.5,
+      opacity: 0.7,
       width: 1.5
     },
     move: {
@@ -91,6 +91,8 @@ const ParticlesContainer = () => (
       bottom: 0,
       zIndex: -1
     }}
+    data-aos="zoom-out"
+    data-aos-duration="1500"
   >
     <Particles style={{ position: "absolute" }} params={particleParams} />
   </div>

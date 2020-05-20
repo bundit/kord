@@ -51,6 +51,14 @@ html {
   border: 2px #4e1cae solid;
 }
 
+.button:active .top {
+  border: 2px solid white;
+}
+
+.button:active .top .label {
+  color: white;
+}
+
 .button {
   display: inline-block;
   text-decoration: none;
@@ -121,7 +129,7 @@ html {
   position: absolute;
   border-radius: 7px;
   /* border on hover */
-  background-color: #2acdc1;
+  /* background-color: #2acdc1; */
   -webkit-transition: all 0.25s ease-out;
   -moz-transition: all 0.25s ease-out;
   -o-transition: all 0.25s ease-out;
@@ -130,23 +138,23 @@ html {
 
 .button:hover .top .button-border-left,
 .button:hover .top .button-border-right {
-  height: calc(100% - 4px);
+  height: calc(100% - 6px);
 }
 
 .button:hover .top .button-border-top,
 .button:hover .top .button-border-bottom {
-  width: calc(100% - 4px);
+  width: calc(100% - 6px);
 }
 
 .button-border-left {
   left: -2px;
-  bottom: 2px;
+  bottom: 3px;
   width: 2px;
   height: 0;
 }
 
 .button-border-top {
-  left: 2px;
+  left: 3px;
   top: -2px;
   width: 0;
   height: 2px;
@@ -154,13 +162,13 @@ html {
 
 .button-border-right {
   right: -2px;
-  top: 2px;
+  top: 3px;
   width: 2px;
   height: 0;
 }
 
 .button-border-bottom {
-  right: 2px;
+  right: 3px;
   bottom: -2px;
   width: 0;
   height: 2px;
