@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from "react";
+import "aos/dist/aos.css";
+
+import "../components/styles/global.css";
+
+import AOS from "aos";
 import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
 
 import Header from "../components/header";
 import ParticlesContainer from "../components/particles-container";
-import "../components/styles/global.css";
 
 const Layout = ({ children }) => {
   const [isScrolledPast, setIsScrolledPast] = useState(false);
 
+  useAOS();
+
   useEffect(() => {
     const onScroll = () => {
-      setIsScrolledPast(window.pageYOffset >= window.innerHeight);
+      setIsScrolledPast(window.pageYOffset >= 100);
     };
 
     window.addEventListener("scroll", onScroll);
@@ -27,6 +33,16 @@ const Layout = ({ children }) => {
     </>
   );
 };
+
+function useAOS() {
+  React.useEffect(() => {
+    AOS.init({
+      disable: "phone",
+      once: "true",
+      offset: 200
+    });
+  }, []);
+}
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired

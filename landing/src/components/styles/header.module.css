@@ -12,9 +12,6 @@
   left: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.7);
-  /* background: #fb1; */
-  /* box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); */
-  /* padding: 1.5rem 0; */
   z-index: 1000;
 }
 
@@ -102,12 +99,6 @@
   fill: white;
 }
 
-.headerScrolled {
-  transition: 0.5s ease;
-  background-color: #fb1;
-  opacity: 0.98;
-}
-
 @media (min-width: 750px) {
   .headerLinks {
     display: inline;
@@ -118,6 +109,13 @@
   .header {
     background: transparent;
     padding-top: 15px;
+    padding-bottom: 15px;
+    transition: 0.5s ease;
+  }
+  .headerScrolled {
+    background-color: #ffbb11e6;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0.98;
   }
   .header svg {
     height: 45px;

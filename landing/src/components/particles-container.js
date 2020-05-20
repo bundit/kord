@@ -82,7 +82,7 @@ const particleParams = {
 const ParticlesContainer = () => (
   <div
     style={{
-      position: "absolute",
+      position: "fixed",
       background:
         "linear-gradient(0deg, rgba(255,187,17,1) 0%, rgba(255,200,66,1) 100%)",
       top: 0,
