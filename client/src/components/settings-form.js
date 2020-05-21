@@ -19,7 +19,7 @@ import {
 import { getSoundcloudProfile } from "../redux/actions/soundcloudActions";
 import FormCheckbox from "./form-checkbox";
 import Modal from "./modal";
-import placeholderImg from "../assets/placeholder.png";
+import avatarImg from "../assets/avatar-placeholder.png";
 import styles from "../styles/modal.module.css";
 
 const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
@@ -146,7 +146,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
       <div className={styles.profileWrap}>
         <div className={styles.profilePicWrap}>
           <img
-            src={settings && settings.image ? settings.image : placeholderImg}
+            src={settings && settings.image ? settings.image : avatarImg}
             alt=""
           />
         </div>

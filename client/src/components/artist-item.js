@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import { formatArtistName } from "../utils/formattingHelpers";
-import placeholderImg from "../assets/placeholder.png";
+import avatarImg from "../assets/avatar-placeholder.png";
 import styles from "../styles/library.module.css";
 
 const ArtistItem = ({ artist }) => {
@@ -22,7 +22,7 @@ const ArtistItem = ({ artist }) => {
             <div className={styles.trackImageWrap}>
               <img
                 className={styles.artistImage}
-                src={img || placeholderImg}
+                src={img || avatarImg}
                 alt={artistName}
                 onError={e => {
                   // This function ensures that if there is a 404 on the image,
