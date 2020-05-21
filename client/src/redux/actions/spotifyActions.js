@@ -32,7 +32,7 @@ export const refreshSpotifyToken = () => dispatch => {
   });
 };
 
-export const setSpotifyProfile = () => dispatch => {
+export const setSpotifyProfile = (tries = 3) => dispatch => {
   return spotifyApi
     .getMe({})
     .then(json => {
@@ -42,39 +42,55 @@ export const setSpotifyProfile = () => dispatch => {
     })
     .then(() => dispatch(importSavedSpotifyTracks()))
     .catch(e => {
-      return dispatch(errorHandler(e)).then(() =>
-        dispatch(setSpotifyProfile())
-      );
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(setSpotifyProfile(--tries))
+        );
+      } else return Promise.reject(e);
     });
 };
 
 export const importSavedSpotifyTracks = (
   limit = 50,
   offset = 0,
-  market = "from_token"
+  market = "from_token",
+  tries = 3
 ) => dispatch => {
-  return spotifyApi.getMySavedTracks({ limit, offset, market }).then(json => {
-    const tracks = mapJsonToTracks(json);
-    const next = json.next;
+  return spotifyApi
+    .getMySavedTracks({ limit, offset, market })
+    .then(json => {
+      const tracks = mapJsonToTracks(json);
+      const next = json.next;
 
-    const userLikes = {
-      title: "Spotify Likes",
-      id: "likes",
-      tracks: tracks,
-      next: next,
-      total: json.total,
-      source: "spotify",
-      isConnected: false,
-      dateSynced: new Date()
-    };
+      const userLikes = {
+        title: "Spotify Likes",
+        id: "likes",
+        tracks: tracks,
+        next: next,
+        total: json.total,
+        source: "spotify",
+        isConnected: false,
+        dateSynced: new Date()
+      };
 
-    dispatch(importLikes("spotify", userLikes));
+      dispatch(importLikes("spotify", userLikes));
 
-    return { tracks, next };
-  });
+      return { tracks, next };
+    })
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(importSavedSpotifyTracks(limit, offset, market, --tries))
+        );
+      } else return Promise.reject(e);
+    });
 };
 
-export const getUserSpotifyPlaylists = (limit = 50, offset = 0) => dispatch => {
+export const getUserSpotifyPlaylists = (
+  limit = 50,
+  offset = 0,
+  tries = 3
+) => dispatch => {
   return spotifyApi
     .getUserPlaylists({ limit, offset })
     .then(json => {
@@ -83,16 +99,19 @@ export const getUserSpotifyPlaylists = (limit = 50, offset = 0) => dispatch => {
       dispatch(importPlaylists(SPOTIFY, playlists));
     })
     .catch(e => {
-      return dispatch(errorHandler(e)).then(() =>
-        dispatch(getUserSpotifyPlaylists(limit, offset))
-      );
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(getUserSpotifyPlaylists(limit, offset, --tries))
+        );
+      } else return Promise.reject(e);
     });
 };
 
 export const getSpotifyPlaylistTracks = (
   id,
   next,
-  market = "from_token"
+  market = "from_token",
+  tries = 3
 ) => dispatch => {
   let json;
 
@@ -112,10 +131,12 @@ export const getSpotifyPlaylistTracks = (
 
       return { tracks, next };
     })
-    .catch(err => {
-      return dispatch(errorHandler(err)).then(() =>
-        dispatch(getSpotifyPlaylistTracks(id, next))
-      );
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(getSpotifyPlaylistTracks(id, next, market, --tries))
+        );
+      } else return Promise.reject(e);
     });
 };
 
@@ -124,7 +145,8 @@ export const searchSpotify = (
   limit = 20,
   offset = 0,
   types = ["track", "artist", "album"],
-  market = "from_token"
+  market = "from_token",
+  tries = 3
 ) => dispatch => {
   const storageKey = `SPOT:${query}`;
 
@@ -134,12 +156,40 @@ export const searchSpotify = (
     return dispatch(setSpotifyResults(payload));
   }
 
-  return spotifyApi.search(query, types, { market }).then(json => {
-    const payload = parseSpotifyResults(json);
+  return spotifyApi
+    .search(query, types, { market })
+    .then(json => {
+      const payload = parseSpotifyResults(json);
 
-    dispatch(setSpotifyResults(payload));
-    cacheValue(storageKey, json);
-  });
+      dispatch(setSpotifyResults(payload));
+      cacheValue(storageKey, json);
+    })
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(searchSpotify(query, limit, offset, types, market, --tries))
+        );
+      } else return Promise.reject(e);
+    });
+};
+
+export const loadMoreSpotifyTracks = (next, tries = 3) => dispatch => {
+  if (!next) return Promise.reject("No more results");
+
+  return spotifyApi
+    .getGeneric(next)
+    .then(json => {
+      const { tracksPayload } = parseSpotifyResults(json);
+
+      dispatch(setMoreTrackResults("spotify", tracksPayload));
+    })
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(loadMoreSpotifyTracks(next, --tries))
+        );
+      } else return Promise.reject(e);
+    });
 };
 
 function parseSpotifyResults(json) {
@@ -179,16 +229,6 @@ const setSpotifyResults = payload => dispatch => {
   }
 
   return Promise.resolve({ message: "Results set" });
-};
-
-export const loadMoreSpotifyTracks = next => dispatch => {
-  if (!next) return;
-
-  spotifyApi.getGeneric(next).then(json => {
-    const { tracksPayload } = parseSpotifyResults(json);
-
-    dispatch(setMoreTrackResults("spotify", tracksPayload));
-  });
 };
 
 function errorHandler(err, tries = 3) {
