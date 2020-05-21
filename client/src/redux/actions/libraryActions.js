@@ -113,7 +113,7 @@ export const loadPlaylistTracks = (source, id, next) => dispatch => {
   if (source === "spotify") {
     return dispatch(getSpotifyPlaylistTracks(id, next));
   } else if (source === "soundcloud") {
-    if ("id" === "likes") {
+    if (id === "likes") {
       return dispatch(getSoundcloudLikes(next));
     } else {
       return dispatch(getSoundcloudPlaylistTracks(id, next));
