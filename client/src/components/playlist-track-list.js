@@ -58,7 +58,7 @@ const PlaylistTracklist = ({
         .then(() => {
           if (hasRefreshed) {
             alert.success("Playlist refreshed");
-            setHasRefreshed(true);
+            setHasRefreshed(false);
           }
         })
         .catch(e => {
