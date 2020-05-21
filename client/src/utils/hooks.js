@@ -1,10 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
 
-import {
-  setSpotifyAccessToken,
-  setSpotifyProfile
-} from "../redux/actions/spotifyActions";
+import { fetchProfileAndPlaylists } from "../redux/actions/userActions";
+import { setSpotifyAccessToken } from "../redux/actions/spotifyActions";
 
 export function useHashParamDetectionOnLoad() {
   const dispatch = useDispatch();
@@ -18,7 +16,7 @@ export function useHashParamDetectionOnLoad() {
       if (source === "spotify") {
         const spotifyToken = URLParams.get("spotifyToken");
         dispatch(setSpotifyAccessToken(spotifyToken));
-        dispatch(setSpotifyProfile()).catch(e => {
+        dispatch(fetchProfileAndPlaylists("spotify")).catch(e => {
           console.error(`There was an error: ${e.status}`);
         });
       }

@@ -11,8 +11,7 @@ import { useAlert } from "react-alert";
 import React, { useState } from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
-import { fetchPlaylists } from "../redux/actions/libraryActions";
-import { fetchProfile } from "../redux/actions/userActions";
+import { fetchProfileAndPlaylists } from "../redux/actions/userActions";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
 import ConnectedSourceButton from "./connected-source-button";
 import PlaylistItem from "./playlist-item";
@@ -50,9 +49,8 @@ const Sidebar = ({ user, playlists }) => {
       />
     ));
 
-  function handleUpdateProfile(source, username) {
-    return dispatch(fetchProfile(source, username))
-      .then(() => dispatch(fetchPlaylists(source, username)))
+  function handleUpdateProfile(source, user) {
+    return dispatch(fetchProfileAndPlaylists(source, user))
       .then(() => {
         alert.success("Profile Refreshed");
       })
