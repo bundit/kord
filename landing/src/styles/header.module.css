@@ -92,11 +92,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  fill: black;
-}
-
-.homeLink:hover svg {
-  fill: white;
 }
 
 @media (min-width: 750px) {

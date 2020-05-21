@@ -37,7 +37,6 @@ const Layout = ({ children }) => {
 function useAOS() {
   React.useEffect(() => {
     AOS.init({
-      disable: "phone",
       once: "true",
       offset: 200
     });
