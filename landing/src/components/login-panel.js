@@ -6,7 +6,7 @@ import { faSpotify, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 import Kord3D from "../assets/circle-logo.svg";
 
-import styles from "./styles/login.module.css";
+import styles from "../styles/login.module.css";
 
 const LoginPanel = ({ login }) => {
   const text = login ? "Log in" : "Sign up";

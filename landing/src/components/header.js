@@ -1,4 +1,4 @@
-import "./styles/burger.css";
+import "../styles/burger.css";
 
 import { Link } from "gatsby";
 import { slide as Menu } from "react-burger-menu";
@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 
 import Kord3D from "../assets/circle-logo.svg";
-import styles from "./styles/header.module.css";
+import styles from "../styles/header.module.css";
 
 const Header = ({ isScrolledPast }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

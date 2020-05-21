@@ -1,4 +1,4 @@
-import "../components/styles/button-3d-round.css";
+import "../styles/button-3d-round.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, navigate } from "gatsby";
@@ -11,7 +11,7 @@ import {
 import React, { useState } from "react";
 
 import SEO from "../components/seo";
-import styles from "../components/styles/landing.module.css";
+import styles from "../styles/landing.module.css";
 
 const IndexPage = () => {
   const [hasScrolled, setHasScrolled] = useState(false);

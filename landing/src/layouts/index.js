@@ -1,6 +1,6 @@
 import "aos/dist/aos.css";
 
-import "../components/styles/global.css";
+import "../styles/global.css";
 
 import AOS from "aos";
 import PropTypes from "prop-types";
