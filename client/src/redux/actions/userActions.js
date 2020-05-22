@@ -39,3 +39,11 @@ export const fetchProfileAndPlaylists = (source, user) => dispatch => {
     dispatch(fetchPlaylists(source, user))
   );
 };
+
+export const saveRoute = (relativeRoute, route) => {
+  return {
+    type: "SAVE_ROUTE",
+    relativeRoute,
+    payload: route
+  };
+};

@@ -38,28 +38,6 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case PUSH_LIB_ROUTE: {
-      const pathname = action.payload;
-      const libHistory = state.history.library;
-
-      if (pathname === libHistory[libHistory.length - 1]) {
-        return state;
-      }
-
-      // If the path is the base then clear history
-      const newLibHistory =
-        pathname.toLowerCase() === "/library"
-          ? ["/library"]
-          : [...state.history.library, pathname];
-
-      return {
-        ...state,
-        history: {
-          ...state.history,
-          library: newLibHistory
-        }
-      };
-    }
     case "SET_ACCESS_TOKEN": {
       const accessToken = action.payload;
       const source = action.source;
@@ -93,6 +71,45 @@ export default function(state = initialState, action) {
         [source]: {
           ...state[source],
           ...newProfile
+        }
+      };
+    }
+
+    case "SAVE_ROUTE": {
+      const route = action.payload;
+      const relativeRoute = action.relativeRoute;
+      const rootRoute = `/app/${relativeRoute}`;
+      const currentHistory = state.history[relativeRoute] || [];
+      const updatedHistory =
+        route === rootRoute ? [route] : [route, ...currentHistory];
+
+      return {
+        ...state,
+        history: {
+          ...state.history,
+          [relativeRoute]: updatedHistory
+        }
+      };
+    }
+    case PUSH_LIB_ROUTE: {
+      const pathname = action.payload;
+      const libHistory = state.history.library;
+
+      if (pathname === libHistory[libHistory.length - 1]) {
+        return state;
+      }
+
+      // If the path is the base then clear history
+      const newLibHistory =
+        pathname.toLowerCase() === "/library"
+          ? ["/library"]
+          : [...state.history.library, pathname];
+
+      return {
+        ...state,
+        history: {
+          ...state.history,
+          library: newLibHistory
         }
       };
     }

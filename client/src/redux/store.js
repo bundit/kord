@@ -30,6 +30,9 @@ store.subscribe(() => {
       ...state.player,
       isPlaying: false,
       seek: 0
+    },
+    search: {
+      history: state.search.history
     }
   });
 });
