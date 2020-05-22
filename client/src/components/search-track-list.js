@@ -12,14 +12,22 @@ import styles from "../styles/library.module.css";
 
 const searchIncrementAmount = 10;
 
-const SearchTrackList = ({ source, tracks, currentTrackId, isPlaying }) => {
+const SearchTrackList = ({
+  source,
+  tracks,
+  currentTrackId,
+  isPlaying,
+  restored
+}) => {
   const dispatch = useDispatch();
-  const [numShowTracks, setNumShowTracks] = useState(0);
+  const [numShowTracks, setNumShowTracks] = useState(restored ? 10 : 0);
   const searchHasMoreToShow = tracks.next || numShowTracks < tracks.list.length;
   const listHeight = Math.min(tracks.list.length, numShowTracks);
 
   React.useEffect(() => {
-    setTimeout(handleShowMore, 1000);
+    if (!restored) {
+      setTimeout(handleShowMore, 1000);
+    }
     // eslint-disable-next-line
   }, []);
 

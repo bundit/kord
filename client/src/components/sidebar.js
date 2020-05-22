@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, NavLink } from "react-router-dom";
-import { connect, useDispatch } from "react-redux";
+import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
+import { connect, useDispatch, useSelector } from "react-redux";
 import {
   faMusic,
   faSearch,
@@ -22,7 +22,10 @@ const Sidebar = ({ user, playlists }) => {
   const [isSettingsFormOpen, setIsSettingsFormOpen] = useState(false);
   const [settingsSource, setSettingsSource] = useState();
   const dispatch = useDispatch();
+  const history = useHistory();
   const alert = useAlert();
+  const userHistory = useSelector(state => state.user.history);
+  const location = useLocation();
 
   function toggleSettingsForm(source) {
     setSettingsSource(source);
@@ -63,6 +66,16 @@ const Sidebar = ({ user, playlists }) => {
       });
   }
 
+  function handleSearchNavigationOnClick(e) {
+    e.preventDefault();
+    const { pathname: currentPath } = location;
+    const lastPath = userHistory.search[0] || "/app/search";
+    const newPath =
+      lastPath === currentPath ? "/app/search" : `${lastPath}?restored=true`;
+
+    history.push(newPath);
+  }
+
   return (
     <div className={styles.sidebarWrapper}>
       <div className={styles.sidebarHeader}>
@@ -85,6 +98,7 @@ const Sidebar = ({ user, playlists }) => {
         </NavLink>
         <NavLink
           to="/app/search"
+          onClick={handleSearchNavigationOnClick}
           className={styles.sidebarNavLink}
           activeClassName={styles.activeNavLink}
         >

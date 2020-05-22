@@ -10,6 +10,7 @@
     "@fortawesome/react-fontawesome": "^0.1.7",
     "eslint-config-airbnb": "^18.0.1",
     "prop-types": "^15.7.2",
+    "query-string": "^6.12.1",
     "raf": "^3.4.1",
     "react": "^16.11.0",
     "react-alert": "^7.0.0",
