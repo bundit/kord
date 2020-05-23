@@ -133,10 +133,8 @@
 
 .sectionContainer {
   display: grid;
-  grid-template-columns: repeat(2, 150px);
-  grid-template-rows: repeat(2, 150px);
-
-  padding: 15px;
+  grid-template-columns: repeat(4, calc(100% / 4));
+  grid-template-rows: 125px;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
@@ -147,6 +145,10 @@
   padding: 20px;
   height: 100%;
   color: #555;
+  font-size: 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .sourceCard:hover {
@@ -207,19 +209,21 @@
     grid-template-rows: 150px;
   }
 
-  .sourceCard svg {
-    font-size: 4em;
+  .sourceCard {
+    font-size: 11px;
   }
 }
 
 @media (min-width: 750px) {
   .p1Content {
-    padding: 200px 0;
+    padding: 110px 0;
   }
+
   .p3Content {
     padding-top: 100px;
     padding-bottom: 150px;
   }
+
   .slogan {
     font-size: 70px;
   }
@@ -227,7 +231,7 @@
 
 @media (min-width: 900px) {
   .p1Content {
-    padding: 250px 0;
+    padding: 125px 0;
   }
   .p3Content {
     padding-top: 150px;
@@ -237,10 +241,14 @@
     font-size: 35px;
   }
 
+  .sourceCard {
+    font-size: 12px;
+  }
+
   .sectionContainer {
     grid-template-columns: repeat(4, 200px);
     grid-template-rows: 200px;
-    padding: 30px 0;
+    padding: 20px 0;
   }
 }
 
@@ -250,8 +258,9 @@
   }
 
   .p1Content {
-    padding: 300px 0;
+    padding: 150px 0;
   }
+
   .p3Content {
     padding-top: 200px;
     padding-bottom: 250px;

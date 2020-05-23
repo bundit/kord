@@ -34,7 +34,7 @@ const IndexPage = () => {
     window.removeEventListener("scroll", scrollListener);
   }
 
-  const sourceTransitionDuration = "500";
+  const sourceTransitionDuration = "400";
 
   return (
     <>
@@ -85,7 +85,7 @@ const IndexPage = () => {
           data-aos="zoom-out"
           data-aos-easing="ease-in-out-back"
           data-aos-duration="1000"
-          data-aos-offset="300"
+          data-aos-offset="200"
         >
           <h1>Already have playlists? No problem.</h1>
           <h3 className={styles.p2Blurb}>
@@ -98,9 +98,9 @@ const IndexPage = () => {
             <div
               data-aos="fade-right"
               data-aos-easing="ease-in-out-back"
-              // data-aos-offset="100"
               data-aos-duration={sourceTransitionDuration}
-              data-aos-delay="800"
+              // data-aos-delay="800"
+              data-aos-delay="500"
             >
               <FontAwesomeIcon icon={faSpotify} />
               <h3>Spotify</h3>
@@ -111,7 +111,8 @@ const IndexPage = () => {
               data-aos="fade-right"
               data-aos-easing="ease-in-out-back"
               data-aos-duration={sourceTransitionDuration}
-              data-aos-delay="1100"
+              // data-aos-delay="1100"
+              data-aos-delay="700"
             >
               <FontAwesomeIcon icon={faSoundcloud} />
               <h3>Soundcloud</h3>
@@ -122,7 +123,8 @@ const IndexPage = () => {
               data-aos="fade-right"
               data-aos-easing="ease-in-out-back"
               data-aos-duration={sourceTransitionDuration}
-              data-aos-delay="1400"
+              // data-aos-delay="1400"
+              data-aos-delay="900"
             >
               <FontAwesomeIcon icon={faYoutube} />
               <h3>Coming soon!</h3>
@@ -133,7 +135,8 @@ const IndexPage = () => {
               data-aos="fade-right"
               data-aos-easing="ease-in-out-back"
               data-aos-duration={sourceTransitionDuration}
-              data-aos-delay="1700"
+              // data-aos-delay="1700"
+              data-aos-delay="1100"
             >
               <FontAwesomeIcon icon={faMixcloud} />
               <h3>Coming soon!</h3>
@@ -148,7 +151,7 @@ const IndexPage = () => {
             style={{ marginTop: "20px" }}
             data-aos="fade-down"
             data-aos-easing="ease-in-out-back"
-            data-aos-duration="1200"
+            data-aos-duration="1000"
           >
             Ready to start listening?
           </h1>
@@ -163,7 +166,7 @@ const IndexPage = () => {
               data-aos-easing="ease-in"
               data-aos-duration="200"
               data-aos-offset="0"
-              data-aos-delay="1000"
+              data-aos-delay="800"
             >
               <div className="bottom" />
             </span>
@@ -174,7 +177,7 @@ const IndexPage = () => {
               data-aos-easing="ease-in"
               data-aos-duration="300"
               data-aos-offset="0"
-              data-aos-delay="1600"
+              data-aos-delay="1200"
             >
               <div className="label">Listen now</div>
             </div>
