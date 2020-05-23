@@ -1,6 +1,7 @@
 import { Route } from "react-router-dom";
 import React, { useEffect } from "react";
 
+import SearchHistory from "./search-history";
 import SearchResults from "./search-results";
 
 // For restoring scroll position when component is unmounted
@@ -17,7 +18,7 @@ const SearchPage = () => {
 
   return (
     <>
-      <Route exact path="/app/search" render={() => <h1>Search Page</h1>} />
+      <Route exact path="/app/search" component={SearchHistory} />
       <Route exact path="/app/search/:query" component={SearchResults} />
     </>
   );

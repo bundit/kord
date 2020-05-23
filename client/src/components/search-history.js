@@ -1,0 +1,60 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+
+import { removeFromSearchHistory } from "../redux/actions/searchActions";
+import styles from "../styles/library.module.css";
+
+const SearchHistory = () => {
+  const searchHistory = useSelector(state => state.search.history) || [];
+  const dispatch = useDispatch();
+
+  function handleDeleteSearch(e) {
+    dispatch(removeFromSearchHistory(e.currentTarget.value));
+  }
+
+  return (
+    <div
+      className={styles.pageWrapper}
+      style={{ display: "flex", flexDirection: "column" }}
+    >
+      {searchHistory.length && (
+        <h2 className={styles.listTitle} style={{ marginTop: "40px" }}>
+          Your Recent Searches
+        </h2>
+      )}
+      <div className={`${styles.libraryWrapper} ${styles.playlistList}`}>
+        {searchHistory.map(searchPhrase => (
+          <div
+            style={{
+              position: "relative",
+              color: "#ccc",
+              alignItems: "center"
+            }}
+            key={`Phrase:${searchPhrase}`}
+          >
+            <Link
+              to={`/app/search/${searchPhrase}`}
+              className={`${styles.playlistItem} ${styles.redoSearchLink}`}
+            >
+              {/* <span style={{ marginTop: "auto", display: "block" }}> */}
+              <br />"{searchPhrase}"{/* </span> */}
+            </Link>
+            <button
+              className={styles.deleteSearchButton}
+              onClick={handleDeleteSearch}
+              value={searchPhrase}
+            >
+              <FontAwesomeIcon icon={faTimes} size="lg" />
+            </button>
+          </div>
+        ))}
+      </div>
+      )
+    </div>
+  );
+};
+
+export default SearchHistory;
