@@ -43,6 +43,13 @@ export function addToSearchHistory(query) {
   };
 }
 
+export function removeFromSearchHistory(query) {
+  return {
+    type: "REMOVE_FROM_SEARCH_HISTORY",
+    payload: query
+  };
+}
+
 export const searchForMusic = query => dispatch => {
   const user = store.getState().user;
   const requests = [];

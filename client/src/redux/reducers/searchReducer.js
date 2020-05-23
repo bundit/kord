@@ -91,6 +91,18 @@ export default function(state = initialState, action) {
       };
     }
 
+    case "REMOVE_FROM_SEARCH_HISTORY": {
+      const queryToFilter = action.payload;
+      const filteredHistory = state.history.filter(
+        query => query !== queryToFilter
+      );
+
+      return {
+        ...state,
+        history: filteredHistory
+      };
+    }
+
     default:
       return state;
   }
