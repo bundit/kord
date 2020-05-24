@@ -2,7 +2,7 @@ import {
   loadMoreSoundcloudTracks,
   searchSoundcloudTracks
 } from "./soundcloudActions";
-import { searchSpotify } from "./spotifyActions";
+import { loadMoreSpotifyTracks, searchSpotify } from "./spotifyActions";
 import store from "../store";
 
 export function setQuery(query) {
@@ -65,10 +65,12 @@ export const searchForMusic = query => dispatch => {
   return Promise.all(requests.map(request => dispatch(request(query))));
 };
 
-export const loadMoreTrackResults = source => dispatch => {
+export const loadMoreTrackResults = (source, next) => dispatch => {
+  if (!next) return Promise.reject("No more results");
+
   if (source === "soundcloud") {
-    return dispatch(loadMoreSoundcloudTracks());
+    return dispatch(loadMoreSoundcloudTracks(next));
   } else if (source === "spotify") {
-    // return dispatch(loadMoreSpotifyTracks());
+    return dispatch(loadMoreSpotifyTracks(next));
   }
 };

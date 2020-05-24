@@ -110,7 +110,7 @@ export const searchSoundcloudTracks = (query, limit = 50) => dispatch => {
 };
 
 export const loadMoreSoundcloudTracks = next => dispatch => {
-  fetchGeneric(next).then(json => {
+  return fetchGeneric(next).then(json => {
     const tracks = mapCollectionToTracks(json.collection);
     const next = json.next_href;
 

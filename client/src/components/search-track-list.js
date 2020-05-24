@@ -1,12 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
 import React, { useState } from "react";
 
 import { capitalizeWord } from "../utils/formattingHelpers";
-import { loadMoreSoundcloudTracks } from "../redux/actions/soundcloudActions";
-import { loadMoreSpotifyTracks } from "../redux/actions/spotifyActions";
+import { loadMoreTrackResults } from "../redux/actions/searchActions";
 import { playTrack } from "../redux/actions/playerActions";
+import LoadingSpinner from "./loading-spinner";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
 
@@ -20,29 +21,45 @@ const SearchTrackList = ({
   restored
 }) => {
   const dispatch = useDispatch();
+  const alert = useAlert();
+  const [isLoading, setIsLoading] = useState(restored ? false : true);
   const [numShowTracks, setNumShowTracks] = useState(restored ? 10 : 0);
   const searchHasMoreToShow = tracks.next || numShowTracks < tracks.list.length;
   const listHeight = Math.min(tracks.list.length, numShowTracks);
 
   React.useEffect(() => {
     if (!restored) {
-      setTimeout(handleShowMore, 1000);
+      handleShowMore();
     }
     // eslint-disable-next-line
   }, []);
 
   function handleShowMore() {
-    if (numShowTracks >= tracks.list.length) {
-      handleLoadMoreTracks();
-    }
+    setIsLoading(true);
 
-    setNumShowTracks(numShowTracks + searchIncrementAmount);
+    setTimeout(() => {
+      let loadTracks;
+      if (numShowTracks >= tracks.list.length) {
+        loadTracks = handleLoadMoreTracks();
+      } else loadTracks = Promise.resolve();
+
+      loadTracks
+        .then(() => {
+          setNumShowTracks(numShowTracks + searchIncrementAmount);
+        })
+        .catch(e => {
+          alert.error(e.toString());
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }, 500);
   }
 
   function handleLoadMoreTracks() {
     if (tracks.next) {
-      dispatch(loadMoreTracks(source, tracks.next));
-    }
+      return dispatch(loadMoreTrackResults(source, tracks.next));
+    } else return Promise.resolve();
   }
 
   function dispatchPlayTrack(index) {
@@ -67,7 +84,9 @@ const SearchTrackList = ({
           handlePlay={dispatchPlayTrack}
         />
       </div>
-      {
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
         <button
           type="button"
           onClick={handleShowMore}
@@ -84,19 +103,9 @@ const SearchTrackList = ({
             "End of results"
           )}
         </button>
-      }
+      )}
     </div>
   );
-};
-
-const loadMoreTracks = (source, next) => dispatch => {
-  if (!next) return;
-
-  if (source === "soundcloud") {
-    dispatch(loadMoreSoundcloudTracks(next));
-  } else if (source === "spotify") {
-    dispatch(loadMoreSpotifyTracks(next));
-  }
 };
 
 export default SearchTrackList;
