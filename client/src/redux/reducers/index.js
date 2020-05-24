@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
 
-import formReducer from "./formReducer";
 import libraryReducer from "./libraryReducer";
 import playerReducer from "./playerReducer";
 import searchReducer from "./searchReducer";
@@ -10,6 +9,5 @@ export default combineReducers({
   library: libraryReducer,
   search: searchReducer,
   player: playerReducer,
-  user: userReducer,
-  form: formReducer
+  user: userReducer
 });

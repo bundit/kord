@@ -1,4 +1,10 @@
-import { PUSH_LIB_ROUTE } from "../actions/types";
+import {
+  PUSH_LIB_ROUTE,
+  SAVE_ROUTE,
+  SET_ACCESS_TOKEN,
+  SET_CONNECTION,
+  SET_PROFILE
+} from "../actions/types";
 
 const initialState = {
   soundcloud: {
@@ -38,7 +44,7 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case "SET_ACCESS_TOKEN": {
+    case SET_ACCESS_TOKEN: {
       const accessToken = action.payload;
       const source = action.source;
 
@@ -50,7 +56,7 @@ export default function(state = initialState, action) {
         }
       };
     }
-    case "SET_CONNECTION": {
+    case SET_CONNECTION: {
       const isConnected = action.payload;
       const source = action.source;
 
@@ -62,7 +68,7 @@ export default function(state = initialState, action) {
         }
       };
     }
-    case "SET_PROFILE": {
+    case SET_PROFILE: {
       const source = action.source;
       const newProfile = action.payload;
 
@@ -75,7 +81,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "SAVE_ROUTE": {
+    case SAVE_ROUTE: {
       const route = action.payload;
       const relativeRoute = action.relativeRoute;
       const rootRoute = `/app/${relativeRoute}`;

@@ -1,15 +1,20 @@
 import {
-  PLAY,
-  PAUSE,
-  SEEK,
-  SET_PLAYER,
-  SET_TRACK,
-  SET_DURATION,
-  SET_SEEK,
-  NEXT_TRACK,
-  PREV_TRACK,
   ADD_TO_QUEUE,
-  SET_QUEUE
+  APPEND_QUEUE,
+  NEXT_TRACK,
+  PAUSE,
+  PLAY,
+  PREV_TRACK,
+  SEEK,
+  SET_CONTEXT,
+  SET_DURATION,
+  SET_NEXT_QUEUE_HREF,
+  SET_PLAYER,
+  SET_QUEUE,
+  SET_QUEUE_INDEX,
+  SET_SEEK,
+  SET_TRACK,
+  SET_VOLUME
 } from "../actions/types";
 
 const initialState = {
@@ -150,35 +155,35 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "SET_QUEUE_INDEX": {
+    case SET_QUEUE_INDEX: {
       return {
         ...state,
         index: action.payload
       };
     }
 
-    case "SET_VOLUME": {
+    case SET_VOLUME: {
       return {
         ...state,
         volume: action.payload
       };
     }
 
-    case "SET_NEXT_QUEUE_HREF": {
+    case SET_NEXT_QUEUE_HREF: {
       return {
         ...state,
         nextHref: action.payload
       };
     }
 
-    case "SET_CONTEXT": {
+    case SET_CONTEXT: {
       return {
         ...state,
         context: action.payload
       };
     }
 
-    case "APPEND_QUEUE": {
+    case APPEND_QUEUE: {
       return {
         ...state,
         queue: [...state.queue, ...action.payload]

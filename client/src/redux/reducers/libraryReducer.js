@@ -1,3 +1,15 @@
+import {
+  CLEAR_PLAYLIST_TRACKS,
+  CLEAR_TRASH,
+  IMPORT_LIKES,
+  IMPORT_PLAYLISTS,
+  IMPORT_PLAYLIST_TRACKS,
+  MOVE_PLAYLISTS_TO_TRASH,
+  RESTORE_PLAYLISTS_FROM_TRASH,
+  SET_NEXT_PLAYLIST_HREF,
+  SET_PLAYLIST_CONNECTIONS
+} from "../actions/types";
+
 const initialState = {
   playlists: {
     spotify: [],
@@ -9,7 +21,7 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case "IMPORT_LIKES": {
+    case IMPORT_LIKES: {
       let likes = action.payload;
       const source = action.source;
       const playlistsOfThisSource = state.playlists[source].slice() || [];
@@ -33,7 +45,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "IMPORT_PLAYLISTS": {
+    case IMPORT_PLAYLISTS: {
       const newPlaylists = action.payload;
       const source = action.source;
       const prevPlaylists = state.playlists[source].slice();
@@ -65,7 +77,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "IMPORT_PLAYLIST_TRACKS": {
+    case IMPORT_PLAYLIST_TRACKS: {
       const { source, playlistId } = action;
       const loadedTracks = action.payload;
 
@@ -87,7 +99,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "SET_NEXT_PLAYLIST_HREF": {
+    case SET_NEXT_PLAYLIST_HREF: {
       const { source, playlistId } = action;
       const nextHref = action.payload;
 
@@ -108,7 +120,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "SET_PLAYLIST_CONNECTIONS": {
+    case SET_PLAYLIST_CONNECTIONS: {
       const source = action.source;
       const newSettings = action.payload;
       const updateSettings = state.playlists[source].slice();
@@ -127,7 +139,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "CLEAR_PLAYLIST_TRACKS": {
+    case CLEAR_PLAYLIST_TRACKS: {
       const source = action.source;
       const playlistId = action.payload;
 
@@ -152,7 +164,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "MOVE_PLAYLISTS_TO_TRASH": {
+    case MOVE_PLAYLISTS_TO_TRASH: {
       const source = action.payload;
       const playlists = state.playlists[source];
 
@@ -168,7 +180,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "RESTORE_PLAYLISTS_FROM_TRASH": {
+    case RESTORE_PLAYLISTS_FROM_TRASH: {
       const source = action.payload;
       const playlists = state.trash[source];
 
@@ -182,7 +194,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "CLEAR_TRASH": {
+    case CLEAR_TRASH: {
       const source = action.payload;
 
       return {

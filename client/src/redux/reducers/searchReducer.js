@@ -1,4 +1,11 @@
-import { ADD_TO_SEARCH_HISTORY } from "../actions/types";
+import {
+  ADD_TO_SEARCH_HISTORY,
+  REMOVE_FROM_SEARCH_HISTORY,
+  SET_ARTIST_RESULTS,
+  SET_MORE_TRACK_RESULTS,
+  SET_QUERY,
+  SET_TRACK_RESULTS
+} from "../actions/types";
 
 const initialState = {
   query: "",
@@ -33,14 +40,14 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case "SET_QUERY": {
+    case SET_QUERY: {
       return {
         ...state,
         query: action.payload
       };
     }
 
-    case "SET_TRACK_RESULTS": {
+    case SET_TRACK_RESULTS: {
       const source = action.source;
       const trackResults = action.payload;
       return {
@@ -52,7 +59,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "SET_MORE_TRACK_RESULTS": {
+    case SET_MORE_TRACK_RESULTS: {
       const source = action.source;
       const newTracks = action.payload;
 
@@ -68,7 +75,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "SET_ARTIST_RESULTS": {
+    case SET_ARTIST_RESULTS: {
       const source = action.source;
       const artistResults = action.payload;
       return {
@@ -91,7 +98,7 @@ export default function(state = initialState, action) {
       };
     }
 
-    case "REMOVE_FROM_SEARCH_HISTORY": {
+    case REMOVE_FROM_SEARCH_HISTORY: {
       const queryToFilter = action.payload;
       const filteredHistory = state.history.filter(
         query => query !== queryToFilter
