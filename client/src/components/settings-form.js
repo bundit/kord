@@ -18,6 +18,7 @@ import {
 } from "../redux/actions/libraryActions";
 import { getSoundcloudProfile } from "../redux/actions/soundcloudActions";
 import FormCheckbox from "./form-checkbox";
+import LoadingSpinner from "./loading-spinner";
 import Modal from "./modal";
 import avatarImg from "../assets/avatar-placeholder.png";
 import styles from "../styles/modal.module.css";
@@ -32,6 +33,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   const settings = user[source];
   const [playlistSettings, setPlaylistSettings] = useState([]);
   const [hasSynced, setHasSynced] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [showUsernameInput, setShowUsernameInput] = useState(
     !isConnected && source === "soundcloud"
@@ -96,6 +98,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
     if (usernameInput.length > 15 && inputPrefix === "soundcloud.com/") {
       // TODO add more input validation here
       dispatch(movePlaylistsToTrash("soundcloud"));
+      setIsLoading(true);
 
       dispatch(getSoundcloudProfile(inputSuffix))
         .then(() => dispatch(fetchPlaylists(source, inputSuffix)))
@@ -113,7 +116,8 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
           } else {
             alert.error(`Uncaught error ${e}`);
           }
-        });
+        })
+        .finally(() => setTimeout(() => setIsLoading(false), 500));
     } else {
       alert.error("Invalid Soundcloud profile URL");
     }
@@ -128,12 +132,17 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   }
 
   function handleSync(e) {
+    setIsLoading(true);
     if (!hasSynced && isConnected) {
       setHasSynced(true);
 
-      return handleUpdate(source, usernameInput.slice(15)).catch(e => {
-        alert.error(`Error syncing: ${e}`);
-      });
+      return handleUpdate(source, usernameInput.slice(15))
+        .catch(e => {
+          alert.error(`Error syncing: ${e}`);
+        })
+        .finally(() => {
+          setTimeout(() => setIsLoading(false), 500);
+        });
     }
   }
 
@@ -222,7 +231,10 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
       <form className={styles.modalForm} onSubmit={onSubmit}>
         <div className={styles.formInnerWrapper}>
           {/* TODO: insert user profile here */}
-          {playlistSettings &&
+          {isLoading ? (
+            <LoadingSpinner />
+          ) : (
+            playlistSettings &&
             playlistSettings.map((playlist, i) => (
               <FormCheckbox
                 title={playlist.title}
@@ -232,7 +244,8 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
                 numTracks={playlist.total}
                 onChange={toggleCheckbox}
               />
-            ))}
+            ))
+          )}
         </div>
         <div className={styles.formCancelSubmitButtonGroup}>
           <button
