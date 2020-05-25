@@ -107,6 +107,7 @@ const MinifiedPlayer = ({
           onMouseDown={handleMouseDownSeek}
           onMouseUp={handleMouseUpSeek}
         />
+        <span className={progressBarStyles.progressTrack}></span>
         <span
           className={progressBarStyles.progressBar}
           style={{ width: progressPercent }}

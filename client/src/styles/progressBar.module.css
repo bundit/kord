@@ -14,17 +14,42 @@
   background-color: #fb1;
   pointer-events: none;
   z-index: 2;
+  backface-visibility: hidden;
+  filter: grayscale(1%);
+}
+
+.progressTrack {
+  width: 100%;
+  position: absolute;
+  height: 1px;
+  bottom: 0px;
+  left: 0;
+  transition: 0.3s ease-out;
+  background-color: #383f41;
+  pointer-events: none;
+  z-index: 1;
+  backface-visibility: hidden;
+  filter: grayscale(1%);
 }
 
 .desktopSeekBar {
   display: none;
+  background: transparent;
 }
 
-.progressContainer:hover input[type="range"].desktopSeekBar,
 .progressContainer:hover .progressBar {
   transform: scaleY(10);
-  background-color: #ffc842;
+  background: #ffc842;
 }
+
+.progressContainer:hover .progressTrack {
+  transform: scaleY(10);
+}
+
+/* .progressContainer:hover .desktopSeekBar::-moz-range-track {
+  transform: scaleY(10);
+  background-color: #ffc842;
+} */
 
 .progressContainer:hover ~ .playerWrapper .timeContainer {
   color: #ffd46b;
@@ -37,9 +62,12 @@
 }
 
 input[type="range"].desktopSeekBar {
-  transition: 0.3s ease-out;
   -webkit-appearance: none;
   width: 100%;
+  opacity: 0;
+  min-height: 20px;
+  z-index: 5;
+  cursor: pointer;
 }
 
 input[type="range"].desktopSeekBar:focus {
@@ -55,7 +83,7 @@ input[type="range"].desktopSeekBar::-webkit-slider-runnable-track {
 
 input[type="range"].desktopSeekBar::-webkit-slider-thumb {
   height: 1px;
-  width: 10px;
+  width: 1px;
   background: #383f41;
   cursor: pointer;
   -webkit-appearance: none;
@@ -74,7 +102,7 @@ input[type="range"].desktopSeekBar::-moz-range-track {
 
 input[type="range"].desktopSeekBar::-moz-range-thumb {
   height: 1px;
-  width: 10px;
+  width: 1px;
   background: #383f41;
   cursor: pointer;
 }
@@ -152,15 +180,14 @@ input[type="range"].desktopSeekBar:focus::-ms-fill-upper {
     z-index: 1;
   }
 
-  .progressBar {
-    height: 1px;
-    position: absolute;
+  .progressBar,
+  .progressTrack {
     bottom: 9px;
   }
 
   .desktopSeekBar {
     display: inline;
     position: absolute;
-    bottom: 7px;
+    bottom: 0px;
   }
 }
