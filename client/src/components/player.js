@@ -29,6 +29,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   const [userVolumeValue, setUserVolumeValue] = useState(volume);
   const [isUserSettingVolume, setIsUserSettingVolume] = useState(false);
 
+  const theRaf = useRef(null);
   const soundcloudPlayer = useRef(null);
   const spotifyPlayer = useRef(null);
   const alert = useAlert();
@@ -36,7 +37,29 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
 
   useSetDurationOnTrackChange(current);
   usePauseIfSdkNotReady(current, isPlaying, isSpotifySdkReady);
-  useRenderSeekPosition(current, isPlaying, soundcloudPlayer, spotifyPlayer);
+  const renderSeekPos = React.useCallback(() => {
+    let currentPos;
+    try {
+      if (current.source === "soundcloud") {
+        currentPos = soundcloudPlayer.current.seek();
+      } else if (current.source === "spotify") {
+        currentPos = spotifyPlayer.current.seek() / 1000;
+      } else return raf.cancel(theRaf.current);
+    } catch (e) {
+      return raf.cancel(theRaf.current);
+    }
+
+    // We need to check if seek is a number because there is a race condition in howler
+    // where it will return the howler object if there is a playLock on it.
+    if (typeof currentPos === "number") {
+      currentPos = parseFloat(currentPos.toFixed(1));
+      dispatch(setSeek(currentPos));
+    }
+
+    theRaf.current = raf(renderSeekPos);
+  }, [current.source, dispatch]);
+
+  useRenderSeekPosition(current, theRaf, renderSeekPos, isPlaying);
 
   function handlePlayPause(e) {
     if (isPlaying) {
@@ -82,6 +105,8 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   }
 
   function handleSeek(seconds) {
+    raf.cancel(theRaf.current);
+
     if (seconds < 0) seconds = 0;
     if (seconds > duration) seconds = duration;
 
@@ -95,6 +120,8 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
     }
 
     dispatch(setSeek(seconds));
+
+    setTimeout(() => renderSeekPos(), 300);
   }
 
   function handleMouseDownSeek() {
@@ -244,46 +271,16 @@ function usePauseIfSdkNotReady(current, isPlaying, isSpotifySdkReady) {
   }, [isPlaying, current, isSpotifySdkReady, dispatch]);
 }
 
-function useRenderSeekPosition(
-  current,
-  isPlaying,
-  soundcloudPlayer,
-  spotifyPlayer
-) {
-  const theRaf = useRef(null);
-  const dispatch = useDispatch();
-
+function useRenderSeekPosition(current, theRaf, renderSeekPos, isPlaying) {
   useEffect(() => {
     raf.cancel(theRaf.current);
-
-    function renderSeekPos() {
-      let currentPos;
-      try {
-        if (current.source === "soundcloud") {
-          currentPos = soundcloudPlayer.current.seek();
-        } else if (current.source === "spotify") {
-          currentPos = spotifyPlayer.current.seek() / 1000;
-        } else return raf.cancel(theRaf.current);
-      } catch (e) {
-        return raf.cancel(theRaf.current);
-      }
-
-      // We need to check if seek is a number because there is a race condition in howler
-      // where it will return the howler object if there is a playLock on it.
-      if (typeof currentPos === "number") {
-        currentPos = parseFloat(currentPos.toFixed(1));
-        dispatch(setSeek(currentPos));
-      }
-
-      theRaf.current = raf(renderSeekPos);
-    }
 
     if (isPlaying) {
       renderSeekPos();
     } else raf.cancel(theRaf.current);
 
     return () => raf.cancel(theRaf);
-  }, [current, isPlaying, soundcloudPlayer, spotifyPlayer, dispatch]); // Stop or start RAF when play/pause and song changes
+  }, [current, isPlaying, theRaf, renderSeekPos]); // Stop or start RAF when play/pause and song changes
 }
 
 Player.propTypes = {
