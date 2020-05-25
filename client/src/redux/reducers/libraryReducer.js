@@ -84,6 +84,11 @@ export default function(state = initialState, action) {
       const newPlaylistList = state.playlists[source].map(playlist => {
         //eslint-disable-next-line
         if (playlist.id == playlistId) {
+          const playlistIsEmpty = !playlist.tracks || !playlist.tracks.length;
+          if (playlistIsEmpty) {
+            playlist.dateSynced = new Date();
+          }
+
           playlist.tracks = [...playlist.tracks, ...loadedTracks];
         }
 
