@@ -10,7 +10,7 @@
   height: 1px;
   bottom: 0px;
   left: 0;
-  transition: 0.3s ease-out;
+  transition: 0.35s ease-out;
   background-color: #fb1;
   pointer-events: none;
   z-index: 2;
@@ -24,7 +24,7 @@
   height: 1px;
   bottom: 0px;
   left: 0;
-  transition: 0.3s ease-out;
+  transition: 0.35s ease-out;
   background-color: #383f41;
   pointer-events: none;
   z-index: 1;
