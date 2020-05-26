@@ -138,6 +138,16 @@ const PlaylistTracklist = ({
     e.preventDefault();
   }
 
+  const playlistPlayButtonStyles = {
+    borderRadius: "50%",
+    background:
+      "linear-gradient(330deg, rgba(255,187,17,1) 0%, rgba(255,200,66,1) 70%, rgba(255,255,255,1) 100%)",
+    color: "#192124",
+    marginLeft: "0",
+    cursor: "pointer",
+    fontSize: "19px"
+  };
+
   return (
     !isEmptyObject(currentPlaylist) && (
       <div
@@ -196,35 +206,23 @@ const PlaylistTracklist = ({
                     type="button"
                     onClick={handlePlayPlaylist}
                     className={styles.playlistPlayButton}
-                    style={{
-                      borderRadius: "50%",
-                      background:
-                        "linear-gradient(330deg, rgba(255,187,17,1) 0%, rgba(255,200,66,1) 70%, rgba(255,255,255,1) 100%)",
-                      color: "#192124",
-                      marginLeft: "0",
-                      cursor: "pointer"
-                    }}
+                    style={playlistPlayButtonStyles}
                   >
-                    <FontAwesomeIcon icon={faPlay} size="2x" />
+                    <FontAwesomeIcon icon={faPlay} />
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={handlePausePlaylist}
                     className={styles.playlistPlayButton}
-                    style={{
-                      borderRadius: "50%",
-                      background:
-                        "linear-gradient(330deg, rgba(255,187,17,1) 0%, rgba(255,200,66,1) 70%, rgba(255,255,255,1) 100%)",
-                      color: "#192124",
-                      marginLeft: "0",
-                      cursor: "pointer"
-                    }}
+                    style={playlistPlayButtonStyles}
                   >
-                    <FontAwesomeIcon icon={faPause} size="2x" />
+                    <FontAwesomeIcon icon={faPause} />
                   </button>
                 )}
-                <div>Last synced: {timeSince(currentPlaylist.dateSynced)} </div>
+                <div style={{ marginLeft: "auto" }}>
+                  Last synced: {timeSince(currentPlaylist.dateSynced)}{" "}
+                </div>
               </div>
             </div>
           </div>
