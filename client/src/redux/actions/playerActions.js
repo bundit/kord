@@ -124,6 +124,13 @@ export function setVolume(newVolume) {
   };
 }
 
+export function setMuted(isMuted) {
+  return {
+    type: "SET_MUTED",
+    payload: isMuted
+  };
+}
+
 function setNextQueueHref(nextHref) {
   return {
     type: "SET_NEXT_QUEUE_HREF",

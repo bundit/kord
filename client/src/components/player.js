@@ -12,6 +12,7 @@ import {
   play,
   prevTrack,
   setDuration,
+  setMuted,
   setSeek,
   setVolume
 } from "../redux/actions/playerActions";
@@ -21,13 +22,21 @@ import SpotifyPlayer from "./spotify-player";
 import miniPlayerSlide from "../styles/miniPlayerSlide.module.css";
 import slideTransition from "../styles/slide.module.css";
 
-export const Player = ({ current, isPlaying, volume, seek, duration }) => {
+export const Player = ({
+  current,
+  isPlaying,
+  volume,
+  isMuted,
+  seek,
+  duration
+}) => {
   const [isSpotifySdkReady, setIsSpotifySdkReady] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [userSeekPos, setUserSeekPos] = useState(0);
   const [isUserSeeking, setIsUserSeeking] = useState(false);
   const [userVolumeValue, setUserVolumeValue] = useState(volume);
   const [isUserSettingVolume, setIsUserSettingVolume] = useState(false);
+  volume = isMuted ? 0 : volume;
 
   const theRaf = useRef(null);
   const soundcloudPlayer = useRef(null);
@@ -142,6 +151,7 @@ export const Player = ({ current, isPlaying, volume, seek, duration }) => {
   }
 
   function handleMouseDownVolume() {
+    dispatch(setMuted(false));
     setIsUserSettingVolume(true);
   }
 
@@ -301,6 +311,7 @@ const mapStateToProps = state => ({
   current: state.player.currentTrack,
   isPlaying: state.player.isPlaying,
   volume: state.player.volume,
+  isMuted: state.player.isMuted,
   seek: state.player.seek,
   duration: state.player.duration
 });

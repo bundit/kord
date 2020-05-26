@@ -173,6 +173,7 @@
 
 .volumeWrapper {
   display: none;
+  cursor: pointer;
 }
 
 .volumeWrapper:hover .volumeLowerFill {
@@ -183,10 +184,15 @@
   color: #ffc842;
 }
 
-.volumeIconWrapper {
+.volumeIconButton {
   width: 25px;
   margin-left: auto;
 }
+
+.volumeIconButton:hover ~ .volumeLowerFill {
+  background-color: #b3b3b3;
+}
+
 .volumeWrapper svg {
   margin-bottom: 0;
 

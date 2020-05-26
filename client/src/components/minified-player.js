@@ -7,6 +7,7 @@ import {
   faVolumeDown,
   faVolumeUp
 } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React, { useState, useRef } from "react";
 
@@ -19,6 +20,7 @@ import {
   secondsToFormatted
 } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
+import { setMuted } from "../redux/actions/playerActions";
 import { useMobileDetection } from "../utils/hooks";
 import progressBarStyles from "../styles/progressBar.module.css";
 import styles from "../styles/player.module.css";
@@ -44,18 +46,21 @@ const MinifiedPlayer = ({
   handlePrev,
   handleNext
 }) => {
+  const dispatch = useDispatch();
   const [hoverOffset, setHoverOffset] = useState(0);
   const [isUserHovering, setIsUserHovering] = useState(false);
   const seekWrap = useRef(null);
+
+  const isMuted = useSelector(state => state.player.isMuted);
 
   const isMobile = useMobileDetection();
 
   const progress = (isUserSeeking ? userSeekPos : seek) / duration;
   const progressPercent = `${progress * 100}%`;
 
-  const currentVolumeValue = Number(
-    isUserSettingVolume ? userVolumeValue : volume
-  );
+  const currentVolumeValue = isMuted
+    ? 0
+    : Number(isUserSettingVolume ? userVolumeValue : volume);
   const sliderWidth = 125; // px
 
   const volumeWidth = currentVolumeValue * sliderWidth;
@@ -86,6 +91,10 @@ const MinifiedPlayer = ({
 
   function handleMouseOut() {
     setIsUserHovering(false);
+  }
+
+  function handleToggleMute() {
+    dispatch(setMuted(!isMuted));
   }
 
   return (
@@ -186,9 +195,14 @@ const MinifiedPlayer = ({
         </div>
 
         <div className={styles.volumeWrapper}>
-          <span className={styles.volumeIconWrapper}>
+          <button
+            type="button"
+            onClick={handleToggleMute}
+            className={styles.volumeIconButton}
+          >
             <FontAwesomeIcon icon={volumeIcon} size="sm" />
-          </span>
+          </button>
+
           <span
             className={styles.volumeLowerFill}
             style={{ width: volumeWidth, right: volumeRight }}

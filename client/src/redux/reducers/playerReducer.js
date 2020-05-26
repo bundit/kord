@@ -8,6 +8,7 @@ import {
   SEEK,
   SET_CONTEXT,
   SET_DURATION,
+  SET_MUTED,
   SET_NEXT_QUEUE_HREF,
   SET_PLAYER,
   SET_QUEUE,
@@ -25,6 +26,7 @@ const initialState = {
     },
     id: "-1"
   },
+  isMuted: false,
   duration: 0,
   seek: 0,
   isPlaying: false,
@@ -187,6 +189,13 @@ export default function(state = initialState, action) {
       return {
         ...state,
         queue: [...state.queue, ...action.payload]
+      };
+    }
+
+    case SET_MUTED: {
+      return {
+        ...state,
+        isMuted: action.payload
       };
     }
 

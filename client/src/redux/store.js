@@ -28,6 +28,7 @@ store.subscribe(() => {
     },
     player: {
       ...state.player,
+      isMuted: false,
       isPlaying: false,
       seek: 0,
       context: state.player.context
