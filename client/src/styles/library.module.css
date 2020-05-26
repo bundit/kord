@@ -390,9 +390,12 @@
 }
 
 .playlistItem,
-.playlistImageOverlay,
-.playlistPlayButton {
+.playlistImageOverlay {
   transition: 0.3s ease-out;
+}
+
+.playlistPlayButton {
+  transition: 0.1s linear;
 }
 
 .playlistItem h3 {
@@ -453,8 +456,8 @@
 }
 
 .playlistPlayButton {
-  height: 65px;
-  width: 65px;
+  height: 60px;
+  width: 60px;
   color: white;
   margin: 0 auto;
   outline: none;
@@ -465,8 +468,7 @@
 }
 
 .playlistPlayButton:active {
-  transition: 0.3s linear;
-  transform: scale(0.9);
+  transform: scale(1);
 }
 
 .syncButton {

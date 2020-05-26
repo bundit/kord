@@ -11,14 +11,15 @@
   margin: auto auto auto 0;
   display: block;
   height: 35px;
-  width: 135px;
-  padding-left: 20px;
+  width: 140px;
+  padding-left: 25px;
   padding-right: 15px;
   border-radius: 7px;
   border: none;
   background-color: #bbb;
   box-sizing: border-box;
   transition: 0.4s ease;
+  color: black;
 }
 
 .searchBar::placeholder {
