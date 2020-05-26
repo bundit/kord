@@ -84,14 +84,55 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   transition: 0.4s ease-out;
+  position: relative;
 }
 
 .sidebarNavLink svg {
   margin-right: 10px;
 }
 
+.sourceIcon {
+  margin-left: auto;
+  display: none;
+}
+
+.speakerIcon {
+  margin-left: auto;
+}
+
 .sidebarNavLink:hover {
   color: white;
+}
+
+.sidebarNavLink:hover .speakerIcon {
+  display: none;
+}
+
+.sidebarNavLink:hover .sourceIcon {
+  display: block;
+  animation: fadeInFromNone 0.5s ease-out;
+  display: block;
+}
+
+@keyframes fadeInFromNone {
+  /* https://stackoverflow.com/questions/8449933/animation-css3-display-opacity/8450102 */
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+  }
+
+  100% {
+    display: block;
+    opacity: 1;
+  }
+  101% {
+    display: block;
+  }
 }
 
 .activeNavLink {

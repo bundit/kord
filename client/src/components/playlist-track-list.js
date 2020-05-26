@@ -39,8 +39,9 @@ const PlaylistTracklist = ({
   const [hasRefreshed, setHasRefreshed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const context = useSelector(state => state.player.context);
-  // eslint-disable-next-line
-  const thisPlaylistIsPlaying = context.id == id && isPlaying;
+
+  const thisPlaylistIsPlaying = // eslint-disable-next-line
+    context.source === source && context.id == id && isPlaying;
   // eslint-disable-next-line
   const playlistIndex = playlists[source].findIndex(p => p.id == id);
   const currentPlaylist = playlists[source][playlistIndex] || {};
@@ -121,7 +122,7 @@ const PlaylistTracklist = ({
   }
 
   function handlePlayPlaylist(e) {
-    if (context.id === id) {
+    if (context.id === id && context.source === source) {
       dispatch(play());
     } else {
       dispatch(playPlaylist(currentPlaylist));

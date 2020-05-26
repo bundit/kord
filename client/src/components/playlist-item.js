@@ -1,6 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
-import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faPause, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSpotify,
+  faSoundcloud,
+  faYoutube
+} from "@fortawesome/free-brands-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
@@ -16,11 +21,12 @@ const PlaylistItem = ({ playlist, sidebar }) => {
   const dispatch = useDispatch();
   const context = useSelector(state => state.player.context);
   const isPlaying = useSelector(state => state.player.isPlaying);
-  // eslint-disable-next-line
-  const thisPlaylistIsPlaying = context.id == id && isPlaying;
+
+  const thisPlaylistIsPlaying = // eslint-disable-next-line
+    context.source === source && context.id == id && isPlaying;
 
   function handlePlayPlaylist(e) {
-    if (context.id === id) {
+    if (context.id === id && context.source === source) {
       dispatch(play());
     } else {
       dispatch(playPlaylist(playlist));
@@ -36,6 +42,14 @@ const PlaylistItem = ({ playlist, sidebar }) => {
     e.stopPropagation();
     e.preventDefault();
   }
+
+  const icons = {
+    spotify: faSpotify,
+    soundcloud: faSoundcloud,
+    youtube: faYoutube
+  };
+
+  const sourceIcon = icons[source];
 
   return (
     <NavLink
@@ -74,7 +88,22 @@ const PlaylistItem = ({ playlist, sidebar }) => {
             <span>{`${playlist.total} Tracks`}</span>
           </div>
         ) : (
-          <div>{capitalizeWord(title)}</div>
+          <div style={{ display: "flex" }}>
+            <span
+              style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}
+            >
+              {capitalizeWord(title)}
+            </span>
+
+            <span className={sidebarStyles.sourceIcon}>
+              <FontAwesomeIcon icon={sourceIcon} size="lg" />
+            </span>
+            {thisPlaylistIsPlaying && (
+              <span className={sidebarStyles.speakerIcon}>
+                <FontAwesomeIcon icon={faVolumeUp} />
+              </span>
+            )}
+          </div>
         )}
       </div>
     </NavLink>
