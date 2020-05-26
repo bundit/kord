@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faSync } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faSync, faPause } from "@fortawesome/free-solid-svg-icons";
 import { useAlert } from "react-alert";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import React, { useRef, useState } from "react";
 
 import { capitalizeWord } from "../utils/formattingHelpers";
@@ -11,7 +11,12 @@ import {
   loadPlaylistTracks
 } from "../redux/actions/libraryActions";
 import { getImgUrl } from "../utils/getImgUrl";
-import { playPlaylist, playTrack } from "../redux/actions/playerActions";
+import {
+  pause,
+  play,
+  playPlaylist,
+  playTrack
+} from "../redux/actions/playerActions";
 import { timeSince } from "../utils/dateHelpers";
 import { usePrevious } from "../utils/hooks";
 import LoadingSpinner from "./loading-spinner";
@@ -33,6 +38,9 @@ const PlaylistTracklist = ({
   const [numShowTracks, setNumShowTracks] = useState(playlistIncrementAmount);
   const [hasRefreshed, setHasRefreshed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const context = useSelector(state => state.player.context);
+  // eslint-disable-next-line
+  const thisPlaylistIsPlaying = context.id == id && isPlaying;
   // eslint-disable-next-line
   const playlistIndex = playlists[source].findIndex(p => p.id == id);
   const currentPlaylist = playlists[source][playlistIndex] || {};
@@ -113,7 +121,18 @@ const PlaylistTracklist = ({
   }
 
   function handlePlayPlaylist(e) {
-    dispatch(playPlaylist(currentPlaylist));
+    if (context.id === id) {
+      dispatch(play());
+    } else {
+      dispatch(playPlaylist(currentPlaylist));
+    }
+
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  function handlePausePlaylist(e) {
+    dispatch(pause());
 
     e.stopPropagation();
     e.preventDefault();
@@ -172,21 +191,39 @@ const PlaylistTracklist = ({
                   marginTop: "auto"
                 }}
               >
-                <button
-                  type="button"
-                  onClick={handlePlayPlaylist}
-                  className={styles.playlistPlayButton}
-                  style={{
-                    borderRadius: "50%",
-                    background:
-                      "linear-gradient(330deg, rgba(255,187,17,1) 0%, rgba(255,200,66,1) 70%, rgba(255,255,255,1) 100%)",
-                    color: "#192124",
-                    marginLeft: "0",
-                    cursor: "pointer"
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPlay} size="2x" />
-                </button>
+                {!tracks.length ? null : !thisPlaylistIsPlaying ? (
+                  <button
+                    type="button"
+                    onClick={handlePlayPlaylist}
+                    className={styles.playlistPlayButton}
+                    style={{
+                      borderRadius: "50%",
+                      background:
+                        "linear-gradient(330deg, rgba(255,187,17,1) 0%, rgba(255,200,66,1) 70%, rgba(255,255,255,1) 100%)",
+                      color: "#192124",
+                      marginLeft: "0",
+                      cursor: "pointer"
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faPlay} size="2x" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handlePausePlaylist}
+                    className={styles.playlistPlayButton}
+                    style={{
+                      borderRadius: "50%",
+                      background:
+                        "linear-gradient(330deg, rgba(255,187,17,1) 0%, rgba(255,200,66,1) 70%, rgba(255,255,255,1) 100%)",
+                      color: "#192124",
+                      marginLeft: "0",
+                      cursor: "pointer"
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faPause} size="2x" />
+                  </button>
+                )}
                 <div>Last synced: {timeSince(currentPlaylist.dateSynced)} </div>
               </div>
             </div>
