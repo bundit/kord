@@ -29,7 +29,8 @@ store.subscribe(() => {
     player: {
       ...state.player,
       isPlaying: false,
-      seek: 0
+      seek: 0,
+      context: state.player.context
     },
     search: {
       history: state.search.history

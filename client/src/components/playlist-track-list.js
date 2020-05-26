@@ -100,7 +100,11 @@ const PlaylistTracklist = ({
   );
 
   function dispatchPlayTrack(index) {
-    dispatch(playTrack(index, tracks, currentPlaylist.next));
+    const context = {
+      source: tracks[index].source,
+      id: id
+    };
+    dispatch(playTrack(index, tracks, currentPlaylist.next, context));
   }
 
   function handleRefresh() {

@@ -63,7 +63,11 @@ const SearchTrackList = ({
   }
 
   function dispatchPlayTrack(index) {
-    dispatch(playTrack(index, tracks.list, tracks.next));
+    const context = {
+      source: tracks.list[index].source,
+      id: "search"
+    };
+    dispatch(playTrack(index, tracks.list, tracks.next, context));
   }
 
   return (

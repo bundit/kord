@@ -15,7 +15,7 @@ import { loadPlaylistTracks } from "./libraryActions";
 import { mapJsonToTracks, spotifyApi } from "./spotifyActions";
 import store from "../store";
 
-export const playTrack = (index, tracklist, nextHref) => dispatch => {
+export const playTrack = (index, tracklist, nextHref, context) => dispatch => {
   while (index < tracklist.length && !tracklist[index].streamable) {
     index++;
   }
@@ -25,7 +25,7 @@ export const playTrack = (index, tracklist, nextHref) => dispatch => {
   dispatch(setQueueIndex(index));
   dispatch(setQueue(tracklist));
   dispatch(setNextQueueHref(nextHref));
-  dispatch(setContext(currentTrack.source));
+  dispatch(setContext(context));
 };
 
 export function play() {
@@ -131,24 +131,28 @@ function setNextQueueHref(nextHref) {
   };
 }
 
-function setContext(source) {
+function setContext(context) {
   return {
     type: "SET_CONTEXT",
-    payload: source
+    payload: context
   };
 }
 
 export const playPlaylist = playlist => dispatch => {
   const { source, id, next, tracks, total } = playlist;
+  const context = {
+    source: source,
+    id: id
+  };
 
   if (total === 0) return;
 
   if (!tracks.length) {
     dispatch(loadPlaylistTracks(source, id, next)).then(({ tracks, next }) => {
-      dispatch(playTrack(0, tracks, next));
+      dispatch(playTrack(0, tracks, next, context));
     });
   } else {
-    dispatch(playTrack(0, tracks, next));
+    dispatch(playTrack(0, tracks, next, context));
   }
 };
 
@@ -161,7 +165,10 @@ export function appendQueue(tracks) {
 
 const loadMoreQueueTracks = () => dispatch => {
   const playerState = store.getState().player;
-  let { nextHref, context } = playerState;
+  let {
+    nextHref,
+    context: { source }
+  } = playerState;
 
   if (!nextHref) {
     return Promise.resolve("No more results");
@@ -171,7 +178,7 @@ const loadMoreQueueTracks = () => dispatch => {
   let tracks;
   let next;
 
-  if (context === "spotify") {
+  if (source === "spotify") {
     promise = spotifyApi.getGeneric(nextHref).then(json => {
       tracks = json.tracks
         ? mapJsonToTracks(json.tracks, true)
@@ -180,7 +187,7 @@ const loadMoreQueueTracks = () => dispatch => {
 
       return { tracks, next };
     });
-  } else if (context === "soundcloud") {
+  } else if (source === "soundcloud") {
     if (nextHref.includes("api-v2")) {
       nextHref = `/api?url=${encodeURIComponent(
         `${nextHref}&client_id=${process.env.REACT_APP_SC_V2_KEY}`
