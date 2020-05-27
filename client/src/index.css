@@ -72,13 +72,16 @@ a {
 }
 
 ::-webkit-scrollbar {
-  width: 15px;
+  width: 13px;
 }
 
 ::-webkit-scrollbar-track {
   background-color: #192124;
-  /* rgba(100, 100, 100, 0.5); */
-  /* width: 15px; */
+}
+
+body {
+  scrollbar-color: #6f7c7f #192124;
+  scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar-thumb {

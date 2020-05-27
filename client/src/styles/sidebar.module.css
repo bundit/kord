@@ -64,6 +64,15 @@
   flex-direction: column;
 }
 
+.playlistContainer {
+  scrollbar-color: #6f7c7f #121a1d;
+  scrollbar-width: thin;
+}
+
+.playlistContainer::-webkit-scrollbar-track {
+  background-color: #121a1d;
+}
+
 .sectionWrapper h2 {
   padding-left: 5px;
   margin: 12px;
