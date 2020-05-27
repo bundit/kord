@@ -33,7 +33,7 @@ export const getSoundcloudProfile = userId => dispatch => {
         tracks: [],
         total: json.public_favorites_count,
         next: beginHref,
-        isConnected: false,
+        isConnected: true,
         dateSynced: new Date()
       };
 
@@ -181,7 +181,7 @@ function mapCollectionToPlaylists(collection) {
     source: "soundcloud",
     tracks: mapCollectionToTracks(item.tracks),
     total: item.tracks.length,
-    isConnected: false,
+    isConnected: true,
     dateSynced: new Date()
   }));
 }
