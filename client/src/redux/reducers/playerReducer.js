@@ -33,7 +33,10 @@ const initialState = {
   volume: 1.0,
   index: 0,
   queue: [],
-  context: null,
+  context: {
+    source: "source",
+    id: "id"
+  },
   nextHref: null
 };
 
