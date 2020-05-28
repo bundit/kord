@@ -4,7 +4,8 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import {
   faMusic,
   faSearch,
-  faCompass
+  faCompass,
+  faVolumeUp
 } from "@fortawesome/free-solid-svg-icons";
 import { faSoundcloud, faSpotify } from "@fortawesome/free-brands-svg-icons";
 import { useAlert } from "react-alert";
@@ -26,6 +27,9 @@ const Sidebar = ({ user, playlists }) => {
   const alert = useAlert();
   const userHistory = useSelector(state => state.user.history);
   const location = useLocation();
+  const player = useSelector(state => state.player);
+  const { context, isPlaying } = player; // eslint-disable-next-line
+  const playingFromSearch = context.id == "search" && isPlaying;
 
   function toggleSettingsForm(source) {
     setSettingsSource(source);
@@ -101,9 +105,15 @@ const Sidebar = ({ user, playlists }) => {
           onClick={handleSearchNavigationOnClick}
           className={styles.sidebarNavLink}
           activeClassName={styles.activeNavLink}
+          style={{ display: "flex", alignItems: "center" }}
         >
           <FontAwesomeIcon size="lg" icon={faSearch} />
           Search
+          {playingFromSearch ? (
+            <span style={{ marginLeft: "auto" }}>
+              <FontAwesomeIcon icon={faVolumeUp} />
+            </span>
+          ) : null}
         </NavLink>
         <NavLink
           to="/app/explore"
