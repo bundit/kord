@@ -62,9 +62,9 @@ router.get(
       /** assign our jwt to the cookie */
       res.cookie("kordUser", token, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7
-        // TODO Get SSL Certs
-        // secure: isProduction
+        maxAge: process.env.JWT_TOKEN_EXPIRE,
+        secure: process.env.NODE_ENV === "production",
+        overwrite: true
       });
       res.redirect(
         `/app/library#source=spotify&spotifyToken=${user.accessToken}`
