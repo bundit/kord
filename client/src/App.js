@@ -32,6 +32,23 @@ const App = () => {
             <Switch>
               <Route path="/app/search" component={SearchPage} />
               <Route path="/app/library" component={Library} />
+              <Route
+                path="/app/explore"
+                render={() => (
+                  <h1
+                    style={{
+                      marginTop: "150px",
+                      marginLeft: "50px",
+                      fontFamily: "Pacifico",
+                      color: "#ccc",
+                      fontSize: "45px",
+                      fontWeight: "300"
+                    }}
+                  >
+                    Coming soon!
+                  </h1>
+                )}
+              />
             </Switch>
             <Route component={Footer} />
           </main>
