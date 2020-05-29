@@ -11,29 +11,30 @@
   margin: auto auto auto 0;
   display: block;
   height: 35px;
-  width: 140px;
+  width: 145px;
   padding-left: 25px;
   padding-right: 15px;
   border-radius: 7px;
   border: none;
+  outline: none;
   background-color: #bbb;
   box-sizing: border-box;
   transition: 0.4s ease;
   color: black;
+  font-size: 12px;
 }
 
 .searchBar::placeholder {
   color: black;
+  opacity: 1;
 }
 
 .searchBar:focus {
-  outline: none;
   background-color: #fff;
   width: 330px;
 }
 
 .searchBarHasValue {
-  outline: none;
   width: 330px;
 }
 
