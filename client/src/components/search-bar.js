@@ -8,6 +8,7 @@ const SearchBar = ({ placeholder, query, onChange, onSubmit, onReset }) => (
     <input
       className={`${styles.searchBar} ${query.length &&
         styles.searchBarHasValue}`}
+      id="search-bar"
       name="search"
       type="search"
       onChange={onChange}
