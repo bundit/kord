@@ -171,8 +171,14 @@
 }
 
 .formSubmitButton {
-  background-color: #fb1;
+  transition: 0.3s ease-out;
+  background-color: #ce9300;
   color: black;
+  outline: none;
+}
+
+.formSubmitButton:hover {
+  background-color: #fb1;
 }
 
 .formSubmitButton:hover {

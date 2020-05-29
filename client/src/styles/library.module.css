@@ -57,18 +57,21 @@
 }
 
 .showMoreButton {
-  color: black;
-  background-color: #ce9300;
+  border: 1px #a2740080 solid;
+  color: #ce9300;
   font-weight: 600;
   border-radius: 7px;
   padding: 10px;
   transition: 0.3s ease-out;
   cursor: pointer;
   margin: 12px 0;
+  outline: none;
+  font-size: 12px;
 }
 
 .showMoreButton:hover {
-  background-color: #fb1;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fb1;
 }
 
 .endOfResults {
