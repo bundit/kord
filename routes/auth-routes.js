@@ -18,7 +18,7 @@ router.get("/token", (req, res, next) => {
     }
 
     if (!user) {
-      return res.status(401).json({ message: info });
+      return res.status(401).json({ message: "no user" });
     }
 
     const expires = Date.now() + parseInt(process.env.JWT_TOKEN_EXPIRE, 10);

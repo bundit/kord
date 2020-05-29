@@ -10,11 +10,13 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import React, { useState } from "react";
 
+import { useAuthDetection } from "../utils/auth-provider";
 import SEO from "../components/seo";
 import styles from "../styles/landing.module.css";
 
 const IndexPage = () => {
   const [hasScrolled, setHasScrolled] = useState(false);
+  const isLoggedIn = useAuthDetection();
 
   function scrollListener() {
     setHasScrolled(true);
@@ -36,6 +38,9 @@ const IndexPage = () => {
 
   const sourceTransitionDuration = "400";
 
+  const textCTA = isLoggedIn ? "Open Player" : "Join now";
+  const linkCTA = isLoggedIn ? "/app/library" : "/login";
+
   return (
     <>
       <SEO title="Home" />
@@ -54,7 +59,7 @@ const IndexPage = () => {
           </h1>
 
           <Link
-            to="/login"
+            to={linkCTA}
             className="button nav-link"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -75,7 +80,7 @@ const IndexPage = () => {
               data-aos-duration="300"
               data-aos-delay="1600"
             >
-              <div className="label">Listen now</div>
+              <div className="label">{textCTA}</div>
             </div>
           </Link>
         </div>
@@ -156,7 +161,7 @@ const IndexPage = () => {
             Ready to start listening?
           </h1>
           <Link
-            to="/login"
+            to={linkCTA}
             className="button nav-link"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -179,7 +184,7 @@ const IndexPage = () => {
               data-aos-offset="0"
               data-aos-delay="1200"
             >
-              <div className="label">Listen now</div>
+              <div className="label">{textCTA}</div>
             </div>
           </Link>
         </div>

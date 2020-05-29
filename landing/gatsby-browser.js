@@ -5,3 +5,6 @@
  */
 
 // You can delete this file if you're not using it
+import AuthProvider from "./src/utils/auth-provider";
+
+export const wrapRootElement = AuthProvider;
