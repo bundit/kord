@@ -76,6 +76,15 @@ export const Player = ({
   useRenderSeekPosition(current, theRaf, renderSeekPos, isPlaying);
   useDetectMediaSession();
 
+  React.useEffect(() => {
+    window.onkeydown = e => {
+      if (e.keyCode === 32) {
+        handlePlayPause(e);
+        e.preventDefault();
+      }
+    }; // eslint-disable-next-line
+  }, [isPlaying]);
+
   function handlePlay() {
     dispatch(play());
   }
@@ -90,6 +99,7 @@ export const Player = ({
     } else {
       handlePlay();
     }
+
     e.stopPropagation();
   }
 
