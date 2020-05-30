@@ -30,7 +30,7 @@ const initialState = {
   duration: 0,
   seek: 0,
   isPlaying: false,
-  volume: 1.0,
+  volume: 0.5,
   index: 0,
   queue: [],
   context: {
