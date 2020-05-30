@@ -29,12 +29,24 @@ export const playTrack = (index, tracklist, nextHref, context) => dispatch => {
 };
 
 export function play() {
+  let silentPlayer = document.getElementById("player");
+  if (silentPlayer) {
+    silentPlayer.play();
+  }
+  navigator.mediaSession.playbackState = "playing";
+
   return {
     type: PLAY
   };
 }
 
 export function pause() {
+  let silentPlayer = document.getElementById("player");
+  if (silentPlayer) {
+    silentPlayer.pause();
+  }
+  navigator.mediaSession.playbackState = "paused";
+
   return {
     type: PAUSE
   };

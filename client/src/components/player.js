@@ -2,7 +2,7 @@ import { CSSTransition } from "react-transition-group";
 import { connect, useDispatch } from "react-redux";
 import { useAlert } from "react-alert";
 import PropTypes from "prop-types";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import ReactHowler from "react-howler";
 import raf from "raf";
 
@@ -11,11 +11,16 @@ import {
   pause,
   play,
   prevTrack,
-  setDuration,
   setMuted,
   setSeek,
   setVolume
 } from "../redux/actions/playerActions";
+import {
+  useDetectMediaSession,
+  usePauseIfSdkNotReady,
+  useRenderSeekPosition,
+  useSetDurationOnTrackChange
+} from "../utils/hooks";
 import ExpandedPlayer from "./expanded-player";
 import MinifiedPlayer from "./minified-player";
 import SpotifyPlayer from "./spotify-player";
@@ -69,12 +74,21 @@ export const Player = ({
   }, [current.source, dispatch]);
 
   useRenderSeekPosition(current, theRaf, renderSeekPos, isPlaying);
+  useDetectMediaSession();
+
+  function handlePlay() {
+    dispatch(play());
+  }
+
+  function handlePause() {
+    dispatch(pause());
+  }
 
   function handlePlayPause(e) {
     if (isPlaying) {
-      dispatch(pause());
+      handlePause();
     } else {
-      dispatch(play());
+      handlePlay();
     }
     e.stopPropagation();
   }
@@ -180,6 +194,12 @@ export const Player = ({
 
   return (
     <>
+      <audio id="player" autoPlay loop>
+        <source
+          src="https://raw.githubusercontent.com/anars/blank-audio/master/10-minutes-of-silence.mp3"
+          type="audio/mp3"
+        />
+      </audio>
       {current.source === "soundcloud" && (
         <ReactHowler
           src={`https://api.soundcloud.com/tracks/${current.id}/stream?client_id=${KEY}`}
@@ -259,39 +279,6 @@ export const Player = ({
     </>
   );
 };
-
-function useSetDurationOnTrackChange(current) {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setSeek(0));
-    dispatch(setDuration(Math.round(current.duration / 1000)));
-  }, [current, dispatch]); // Song was changed
-}
-
-function usePauseIfSdkNotReady(current, isPlaying, isSpotifySdkReady) {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    // Prevent play if player is not ready
-    if (current.source === "spotify") {
-      if (isPlaying && !isSpotifySdkReady) {
-        dispatch(pause());
-      }
-    }
-  }, [isPlaying, current, isSpotifySdkReady, dispatch]);
-}
-
-function useRenderSeekPosition(current, theRaf, renderSeekPos, isPlaying) {
-  useEffect(() => {
-    raf.cancel(theRaf.current);
-
-    if (isPlaying) {
-      renderSeekPos();
-    } else raf.cancel(theRaf.current);
-
-    return () => raf.cancel(theRaf);
-  }, [current, isPlaying, theRaf, renderSeekPos]); // Stop or start RAF when play/pause and song changes
-}
 
 Player.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
