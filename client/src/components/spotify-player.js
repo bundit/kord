@@ -1,8 +1,7 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
+import React, { useEffect, useRef } from "react";
 
 import { refreshSpotifyToken } from "../redux/actions/spotifyActions";
 import { usePrevious } from "../utils/hooks";
@@ -100,7 +99,7 @@ const SpotifyPlayer = ({
     }
   }, [volume]);
 
-  return <></>;
+  return <React.Fragment />;
 };
 
 function useSpotifyWebPlaybackSdkScript() {
@@ -167,7 +166,7 @@ class SpotifyWebPlaybackSdk {
         if (res.status === 401) {
           // Expired token
           return this.fetchAndSetToken().then(() =>
-            this.load(trackId, --tries)
+            this.load(trackId, positionMs, --tries)
           );
         } else if (res.status === 403) {
           return this.handleAccountError();
@@ -177,7 +176,7 @@ class SpotifyWebPlaybackSdk {
 
           return this.initPlayer().then(() => {
             console.log("Spoitfy player reinitialized");
-            return this.load(trackId, --tries);
+            return this.load(trackId, positionMs, --tries);
           });
         }
 
@@ -186,7 +185,7 @@ class SpotifyWebPlaybackSdk {
         this.trackSeekPosition();
       });
     } else {
-      setTimeout(() => this.load(trackId, --tries), 500);
+      setTimeout(() => this.load(trackId, positionMs, --tries), 500);
     }
   }
 
@@ -329,24 +328,26 @@ class SpotifyWebPlaybackSdk {
   }
 
   handleStateChange(state) {
-    if (
-      this.state &&
-      state &&
-      state.track_window.previous_tracks.find(
-        x => x.id === state.track_window.current_track.id
-      ) &&
-      !this.state.paused &&
-      state.paused
-    ) {
-      // Track ended
-      this.stopTrackingSeekPosition();
+    const prevStateExists = this.prevState && state;
 
-      if (this.onTrackEnd) {
-        this.onTrackEnd();
+    if (prevStateExists) {
+      const currentTrackIsInPreviousTracks = state.track_window.previous_tracks.find(
+        x => x.id === state.track_window.current_track.id
+      );
+      const notPausedBeforeButPausedNow =
+        !this.prevState.paused && state.paused;
+
+      if (currentTrackIsInPreviousTracks && notPausedBeforeButPausedNow) {
+        // Track ended
+        this.stopTrackingSeekPosition();
+
+        if (this.onTrackEnd) {
+          this.onTrackEnd();
+        }
       }
     }
 
-    this.state = state;
+    this.prevState = state;
 
     if (state) {
       this.progressMs = state.position;
