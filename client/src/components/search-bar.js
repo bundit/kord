@@ -12,6 +12,7 @@ const SearchBar = ({ placeholder, query, onChange, onSubmit, onReset }) => (
       name="search"
       type="search"
       onChange={onChange}
+      onKeyDown={handleKeyDown}
       placeholder={placeholder}
       value={query}
       // disable auto inputs
@@ -32,6 +33,11 @@ const SearchBar = ({ placeholder, query, onChange, onSubmit, onReset }) => (
     </div>
   </form>
 );
+
+function handleKeyDown(e) {
+  // Don't trigger play pause with spacebar
+  e.stopPropagation();
+}
 
 SearchBar.propTypes = {
   query: PropTypes.string,
