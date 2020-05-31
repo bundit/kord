@@ -7,7 +7,8 @@ import {
   MOVE_PLAYLISTS_TO_TRASH,
   RESTORE_PLAYLISTS_FROM_TRASH,
   SET_NEXT_PLAYLIST_HREF,
-  SET_PLAYLIST_CONNECTIONS
+  SET_PLAYLIST_CONNECTIONS,
+  SET_TRACK_UNSTREAMABLE
 } from "../actions/types";
 
 const initialState = {
@@ -206,6 +207,37 @@ export default function(state = initialState, action) {
         ...state,
         trash: {
           [source]: null
+        }
+      };
+    }
+
+    case SET_TRACK_UNSTREAMABLE: {
+      const { source, id: playlistId } = action.context;
+      const trackId = action.payload;
+
+      if (playlistId === "search") {
+        return state;
+      }
+
+      const updatedPlaylists = state.playlists[source].map(playlist => {
+        // eslint-disable-next-line
+        if (playlist.id == playlistId) {
+          playlist.tracks = playlist.tracks.map(track => {
+            // eslint-disable-next-line
+            if (track.id == trackId) {
+              track.streamable = false;
+            }
+            return track;
+          });
+        }
+        return playlist;
+      });
+
+      return {
+        ...state,
+        playlists: {
+          ...state.playlists,
+          [source]: updatedPlaylists
         }
       };
     }

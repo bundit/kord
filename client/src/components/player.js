@@ -15,6 +15,7 @@ import {
   setSeek,
   setVolume
 } from "../redux/actions/playerActions";
+import { setTrackUnstreamable } from "../redux/actions/libraryActions";
 import {
   useDetectMediaSession,
   usePauseIfSdkNotReady,
@@ -195,6 +196,8 @@ export const Player = ({
         soundcloudPlayer.current.initHowler();
       }
       if (err === 4) {
+        // Not streamable
+        dispatch(setTrackUnstreamable(current.id));
         handleNextTrack();
       }
     }

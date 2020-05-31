@@ -1,3 +1,4 @@
+import { SET_TRACK_UNSTREAMABLE } from "./types";
 import {
   getSoundcloudLikes,
   getSoundcloudPlaylistTracks,
@@ -126,5 +127,14 @@ export function clearPlaylistTracks(source, playlistId) {
     type: "CLEAR_PLAYLIST_TRACKS",
     source,
     payload: playlistId
+  };
+}
+
+export function setTrackUnstreamable(id) {
+  const context = store.getState().player.context || {};
+  return {
+    type: SET_TRACK_UNSTREAMABLE,
+    context,
+    payload: id
   };
 }
