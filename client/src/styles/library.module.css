@@ -537,7 +537,7 @@
   .listTitle {
     padding-left: 3.4rem;
     color: #ccc;
-    font-size: 40px;
+    font-size: 30px;
     margin-bottom: 5px;
   }
 
@@ -600,6 +600,9 @@
 }
 
 @media (min-width: 1025px) {
+  .listTitle {
+    font-size: 40px;
+  }
   .dropDownButton {
     margin-left: 0;
   }
