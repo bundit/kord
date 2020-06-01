@@ -4,7 +4,10 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 
-import { removeFromSearchHistory } from "../redux/actions/searchActions";
+import {
+  addToSearchHistory,
+  removeFromSearchHistory
+} from "../redux/actions/searchActions";
 import styles from "../styles/library.module.css";
 
 const SearchHistory = () => {
@@ -38,6 +41,11 @@ const SearchHistory = () => {
     setSearchBarIsFocused(true);
   }
 
+  function handleRedoSearch(e) {
+    const pastQuery = e.target.innerText.replace(/"|\n/g, "").trim();
+    dispatch(addToSearchHistory(pastQuery));
+  }
+
   return (
     <div
       className={styles.pageWrapper}
@@ -61,6 +69,7 @@ const SearchHistory = () => {
               <Link
                 to={`/app/search/${searchPhrase}`}
                 className={`${styles.playlistItem} ${styles.redoSearchLink}`}
+                onClick={handleRedoSearch}
               >
                 <span style={{ marginTop: "auto", display: "block" }}>
                   <br />

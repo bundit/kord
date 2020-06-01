@@ -27,8 +27,10 @@ function Header({ location }) {
   function handleSearchSubmit(e) {
     e.preventDefault();
 
-    history.push(`/app/search/${query}`);
-    dispatch(addToSearchHistory(query));
+    if (query && query.length) {
+      history.push(`/app/search/${query}`);
+      dispatch(addToSearchHistory(query));
+    }
   }
 
   function handleResetQuery() {
