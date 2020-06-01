@@ -76,7 +76,7 @@ const PlaylistTracklist = ({
         .finally(() => {
           setIsLoading(false);
         });
-    }, 1000);
+    }, 500);
   }, [
     isLoading,
     next,

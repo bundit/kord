@@ -37,23 +37,21 @@ const SearchTrackList = ({
   function handleShowMore() {
     setIsLoading(true);
 
-    setTimeout(() => {
-      let loadTracks;
-      if (numShowTracks >= tracks.list.length) {
-        loadTracks = handleLoadMoreTracks();
-      } else loadTracks = Promise.resolve();
+    let loadTracks;
+    if (numShowTracks >= tracks.list.length) {
+      loadTracks = handleLoadMoreTracks();
+    } else loadTracks = Promise.resolve();
 
-      loadTracks
-        .then(() => {
-          setNumShowTracks(numShowTracks + searchIncrementAmount);
-        })
-        .catch(e => {
-          alert.error(e.toString());
-        })
-        .finally(() => {
+    loadTracks
+      .catch(e => {
+        alert.error(e.toString());
+      })
+      .finally(() =>
+        setTimeout(() => {
           setIsLoading(false);
-        });
-    }, 500);
+          setNumShowTracks(numShowTracks + searchIncrementAmount);
+        }, 500)
+      );
   }
 
   function handleLoadMoreTracks() {
