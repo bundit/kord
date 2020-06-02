@@ -17,7 +17,6 @@ const LoginPanel = ({ login }) => {
         <Link to="/">
           <h1>
             <Kord3D />
-            {/* {" v0.3"} */}
           </h1>
         </Link>
       </div>
@@ -37,18 +36,27 @@ const LoginPanel = ({ login }) => {
           <span>{`${text} with Youtube`}</span>
         </a>
       </div>
+      <div style={{ fontSize: "10px", marginBottom: "10px" }}>
+        {`Learn about how Kord collects, uses, shares and protects your personal
+        data in our `}
+        <Link to="/privacy" className={styles.link}>
+          Privacy Policy
+        </Link>
+        .
+      </div>
       {login ? (
         <span className={styles.otherPanelWrapper}>
           {"New here? "}
-
-          <Link to="/signup">
+          <Link to="/signup" className={styles.link}>
             <strong>Sign Up</strong>
           </Link>
         </span>
       ) : (
         <span className={styles.otherPanelWrapper}>
           {"Already a member? "}
-          <Link to="/login">Log In</Link>
+          <Link to="/login" className={styles.link}>
+            Log In
+          </Link>
         </span>
       )}
     </div>
