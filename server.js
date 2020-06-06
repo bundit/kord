@@ -1,7 +1,6 @@
 const cookieParser = require("cookie-parser");
 const express = require("express");
 const passport = require("passport");
-const request = require("request");
 const path = require("path");
 
 require("./config/database-setup");
@@ -47,6 +46,3 @@ if (isProduction) {
 
 const port = process.env.PORT || 8888;
 app.listen(port, () => console.log(`Listening on port ${port}.`));
-
-// Keep Alive
-setInterval(() => request("http://kords.herokuapp.com"), 1000 * 60 * 25);
