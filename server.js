@@ -7,6 +7,7 @@ require("./config/database-setup");
 require("./config/passport-setup");
 
 const forceSSL = require("./middleware/ssl");
+const forceWWW = require("./middleware/www");
 const appRoutes = require("./routes/app-routes");
 const authRoutes = require("./routes/auth-routes");
 const indexRoutes = require("./routes/index-routes");
@@ -19,6 +20,7 @@ const isProduction = app.get("env") === "production";
 // MIDDLEWARE
 if (isProduction) {
   app.use(forceSSL);
+  app.use(forceWWW);
 }
 app.use(cookieParser());
 app.use(passport.initialize());
