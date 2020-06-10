@@ -1,4 +1,5 @@
 import { fetchPlaylists } from "./libraryActions";
+import { fetchYoutubeProfile } from "./youtubeActions";
 import { getSoundcloudProfile } from "./soundcloudActions";
 import { setSpotifyProfile } from "./spotifyActions";
 
@@ -31,6 +32,8 @@ export const fetchProfile = (source, user) => dispatch => {
     return dispatch(setSpotifyProfile());
   } else if (source === "soundcloud") {
     return dispatch(getSoundcloudProfile(user));
+  } else if (source === "youtube") {
+    return dispatch(fetchYoutubeProfile());
   }
 };
 
