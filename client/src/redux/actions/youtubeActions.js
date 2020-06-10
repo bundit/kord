@@ -1,6 +1,6 @@
 import { fetchGeneric } from "../../utils/fetchGeneric";
 import { importPlaylists } from "./libraryActions";
-import { setAccessToken, setConnection } from "./userActions";
+import { setAccessToken, setConnection, setUserProfile } from "./userActions";
 
 let youtubeToken;
 
@@ -16,6 +16,32 @@ export const refreshYoutubeToken = () => dispatch => {
     dispatch(setYoutubeAccessToken(json.accessToken));
     return json.accessToken;
   });
+};
+
+export const fetchYoutubeProfile = (tries = 3) => dispatch => {
+  const endpoint = `https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
+  const opts = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${youtubeToken}`,
+      Accept: "application/json"
+    }
+  };
+
+  return fetchGeneric(endpoint, opts)
+    .then(json => {
+      const profile = mapJsonToProfile(json);
+      console.log(json);
+
+      dispatch(setUserProfile("youtube", profile));
+    })
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchYoutubeProfile(--tries))
+        );
+      } else return Promise.reject(e);
+    });
 };
 
 export const fetchUserYoutubePlaylists = (
@@ -57,6 +83,16 @@ function errorHandler(err, tries = 3) {
     }
 
     return dispatch(errorHandler(err, --tries));
+  };
+}
+
+function mapJsonToProfile(json) {
+  json = json.items[0];
+  return {
+    username: json.snippet.title,
+    image: json.snippet.thumbnails,
+    profileUrl: `https://www.youtube.com/channel/${json.id}?view_as=subscriber`,
+    id: json.id
   };
 }
 
