@@ -1,4 +1,5 @@
 import { cacheValue, loadCachedValue } from "../../utils/sessionStorage";
+import { fetchGeneric } from "../../utils/fetchGeneric";
 import {
   importLikes,
   importPlaylistTracks,
@@ -128,16 +129,6 @@ export const searchSoundcloudArtists = (query, limit = 5) => dispatch => {
 
 function fetchScArtists(endpoint) {
   return fetchGeneric(endpoint).then(json => mapJsonToArtists(json));
-}
-
-export function fetchGeneric(endpoint) {
-  return fetch(endpoint, { mode: "cors" }).then(res => {
-    if (res.status < 200 || res.status >= 300) {
-      return Promise.reject(res);
-    }
-
-    return res.json();
-  });
 }
 
 export function mapCollectionToTracks(collection) {

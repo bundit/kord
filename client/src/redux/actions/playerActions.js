@@ -10,8 +10,9 @@ import {
   SET_SEEK,
   SET_TRACK
 } from "./types";
-import { fetchGeneric, mapCollectionToTracks } from "./soundcloudActions";
+import { fetchGeneric } from "../../utils/fetchGeneric";
 import { loadPlaylistTracks } from "./libraryActions";
+import { mapCollectionToTracks } from "./soundcloudActions";
 import { mapJsonToTracks, spotifyApi } from "./spotifyActions";
 import store from "../store";
 

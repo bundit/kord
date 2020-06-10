@@ -1,7 +1,7 @@
 import SpotifyWebApi from "spotify-web-api-js";
 
 import { cacheValue, loadCachedValue } from "../../utils/sessionStorage";
-import { fetchGeneric } from "./soundcloudActions";
+import { fetchGeneric } from "../../utils/fetchGeneric";
 import {
   importLikes,
   importPlaylistTracks,
