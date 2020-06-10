@@ -55,7 +55,7 @@ router.get(
         overwrite: true
       });
       res.redirect(
-        `/app/library#source=youtube&youtubeToken=${user.accessToken}`
+        `/app/library#source=youtube&accessToken=${user.accessToken}`
       );
     });
   }

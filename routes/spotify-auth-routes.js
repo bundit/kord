@@ -66,7 +66,7 @@ router.get(
         overwrite: true
       });
       res.redirect(
-        `/app/library#source=spotify&spotifyToken=${user.accessToken}`
+        `/app/library#source=spotify&accessToken=${user.accessToken}`
       );
     });
   }
