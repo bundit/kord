@@ -2,7 +2,10 @@ import { useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
 import raf from "raf";
 
-import { fetchProfileAndPlaylists } from "../redux/actions/userActions";
+import {
+  fetchProfileAndPlaylists,
+  setAccessToken
+} from "../redux/actions/userActions";
 import {
   nextTrack,
   pause,
@@ -11,7 +14,6 @@ import {
   setDuration,
   setSeek
 } from "../redux/actions/playerActions";
-import { setSpotifyAccessToken } from "../redux/actions/spotifyActions";
 
 export function useHashParamDetectionOnLoad() {
   const dispatch = useDispatch();
@@ -22,10 +24,11 @@ export function useHashParamDetectionOnLoad() {
       const URLParams = new URLSearchParams(window.location.hash.substr(1));
       const source = URLParams.get("source");
 
-      if (source === "spotify") {
-        const spotifyToken = URLParams.get("spotifyToken");
-        dispatch(setSpotifyAccessToken(spotifyToken));
-        dispatch(fetchProfileAndPlaylists("spotify")).catch(e => {
+      if (source) {
+        const accessToken = URLParams.get("accessToken");
+
+        dispatch(setAccessToken(source, accessToken));
+        dispatch(fetchProfileAndPlaylists(source)).catch(e => {
           console.error(`There was an error: ${e.status}`);
         });
       }
