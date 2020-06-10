@@ -6,9 +6,11 @@ const refresh = require("passport-oauth2-refresh");
 
 const db = require("../config/database-setup");
 const spotifyAuthRoutes = require("./spotify-auth-routes");
+const youtubeAuthRoutes = require("./youtube-auth-routes");
 // const mixcloudAuthRoutes = require("./mixcloud-auth-routes");
 
 router.use("/spotify", spotifyAuthRoutes);
+router.use("/youtube", youtubeAuthRoutes);
 // router.use("/mixcloud", mixcloudAuthRoutes);
 
 router.get("/token", (req, res, next) => {
