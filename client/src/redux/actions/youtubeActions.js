@@ -31,7 +31,6 @@ export const fetchYoutubeProfile = (tries = 3) => dispatch => {
   return fetchGeneric(endpoint, opts)
     .then(json => {
       const profile = mapJsonToProfile(json);
-      console.log(json);
 
       dispatch(setUserProfile("youtube", profile));
     })
@@ -90,7 +89,7 @@ function mapJsonToProfile(json) {
   json = json.items[0];
   return {
     username: json.snippet.title,
-    image: json.snippet.thumbnails,
+    image: json.snippet.thumbnails.medium.url,
     profileUrl: `https://www.youtube.com/channel/${json.id}?view_as=subscriber`,
     id: json.id
   };
