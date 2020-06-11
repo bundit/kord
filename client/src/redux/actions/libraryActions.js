@@ -1,5 +1,8 @@
 import { SET_TRACK_UNSTREAMABLE } from "./types";
-import { fetchUserYoutubePlaylists } from "./youtubeActions";
+import {
+  fetchUserYoutubePlaylists,
+  fetchYoutubePlaylistTracks
+} from "./youtubeActions";
 import {
   getSoundcloudLikes,
   getSoundcloudPlaylistTracks,
@@ -122,6 +125,8 @@ export const loadPlaylistTracks = (source, id, next) => dispatch => {
     } else {
       return dispatch(getSoundcloudPlaylistTracks(id, next));
     }
+  } else if (source === "youtube") {
+    return dispatch(fetchYoutubePlaylistTracks(id, next));
   }
 };
 

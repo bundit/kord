@@ -11,6 +11,7 @@ import {
   SET_TRACK
 } from "./types";
 import { fetchGeneric } from "../../utils/fetchGeneric";
+import { fetchYoutubePlaylistTracks } from "./youtubeActions";
 import { loadPlaylistTracks } from "./libraryActions";
 import { mapCollectionToTracks } from "./soundcloudActions";
 import { mapJsonToTracks, spotifyApi } from "./spotifyActions";
@@ -184,10 +185,12 @@ export function appendQueue(tracks) {
 }
 
 const loadMoreQueueTracks = () => dispatch => {
-  const playerState = store.getState().player;
+  const state = store.getState();
+  const playerState = state.player;
+  const youtubeToken = state.user.youtube.accessToken;
   let {
     nextHref,
-    context: { source }
+    context: { source, id }
   } = playerState;
 
   if (!nextHref) {
@@ -220,6 +223,10 @@ const loadMoreQueueTracks = () => dispatch => {
 
       return { tracks, next };
     });
+  } else if (source === "youtube") {
+    if (id !== "search") {
+      promise = dispatch(fetchYoutubePlaylistTracks(id, nextHref));
+    }
   }
 
   return promise.then(({ tracks, next }) => {
