@@ -451,6 +451,18 @@
   left: 0;
 }
 
+.playlistImageWrap img {
+  left: 50%;
+  /* margin-left: calc(100%-25%); */
+  position: absolute;
+  /* move the element half way across the screen */
+  left: 50%;
+  /* allow the width to be calculated dynamically */
+  width: auto;
+  /* then move the element back again using a transform */
+  transform: translateX(-50%);
+}
+
 .playlistImageOverlay {
   display: flex;
   align-items: center;
