@@ -1,8 +1,14 @@
+import { YTDurationToMilliseconds } from "../../utils/YTDurationToMilliseconds";
 import { fetchGeneric } from "../../utils/fetchGeneric";
-import { importPlaylists } from "./libraryActions";
+import {
+  importPlaylistTracks,
+  importPlaylists,
+  setNextPlaylistHref
+} from "./libraryActions";
 import { setAccessToken, setConnection, setUserProfile } from "./userActions";
+import store from "../store";
 
-let youtubeToken;
+let youtubeToken = store.getState().user.youtube.accessToken;
 
 export const setYoutubeAccessToken = accessToken => dispatch => {
   youtubeToken = accessToken;
@@ -71,6 +77,66 @@ export const fetchUserYoutubePlaylists = (
     });
 };
 
+export const fetchYoutubePlaylistTracks = (
+  id,
+  next,
+  limit = 50,
+  tries = 3
+) => dispatch => {
+  let playlistEndpoint;
+  const opts = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${youtubeToken}`,
+      Accept: "application/json"
+    }
+  };
+
+  if (next === "start") {
+    playlistEndpoint = `https://www.googleapis.com/youtube/v3/playlistItems?part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
+  } else {
+    playlistEndpoint = next;
+  }
+
+  return fetchGeneric(playlistEndpoint, opts)
+    .then(json => {
+      const tracks = mapJsonToTracks(json).filter(
+        tracks => tracks.title !== "Private video"
+      );
+
+      const next = `https://www.googleapis.com/youtube/v3/playlistItems?pageToken=${json.nextPageToken}&part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
+      dispatch(setNextPlaylistHref("youtube", id, next));
+
+      return { tracks, next };
+    })
+    .then(({ tracks, next }) => {
+      const videoIds = tracks.map(track => track.id);
+      const videoEndpoint = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Csnippet&id=${videoIds}&key=${process.env.REACT_APP_YT_KEY}`;
+
+      return fetchGeneric(videoEndpoint, opts).then(json => {
+        json.items.forEach(item => {
+          let index = tracks.findIndex(track => track.id === item.id);
+
+          tracks[index] = {
+            ...tracks[index],
+            ...mapDurationAndChannelToTracks(item)
+          };
+        });
+
+        dispatch(importPlaylistTracks("youtube", id, tracks));
+
+        return { tracks, next };
+      });
+    })
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchYoutubePlaylistTracks(id, next, limit, --tries))
+        );
+      } else return Promise.reject(e);
+    });
+};
+
 function errorHandler(err, tries = 3) {
   return dispatch => {
     if (!tries) {
@@ -108,4 +174,24 @@ function mapJsonToPlaylists(json) {
     isConnected: true,
     dateSynced: new Date()
   }));
+}
+
+function mapJsonToTracks(json) {
+  return json.items.map(item => ({
+    id: item.snippet.resourceId.videoId,
+    title: item.snippet.title,
+    img: item.snippet.thumbnails,
+    streamable: true,
+    source: "youtube"
+  }));
+}
+
+function mapDurationAndChannelToTracks(item) {
+  return {
+    duration: YTDurationToMilliseconds(item.contentDetails.duration),
+    artist: {
+      id: item.snippet.channelId,
+      name: item.snippet.channelTitle
+    }
+  };
 }
