@@ -25,6 +25,7 @@ import {
 import ExpandedPlayer from "./expanded-player";
 import MinifiedPlayer from "./minified-player";
 import SpotifyPlayer from "./spotify-player";
+import YoutubePlayer from "./youtube-player";
 import miniPlayerSlide from "../styles/miniPlayerSlide.module.css";
 import slideTransition from "../styles/slide.module.css";
 
@@ -47,6 +48,7 @@ export const Player = ({
   const theRaf = useRef(null);
   const soundcloudPlayer = useRef(null);
   const spotifyPlayer = useRef(null);
+  const youtubePlayer = useRef(null);
   const alert = useAlert();
   const dispatch = useDispatch();
 
@@ -59,6 +61,8 @@ export const Player = ({
         currentPos = soundcloudPlayer.current.seek();
       } else if (current.source === "spotify") {
         currentPos = spotifyPlayer.current.seek() / 1000;
+      } else if (current.source === "youtube") {
+        currentPos = youtubePlayer.current.getCurrentTime();
       } else return raf.cancel(theRaf.current);
     } catch (e) {
       return raf.cancel(theRaf.current);
@@ -153,6 +157,10 @@ export const Player = ({
       spotifyPlayer.current.seek(seconds * 1000);
     }
 
+    if (current.source === "youtube") {
+      youtubePlayer.current.seekTo(seconds);
+    }
+
     dispatch(setSeek(seconds));
 
     setTimeout(() => renderSeekPos(), 300);
@@ -235,6 +243,13 @@ export const Player = ({
         onReady={handleSpotifyReady}
         onNotReady={handleSpotifyNotReady}
         onAccountError={handleSpotifyAccountError}
+      />
+      <YoutubePlayer
+        isPlaying={isPlaying}
+        current={current}
+        volume={volume}
+        forwardRef={youtubePlayer}
+        onEnd={handleOnEnd}
       />
       {/* Expanded music player */}
       <CSSTransition
