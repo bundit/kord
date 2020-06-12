@@ -7,7 +7,11 @@ import {
   faCompass,
   faVolumeUp
 } from "@fortawesome/free-solid-svg-icons";
-import { faSoundcloud, faSpotify } from "@fortawesome/free-brands-svg-icons";
+import {
+  faSoundcloud,
+  faSpotify,
+  faYoutube
+} from "@fortawesome/free-brands-svg-icons";
 import { useAlert } from "react-alert";
 import React, { useState } from "react";
 
@@ -131,6 +135,13 @@ const Sidebar = ({ user, playlists }) => {
       </div>
       <div className={styles.sidebarFooter}>
         <ConnectedSourceButton
+          isConnected={user.spotify.isConnected}
+          handleClick={toggleSettingsForm}
+          handleConnectSource={redirectToConnectSource}
+          source="spotify"
+          icon={faSpotify}
+        />
+        <ConnectedSourceButton
           isConnected={user.soundcloud.isConnected}
           handleClick={toggleSettingsForm}
           handleConnectSource={toggleSettingsForm}
@@ -138,19 +149,13 @@ const Sidebar = ({ user, playlists }) => {
           icon={faSoundcloud}
         />
         <ConnectedSourceButton
-          isConnected={user.spotify.isConnected}
-          handleClick={toggleSettingsForm}
-          handleConnectSource={redirectToConnectSource}
-          source="spotify"
-          icon={faSpotify}
-        />
-        {/* <ConnectedSourceButton
           isConnected={user.youtube.isConnected}
-          handleSettings={toggleSettingsForm}
+          handleClick={toggleSettingsForm}
           handleConnectSource={redirectToConnectSource}
           source="youtube"
           icon={faYoutube}
-          />
+        />
+        {/*
           <ConnectedSourceButton
           isConnected={user.mixcloud.isConnected}
           handleSettings={toggleSettingsForm}
