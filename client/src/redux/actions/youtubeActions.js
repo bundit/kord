@@ -104,7 +104,9 @@ export const fetchYoutubePlaylistTracks = (
         tracks => tracks.title !== "Private video"
       );
 
-      const next = `https://www.googleapis.com/youtube/v3/playlistItems?pageToken=${json.nextPageToken}&part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
+      const next =
+        json.nextPageToken &&
+        `https://www.googleapis.com/youtube/v3/playlistItems?pageToken=${json.nextPageToken}&part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
       dispatch(setNextPlaylistHref("youtube", id, next));
 
       return { tracks, next };
@@ -115,12 +117,17 @@ export const fetchYoutubePlaylistTracks = (
 
       return fetchGeneric(videoEndpoint, opts).then(json => {
         json.items.forEach(item => {
-          let index = tracks.findIndex(track => track.id === item.id);
+          tracks = tracks.map(track => {
+            if (track.id === item.id) {
+              track = {
+                ...track,
+                ...mapDurationAndChannelToTracks(item)
+              };
+            }
+            return track;
+          });
 
-          tracks[index] = {
-            ...tracks[index],
-            ...mapDurationAndChannelToTracks(item)
-          };
+          // let index = tracks.findIndex(track => track.id === item.id);
         });
 
         dispatch(importPlaylistTracks("youtube", id, tracks));

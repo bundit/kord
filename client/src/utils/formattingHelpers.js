@@ -1,4 +1,8 @@
 export function formatArtistName(artist) {
+  if (!artist) {
+    return "";
+  }
+
   if (artist.name) {
     return artist.name;
   }
