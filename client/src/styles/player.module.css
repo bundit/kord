@@ -20,6 +20,31 @@
   box-sizing: border-box;
 }
 
+.youtubeContainer {
+  border-radius: 7px;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  bottom: 7px;
+  left: 12px;
+  position: absolute;
+  z-index: 5;
+  transition: 2s linear;
+  border: 1px transparent solid;
+}
+
+.youtubeIsPlaying {
+  opacity: 1;
+}
+
+.youtubeContainer iframe {
+  /* width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0; */
+}
+
 .miniPlayer button,
 .miniPlayer button svg {
   transition: 0.3s ease;
@@ -59,13 +84,19 @@
   width: 200px;
 }
 
-.miniPlayerImageWrap,
-.miniPlayerImageWrap img {
+.miniPlayerImageWrap {
+  display: flex;
   height: 56px;
-  min-width: 56px;
   width: auto;
+  overflow: hidden;
   border-radius: 7px;
 }
+
+.miniPlayerImageWrap img {
+  max-height: 100%;
+  width: auto;
+}
+
 .miniPlayerImageWrap {
   border: 1px #383f41 solid;
   overflow: hidden;
@@ -305,8 +336,11 @@ input[type="range"].volumeSlider:focus::-ms-fill-upper {
   }
 
   .miniPlayerImageWrap {
-    display: block;
     margin-right: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   .desktopButtonGroup {
     display: flex;

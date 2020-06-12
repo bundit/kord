@@ -257,9 +257,14 @@
   width: 3rem;
   margin-right: 1rem;
   border-radius: 7px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.trackImageWrap,
 .trackImageWrap,
 .overlay,
 .trackPlayButton {
@@ -268,9 +273,8 @@
 }
 
 .trackImageWrap img {
-  width: inherit;
-  height: inherit;
-  box-sizing: border-box;
+  max-height: 100%;
+  width: auto;
 }
 
 .trackImage,

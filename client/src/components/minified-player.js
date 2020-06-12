@@ -147,7 +147,14 @@ const MinifiedPlayer = ({
           <FontAwesomeIcon icon={faAngleUp} />
         </button>
         <div className={styles.nowPlaying}>
-          <div className={styles.miniPlayerImageWrap}>
+          <div
+            className={styles.miniPlayerImageWrap}
+            style={
+              current.source === "youtube"
+                ? { minWidth: "100px", height: "56px" }
+                : {}
+            }
+          >
             <img src={getImgUrl(current, "md")} alt="album-art" />
           </div>
           <div className={styles.titleWrapper}>
