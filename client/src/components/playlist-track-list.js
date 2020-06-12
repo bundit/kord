@@ -83,9 +83,9 @@ const PlaylistTracklist = ({
     total,
     id,
     tracks.length,
+    dispatch,
     source,
     hasRefreshed,
-    dispatch,
     alert
   ]);
 
@@ -95,7 +95,12 @@ const PlaylistTracklist = ({
   }, [id, source]);
 
   useResetOnPlaylistChange(currentPlaylist, setNumShowTracks, scrollContainer);
-  useLoadTracksIfEmpty(tracks, dispatchLoadMoreTracks);
+  useLoadTracksIfEmpty(
+    tracks,
+    dispatchLoadMoreTracks,
+    hasRefreshed,
+    setHasRefreshed
+  );
 
   function showMoreTracks() {
     setNumShowTracks(numShowTracks + playlistIncrementAmount);
@@ -117,8 +122,8 @@ const PlaylistTracklist = ({
   }
 
   function handleRefresh() {
-    setHasRefreshed(true);
     dispatch(clearPlaylistTracks(source, currentPlaylist.id));
+    // setHasRefreshed(true);
   }
 
   function handlePlayPlaylist(e) {
@@ -279,12 +284,18 @@ function useLoadTracksOnScroll(
   };
 }
 
-function useLoadTracksIfEmpty(tracks, handleLoadMoreTracks) {
+function useLoadTracksIfEmpty(
+  tracks,
+  handleLoadMoreTracks,
+  hasRefreshed,
+  setHasRefreshed
+) {
   React.useEffect(() => {
-    if (!tracks.length) {
+    if (!tracks.length && !hasRefreshed) {
       handleLoadMoreTracks();
+      setHasRefreshed(true);
     }
-  }, [tracks, handleLoadMoreTracks]);
+  }, [tracks, handleLoadMoreTracks, hasRefreshed, setHasRefreshed]);
 }
 
 function isEmptyObject(obj) {
