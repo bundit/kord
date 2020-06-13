@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
 import raf from "raf";
 
@@ -17,6 +18,7 @@ import {
 
 export function useHashParamDetectionOnLoad() {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     if (window.location.hash) {
@@ -28,9 +30,13 @@ export function useHashParamDetectionOnLoad() {
         const accessToken = URLParams.get("accessToken");
 
         dispatch(setAccessToken(source, accessToken));
-        dispatch(fetchProfileAndPlaylists(source)).catch(e => {
-          console.error(`There was an error: ${e.status}`);
-        });
+        dispatch(fetchProfileAndPlaylists(source))
+          .catch(e => {
+            console.error(`There was an error: ${e.status}`);
+          })
+          .finally(() => {
+            history.push("/app/library");
+          });
       }
     } // eslint-disable-next-line
   }, []);
