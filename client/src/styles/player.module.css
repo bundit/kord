@@ -85,7 +85,6 @@
 }
 
 .miniPlayerImageWrap {
-  display: flex;
   height: 56px;
   width: auto;
   overflow: hidden;
@@ -342,6 +341,7 @@ input[type="range"].volumeSlider:focus::-ms-fill-upper {
     align-items: center;
     justify-content: center;
   }
+
   .desktopButtonGroup {
     display: flex;
     align-items: center;
