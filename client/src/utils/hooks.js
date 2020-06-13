@@ -5,7 +5,8 @@ import raf from "raf";
 
 import {
   fetchProfileAndPlaylists,
-  setAccessToken
+  setAccessToken,
+  setConnection
 } from "../redux/actions/userActions";
 import {
   nextTrack,
@@ -30,6 +31,7 @@ export function useHashParamDetectionOnLoad() {
         const accessToken = URLParams.get("accessToken");
 
         dispatch(setAccessToken(source, accessToken));
+        dispatch(setConnection(source, true));
         dispatch(fetchProfileAndPlaylists(source))
           .catch(e => {
             console.error(`There was an error: ${e.status}`);
