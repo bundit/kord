@@ -31,6 +31,7 @@
   z-index: 5;
   transition: 2s linear;
   border: 1px transparent solid;
+  display: none;
 }
 
 .youtubeIsPlaying {
@@ -323,6 +324,10 @@ input[type="range"].volumeSlider:focus::-ms-fill-upper {
     width: auto;
     height: 81px;
     border-radius: 0;
+  }
+
+  .youtubeContainer {
+    display: inline-block;
   }
 
   .miniPlayer:active {
