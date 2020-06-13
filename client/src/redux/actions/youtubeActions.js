@@ -113,9 +113,8 @@ export const fetchYoutubePlaylistTracks = (
     })
     .then(({ tracks, next }) => {
       const videoIds = tracks.map(track => track.id);
-      const videoEndpoint = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Csnippet&id=${videoIds}&key=${process.env.REACT_APP_YT_KEY}`;
 
-      return fetchGeneric(videoEndpoint, opts).then(json => {
+      return fetchYoutubeTrackInfo(videoIds).then(json => {
         json.items.forEach(item => {
           tracks = tracks.map(track => {
             if (track.id === item.id) {
@@ -126,8 +125,6 @@ export const fetchYoutubePlaylistTracks = (
             }
             return track;
           });
-
-          // let index = tracks.findIndex(track => track.id === item.id);
         });
 
         dispatch(importPlaylistTracks("youtube", id, tracks));
@@ -143,6 +140,12 @@ export const fetchYoutubePlaylistTracks = (
       } else return Promise.reject(e);
     });
 };
+
+function fetchYoutubeTrackInfo(videoIds) {
+  const videoEndpoint = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Csnippet&id=${videoIds}&key=${process.env.REACT_APP_YT_KEY}`;
+
+  return fetchGeneric(videoEndpoint);
+}
 
 function errorHandler(err, tries = 3) {
   return dispatch => {
