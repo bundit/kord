@@ -8,11 +8,7 @@ import {
 import { setAccessToken, setConnection, setUserProfile } from "./userActions";
 import store from "../store";
 
-let youtubeToken = store.getState().user.youtube.accessToken;
-
 export const setYoutubeAccessToken = accessToken => dispatch => {
-  youtubeToken = accessToken;
-
   dispatch(setAccessToken("youtube", accessToken));
   dispatch(setConnection("youtube", true));
 };
@@ -26,13 +22,7 @@ export const refreshYoutubeToken = () => dispatch => {
 
 export const fetchYoutubeProfile = (tries = 3) => dispatch => {
   const endpoint = `https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
-  const opts = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${youtubeToken}`,
-      Accept: "application/json"
-    }
-  };
+  const opts = generateYoutubeFetchOptionsAndHeaders();
 
   return fetchGeneric(endpoint, opts)
     .then(json => {
@@ -54,13 +44,7 @@ export const fetchUserYoutubePlaylists = (
   tries = 3
 ) => dispatch => {
   const endpoint = `https://www.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails%2Cid&maxResults=${limit}&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
-  const opts = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${youtubeToken}`,
-      Accept: "application/json"
-    }
-  };
+  const opts = generateYoutubeFetchOptionsAndHeaders();
 
   return fetchGeneric(endpoint, opts)
     .then(json => {
@@ -84,13 +68,7 @@ export const fetchYoutubePlaylistTracks = (
   tries = 3
 ) => dispatch => {
   let playlistEndpoint;
-  const opts = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${youtubeToken}`,
-      Accept: "application/json"
-    }
-  };
+  const opts = generateYoutubeFetchOptionsAndHeaders();
 
   if (next === "start") {
     playlistEndpoint = `https://www.googleapis.com/youtube/v3/playlistItems?part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
@@ -158,6 +136,18 @@ function errorHandler(err, tries = 3) {
     }
 
     return dispatch(errorHandler(err, --tries));
+  };
+}
+
+function generateYoutubeFetchOptionsAndHeaders() {
+  const youtubeToken = store.getState().user.youtube.token;
+
+  return {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${youtubeToken}`,
+      Accept: "application/json"
+    }
   };
 }
 
