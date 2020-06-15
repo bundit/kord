@@ -127,6 +127,10 @@ export default function(state = initialState, action) {
       let prevIndex = state.index;
       const queue = state.queue;
 
+      if (prevIndex === 0) {
+        return state;
+      }
+
       do {
         prevIndex--;
       } while (prevIndex > 0 && !queue[prevIndex].streamable);
@@ -138,7 +142,6 @@ export default function(state = initialState, action) {
       return {
         ...state,
         currentTrack: prevTrack,
-        duration: prevTrack.duration,
         index: prevIndex
       };
     }
