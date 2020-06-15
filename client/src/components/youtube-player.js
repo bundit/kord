@@ -7,6 +7,7 @@ function YoutubePlayer({ isPlaying, current, volume, forwardRef, onEnd }) {
     current.source === "youtube" &&
     styles.youtubeIsPlaying}`;
 
+  useStartAtBeginningOnTrackChange(current, forwardRef);
   useSyncPlayPause(isPlaying, current, forwardRef);
   useSyncVolume(volume, forwardRef);
 
@@ -39,6 +40,15 @@ function YoutubePlayer({ isPlaying, current, volume, forwardRef, onEnd }) {
       onError={handleYoutubePlayerError}
     />
   );
+}
+
+// Make sure that video starts at 0:00 on track change and not cached seek time
+function useStartAtBeginningOnTrackChange(currentTrack, youtubePlayer) {
+  React.useEffect(() => {
+    if (currentTrack.source === "youtube" && youtubePlayer.current) {
+      youtubePlayer.current.seekTo(0);
+    }
+  }, [currentTrack, youtubePlayer]);
 }
 
 function useSyncPlayPause(isPlaying, current, youtubePlayer) {
