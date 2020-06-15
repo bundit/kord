@@ -1,7 +1,10 @@
 import { Route, Switch } from "react-router-dom";
 import React from "react";
 
-import { useHashParamDetectionOnLoad } from "./utils/hooks";
+import {
+  useHashParamDetectionOnLoad,
+  useKeepSessionAlive
+} from "./utils/hooks";
 import Footer from "./components/layout/footer";
 import Header from "./components/layout/header";
 import Library from "./components/library-page";
@@ -11,6 +14,7 @@ import Sidebar from "./components/sidebar";
 
 const App = () => {
   useHashParamDetectionOnLoad();
+  useKeepSessionAlive();
 
   return (
     <>

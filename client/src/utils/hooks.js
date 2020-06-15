@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
 import raf from "raf";
 
+import { fetchGeneric } from "./fetchGeneric";
 import {
   fetchProfileAndPlaylists,
   setAccessToken,
@@ -146,5 +147,28 @@ export function useDetectMediaSession() {
         }
       }
     }; //eslint-disable-next-line
+  }, []);
+}
+
+export function useKeepSessionAlive() {
+  const timer = useRef(null);
+
+  function refreshUserCookie() {
+    fetchGeneric("/auth/token").catch(e => {
+      if (e.status === 403 || e.status === 401) {
+        window.location = "/login";
+      }
+    });
+  }
+
+  function clearInterval() {
+    clearTimeout(timer.current);
+  }
+
+  useEffect(() => {
+    const oneHour = 1000 * 60 * 60;
+    timer.current = setInterval(refreshUserCookie, oneHour);
+
+    return clearInterval;
   }, []);
 }
