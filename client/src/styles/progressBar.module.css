@@ -56,6 +56,10 @@
 }
 
 .timeContainer {
+  min-width: 38px;
+}
+
+.timeContainer {
   font-size: 11px;
   transition: 0.2s linear;
   color: #bbb;

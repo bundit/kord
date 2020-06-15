@@ -172,7 +172,10 @@ const MinifiedPlayer = ({
           <FontAwesomeIcon icon={isPlaying ? faPauseCircle : faPlay} />
         </button>
         <div className={styles.desktopButtonGroup}>
-          <span className={progressBarStyles.timeContainer}>
+          <span
+            className={progressBarStyles.timeContainer}
+            style={{ textAlign: "right" }}
+          >
             {secondsToFormatted(isUserSeeking ? userSeekPos : seek || 0)}
           </span>
           <button

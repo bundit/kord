@@ -72,9 +72,18 @@
   border-radius: 7px;
 }
 
+.forwardButton {
+  margin-right: 10px;
+}
+
+.backwardButton {
+  margin-left: 10px;
+}
+
 .desktopPlayPauseButton {
   width: 50px;
   height: 50px;
+  margin: 0 10px;
 }
 .desktopButtonGroup,
 .miniPlayerImageWrap,
@@ -82,7 +91,7 @@
   display: none;
 }
 .desktopButtonGroup {
-  width: 200px;
+  min-width: 200px;
 }
 
 .miniPlayerImageWrap {
@@ -123,13 +132,14 @@
 .titleWrapper {
   flex: 1;
   width: 75%;
+  overflow: hidden;
 }
 
 .titleWrapper > div {
-  max-width: 100%;
+  width: auto;
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .nowPlayingArtist {

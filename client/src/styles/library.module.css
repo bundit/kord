@@ -253,8 +253,8 @@
 
 .trackImageWrap {
   position: relative;
-  height: 3rem;
-  width: 3rem;
+  min-height: 3rem;
+  min-width: 3rem;
   margin-right: 1rem;
   border-radius: 7px;
 
