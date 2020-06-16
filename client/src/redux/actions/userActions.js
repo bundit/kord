@@ -1,7 +1,15 @@
+import { SET_KORD_ID } from "./types";
 import { fetchPlaylists } from "./libraryActions";
 import { fetchYoutubeProfile } from "./youtubeActions";
 import { getSoundcloudProfile } from "./soundcloudActions";
 import { setSpotifyProfile } from "./spotifyActions";
+
+export const setKordId = userId => {
+  return {
+    type: SET_KORD_ID,
+    payload: userId
+  };
+};
 
 export const setAccessToken = (source, token) => {
   return {

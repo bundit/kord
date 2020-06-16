@@ -7,7 +7,8 @@ import { fetchGeneric } from "./fetchGeneric";
 import {
   fetchProfileAndPlaylists,
   setAccessToken,
-  setConnection
+  setConnection,
+  setKordId
 } from "../redux/actions/userActions";
 import {
   nextTrack,
@@ -27,6 +28,7 @@ export function useHashParamDetectionOnLoad() {
       // Get hash params excluding first #
       const URLParams = new URLSearchParams(window.location.hash.substr(1));
       const source = URLParams.get("source");
+      const userId = URLParams.get("userId");
 
       if (source) {
         const accessToken = URLParams.get("accessToken");
@@ -40,6 +42,10 @@ export function useHashParamDetectionOnLoad() {
           .finally(() => {
             history.push("/app/library");
           });
+      }
+
+      if (userId) {
+        dispatch(setKordId(userId));
       }
     } // eslint-disable-next-line
   }, []);

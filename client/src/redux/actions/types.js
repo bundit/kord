@@ -11,6 +11,7 @@ export const CLEAR_TRASH = "CLEAR_TRASH";
 export const SET_TRACK_UNSTREAMABLE = "SET_TRACK_UNSTREAMABLE";
 
 // User Reducer
+export const SET_KORD_ID = "SET_KORD_ID";
 export const SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN";
 export const SET_CONNECTION = "SET_CONNECTION";
 export const SET_PROFILE = "SET_PROFILE";

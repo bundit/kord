@@ -3,10 +3,14 @@ import {
   SAVE_ROUTE,
   SET_ACCESS_TOKEN,
   SET_CONNECTION,
+  SET_KORD_ID,
   SET_PROFILE
 } from "../actions/types";
 
 const initialState = {
+  kord: {
+    id: null
+  },
   soundcloud: {
     isConnected: false,
     username: null,
@@ -44,6 +48,17 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
+    case SET_KORD_ID: {
+      const kordId = action.payload;
+
+      return {
+        ...state,
+        kord: {
+          ...state.kord,
+          id: kordId
+        }
+      };
+    }
     case SET_ACCESS_TOKEN: {
       const accessToken = action.payload;
       const source = action.source;
