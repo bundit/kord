@@ -38,9 +38,11 @@
 
 .deskHeader {
   position: fixed;
-  width: 100%;
+  /* width: 100%; */
   z-index: 1;
+  left: 230px;
   top: 0;
+  right: 0;
   display: none;
   flex-direction: column;
   background: #151d20;
@@ -53,13 +55,15 @@
   border-bottom: 1px #383f41 solid;
   padding: 10px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  /* box-sizing: border-box; */
 }
 
 .navGroup {
   height: 100%;
   width: 80px;
-  display: flex;
+  /* display: flex; */
+  display: none;
   justify-content: space-around;
   align-items: center;
 }
@@ -78,11 +82,46 @@
   background-color: #666;
 }
 
+.logoutButton {
+  border: 1px #a2740080 solid;
+  color: #ce9300;
+  font-weight: 600;
+  border-radius: 7px;
+  padding: 10px;
+  transition: 0.3s ease-out;
+  cursor: pointer;
+  outline: none;
+  font-size: 12px;
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.logoutButton span {
+  display: none;
+}
+
+.logoutButton:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fb1;
+}
+
 @media (min-width: 800px) {
   .header {
     display: none;
   }
   .deskHeader {
     display: flex;
+  }
+}
+
+@media (min-width: 1000px) {
+  .navGroup {
+    display: flex;
+  }
+  .logoutButton span {
+    display: inline;
+  }
+  .logoutButton svg {
+    display: none;
   }
 }

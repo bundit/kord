@@ -1,6 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink, useHistory } from "react-router-dom";
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faSignOutAlt
+} from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
@@ -19,6 +23,15 @@ function Header({ location }) {
   const baseUrls = ["Library", "Search", "More", ""];
 
   const query = useSelector(state => state.search.query);
+
+  // Get only last route
+  let title = pathname.slice(pathname.lastIndexOf("/") + 1);
+  // Make it capitalized
+  if (title.length > 0) {
+    title = `${title[0].toUpperCase()}${title.slice(1)}`;
+  }
+  // Previous route within tab
+  const prevRoute = pathname.slice(0, pathname.lastIndexOf("/"));
 
   function handleSearchChange(e) {
     dispatch(setQuery(e.target.value));
@@ -45,14 +58,16 @@ function Header({ location }) {
     history.goForward();
   }
 
-  // Get only last route
-  let title = pathname.slice(pathname.lastIndexOf("/") + 1);
-  // Make it capitalized
-  if (title.length > 0) {
-    title = `${title[0].toUpperCase()}${title.slice(1)}`;
+  function handleLogout() {
+    const confirm = window.confirm("Are you sure you want to log out?");
+    const isProduction = process.env.NODE_ENV === "production";
+
+    if (confirm) {
+      window.location.href = isProduction
+        ? "/auth/logout"
+        : "http://localhost:8888/auth/logout";
+    }
   }
-  // Previous route within tab
-  const prevRoute = pathname.slice(0, pathname.lastIndexOf("/"));
 
   return (
     <>
@@ -102,6 +117,15 @@ function Header({ location }) {
               <FontAwesomeIcon size="3x" icon={faCogs} />
             </button>
           </div> */}
+          <button
+            onClick={handleLogout}
+            type="button"
+            className={styles.logoutButton}
+          >
+            <span>Logout</span>
+
+            <FontAwesomeIcon icon={faSignOutAlt} />
+          </button>
         </div>
       </header>
     </>
