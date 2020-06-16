@@ -34,6 +34,7 @@ router.get(
 
     // JWT payload
     const payload = {
+      id: user.id,
       email: user.email,
       expires
     };
@@ -55,7 +56,7 @@ router.get(
         overwrite: true
       });
       res.redirect(
-        `/app/library#source=youtube&accessToken=${user.accessToken}`
+        `/app/library#source=youtube&accessToken=${user.accessToken}&userId=${user.id}`
       );
     });
   }
