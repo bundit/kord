@@ -93,4 +93,10 @@ router.get("/:provider/refresh", (req, res, next) => {
   })(req, res, next);
 });
 
+router.get("/logout", (req, res) => {
+  res.clearCookie("kordUser");
+
+  return res.status(200).redirect("/login");
+});
+
 module.exports = router;
