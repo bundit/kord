@@ -17,9 +17,10 @@ async function checkIfUserExists(client, email) {
 // Insert a user and return the new row
 async function insertNewUser(client, email) {
   const userInsertQuery = {
-    text: `INSERT INTO users(email, created_at)
+    text: `INSERT INTO users(id, email, created_at)
            VALUES
            (
+              uuid_generate_v4(),
               $1,
               now()
            )
