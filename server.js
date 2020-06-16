@@ -42,7 +42,7 @@ if (isProduction) {
   });
   // Serve gatsby server in development
   app.get("*", (req, res) => {
-    res.redirect("https://localhost:8000/");
+    res.redirect(`http://localhost:8000${req.originalUrl}`);
   });
 }
 
