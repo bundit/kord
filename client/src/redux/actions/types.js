@@ -1,3 +1,6 @@
+// State Tree
+export const CLEAR_STATE = "CLEAR_STATE";
+
 // Library Reducer
 export const IMPORT_LIKES = "IMPORT_LIKES";
 export const IMPORT_PLAYLISTS = "IMPORT_PLAYLISTS";

@@ -1,8 +1,9 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
 import raf from "raf";
 
+import { clearState } from "../redux/actions/stateActions";
 import { fetchGeneric } from "./fetchGeneric";
 import {
   fetchProfileAndPlaylists,
@@ -22,6 +23,7 @@ import {
 export function useHashParamDetectionOnLoad() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const kordId = useSelector(state => state.user.kord.id);
 
   useEffect(() => {
     if (window.location.hash) {
@@ -29,6 +31,13 @@ export function useHashParamDetectionOnLoad() {
       const URLParams = new URLSearchParams(window.location.hash.substr(1));
       const source = URLParams.get("source");
       const userId = URLParams.get("userId");
+
+      if (userId) {
+        if (userId !== kordId) {
+          dispatch(clearState());
+        }
+        dispatch(setKordId(userId));
+      }
 
       if (source) {
         const accessToken = URLParams.get("accessToken");
@@ -42,10 +51,6 @@ export function useHashParamDetectionOnLoad() {
           .finally(() => {
             history.push("/app/library");
           });
-      }
-
-      if (userId) {
-        dispatch(setKordId(userId));
       }
     } // eslint-disable-next-line
   }, []);
