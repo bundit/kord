@@ -44,9 +44,22 @@ const youtubeAuth = new GoogleStrategy(
   }
 );
 
+const youtubeLink = new GoogleStrategy(
+  {
+    clientID: process.env.YOUTUBE_CLIENT_ID,
+    clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
+    callbackURL: process.env.YOUTUBE_LINK_CALLBACK,
+    passReqToCallback: true
+  },
+  (req, accessToken, refreshToken, profile, cb) => {
+    AuthService.LinkAccount(req, profile, refreshToken, accessToken, cb);
+  }
+);
+
 passport.use("spotify", spotifyAuth);
 passport.use("spotifyLink", spotifyLink);
 passport.use("youtube", youtubeAuth);
+passport.use("youtubeLink", youtubeLink);
 
 refresh.use(spotifyAuth);
 refresh.use(youtubeAuth);
