@@ -10,7 +10,7 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-const spotifyStrategy = new SpotifyStrategy(
+const spotifyAuth = new SpotifyStrategy(
   {
     clientID: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
@@ -21,7 +21,19 @@ const spotifyStrategy = new SpotifyStrategy(
   }
 );
 
-const youtubeStrategy = new GoogleStrategy(
+const spotifyLink = new SpotifyStrategy(
+  {
+    clientID: process.env.SPOTIFY_CLIENT_ID,
+    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+    callbackURL: process.env.SPOTIFY_LINK_CALLBACK,
+    passReqToCallback: true
+  },
+  (req, accessToken, refreshToken, expiresIn, profile, done) => {
+    AuthService.LinkAccount(req, profile, refreshToken, accessToken, done);
+  }
+);
+
+const youtubeAuth = new GoogleStrategy(
   {
     clientID: process.env.YOUTUBE_CLIENT_ID,
     clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
@@ -32,16 +44,17 @@ const youtubeStrategy = new GoogleStrategy(
   }
 );
 
-passport.use(spotifyStrategy);
-refresh.use(spotifyStrategy);
+passport.use("spotify", spotifyAuth);
+passport.use("spotifyLink", spotifyLink);
+passport.use("youtube", youtubeAuth);
 
-passport.use(youtubeStrategy);
-refresh.use(youtubeStrategy);
+refresh.use(spotifyAuth);
+refresh.use(youtubeAuth);
 
 passport.use(
   new JWTStrategy(
     {
-      jwtFromRequest: req => req.cookies.kordUser,
+      jwtFromRequest: req => req.cookies && req.cookies.kordUser,
       secretOrKey: process.env.JWT_SECRET
     },
     (jwtPayload, done) => {

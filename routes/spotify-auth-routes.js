@@ -53,7 +53,7 @@ router.get(
     /** assigns payload to req.user */
     req.login(payload, { session: false }, error => {
       if (error) {
-        res.status(400).send({ error });
+        res.status(400).send({ error: error.toString() });
       }
 
       /** generate a signed json web token and return it in the response */
@@ -66,6 +66,77 @@ router.get(
         secure: process.env.NODE_ENV === "production",
         overwrite: true
       });
+      res.redirect(
+        `/app/library#source=spotify&accessToken=${user.accessToken}&userId=${user.id}`
+      );
+    });
+  }
+);
+
+router.use("/link", (req, res, next) => {
+  passport.authenticate("jwt", (err, user, info) => {
+    if (err) {
+      return res.status(403).redirect("/login");
+    }
+
+    if (!user) {
+      return res.status(401).redirect("/login");
+    }
+
+    return next();
+  })(req, res, next);
+});
+
+router.get(
+  "/link",
+  passport.authenticate("spotifyLink", {
+    scope: [
+      "user-read-email",
+      "user-read-private",
+      "user-read-playback-state",
+      "streaming",
+      "user-modify-playback-state",
+      "playlist-modify-public",
+      "user-library-modify",
+      "user-top-read",
+      "playlist-read-collaborative",
+      "user-read-currently-playing",
+      "playlist-read-private",
+      "user-follow-read",
+      "user-read-recently-played",
+      "playlist-modify-private",
+      "user-library-read"
+    ],
+    showDialog: true
+  }),
+  // eslint-disable-next-line
+  (req, res) => {
+    // The request will be redirected to spotify for authentication, so this
+    // function will not be called.
+  }
+);
+
+router.get(
+  "/link/callback",
+  passport.authenticate("spotifyLink", { failureRedirect: "/login" }),
+  (req, res) => {
+    const { user } = req;
+
+    const expires = Date.now() + parseInt(process.env.JWT_TOKEN_EXPIRE, 10);
+
+    // JWT payload
+    const payload = {
+      id: user.id,
+      email: user.email,
+      expires
+    };
+
+    /** assigns payload to req.user */
+    req.login(payload, { session: false }, error => {
+      if (error) {
+        res.status(400).send({ error: error.toString() });
+      }
+
       res.redirect(
         `/app/library#source=spotify&accessToken=${user.accessToken}&userId=${user.id}`
       );
