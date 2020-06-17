@@ -42,9 +42,9 @@ const Sidebar = ({ user, playlists }) => {
 
   function redirectToConnectSource(source) {
     if (process.env.NODE_ENV === "development") {
-      window.location.href = `http://localhost:8888/auth/${source}`;
+      window.location.href = `http://localhost:8888/auth/${source}/link`;
     } else {
-      window.location.href = `/auth/${source}`;
+      window.location.href = `/auth/${source}/link`;
     }
   }
 
