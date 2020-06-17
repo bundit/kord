@@ -185,7 +185,9 @@ class SpotifyWebPlaybackSdk {
         this.trackSeekPosition();
       });
     } else {
-      setTimeout(() => this.load(trackId, positionMs, --tries), 500);
+      this.initPlayer().then(() => {
+        setTimeout(() => this.load(trackId, positionMs, --tries), 500);
+      });
     }
   }
 
