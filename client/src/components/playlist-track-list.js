@@ -227,7 +227,8 @@ const PlaylistTracklist = ({
                   </button>
                 )}
                 <div style={{ marginLeft: "auto" }}>
-                  Last synced: {timeSince(currentPlaylist.dateSynced)}{" "}
+                  Last synced:{" "}
+                  {isLoading ? "..." : timeSince(currentPlaylist.dateSynced)}{" "}
                 </div>
               </div>
             </div>

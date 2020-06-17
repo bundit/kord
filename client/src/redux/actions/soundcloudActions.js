@@ -173,7 +173,7 @@ function mapCollectionToPlaylists(collection) {
     tracks: mapCollectionToTracks(item.tracks),
     total: item.tracks.length,
     isConnected: true,
-    dateSynced: new Date()
+    dateSynced: null
   }));
 }
 

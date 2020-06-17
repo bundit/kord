@@ -6,7 +6,7 @@ export function timeSince(date) {
   let interval = Math.floor(seconds / 31536000);
 
   if (interval > 1) {
-    return interval + " years";
+    return interval + " years lol";
   }
 
   interval = Math.floor(seconds / 2592000);
@@ -29,5 +29,9 @@ export function timeSince(date) {
     return interval + " minutes";
   }
 
-  return Math.floor(seconds) + " seconds";
+  if (seconds > 1) {
+    return Math.floor(seconds) + " seconds";
+  }
+
+  return "just now";
 }
