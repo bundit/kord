@@ -62,8 +62,8 @@ router.get("/:provider/refresh", (req, res, next) => {
       text: `SELECT *
              FROM (users JOIN user_profiles
              ON users.id=user_profiles.user_id)
-             WHERE users.email=$1 AND user_profiles.oauth_provider=$2`,
-      values: [kordUser.email, provider]
+             WHERE users.id=$1 AND user_profiles.oauth_provider=$2`,
+      values: [kordUser.id, provider]
     };
 
     const {
