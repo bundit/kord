@@ -27,6 +27,7 @@ router.get("/token", (req, res, next) => {
 
     const newToken = jwt.sign(
       {
+        id: user.id,
         email: user.email,
         expires
       },
