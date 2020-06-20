@@ -16,7 +16,7 @@ import {
   restorePlaylistsFromTrash,
   setPlaylistConnections
 } from "../redux/actions/libraryActions";
-import { getSoundcloudProfile } from "../redux/actions/soundcloudActions";
+import { fetchSoundcloudProfile } from "../redux/actions/soundcloudActions";
 import FormCheckbox from "./form-checkbox";
 import LoadingSpinner from "./loading-spinner";
 import Modal from "./modal";
@@ -100,7 +100,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
       dispatch(movePlaylistsToTrash("soundcloud"));
       setIsLoading(true);
 
-      dispatch(getSoundcloudProfile(inputSuffix))
+      dispatch(fetchSoundcloudProfile(inputSuffix))
         .then(() => dispatch(fetchPlaylists(source, inputSuffix)))
         .then(() => {
           dispatch(clearTrash("soundcloud"));

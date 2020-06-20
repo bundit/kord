@@ -1,18 +1,18 @@
 import { SET_TRACK_UNSTREAMABLE } from "./types";
 import {
-  fetchUserYoutubePlaylists,
-  fetchYoutubePlaylistTracks
-} from "./youtubeActions";
-import {
-  getSoundcloudLikes,
-  getSoundcloudPlaylistTracks,
-  getUserSoundcloudPlaylists
+  fetchSoundcloudLikes,
+  fetchSoundcloudPlaylistTracks,
+  fetchSoundcloudPlaylists
 } from "./soundcloudActions";
 import {
-  getSpotifyPlaylistTracks,
-  getUserSpotifyPlaylists,
-  importSavedSpotifyTracks
+  fetchSpotifyLikes,
+  fetchSpotifyPlaylistTracks,
+  fetchSpotifyPlaylists
 } from "./spotifyActions";
+import {
+  fetchYoutubePlaylistTracks,
+  fetchYoutubePlaylists
+} from "./youtubeActions";
 import store from "../store";
 
 export function importSongs(songs) {
@@ -94,21 +94,21 @@ export const setPlaylistConnections = (source, newSettings) => {
 
 export const fetchPlaylists = (source, username) => dispatch => {
   if (source === "spotify") {
-    return dispatch(getUserSpotifyPlaylists());
+    return dispatch(fetchSpotifyPlaylists());
   } else if (source === "soundcloud") {
-    return dispatch(getUserSoundcloudPlaylists(username));
+    return dispatch(fetchSoundcloudPlaylists(username));
   } else if (source === "youtube") {
-    return dispatch(fetchUserYoutubePlaylists());
+    return dispatch(fetchYoutubePlaylists());
   }
 };
 
 export const loadLikes = source => dispatch => {
   if (source === "spotify") {
-    return dispatch(importSavedSpotifyTracks());
+    return dispatch(fetchSpotifyLikes());
   } else if (source === "soundcloud") {
     const userId = store.getState().user.soundcloud.id;
 
-    return dispatch(getSoundcloudLikes(null, userId));
+    return dispatch(fetchSoundcloudLikes(null, userId));
   }
 };
 
@@ -118,12 +118,12 @@ export const loadPlaylistTracks = (source, id, next) => dispatch => {
   }
 
   if (source === "spotify") {
-    return dispatch(getSpotifyPlaylistTracks(id, next));
+    return dispatch(fetchSpotifyPlaylistTracks(id, next));
   } else if (source === "soundcloud") {
     if (id === "likes") {
-      return dispatch(getSoundcloudLikes(next));
+      return dispatch(fetchSoundcloudLikes(next));
     } else {
-      return dispatch(getSoundcloudPlaylistTracks(id, next));
+      return dispatch(fetchSoundcloudPlaylistTracks(id, next));
     }
   } else if (source === "youtube") {
     return dispatch(fetchYoutubePlaylistTracks(id, next));

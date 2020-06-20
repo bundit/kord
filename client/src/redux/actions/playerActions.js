@@ -187,7 +187,7 @@ export function appendQueue(tracks) {
 const loadMoreQueueTracks = () => dispatch => {
   const state = store.getState();
   const playerState = state.player;
-  const youtubeToken = state.user.youtube.accessToken;
+
   let {
     nextHref,
     context: { source, id }

@@ -1,8 +1,8 @@
 import {
-  loadMoreSoundcloudTracks,
+  fetchMoreSoundcloudTrackResults,
   searchSoundcloudTracks
 } from "./soundcloudActions";
-import { loadMoreSpotifyTracks, searchSpotify } from "./spotifyActions";
+import { fetchMoreSpotifyTrackResults, searchSpotify } from "./spotifyActions";
 import store from "../store";
 
 export function setQuery(query) {
@@ -69,8 +69,8 @@ export const loadMoreTrackResults = (source, next) => dispatch => {
   if (!next) return Promise.reject("No more results");
 
   if (source === "soundcloud") {
-    return dispatch(loadMoreSoundcloudTracks(next));
+    return dispatch(fetchMoreSoundcloudTrackResults(next));
   } else if (source === "spotify") {
-    return dispatch(loadMoreSpotifyTracks(next));
+    return dispatch(fetchMoreSpotifyTrackResults(next));
   }
 };

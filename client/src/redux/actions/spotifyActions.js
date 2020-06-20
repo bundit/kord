@@ -32,7 +32,7 @@ export const refreshSpotifyToken = () => dispatch => {
   });
 };
 
-export const setSpotifyProfile = (tries = 3) => dispatch => {
+export const fetchSpotifyProfile = (tries = 3) => dispatch => {
   return spotifyApi
     .getMe({})
     .then(json => {
@@ -40,17 +40,17 @@ export const setSpotifyProfile = (tries = 3) => dispatch => {
 
       dispatch(setUserProfile("spotify", profile));
     })
-    .then(() => dispatch(importSavedSpotifyTracks()))
+    .then(() => dispatch(fetchSpotifyLikes()))
     .catch(e => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
-          dispatch(setSpotifyProfile(--tries))
+          dispatch(fetchSpotifyProfile(--tries))
         );
       } else return Promise.reject(e);
     });
 };
 
-export const importSavedSpotifyTracks = (
+export const fetchSpotifyLikes = (
   limit = 50,
   offset = 0,
   market = "from_token",
@@ -80,13 +80,13 @@ export const importSavedSpotifyTracks = (
     .catch(e => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
-          dispatch(importSavedSpotifyTracks(limit, offset, market, --tries))
+          dispatch(fetchSpotifyLikes(limit, offset, market, --tries))
         );
       } else return Promise.reject(e);
     });
 };
 
-export const getUserSpotifyPlaylists = (
+export const fetchSpotifyPlaylists = (
   limit = 50,
   offset = 0,
   tries = 3
@@ -101,13 +101,13 @@ export const getUserSpotifyPlaylists = (
     .catch(e => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
-          dispatch(getUserSpotifyPlaylists(limit, offset, --tries))
+          dispatch(fetchSpotifyPlaylists(limit, offset, --tries))
         );
       } else return Promise.reject(e);
     });
 };
 
-export const getSpotifyPlaylistTracks = (
+export const fetchSpotifyPlaylistTracks = (
   id,
   next,
   market = "from_token",
@@ -134,7 +134,7 @@ export const getSpotifyPlaylistTracks = (
     .catch(e => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
-          dispatch(getSpotifyPlaylistTracks(id, next, market, --tries))
+          dispatch(fetchSpotifyPlaylistTracks(id, next, market, --tries))
         );
       } else return Promise.reject(e);
     });
@@ -173,7 +173,7 @@ export const searchSpotify = (
     });
 };
 
-export const loadMoreSpotifyTracks = (next, tries = 3) => dispatch => {
+export const fetchMoreSpotifyTrackResults = (next, tries = 3) => dispatch => {
   if (!next) return Promise.reject("No more results");
 
   return spotifyApi
@@ -186,7 +186,7 @@ export const loadMoreSpotifyTracks = (next, tries = 3) => dispatch => {
     .catch(e => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
-          dispatch(loadMoreSpotifyTracks(next, --tries))
+          dispatch(fetchMoreSpotifyTrackResults(next, --tries))
         );
       } else return Promise.reject(e);
     });

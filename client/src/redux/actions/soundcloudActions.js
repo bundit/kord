@@ -18,7 +18,7 @@ const LIKES_KEY = process.env.REACT_APP_SC_V2_KEY;
 const LINK = 1;
 const SC_API_BASE_URL = "https://api.soundcloud.com";
 
-export const getSoundcloudProfile = userId => dispatch => {
+export const fetchSoundcloudProfile = userId => dispatch => {
   const endpoint = `${SC_API_BASE_URL}/users/${userId}?client_id=${KEY}`;
 
   return fetchGeneric(endpoint)
@@ -44,7 +44,7 @@ export const getSoundcloudProfile = userId => dispatch => {
     .then(() => dispatch(setConnection("soundcloud", true)));
 };
 
-export const getSoundcloudLikes = (next, userId) => dispatch => {
+export const fetchSoundcloudLikes = (next, userId) => dispatch => {
   if (!next) {
     next = `https://api-v2.soundcloud.com/users/${userId}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
   }
@@ -68,7 +68,7 @@ export const getSoundcloudLikes = (next, userId) => dispatch => {
   });
 };
 
-export const getUserSoundcloudPlaylists = username => dispatch => {
+export const fetchSoundcloudPlaylists = username => dispatch => {
   const playlistEndpoint = `${SC_API_BASE_URL}/users/${username}/playlists?client_id=${KEY}`;
 
   return fetchGeneric(playlistEndpoint).then(data => {
@@ -78,7 +78,7 @@ export const getUserSoundcloudPlaylists = username => dispatch => {
   });
 };
 
-export const getSoundcloudPlaylistTracks = (id, next) => dispatch => {
+export const fetchSoundcloudPlaylistTracks = (id, next) => dispatch => {
   const playlistEndpoint = `https://api.soundcloud.com/playlists/${id}/?client_id=${KEY}`;
 
   return fetchGeneric(playlistEndpoint).then(data => {
@@ -110,7 +110,7 @@ export const searchSoundcloudTracks = (query, limit = 50) => dispatch => {
   });
 };
 
-export const loadMoreSoundcloudTracks = next => dispatch => {
+export const fetchMoreSoundcloudTrackResults = next => dispatch => {
   return fetchGeneric(next).then(json => {
     const tracks = mapCollectionToTracks(json.collection);
     const next = json.next_href;

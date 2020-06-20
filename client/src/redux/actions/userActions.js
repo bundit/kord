@@ -1,8 +1,8 @@
 import { SET_KORD_ID } from "./types";
 import { fetchPlaylists } from "./libraryActions";
+import { fetchSoundcloudProfile } from "./soundcloudActions";
+import { fetchSpotifyProfile } from "./spotifyActions";
 import { fetchYoutubeProfile } from "./youtubeActions";
-import { getSoundcloudProfile } from "./soundcloudActions";
-import { setSpotifyProfile } from "./spotifyActions";
 
 export const setKordId = userId => {
   return {
@@ -37,9 +37,9 @@ export const setUserProfile = (source, profile) => {
 
 export const fetchProfile = (source, user) => dispatch => {
   if (source === "spotify") {
-    return dispatch(setSpotifyProfile());
+    return dispatch(fetchSpotifyProfile());
   } else if (source === "soundcloud") {
-    return dispatch(getSoundcloudProfile(user));
+    return dispatch(fetchSoundcloudProfile(user));
   } else if (source === "youtube") {
     return dispatch(fetchYoutubeProfile());
   }

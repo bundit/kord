@@ -39,10 +39,7 @@ export const fetchYoutubeProfile = (tries = 3) => dispatch => {
     });
 };
 
-export const fetchUserYoutubePlaylists = (
-  limit = 50,
-  tries = 3
-) => dispatch => {
+export const fetchYoutubePlaylists = (limit = 50, tries = 3) => dispatch => {
   const endpoint = `https://www.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails%2Cid&maxResults=${limit}&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
   const opts = generateYoutubeFetchOptionsAndHeaders();
 
@@ -55,7 +52,7 @@ export const fetchUserYoutubePlaylists = (
     .catch(e => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
-          dispatch(fetchUserYoutubePlaylists(limit, --tries))
+          dispatch(fetchYoutubePlaylists(limit, --tries))
         );
       } else return Promise.reject(e);
     });
