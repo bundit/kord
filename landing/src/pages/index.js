@@ -43,7 +43,7 @@ const IndexPage = () => {
 
   return (
     <>
-      <SEO title="Home" />
+      <SEO title="Music from everywhere" />
 
       <div className={styles.p1} style={{ height: "auto" }}>
         <div className={styles.p1Content}>

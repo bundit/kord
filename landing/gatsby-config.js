@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
-    title: "kord",
-    description: "all your music, in one place.",
+    title: "Kord",
+    description: "All your music, in one place.",
     author: "@Bundit"
   },
   plugins: [
