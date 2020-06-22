@@ -260,6 +260,9 @@ input[type="range"].volumeSlider {
   background: #151d20;
   margin-bottom: 4px;
   margin-right: 0;
+  padding: 5px 0;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 input[type="range"].volumeSlider::-webkit-slider-runnable-track {
