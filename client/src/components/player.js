@@ -1,11 +1,12 @@
 import { CSSTransition } from "react-transition-group";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import PropTypes from "prop-types";
 import React, { useState, useRef } from "react";
 import ReactHowler from "react-howler";
 import raf from "raf";
 
+import { capitalizeWord, formatArtistName } from "../utils/formattingHelpers";
 import {
   nextTrack,
   pause,
@@ -51,6 +52,7 @@ export const Player = ({
   const youtubePlayer = useRef(null);
   const alert = useAlert();
   const dispatch = useDispatch();
+  const currentPage = useSelector(state => state.user.history.currentPage);
 
   useSetDurationOnTrackChange(current);
   usePauseIfSdkNotReady(current, isPlaying, isSpotifySdkReady);
@@ -89,6 +91,14 @@ export const Player = ({
       }
     }; // eslint-disable-next-line
   }, [isPlaying]);
+
+  React.useEffect(() => {
+    if (isPlaying) {
+      document.title = `${current.title} ◦ ${formatArtistName(current.artist)}`;
+    } else {
+      document.title = `Kord | ${capitalizeWord(currentPage)}`;
+    }
+  }, [current, currentPage, isPlaying]);
 
   function handlePlay() {
     dispatch(play());
