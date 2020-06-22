@@ -20,6 +20,7 @@ export const SET_CONNECTION = "SET_CONNECTION";
 export const SET_PROFILE = "SET_PROFILE";
 export const SAVE_ROUTE = "SAVE_ROUTE";
 export const PUSH_LIB_ROUTE = "PUSH_LIB_ROUTE";
+export const SET_CURRENT_PAGE = "SET_CURRENT_PAGE";
 
 // Music Player Reducer
 export const PLAY = "PLAY";

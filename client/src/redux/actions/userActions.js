@@ -1,4 +1,4 @@
-import { SET_KORD_ID } from "./types";
+import { SET_CURRENT_PAGE, SET_KORD_ID } from "./types";
 import { fetchPlaylists } from "./libraryActions";
 import { fetchSoundcloudProfile } from "./soundcloudActions";
 import { fetchSpotifyProfile } from "./spotifyActions";
@@ -56,5 +56,12 @@ export const saveRoute = (relativeRoute, route) => {
     type: "SAVE_ROUTE",
     relativeRoute,
     payload: route
+  };
+};
+
+export const setCurrentPage = page => {
+  return {
+    type: SET_CURRENT_PAGE,
+    payload: page
   };
 };

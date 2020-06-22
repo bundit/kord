@@ -3,6 +3,7 @@ import {
   SAVE_ROUTE,
   SET_ACCESS_TOKEN,
   SET_CONNECTION,
+  SET_CURRENT_PAGE,
   SET_KORD_ID,
   SET_PROFILE
 } from "../actions/types";
@@ -42,7 +43,8 @@ const initialState = {
   history: {
     library: [],
     search: [],
-    more: []
+    more: [],
+    currentPage: ""
   }
 };
 
@@ -112,6 +114,7 @@ export default function(state = initialState, action) {
         }
       };
     }
+
     case PUSH_LIB_ROUTE: {
       const pathname = action.payload;
       const libHistory = state.history.library;
@@ -134,6 +137,19 @@ export default function(state = initialState, action) {
         }
       };
     }
+
+    case SET_CURRENT_PAGE: {
+      const currentPage = action.payload;
+
+      return {
+        ...state,
+        history: {
+          ...state.history,
+          currentPage: currentPage
+        }
+      };
+    }
+
     default:
       return state;
   }
