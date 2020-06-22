@@ -1,4 +1,15 @@
-import { SET_TRACK_UNSTREAMABLE } from "./types";
+import {
+  CLEAR_PLAYLIST_TRACKS,
+  CLEAR_TRASH,
+  IMPORT_LIKES,
+  IMPORT_PLAYLISTS,
+  IMPORT_PLAYLIST_TRACKS,
+  MOVE_PLAYLISTS_TO_TRASH,
+  RESTORE_PLAYLISTS_FROM_TRASH,
+  SET_NEXT_PLAYLIST_HREF,
+  SET_PLAYLIST_CONNECTIONS,
+  SET_TRACK_UNSTREAMABLE
+} from "./types";
 import {
   fetchSoundcloudLikes,
   fetchSoundcloudPlaylistTracks,
@@ -15,23 +26,9 @@ import {
 } from "./youtubeActions";
 import store from "../store";
 
-export function importSongs(songs) {
-  return {
-    type: "IMPORT_SONGS",
-    payload: songs
-  };
-}
-
-export function importSong(song) {
-  return {
-    type: "IMPORT_SONG",
-    payload: song
-  };
-}
-
 export function importLikes(source, likes) {
   return {
-    type: "IMPORT_LIKES",
+    type: IMPORT_LIKES,
     source,
     payload: likes
   };
@@ -39,7 +36,7 @@ export function importLikes(source, likes) {
 
 export function importPlaylists(source, playlists) {
   return {
-    type: "IMPORT_PLAYLISTS",
+    type: IMPORT_PLAYLISTS,
     source,
     payload: playlists
   };
@@ -47,7 +44,7 @@ export function importPlaylists(source, playlists) {
 
 export function importPlaylistTracks(source, playlistId, tracks) {
   return {
-    type: "IMPORT_PLAYLIST_TRACKS",
+    type: IMPORT_PLAYLIST_TRACKS,
     source,
     playlistId,
     payload: tracks
@@ -56,7 +53,7 @@ export function importPlaylistTracks(source, playlistId, tracks) {
 
 export function setNextPlaylistHref(source, playlistId, nextHref) {
   return {
-    type: "SET_NEXT_PLAYLIST_HREF",
+    type: SET_NEXT_PLAYLIST_HREF,
     source,
     playlistId,
     payload: nextHref
@@ -65,28 +62,28 @@ export function setNextPlaylistHref(source, playlistId, nextHref) {
 
 export function movePlaylistsToTrash(source) {
   return {
-    type: "MOVE_PLAYLISTS_TO_TRASH",
+    type: MOVE_PLAYLISTS_TO_TRASH,
     payload: source
   };
 }
 
 export function restorePlaylistsFromTrash(source) {
   return {
-    type: "RESTORE_PLAYLISTS_FROM_TRASH",
+    type: RESTORE_PLAYLISTS_FROM_TRASH,
     payload: source
   };
 }
 
 export function clearTrash(source) {
   return {
-    type: "CLEAR_TRASH",
+    type: CLEAR_TRASH,
     payload: source
   };
 }
 
 export const setPlaylistConnections = (source, newSettings) => {
   return {
-    type: "SET_PLAYLIST_CONNECTIONS",
+    type: SET_PLAYLIST_CONNECTIONS,
     source,
     payload: newSettings
   };
@@ -132,7 +129,7 @@ export const loadPlaylistTracks = (source, id, next) => dispatch => {
 
 export function clearPlaylistTracks(source, playlistId) {
   return {
-    type: "CLEAR_PLAYLIST_TRACKS",
+    type: CLEAR_PLAYLIST_TRACKS,
     source,
     payload: playlistId
   };

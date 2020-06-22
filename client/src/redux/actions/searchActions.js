@@ -1,4 +1,12 @@
 import {
+  ADD_TO_SEARCH_HISTORY,
+  REMOVE_FROM_SEARCH_HISTORY,
+  SET_ARTIST_RESULTS,
+  SET_MORE_TRACK_RESULTS,
+  SET_QUERY,
+  SET_TRACK_RESULTS
+} from "./types";
+import {
   fetchMoreSoundcloudTrackResults,
   searchSoundcloudTracks
 } from "./soundcloudActions";
@@ -7,14 +15,14 @@ import store from "../store";
 
 export function setQuery(query) {
   return {
-    type: "SET_QUERY",
+    type: SET_QUERY,
     payload: query
   };
 }
 
 export function setTrackResults(source, tracks) {
   return {
-    type: "SET_TRACK_RESULTS",
+    type: SET_TRACK_RESULTS,
     source,
     payload: tracks
   };
@@ -22,7 +30,7 @@ export function setTrackResults(source, tracks) {
 
 export function setMoreTrackResults(source, tracks) {
   return {
-    type: "SET_MORE_TRACK_RESULTS",
+    type: SET_MORE_TRACK_RESULTS,
     source,
     payload: tracks
   };
@@ -30,7 +38,7 @@ export function setMoreTrackResults(source, tracks) {
 
 export function setArtistResults(source, artists) {
   return {
-    type: "SET_ARTIST_RESULTS",
+    type: SET_ARTIST_RESULTS,
     source,
     payload: artists
   };
@@ -38,14 +46,14 @@ export function setArtistResults(source, artists) {
 
 export function addToSearchHistory(query) {
   return {
-    type: "ADD_TO_SEARCH_HISTORY",
+    type: ADD_TO_SEARCH_HISTORY,
     payload: query
   };
 }
 
 export function removeFromSearchHistory(query) {
   return {
-    type: "REMOVE_FROM_SEARCH_HISTORY",
+    type: REMOVE_FROM_SEARCH_HISTORY,
     payload: query
   };
 }

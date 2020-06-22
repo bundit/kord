@@ -1,14 +1,20 @@
 import {
   ADD_TO_QUEUE,
+  APPEND_QUEUE,
   NEXT_TRACK,
   PAUSE,
   PLAY,
   PREV_TRACK,
   SEEK,
+  SET_CONTEXT,
   SET_DURATION,
+  SET_MUTED,
+  SET_NEXT_QUEUE_HREF,
   SET_QUEUE,
+  SET_QUEUE_INDEX,
   SET_SEEK,
-  SET_TRACK
+  SET_TRACK,
+  SET_VOLUME
 } from "./types";
 import { fetchGeneric } from "../../utils/fetchGeneric";
 import { fetchYoutubePlaylistTracks } from "./youtubeActions";
@@ -126,35 +132,35 @@ export function setQueue(newQ) {
 
 export function setQueueIndex(i) {
   return {
-    type: "SET_QUEUE_INDEX",
+    type: SET_QUEUE_INDEX,
     payload: i
   };
 }
 
 export function setVolume(newVolume) {
   return {
-    type: "SET_VOLUME",
+    type: SET_VOLUME,
     payload: newVolume
   };
 }
 
 export function setMuted(isMuted) {
   return {
-    type: "SET_MUTED",
+    type: SET_MUTED,
     payload: isMuted
   };
 }
 
 function setNextQueueHref(nextHref) {
   return {
-    type: "SET_NEXT_QUEUE_HREF",
+    type: SET_NEXT_QUEUE_HREF,
     payload: nextHref
   };
 }
 
 function setContext(context) {
   return {
-    type: "SET_CONTEXT",
+    type: SET_CONTEXT,
     payload: context
   };
 }
@@ -179,7 +185,7 @@ export const playPlaylist = playlist => dispatch => {
 
 export function appendQueue(tracks) {
   return {
-    type: "APPEND_QUEUE",
+    type: APPEND_QUEUE,
     payload: Array.isArray(tracks) ? tracks : [tracks]
   };
 }

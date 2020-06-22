@@ -77,15 +77,4 @@ const mapStateToProps = state => ({
   libHistory: state.user.history.library
 });
 
-const mapDispatchToProps = dispatch => ({
-  saveLibRoute: route =>
-    dispatch({
-      type: "SAVE_LIB_ROUTE",
-      payload: route
-    })
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Footer);
+export default connect(mapStateToProps)(Footer);
