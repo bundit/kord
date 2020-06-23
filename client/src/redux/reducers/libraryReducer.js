@@ -59,7 +59,10 @@ export default function(state = initialState, action) {
         );
         // If prevIndex found, set it to the state we had before
         if (prevIndex !== -1) {
-          newPlaylist = prevPlaylists[prevIndex];
+          newPlaylist = {
+            ...prevPlaylists[prevIndex],
+            total: newPlaylist.total
+          };
         }
         return newPlaylist;
       });
