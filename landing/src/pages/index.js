@@ -58,31 +58,25 @@ const IndexPage = () => {
             All your music, in one place.
           </h1>
 
-          <Link
-            to={linkCTA}
-            className="button nav-link"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            <span
-              data-aos="zoom-out"
-              data-aos-easing="ease-out"
-              data-aos-duration="200"
-              data-aos-delay="1300"
+          {isLoggedIn ? (
+            <a
+              href={linkCTA}
+              className="button nav-link"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
-              <div className="bottom" />
-            </span>
-
-            <div
-              className="top"
-              data-aos="zoom-out"
-              data-aos-easing="ease-out"
-              data-aos-duration="300"
-              data-aos-delay="1600"
+              <CTA textCTA={textCTA} />
+            </a>
+          ) : (
+            <Link
+              to={linkCTA}
+              className="button nav-link"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
-              <div className="label">{textCTA}</div>
-            </div>
-          </Link>
+              <CTA textCTA={textCTA} />
+            </Link>
+          )}
         </div>
       </div>
       <div className={styles.p2}>
@@ -160,37 +154,55 @@ const IndexPage = () => {
           >
             Ready to start listening?
           </h1>
-          <Link
-            to={linkCTA}
-            className="button nav-link"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            <span
-              data-aos="zoom-out"
-              data-aos-easing="ease-in"
-              data-aos-duration="200"
-              data-aos-offset="0"
-              data-aos-delay="800"
-            >
-              <div className="bottom" />
-            </span>
 
-            <div
-              className="top"
-              data-aos="zoom-out"
-              data-aos-easing="ease-in"
-              data-aos-duration="300"
-              data-aos-offset="0"
-              data-aos-delay="1200"
+          {isLoggedIn ? (
+            <a
+              href={linkCTA}
+              className="button nav-link"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
-              <div className="label">{textCTA}</div>
-            </div>
-          </Link>
+              <CTA textCTA={textCTA} />
+            </a>
+          ) : (
+            <Link
+              to={linkCTA}
+              className="button nav-link"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              <CTA textCTA={textCTA} />
+            </Link>
+          )}
         </div>
       </div>
     </>
   );
 };
+
+function CTA({ textCTA }) {
+  return (
+    <>
+      <span
+        data-aos="zoom-out"
+        data-aos-easing="ease-out"
+        data-aos-duration="200"
+        data-aos-delay="1300"
+      >
+        <div className="bottom" />
+      </span>
+
+      <div
+        className="top"
+        data-aos="zoom-out"
+        data-aos-easing="ease-out"
+        data-aos-duration="300"
+        data-aos-delay="1400"
+      >
+        <div className="label">{textCTA}</div>
+      </div>
+    </>
+  );
+}
 
 export default IndexPage;
