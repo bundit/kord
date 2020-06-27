@@ -9,7 +9,8 @@ import {
   fetchProfileAndPlaylists,
   setAccessToken,
   setConnection,
-  setKordId
+  setKordId,
+  setMainConnection
 } from "../redux/actions/userActions";
 import {
   nextTrack,
@@ -31,12 +32,17 @@ export function useHashParamDetectionOnLoad() {
       const URLParams = new URLSearchParams(window.location.hash.substr(1));
       const source = URLParams.get("source");
       const userId = URLParams.get("userId");
+      const login = URLParams.get("login");
 
       if (userId) {
         if (userId !== kordId) {
           dispatch(clearState());
         }
         dispatch(setKordId(userId));
+      }
+
+      if (login) {
+        dispatch(setMainConnection(source));
       }
 
       if (source) {

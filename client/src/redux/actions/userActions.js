@@ -4,6 +4,7 @@ import {
   SET_CONNECTION,
   SET_CURRENT_PAGE,
   SET_KORD_ID,
+  SET_MAIN_CONNECTION,
   SET_PROFILE
 } from "./types";
 import { fetchPlaylists } from "./libraryActions";
@@ -31,6 +32,13 @@ export const setConnection = (source, isConnected) => {
     type: SET_CONNECTION,
     source,
     payload: isConnected
+  };
+};
+
+export const setMainConnection = source => {
+  return {
+    type: SET_MAIN_CONNECTION,
+    payload: source
   };
 };
 

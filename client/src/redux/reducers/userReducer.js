@@ -5,12 +5,14 @@ import {
   SET_CONNECTION,
   SET_CURRENT_PAGE,
   SET_KORD_ID,
+  SET_MAIN_CONNECTION,
   SET_PROFILE
 } from "../actions/types";
 
 const initialState = {
   kord: {
-    id: null
+    id: null,
+    mainConnection: null
   },
   soundcloud: {
     isConnected: false,
@@ -82,6 +84,17 @@ export default function(state = initialState, action) {
         [source]: {
           ...state[source],
           isConnected
+        }
+      };
+    }
+    case SET_MAIN_CONNECTION: {
+      const source = action.payload;
+
+      return {
+        ...state,
+        kord: {
+          ...state.kord,
+          mainConnection: source
         }
       };
     }
