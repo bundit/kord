@@ -1,52 +1,70 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { useAlert } from "react-alert";
+import {
+  faSoundcloud,
+  faSpotify,
+  faYoutube,
+  faMixcloud
+} from "@fortawesome/free-brands-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import queryString from "query-string";
 
-import { searchForMusic } from "../redux/actions/searchActions";
+import { cacheValue, loadCachedValue } from "../utils/sessionStorage";
+import { capitalizeWord } from "../utils/formattingHelpers";
 import SearchTrackList from "./search-track-list";
 import styles from "../styles/library.module.css";
 
 const SearchResults = () => {
-  const isPlaying = useSelector(state => state.player.isPlaying);
+  const [sourcesToSearch, setSourcesToSearch] = useState([]);
   const currentTrackId = useSelector(state => state.player.currentTrack.id);
-  const user = useSelector(state => state.user);
+  const mainSource = useSelector(state => state.user.kord.mainConnection);
+  const isPlaying = useSelector(state => state.player.isPlaying);
   const results = useSelector(state => state.search);
+  const user = useSelector(state => state.user);
+
   const { query } = useParams();
   const { search } = useLocation();
-  const dispatch = useDispatch();
-  const alert = useAlert();
   const { restored } = queryString.parse(search);
+  const dispatch = useDispatch();
+  const allSources = ["spotify", "youtube", "soundcloud", "mixcloud"];
+  const connectedSources = allSources.filter(
+    source => user[source].isConnected
+  );
 
   useEffect(() => {
-    dispatch(searchForMusic(query)).catch(e => {
-      alert.error("Search Error");
-    });
-    // eslint-disable-next-line
-  }, [query, dispatch]);
+    let cachedSourceSearches = loadCachedValue(`Search:sources:${query}`);
+    setSourcesToSearch(cachedSourceSearches || [mainSource]);
+  }, [query, dispatch, mainSource]);
 
-  const resultsComponents = [];
+  useEffect(() => {
+    cacheValue(`Search:sources:${query}`, sourcesToSearch);
+  }, [query, sourcesToSearch]);
 
-  const sources = Object.keys(results);
-  sources.forEach(source => {
-    if (user[source] && user[source].isConnected) {
-      const tracks = results[source].tracks;
+  function handleSearchSource(e) {
+    const updatedSources = [...sourcesToSearch, e.target.value];
+    setSourcesToSearch(updatedSources);
+  }
 
-      resultsComponents.push(
-        <SearchTrackList
-          source={source}
-          tracks={tracks}
-          currentTrackId={currentTrackId}
-          isPlaying={isPlaying}
-          key={`Search:${source}:${query}`}
-          restored={restored}
-        />
-      );
-    }
-  });
+  function handleHideSearch(e) {
+    const updatedSources = sourcesToSearch.filter(
+      source => source !== e.target.value
+    );
+    setSourcesToSearch(updatedSources);
+  }
+
+  const resultsComponents = sourcesToSearch.map(source => (
+    <SearchTrackList
+      source={source}
+      query={query}
+      tracks={results[source] ? results[source].tracks : { list: [] }}
+      currentTrackId={currentTrackId}
+      isPlaying={isPlaying}
+      key={`Search:${source}:${query}`}
+      restored={restored}
+    />
+  ));
 
   return (
     <div style={{ overflowY: "scroll", margin: "80px 0" }}>
@@ -63,11 +81,49 @@ const SearchResults = () => {
           </Link>
         </span>
       </h3>
+      <div className={styles.searchButtonsWrapper}>
+        {allSources.map(source => (
+          <button
+            className={sourceButtons[source].className}
+            key={`Search:button:${source}`}
+            value={source}
+            onClick={
+              sourcesToSearch.includes(source)
+                ? handleHideSearch
+                : handleSearchSource
+            }
+            disabled={!connectedSources.includes(source)}
+          >
+            <FontAwesomeIcon icon={sourceButtons[source].icon} />
+            {sourcesToSearch.includes(source) ? ` Hide` : ` Show`}{" "}
+            {capitalizeWord(source)}
+          </button>
+        ))}
+      </div>
       <div className={styles.pageWrapper} style={{ margin: 0 }}>
         {resultsComponents}
       </div>
     </div>
   );
+};
+
+const sourceButtons = {
+  spotify: {
+    className: styles.searchSpotifyButton,
+    icon: faSpotify
+  },
+  youtube: {
+    className: styles.searchYoutubeButton,
+    icon: faYoutube
+  },
+  soundcloud: {
+    className: styles.searchSoundcloudButton,
+    icon: faSoundcloud
+  },
+  mixcloud: {
+    className: styles.searchMixcloudButton,
+    icon: faMixcloud
+  }
 };
 
 export default SearchResults;

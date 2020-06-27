@@ -11,7 +11,6 @@ import {
   searchSoundcloudTracks
 } from "./soundcloudActions";
 import { fetchMoreSpotifyTrackResults, searchSpotify } from "./spotifyActions";
-import store from "../store";
 
 export function setQuery(query) {
   return {
@@ -58,19 +57,22 @@ export function removeFromSearchHistory(query) {
   };
 }
 
-export const searchForMusic = query => dispatch => {
-  const user = store.getState().user;
-  const requests = [];
+export const searchForMusic = (source, query) => dispatch => {
+  let request;
 
-  if (user.soundcloud.isConnected) {
-    requests.push(searchSoundcloudTracks);
+  if (source === "soundcloud") {
+    request = searchSoundcloudTracks;
   }
 
-  if (user.spotify.isConnected) {
-    requests.push(searchSpotify);
+  if (source === "spotify") {
+    request = searchSpotify;
   }
 
-  return Promise.all(requests.map(request => dispatch(request(query))));
+  if (request) {
+    return dispatch(request(query));
+  }
+
+  return Promise.resolve();
 };
 
 export const loadMoreTrackResults = (source, next) => dispatch => {

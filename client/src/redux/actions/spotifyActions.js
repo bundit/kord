@@ -153,7 +153,8 @@ export const searchSpotify = (
   const cachedSearch = loadCachedValue(storageKey);
   if (cachedSearch) {
     const payload = parseSpotifyResults(cachedSearch);
-    return dispatch(setSpotifyResults(payload));
+    dispatch(setSpotifyResults(payload));
+    return Promise.resolve();
   }
 
   return spotifyApi

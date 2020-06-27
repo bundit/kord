@@ -2,10 +2,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
+import { cacheValue, loadCachedValue } from "../utils/sessionStorage";
 import { capitalizeWord } from "../utils/formattingHelpers";
-import { loadMoreTrackResults } from "../redux/actions/searchActions";
+import {
+  loadMoreTrackResults,
+  searchForMusic
+} from "../redux/actions/searchActions";
 import { playTrack } from "../redux/actions/playerActions";
 import LoadingSpinner from "./loading-spinner";
 import TrackList from "./track-list";
@@ -16,6 +20,7 @@ const searchIncrementAmount = 10;
 const SearchTrackList = ({
   source,
   tracks,
+  query,
   currentTrackId,
   isPlaying,
   restored
@@ -27,12 +32,29 @@ const SearchTrackList = ({
   const searchHasMoreToShow = tracks.next || numShowTracks < tracks.list.length;
   const listHeight = Math.min(tracks.list.length, numShowTracks);
 
-  React.useEffect(() => {
-    if (!restored) {
-      handleShowMore();
+  useEffect(() => {
+    const numTracks = loadCachedValue(`Search:${query}:${source}:numTracks`);
+    const search = dispatch(searchForMusic(source, query));
+
+    if (numTracks) {
+      search.then(() => {
+        setNumShowTracks(numTracks);
+        setIsLoading(false);
+      });
+    } else {
+      search
+        .catch(e => {
+          alert.error(`Error searching "${query}" from ${source}`);
+        })
+        .finally(handleShowMore);
     }
+
     // eslint-disable-next-line
-  }, []);
+  }, [query, source]);
+
+  useEffect(() => {
+    cacheValue(`Search:${query}:${source}:numTracks`, numShowTracks);
+  }, [numShowTracks, query, source]);
 
   function handleShowMore() {
     setIsLoading(true);
@@ -44,7 +66,7 @@ const SearchTrackList = ({
 
     loadTracks
       .catch(e => {
-        alert.error(e.toString());
+        alert.error(`Error loading tracks from ${source}`);
       })
       .finally(() =>
         setTimeout(() => {

@@ -91,7 +91,6 @@
   align-items: center;
   min-height: 65px;
   width: 100%;
-  max-width: 1310px;
   padding: 1rem 2rem;
   box-sizing: border-box;
   text-decoration: none;
@@ -525,6 +524,72 @@
 
 .redoSearchLink:hover {
   color: white;
+}
+
+.searchButtonsWrapper {
+  display: flex;
+  padding: 3rem 3rem 0 3rem;
+}
+
+.searchButtonsWrapper > button {
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 7px;
+  transition: 0.2s linear;
+  color: #ccc;
+  opacity: 0.9;
+  border-width: 1px;
+  border-style: solid;
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.searchButtonsWrapper > button:hover {
+  opacity: 1;
+  color: white;
+}
+
+.searchButtonsWrapper > button:focus {
+  outline: none;
+}
+
+.searchSpotifyButton {
+  border-color: #1db954b3;
+}
+
+.searchSpotifyButton:hover {
+  background-color: #1db95426;
+}
+
+.searchYoutubeButton {
+  border-color: #ff0000b3;
+}
+
+.searchYoutubeButton:hover {
+  background-color: #ff000026;
+}
+
+.searchSoundcloudButton {
+  border-color: #ff5500b3;
+}
+
+.searchSoundcloudButton:hover {
+  background-color: #ff550026;
+}
+
+.searchMixcloudButton {
+  border-color: #5000ffcc;
+}
+
+.searchMixcloudButton:hover {
+  background-color: #5000ff40;
+}
+
+.searchButtonsWrapper > button:disabled {
+  color: #666;
+  border-color: #666;
+  cursor: not-allowed;
+  background: transparent;
 }
 
 @media (min-width: 800px) {

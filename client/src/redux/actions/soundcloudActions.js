@@ -96,7 +96,8 @@ export const searchSoundcloudTracks = (query, limit = 50) => dispatch => {
 
   const cachedSearch = loadCachedValue(storageKey);
   if (cachedSearch) {
-    return dispatch(setTrackResults("soundcloud", cachedSearch));
+    dispatch(setTrackResults("soundcloud", cachedSearch));
+    return Promise.resolve();
   }
 
   return fetchGeneric(trackSearchEndpoint).then(json => {
