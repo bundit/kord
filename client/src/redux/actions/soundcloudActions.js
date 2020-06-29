@@ -16,15 +16,16 @@ const KEY = process.env.REACT_APP_SC_KEY;
 const LIKES_KEY = process.env.REACT_APP_SC_V2_KEY;
 
 const LINK = 1;
-const SC_API_BASE_URL = "https://api.soundcloud.com";
+const SC_API = "https://api.soundcloud.com";
+const SC_API_V2 = "https://api-v2.soundcloud.com";
 
 export const fetchSoundcloudProfile = userId => dispatch => {
-  const endpoint = `${SC_API_BASE_URL}/users/${userId}?client_id=${KEY}`;
+  const endpoint = `${SC_API}/users/${userId}?client_id=${KEY}`;
 
   return fetchGeneric(endpoint)
     .then(json => {
       const profile = mapJsonToProfile(json);
-      const beginHref = `https://api-v2.soundcloud.com/users/${json.id}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
+      const beginHref = `${SC_API_V2}/users/${json.id}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
 
       const userLikes = {
         id: "likes",
@@ -46,7 +47,7 @@ export const fetchSoundcloudProfile = userId => dispatch => {
 
 export const fetchSoundcloudLikes = (next, userId) => dispatch => {
   if (!next) {
-    next = `https://api-v2.soundcloud.com/users/${userId}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
+    next = `${SC_API_V2}/users/${userId}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
   }
 
   const proxyHref = `/api?url=${encodeURIComponent(
@@ -69,7 +70,7 @@ export const fetchSoundcloudLikes = (next, userId) => dispatch => {
 };
 
 export const fetchSoundcloudPlaylists = username => dispatch => {
-  const playlistEndpoint = `${SC_API_BASE_URL}/users/${username}/playlists?client_id=${KEY}`;
+  const playlistEndpoint = `${SC_API}/users/${username}/playlists?client_id=${KEY}`;
 
   return fetchGeneric(playlistEndpoint).then(data => {
     const newPlaylists = mapCollectionToPlaylists(data);
@@ -79,7 +80,7 @@ export const fetchSoundcloudPlaylists = username => dispatch => {
 };
 
 export const fetchSoundcloudPlaylistTracks = (id, next) => dispatch => {
-  const playlistEndpoint = `https://api.soundcloud.com/playlists/${id}/?client_id=${KEY}`;
+  const playlistEndpoint = `${SC_API}/playlists/${id}/?client_id=${KEY}`;
 
   return fetchGeneric(playlistEndpoint).then(data => {
     const tracks = mapCollectionToTracks(data.tracks);
@@ -91,7 +92,7 @@ export const fetchSoundcloudPlaylistTracks = (id, next) => dispatch => {
 };
 
 export const searchSoundcloudTracks = (query, limit = 50) => dispatch => {
-  const trackSearchEndpoint = `https://api.soundcloud.com/tracks?q=${query}&limit=${limit}&format=json&client_id=${KEY}&linked_partitioning=1`;
+  const trackSearchEndpoint = `${SC_API}/tracks?q=${query}&limit=${limit}&format=json&client_id=${KEY}&linked_partitioning=1`;
   const storageKey = `SC:${query}:artists`;
 
   const cachedSearch = loadCachedValue(storageKey);
@@ -121,7 +122,7 @@ export const fetchMoreSoundcloudTrackResults = next => dispatch => {
 };
 
 export const searchSoundcloudArtists = (query, limit = 5) => dispatch => {
-  const endpoint = `https://api.soundcloud.com/users?q=${query}&client_id=${KEY}&limit=${limit}`;
+  const endpoint = `${SC_API}/users?q=${query}&client_id=${KEY}&limit=${limit}`;
 
   return fetchScArtists(endpoint).then(artistList =>
     dispatch(setArtistResults("soundcloud", artistList))
