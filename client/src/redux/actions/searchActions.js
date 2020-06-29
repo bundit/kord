@@ -11,6 +11,7 @@ import {
   searchSoundcloudTracks
 } from "./soundcloudActions";
 import { fetchMoreSpotifyTrackResults, searchSpotify } from "./spotifyActions";
+import { fetchMoreYoutubeTrackResults, searchYoutube } from "./youtubeActions";
 
 export function setQuery(query) {
   return {
@@ -68,6 +69,10 @@ export const searchForMusic = (source, query) => dispatch => {
     request = searchSpotify;
   }
 
+  if (source === "youtube") {
+    request = searchYoutube;
+  }
+
   if (request) {
     return dispatch(request(query));
   }
@@ -82,5 +87,7 @@ export const loadMoreTrackResults = (source, next) => dispatch => {
     return dispatch(fetchMoreSoundcloudTrackResults(next));
   } else if (source === "spotify") {
     return dispatch(fetchMoreSpotifyTrackResults(next));
+  } else if (source === "youtube") {
+    return dispatch(fetchMoreYoutubeTrackResults(next));
   }
 };

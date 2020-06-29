@@ -17,7 +17,10 @@ import {
   SET_VOLUME
 } from "./types";
 import { fetchGeneric } from "../../utils/fetchGeneric";
-import { fetchYoutubePlaylistTracks } from "./youtubeActions";
+import {
+  fetchMoreYoutubeTrackResults,
+  fetchYoutubePlaylistTracks
+} from "./youtubeActions";
 import { loadPlaylistTracks } from "./libraryActions";
 import { mapCollectionToTracks } from "./soundcloudActions";
 import { mapJsonToTracks, spotifyApi } from "./spotifyActions";
@@ -232,6 +235,8 @@ const loadMoreQueueTracks = () => dispatch => {
   } else if (source === "youtube") {
     if (id !== "search") {
       promise = dispatch(fetchYoutubePlaylistTracks(id, nextHref));
+    } else if (id === "search") {
+      promise = dispatch(fetchMoreYoutubeTrackResults(nextHref));
     }
   }
 

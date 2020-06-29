@@ -1,4 +1,5 @@
 import { YTDurationToMilliseconds } from "../../utils/YTDurationToMilliseconds";
+import { cacheValue, loadCachedValue } from "../../utils/sessionStorage";
 import { fetchGeneric } from "../../utils/fetchGeneric";
 import {
   importPlaylistTracks,
@@ -6,7 +7,9 @@ import {
   setNextPlaylistHref
 } from "./libraryActions";
 import { setAccessToken, setConnection, setUserProfile } from "./userActions";
+import { setMoreTrackResults, setTrackResults } from "./searchActions";
 import store from "../store";
+const YT_API = "https://www.googleapis.com/youtube/v3";
 
 export const setYoutubeAccessToken = accessToken => dispatch => {
   dispatch(setAccessToken("youtube", accessToken));
@@ -21,7 +24,7 @@ export const refreshYoutubeToken = () => dispatch => {
 };
 
 export const fetchYoutubeProfile = (tries = 3) => dispatch => {
-  const endpoint = `https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
+  const endpoint = `${YT_API}/channels?part=snippet&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
   const opts = generateYoutubeFetchOptionsAndHeaders();
 
   return fetchGeneric(endpoint, opts)
@@ -40,7 +43,7 @@ export const fetchYoutubeProfile = (tries = 3) => dispatch => {
 };
 
 export const fetchYoutubePlaylists = (limit = 50, tries = 3) => dispatch => {
-  const endpoint = `https://www.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails%2Cid&maxResults=${limit}&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
+  const endpoint = `${YT_API}/playlists?part=snippet%2CcontentDetails%2Cid&maxResults=${limit}&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
   const opts = generateYoutubeFetchOptionsAndHeaders();
 
   return fetchGeneric(endpoint, opts)
@@ -68,7 +71,7 @@ export const fetchYoutubePlaylistTracks = (
   const opts = generateYoutubeFetchOptionsAndHeaders();
 
   if (next === "start") {
-    playlistEndpoint = `https://www.googleapis.com/youtube/v3/playlistItems?part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
+    playlistEndpoint = `${YT_API}/playlistItems?part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
   } else {
     playlistEndpoint = next;
   }
@@ -81,7 +84,7 @@ export const fetchYoutubePlaylistTracks = (
 
       const next =
         json.nextPageToken &&
-        `https://www.googleapis.com/youtube/v3/playlistItems?pageToken=${json.nextPageToken}&part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
+        `${YT_API}/playlistItems?pageToken=${json.nextPageToken}&part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
       dispatch(setNextPlaylistHref("youtube", id, next));
 
       return { tracks, next };
@@ -117,10 +120,119 @@ export const fetchYoutubePlaylistTracks = (
 };
 
 function fetchYoutubeTrackInfo(videoIds) {
-  const videoEndpoint = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Csnippet&id=${videoIds}&key=${process.env.REACT_APP_YT_KEY}`;
+  const videoEndpoint = `${YT_API}/videos?part=contentDetails%2Csnippet&id=${videoIds}&key=${process.env.REACT_APP_YT_KEY}`;
 
   return fetchGeneric(videoEndpoint);
 }
+
+export const searchYoutube = (query, limit = 25, tries = 3) => dispatch => {
+  const searchEndpoint = `${YT_API}/search?type=video&part=snippet%2Cid&maxResults=${limit}&q=${query}&key=${process.env.REACT_APP_YT_KEY}`;
+  const opts = generateYoutubeFetchOptionsAndHeaders();
+  const storageKey = `YT:${query}`;
+
+  const cachedSearch = loadCachedValue(storageKey);
+  if (cachedSearch) {
+    dispatch(setTrackResults("youtube", cachedSearch));
+    return Promise.resolve();
+  }
+
+  return fetchGeneric(searchEndpoint, opts)
+    .then(json => {
+      const tracks = mapJsonSearchToTracks(json).filter(
+        tracks => tracks.title !== "Private video"
+      );
+
+      const next =
+        json.nextPageToken &&
+        `${YT_API}/search?pageToken=${json.nextPageToken}&type=video&part=snippet%2Cid&maxResults=${limit}&key=${process.env.REACT_APP_YT_KEY}`;
+
+      return { tracks, next };
+    })
+    .then(({ tracks, next }) => {
+      const videoIds = tracks.map(track => track.id);
+
+      return fetchYoutubeTrackInfo(videoIds).then(json => {
+        json.items.forEach(item => {
+          tracks = tracks.map(track => {
+            if (track.id === item.id) {
+              track = {
+                ...track,
+                ...mapDurationAndChannelToTracks(item)
+              };
+            }
+            return track;
+          });
+        });
+
+        const tracksPayload = {
+          list: tracks,
+          next: next
+        };
+
+        dispatch(setTrackResults("youtube", tracksPayload));
+        cacheValue(storageKey, tracksPayload);
+
+        return { tracks, next };
+      });
+    })
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(searchYoutube(query, limit, --tries))
+        );
+      } else return Promise.reject(e);
+    });
+};
+
+export const fetchMoreYoutubeTrackResults = (next, tries = 3) => dispatch => {
+  const opts = generateYoutubeFetchOptionsAndHeaders();
+
+  return fetchGeneric(next, opts)
+    .then(json => {
+      const tracks = mapJsonSearchToTracks(json).filter(
+        tracks => tracks.title !== "Private video"
+      );
+
+      const next =
+        json.nextPageToken &&
+        `${YT_API}/search?pageToken=${json.nextPageToken}&type=video&part=snippet%2Cid&maxResults=25&key=${process.env.REACT_APP_YT_KEY}`;
+
+      return { tracks, next };
+    })
+    .then(({ tracks, next }) => {
+      const videoIds = tracks.map(track => track.id);
+
+      return fetchYoutubeTrackInfo(videoIds).then(json => {
+        json.items.forEach(item => {
+          tracks = tracks.map(track => {
+            if (track.id === item.id) {
+              track = {
+                ...track,
+                ...mapDurationAndChannelToTracks(item)
+              };
+            }
+            return track;
+          });
+        });
+
+        const tracksPayload = {
+          list: tracks,
+          next: next
+        };
+
+        dispatch(setMoreTrackResults("youtube", tracksPayload));
+
+        return { tracks, next };
+      });
+    })
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchMoreYoutubeTrackResults(next, --tries))
+        );
+      } else return Promise.reject(e);
+    });
+};
 
 function errorHandler(err, tries = 3) {
   return dispatch => {
@@ -176,6 +288,16 @@ function mapJsonToPlaylists(json) {
 function mapJsonToTracks(json) {
   return json.items.map(item => ({
     id: item.snippet.resourceId.videoId,
+    title: item.snippet.title,
+    img: item.snippet.thumbnails,
+    streamable: true,
+    source: "youtube"
+  }));
+}
+
+function mapJsonSearchToTracks(json) {
+  return json.items.map(item => ({
+    id: item.id.videoId,
     title: item.snippet.title,
     img: item.snippet.thumbnails,
     streamable: true,
