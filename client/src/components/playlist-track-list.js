@@ -66,7 +66,6 @@ const PlaylistTracklist = ({
       promise
         .then(() => {
           if (hasRefreshed) {
-            alert.success("Playlist refreshed");
             setHasRefreshed(false);
           }
         })
