@@ -13,7 +13,6 @@ import {
 import { setConnection, setUserProfile } from "./userActions";
 
 const KEY = process.env.REACT_APP_SC_KEY;
-const LIKES_KEY = process.env.REACT_APP_SC_V2_KEY;
 
 const LINK = 1;
 const SC_API = "https://api.soundcloud.com";
@@ -50,9 +49,7 @@ export const fetchSoundcloudLikes = (next, userId) => dispatch => {
     next = `${SC_API_V2}/users/${userId}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
   }
 
-  const proxyHref = `/api?url=${encodeURIComponent(
-    `${next}&client_id=${LIKES_KEY}`
-  )}`;
+  const proxyHref = `/api?url=${encodeURIComponent(`${next}`)}`;
 
   return fetchGeneric(proxyHref).then(json => {
     const tracks = mapCollectionToTracks(json.collection);

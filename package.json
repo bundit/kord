@@ -21,6 +21,7 @@
     "passport-oauth2-refresh": "^2.0.0",
     "passport-spotify": "^1.1.0",
     "pg": "^7.18.2",
+    "puppeteer": "^5.2.0",
     "request": "^2.88.2"
   },
   "eslintConfig": {
