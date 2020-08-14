@@ -61,7 +61,9 @@ export default function(state = initialState, action) {
         if (prevIndex !== -1) {
           newPlaylist = {
             ...prevPlaylists[prevIndex],
-            total: newPlaylist.total
+            total: newPlaylist.total,
+            title: newPlaylist.title,
+            img: newPlaylist.img
           };
         }
         return newPlaylist;
