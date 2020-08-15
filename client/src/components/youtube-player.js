@@ -53,7 +53,12 @@ function useStartAtBeginningOnTrackChange(currentTrack, youtubePlayer) {
 
 function useSyncPlayPause(isPlaying, current, youtubePlayer) {
   React.useEffect(() => {
-    if (current.source !== "youtube" || !youtubePlayer.current) {
+    if (!youtubePlayer.current) {
+      return;
+    }
+
+    if (current.source !== "youtube") {
+      youtubePlayer.current.stopVideo();
       return;
     }
 
