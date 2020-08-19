@@ -6,10 +6,15 @@ import { Provider } from "react-redux";
 import AlertTemplate from "react-alert-template-basic";
 import React from "react";
 import ReactDOM from "react-dom";
+import * as Sentry from "@sentry/react";
 
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import store from "./redux/store";
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DNS
+});
 
 const alertOptions = {
   position: "bottom center",

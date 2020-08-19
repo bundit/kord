@@ -8,6 +8,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.11.2",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@fortawesome/react-fontawesome": "^0.1.7",
+    "@sentry/react": "^5.19.0",
     "eslint-config-airbnb": "^18.0.1",
     "prop-types": "^15.7.2",
     "query-string": "^6.12.1",
