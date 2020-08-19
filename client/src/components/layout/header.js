@@ -1,13 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink, useHistory } from "react-router-dom";
-import {
-  faAngleLeft,
-  faAngleRight,
-  faSignOutAlt
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useState } from "react";
 
 import {
   addToSearchHistory,
@@ -17,8 +13,12 @@ import SearchBar from "../search-bar";
 import styles from "../../styles/header.module.css";
 
 function Header({ location }) {
+  const mainConnection = useSelector(state => state.user.kord.mainConnection);
+  const mainUser = useSelector(state => state.user[mainConnection]);
   const dispatch = useDispatch();
   const history = useHistory();
+  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+
   const { pathname } = location;
   const baseUrls = ["Library", "Search", "More", ""];
 
@@ -56,6 +56,10 @@ function Header({ location }) {
 
   function handleGoForward() {
     history.goForward();
+  }
+
+  function toggleSettingsMenu() {
+    setIsSettingsMenuOpen(!isSettingsMenuOpen);
   }
 
   function handleLogout() {
@@ -112,20 +116,25 @@ function Header({ location }) {
             onSubmit={handleSearchSubmit}
             onReset={handleResetQuery}
           />
-          {/* <div className={styles.settingIconContainer}>
-            <button type="button" onClick={() => history.push("/settings")}>
-              <FontAwesomeIcon size="3x" icon={faCogs} />
-            </button>
-          </div> */}
-          <button
-            onClick={handleLogout}
-            type="button"
-            className={styles.logoutButton}
-          >
-            <span>Logout</span>
 
-            <FontAwesomeIcon icon={faSignOutAlt} />
-          </button>
+          <span className={styles.userSettingsButtonWrapper}>
+            <button
+              className={styles.userSettingsButton}
+              onClick={toggleSettingsMenu}
+              style={{ borderWidth: `${isSettingsMenuOpen ? 2 : 1}px` }}
+            >
+              <img src={mainUser.image} alt="profilePic" />
+            </button>
+
+            {isSettingsMenuOpen && (
+              <span className={styles.profileMenu}>
+                <button>Settings</button>
+                <button type="button" onClick={handleLogout}>
+                  Logout
+                </button>
+              </span>
+            )}
+          </span>
         </div>
       </header>
     </>
