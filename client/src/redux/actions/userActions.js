@@ -5,7 +5,9 @@ import {
   SET_CURRENT_PAGE,
   SET_KORD_ID,
   SET_MAIN_CONNECTION,
-  SET_PROFILE
+  SET_PROFILE,
+  SET_SETTINGS_OPEN_STATUS,
+  SET_SETTINGS_SOURCE
 } from "./types";
 import { fetchPlaylists } from "./libraryActions";
 import { fetchSoundcloudProfile } from "./soundcloudActions";
@@ -79,4 +81,31 @@ export const setCurrentPage = page => {
     type: SET_CURRENT_PAGE,
     payload: page
   };
+};
+
+const setIsSettingsOpen = isOpen => {
+  return {
+    type: SET_SETTINGS_OPEN_STATUS,
+    payload: isOpen
+  };
+};
+
+const setSettingsSource = source => {
+  return {
+    type: SET_SETTINGS_SOURCE,
+    payload: source
+  };
+};
+
+export const openSettings = source => dispatch => {
+  dispatch(setIsSettingsOpen(true));
+  dispatch(setSettingsSource(source));
+};
+
+export const closeSettings = () => dispatch => {
+  dispatch(setIsSettingsOpen(false));
+};
+
+export const updateProfile = (source, user) => dispatch => {
+  return dispatch(fetchProfileAndPlaylists(source, user));
 };
