@@ -6,7 +6,9 @@ import {
   SET_CURRENT_PAGE,
   SET_KORD_ID,
   SET_MAIN_CONNECTION,
-  SET_PROFILE
+  SET_PROFILE,
+  SET_SETTINGS_OPEN_STATUS,
+  SET_SETTINGS_SOURCE
 } from "../actions/types";
 
 const initialState = {
@@ -47,6 +49,10 @@ const initialState = {
     search: [],
     more: [],
     currentPage: ""
+  },
+  settings: {
+    isSettingsOpen: false,
+    settingsSource: ""
   }
 };
 
@@ -159,6 +165,30 @@ export default function(state = initialState, action) {
         history: {
           ...state.history,
           currentPage: currentPage
+        }
+      };
+    }
+
+    case SET_SETTINGS_OPEN_STATUS: {
+      const isOpen = action.payload;
+
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          isSettingsOpen: isOpen
+        }
+      };
+    }
+
+    case SET_SETTINGS_SOURCE: {
+      const source = action.payload;
+
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          settingsSource: source
         }
       };
     }

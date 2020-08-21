@@ -22,6 +22,8 @@ export const SET_PROFILE = "SET_PROFILE";
 export const SAVE_ROUTE = "SAVE_ROUTE";
 export const PUSH_LIB_ROUTE = "PUSH_LIB_ROUTE";
 export const SET_CURRENT_PAGE = "SET_CURRENT_PAGE";
+export const SET_SETTINGS_OPEN_STATUS = "SET_SETTINGS_OPEN_STATUS";
+export const SET_SETTINGS_SOURCE = "SET_SETTINGS_SOURCE";
 
 // Music Player Reducer
 export const PLAY = "PLAY";
