@@ -28,7 +28,7 @@ const SearchResults = () => {
   const { search } = useLocation();
   const { restored } = queryString.parse(search);
   const dispatch = useDispatch();
-  const allSources = ["spotify", "youtube", "soundcloud", "mixcloud"];
+  const allSources = ["spotify", "soundcloud", "youtube", "mixcloud"];
   const connectedSources = allSources.filter(
     source => user[source].isConnected
   );
@@ -94,7 +94,14 @@ const SearchResults = () => {
             }
             disabled={!connectedSources.includes(source)}
           >
-            <FontAwesomeIcon icon={sourceButtons[source].icon} />
+            <FontAwesomeIcon
+              icon={sourceButtons[source].icon}
+              style={{
+                color: sourcesToSearch.includes(source)
+                  ? sourceButtons[source].color
+                  : null
+              }}
+            />
             {sourcesToSearch.includes(source) ? ` Hide` : ` Show`}{" "}
             {capitalizeWord(source)}
           </button>
@@ -110,19 +117,24 @@ const SearchResults = () => {
 const sourceButtons = {
   spotify: {
     className: styles.searchSpotifyButton,
-    icon: faSpotify
-  },
-  youtube: {
-    className: styles.searchYoutubeButton,
-    icon: faYoutube
+    icon: faSpotify,
+    color: "#1db954b3"
   },
   soundcloud: {
     className: styles.searchSoundcloudButton,
-    icon: faSoundcloud
+    icon: faSoundcloud,
+    color: "#ff5500b3"
   },
+  youtube: {
+    className: styles.searchYoutubeButton,
+    icon: faYoutube,
+    color: "#ff0000b3"
+  },
+
   mixcloud: {
     className: styles.searchMixcloudButton,
-    icon: faMixcloud
+    icon: faMixcloud,
+    color: "#5000ffcc"
   }
 };
 
