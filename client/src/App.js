@@ -1,7 +1,10 @@
 import { Route, Switch } from "react-router-dom";
+import { useAlert } from "react-alert";
+import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 import * as Sentry from "@sentry/react";
 
+import { closeSettings, updateProfile } from "./redux/actions/userActions";
 import {
   useHashParamDetectionOnLoad,
   useKeepSessionAlive
@@ -12,11 +15,40 @@ import Header from "./components/layout/header";
 import Library from "./components/library-page";
 import NavHistory from "./components/nav-history";
 import SearchPage from "./components/search-page";
+import SettingsForm from "./components/settings-form";
 import Sidebar from "./components/sidebar";
 
 const App = () => {
+  const dispatch = useDispatch();
+  const alert = useAlert();
+
   useHashParamDetectionOnLoad();
   useKeepSessionAlive();
+
+  const isSettingsOpen = useSelector(
+    state => state.user.settings.isSettingsOpen
+  );
+  const settingsSource = useSelector(
+    state => state.user.settings.settingsSource
+  );
+
+  function handleCloseSettings() {
+    dispatch(closeSettings());
+  }
+
+  function handleUpdateProfile(source, user) {
+    return dispatch(updateProfile(source, user))
+      .then(() => {
+        alert.success("Profile Refreshed");
+      })
+      .catch(e => {
+        if (e.status === 0) {
+          alert.error("Connection Error");
+        } else {
+          alert.error(`Unhandled Error${e.status}`);
+        }
+      });
+  }
 
   return (
     <>
@@ -59,6 +91,12 @@ const App = () => {
           </Sentry.ErrorBoundary>
         </main>
       </Route>
+      <SettingsForm
+        show={isSettingsOpen}
+        source={settingsSource}
+        onClose={handleCloseSettings}
+        handleUpdate={handleUpdateProfile}
+      />
     </>
   );
 };

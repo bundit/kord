@@ -21,7 +21,8 @@
   margin-left: -40vw;
   border-radius: 10px;
   color: #aaa;
-  background-color: #192124;
+  /* background-color: #192124; */
+  background-color: #232a2d;
   z-index: 4;
   overflow: hidden;
 }
@@ -63,7 +64,7 @@
   flex-shrink: 1;
   overflow-y: hidden;
   overflow-x: hidden;
-  background-color: #192124;
+  background-color: #232a2d;
 }
 
 .modalForm h2 {
@@ -81,6 +82,10 @@
   overflow-y: scroll;
   overflow-x: hidden;
   scrollbar-width: thin;
+}
+
+.formInnerWrapper::-webkit-scrollbar-track {
+  background-color: #232a2d;
 }
 
 .modalForm input[type="text"] {
@@ -401,6 +406,120 @@
 .rotate {
   transition: 1s ease;
   transform: rotate(360deg);
+}
+
+.settingsTabsWrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: 20px;
+  border-bottom: 1px #383f41 solid;
+  background-color: #192124;
+}
+
+.settingsTab {
+  outline: none;
+  border-radius: 7px 7px 0 0;
+  border-width: 1px;
+  border-style: solid;
+  padding: 8px 10px;
+  border-color: transparent;
+  bottom: -1px;
+  position: relative;
+  transition: 0.2s ease;
+  cursor: pointer;
+  color: #888;
+}
+
+.settingsTab:hover {
+  color: white;
+}
+
+.settingsTab:hover svg {
+  opacity: 1;
+}
+
+.settingsTab svg {
+  margin-right: 5px;
+  opacity: 0.6;
+  transition: 0.2s ease;
+}
+
+.activeTab {
+  border-color: #383f41;
+  background-color: #232a2d;
+  border-bottom-color: #232a2d;
+  color: white;
+  transform: scale(1.05) translateY(-1px);
+}
+
+.activeTab svg {
+  opacity: 1;
+}
+
+.kordTab svg {
+  height: 19px;
+  vertical-align: -4px;
+}
+
+.connectSourceLink {
+  text-decoration: none;
+  margin: 0 auto;
+  margin: 50px auto 20px auto;
+  padding: 6px 20px 17px 20px;
+  color: #ccc;
+  border: 1px #888 solid;
+  border-radius: 7px;
+  font-weight: bold;
+  font-family: "Open Sans";
+  transition: 0.2s ease;
+  width: 260px;
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+.connectSourceLink:hover {
+  color: white;
+}
+
+.connectSourceLink svg {
+  font-size: 28px;
+  margin-right: 10px;
+  position: relative;
+  bottom: -6px;
+}
+
+.spotifyLink {
+  border-color: #1db954b3;
+}
+
+.spotifyLink:hover {
+  background-color: #1db95426;
+}
+
+.soundcloudLink {
+  border-color: #ff5500b3;
+}
+
+.soundcloudLink:hover {
+  background-color: #ff550026;
+}
+
+.youtubeLink {
+  border-color: #ff0000b3;
+}
+
+.youtubeLink:hover {
+  background-color: #ff000026;
+}
+
+.mixcloudLink {
+  border-color: #5000ffcc;
+}
+
+.mixcloudLink:hover {
+  background-color: #5000ff40;
 }
 
 @media (min-width: 800px) {

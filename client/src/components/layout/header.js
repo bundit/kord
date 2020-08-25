@@ -9,15 +9,16 @@ import {
   addToSearchHistory,
   setQuery
 } from "../../redux/actions/searchActions";
+import { openSettings } from "../../redux/actions/userActions";
 import SearchBar from "../search-bar";
 import styles from "../../styles/header.module.css";
 
 function Header({ location }) {
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const mainConnection = useSelector(state => state.user.kord.mainConnection);
-  const mainUser = useSelector(state => state.user[mainConnection]);
+  const mainUser = useSelector(state => state.user[mainConnection]) || "kord";
   const dispatch = useDispatch();
   const history = useHistory();
-  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
 
   const { pathname } = location;
   const baseUrls = ["Library", "Search", "More", ""];
@@ -58,8 +59,13 @@ function Header({ location }) {
     history.goForward();
   }
 
+  function handleOpenSettings() {
+    dispatch(openSettings("kord"));
+    setIsProfileDropdownOpen(false);
+  }
+
   function toggleSettingsMenu() {
-    setIsSettingsMenuOpen(!isSettingsMenuOpen);
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
   }
 
   function handleLogout() {
@@ -121,14 +127,16 @@ function Header({ location }) {
             <button
               className={styles.userSettingsButton}
               onClick={toggleSettingsMenu}
-              style={{ borderWidth: `${isSettingsMenuOpen ? 2 : 1}px` }}
+              style={{ borderWidth: `${isProfileDropdownOpen ? 2 : 1}px` }}
             >
               <img src={mainUser.image} alt="profilePic" />
             </button>
 
-            {isSettingsMenuOpen && (
+            {isProfileDropdownOpen && (
               <span className={styles.profileMenu}>
-                <button>Settings</button>
+                <button type="button" onClick={handleOpenSettings}>
+                  Settings
+                </button>
                 <button type="button" onClick={handleLogout}>
                   Logout
                 </button>

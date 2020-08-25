@@ -3,24 +3,20 @@ import React from "react";
 
 import styles from "../styles/sidebar.module.css";
 
-const ConnectedSourceButton = ({
-  isConnected,
-  handleClick,
-  handleConnectSource,
-  source,
-  icon
-}) => (
-  <button
-    className={`${isConnected && styles.connectedSource}`}
-    type="button"
-    onClick={
-      isConnected
-        ? () => handleClick(source)
-        : () => handleConnectSource(source)
-    }
-  >
-    <FontAwesomeIcon size="6x" icon={icon} />
-  </button>
-);
+const ConnectedSourceButton = ({ isConnected, openSettings, source, icon }) => {
+  function handleClick() {
+    openSettings(source);
+  }
+
+  return (
+    <button
+      className={`${isConnected && styles.connectedSource}`}
+      type="button"
+      onClick={handleClick}
+    >
+      <FontAwesomeIcon size="6x" icon={icon} />
+    </button>
+  );
+};
 
 export default ConnectedSourceButton;
