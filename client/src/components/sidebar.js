@@ -12,23 +12,18 @@ import {
   faSpotify,
   faYoutube
 } from "@fortawesome/free-brands-svg-icons";
-import { useAlert } from "react-alert";
-import React, { useState } from "react";
+import React from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
-import { fetchProfileAndPlaylists } from "../redux/actions/userActions";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
+import { openSettings } from "../redux/actions/userActions";
 import ConnectedSourceButton from "./connected-source-button";
 import PlaylistItem from "./playlist-item";
-import SettingsForm from "./settings-form";
 import styles from "../styles/sidebar.module.css";
 
 const Sidebar = ({ user, playlists }) => {
-  const [isSettingsFormOpen, setIsSettingsFormOpen] = useState(false);
-  const [settingsSource, setSettingsSource] = useState();
   const dispatch = useDispatch();
   const history = useHistory();
-  const alert = useAlert();
   const userHistory = useSelector(state => state.user.history);
   const location = useLocation();
   const player = useSelector(state => state.player);
@@ -36,16 +31,7 @@ const Sidebar = ({ user, playlists }) => {
   const playingFromSearch = context.id == "search" && isPlaying;
 
   function toggleSettingsForm(source) {
-    setSettingsSource(source);
-    setIsSettingsFormOpen(!isSettingsFormOpen);
-  }
-
-  function redirectToConnectSource(source) {
-    if (process.env.NODE_ENV === "development") {
-      window.location.href = `http://localhost:8888/auth/${source}/link`;
-    } else {
-      window.location.href = `/auth/${source}/link`;
-    }
+    dispatch(openSettings(source));
   }
 
   const allPlaylists = flattenPlaylistObject(playlists);
@@ -60,20 +46,6 @@ const Sidebar = ({ user, playlists }) => {
       />
     ));
 
-  function handleUpdateProfile(source, user) {
-    return dispatch(fetchProfileAndPlaylists(source, user))
-      .then(() => {
-        alert.success("Profile Refreshed");
-      })
-      .catch(e => {
-        if (e.status === 0) {
-          alert.error("Connection Error");
-        } else {
-          alert.error(`Unhandled Error${e.status}`);
-        }
-      });
-  }
-
   function handleSearchNavigationOnClick(e) {
     e.preventDefault();
     const { pathname: currentPath } = location;
@@ -83,6 +55,25 @@ const Sidebar = ({ user, playlists }) => {
 
     history.push(newPath);
   }
+
+  const sources = {
+    spotify: {
+      icon: faSpotify,
+      color: "#1db954"
+    },
+    soundcloud: {
+      icon: faSoundcloud,
+      color: "#ff5500"
+    },
+    youtube: {
+      icon: faYoutube,
+      color: "#ff0000"
+    }
+    // mixcloud: {
+    //   icon: faMixcloud,
+    //   color: "#5000ff"
+    // }
+  };
 
   return (
     <div className={styles.sidebarWrapper}>
@@ -134,41 +125,15 @@ const Sidebar = ({ user, playlists }) => {
         <div className={styles.playlistContainer}>{playlistComponents}</div>
       </div>
       <div className={styles.sidebarFooter}>
-        <ConnectedSourceButton
-          isConnected={user.spotify.isConnected}
-          handleClick={toggleSettingsForm}
-          handleConnectSource={redirectToConnectSource}
-          source="spotify"
-          icon={faSpotify}
-        />
-        <ConnectedSourceButton
-          isConnected={user.soundcloud.isConnected}
-          handleClick={toggleSettingsForm}
-          handleConnectSource={toggleSettingsForm}
-          source="soundcloud"
-          icon={faSoundcloud}
-        />
-        <ConnectedSourceButton
-          isConnected={user.youtube.isConnected}
-          handleClick={toggleSettingsForm}
-          handleConnectSource={redirectToConnectSource}
-          source="youtube"
-          icon={faYoutube}
-        />
-        {/*
+        {Object.keys(sources).map(source => (
           <ConnectedSourceButton
-          isConnected={user.mixcloud.isConnected}
-          handleSettings={toggleSettingsForm}
-          handleConnectSource={redirectToConnectSource}
-          source="mixcloud"
-          icon={faMixcloud}
-        /> */}
-        <SettingsForm
-          show={isSettingsFormOpen}
-          source={settingsSource}
-          onClose={toggleSettingsForm}
-          handleUpdate={handleUpdateProfile}
-        />
+            key={`Connect-${source}`}
+            isConnected={user[source].isConnected}
+            openSettings={toggleSettingsForm}
+            source={source}
+            icon={sources[source].icon}
+          />
+        ))}
       </div>
     </div>
   );
