@@ -522,6 +522,34 @@
   background-color: #5000ff40;
 }
 
+.confirmAlbumArt {
+  border-radius: 7px;
+  border: 1px #383f41 solid;
+  margin: 30px auto 10px auto;
+}
+
+.trackInfoWrap {
+  font-size: 14px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.trackInfoWrap > div {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.trackInfoWrap div:first-child {
+  color: #ddd;
+  font-weight: bold;
+}
+
+.trackInfoWrap div:nth-child(2) {
+  color: #ffd46b;
+}
+
 @media (min-width: 800px) {
   .modal {
     left: 50%;

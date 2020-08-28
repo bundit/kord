@@ -149,27 +149,37 @@ export function setTrackUnstreamable(id) {
 }
 
 export const addTrackToPlaylists = (playlistIds, track) => dispatch => {
+  const addTrack = {
+    spotify: addToSpotifyPlaylist
+  };
+
   let requests = [];
 
-  if (track.source === "spotify") {
-    requests = playlistIds.map(playlistId =>
-      dispatch(addToSpotifyPlaylist(playlistId, track)).then(() =>
+  requests = playlistIds.map(playlistId => {
+    if (addTrack[track.source]) {
+      return dispatch(addTrack[track.source](playlistId, track)).then(() =>
         dispatch(addTrackToPlaylistAction(playlistId, track))
-      )
-    );
-  }
+      );
+    }
+
+    return Promise.reject(new Error("Unable to add track"));
+  });
 
   return Promise.all(requests);
 };
 
 export const removeFromPlaylist = track => dispatch => {
-  if (track.source === "spotify") {
-    return dispatch(removeFromSpotifyPlaylist(track)).then(() =>
+  const removeTrack = {
+    spotify: removeFromSpotifyPlaylist
+  };
+
+  if (removeTrack[track.source]) {
+    return dispatch(removeTrack[track.source](track)).then(() =>
       dispatch(removeFromPlaylistAction(track))
     );
   }
 
-  return Promise.resolve();
+  return Promise.reject(new Error("Remove track failed"));
 };
 
 function addTrackToPlaylistAction(playlistId, track) {

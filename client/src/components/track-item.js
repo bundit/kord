@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import {
   faSpotify,
   faSoundcloud,
@@ -10,19 +10,60 @@ import React from "react";
 
 import { formatArtistName, msToDuration } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
+import TrackDropdown from "./track-dropdown";
 import rippleEffect from "../utils/rippleEffect";
 import styles from "../styles/library.module.css";
 
-const TrackItem = ({ track, handlePlay, isActive, isPlaying, index }) => {
+const TrackItem = ({
+  track,
+  handlePlay,
+  isActive,
+  isPlaying,
+  index,
+  search,
+  playlistId
+}) => {
   const { title, duration: ms, artist, source } = track;
   const artistName = formatArtistName(artist);
   const isStreamable = track.streamable || track.streamable === null;
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
 
   function handlePlayTrack(e) {
     e.target.blur();
     if (isStreamable) {
       handlePlay(index);
     }
+  }
+
+  function toggleDropdown(e) {
+    if (!isDropdownOpen) {
+      addScrollListener();
+    } else {
+      removeScrollListener();
+    }
+
+    setIsDropdownOpen(!isDropdownOpen);
+
+    if (e) {
+      e.stopPropagation();
+    }
+  }
+
+  function stopPropagation(e) {
+    e.stopPropagation();
+  }
+
+  function scrollListener() {
+    setIsDropdownOpen(false);
+    removeScrollListener();
+  }
+
+  function addScrollListener() {
+    window.addEventListener("scroll", scrollListener, true);
+  }
+
+  function removeScrollListener() {
+    window.removeEventListener("scroll", scrollListener, true);
   }
 
   return (
@@ -68,7 +109,6 @@ const TrackItem = ({ track, handlePlay, isActive, isPlaying, index }) => {
             </div>
           )}
         </div>
-
         <div className={styles.titleWrapper}>
           <div>
             <strong>{title}</strong>
@@ -87,10 +127,29 @@ const TrackItem = ({ track, handlePlay, isActive, isPlaying, index }) => {
             size="2x"
           />
         </div>
+        {track.source === "spotify" && (
+          <button
+            onClick={toggleDropdown}
+            onDoubleClick={stopPropagation}
+            style={isDropdownOpen ? { color: "#fb1" } : null}
+            className={styles.trackSettingsButton}
+          >
+            <FontAwesomeIcon icon={faEllipsisV} />
+          </button>
+        )}
         <div className={styles.trackRightControls}>
           <div className={styles.duration}>{msToDuration(ms)}</div>
         </div>
       </div>
+      {isDropdownOpen && (
+        <TrackDropdown
+          toggleDropdown={toggleDropdown}
+          track={track}
+          search={search}
+          trackIndex={index}
+          playlistId={playlistId}
+        />
+      )}
     </div>
   );
 };
