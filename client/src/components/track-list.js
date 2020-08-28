@@ -9,7 +9,8 @@ const TrackList = ({
   tracks,
   handlePlay,
   currentTrackID,
-  isPlaying
+  isPlaying,
+  playlistId
 }) => {
   const queueIndex = useSelector(state => state.player.index);
 
@@ -23,6 +24,8 @@ const TrackList = ({
         isActive={currentTrackID === track.id && i === queueIndex}
         isPlaying={isPlaying}
         index={i}
+        search={search}
+        playlistId={playlistId}
       />
     ))
   );

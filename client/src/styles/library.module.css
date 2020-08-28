@@ -121,6 +121,27 @@
   opacity: 1;
 }
 
+.trackWrapper:hover .trackSettingsButton {
+  opacity: 1;
+}
+
+.trackSettingsButton {
+  opacity: 0;
+  cursor: pointer;
+  color: #999;
+  outline: none;
+  padding: 5px 10px;
+  transition: 0.2s ease-out;
+}
+
+.trackSettingsButton svg {
+  font-size: 18px;
+}
+
+.trackSettingsButton:hover {
+  color: white;
+}
+
 .titleWrapper {
   pointer-events: none;
   white-space: nowrap;
@@ -207,6 +228,7 @@
 }
 
 .dropdownOption {
+  margin: 3px 0;
   color: #ccc;
   display: flex;
   width: inherit;

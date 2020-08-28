@@ -223,7 +223,9 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
               <FontAwesomeIcon
                 icon={sourceTabs[source].icon}
                 size="lg"
-                style={{ color: sourceTabs[source].color }}
+                style={{
+                  color: sourceTabs[source] ? sourceTabs[source].color : null
+                }}
               />
             )}
             {capitalizeWord(source)}
@@ -240,7 +242,9 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
         >
           <FontAwesomeIcon
             icon={sourceTabs[source] ? sourceTabs[source].icon : null}
-            style={{ color: sourceTabs[source].color }}
+            style={{
+              color: sourceTabs[source] ? sourceTabs[source].color : null
+            }}
           />
           {`Connect ${capitalizeWord(source)} Account`}
         </a>
