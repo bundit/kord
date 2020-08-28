@@ -3,11 +3,14 @@ import {
   SET_ACCESS_TOKEN,
   SET_CONNECTION,
   SET_CURRENT_PAGE,
+  SET_CURRENT_TRACK_DROPDOWN,
   SET_KORD_ID,
   SET_MAIN_CONNECTION,
   SET_PROFILE,
   SET_SETTINGS_OPEN_STATUS,
-  SET_SETTINGS_SOURCE
+  SET_SETTINGS_SOURCE,
+  TOGGLE_ADD_TO_PLAYLIST_FORM,
+  TOGGLE_DELETE_TRACK_FORM
 } from "./types";
 import { fetchPlaylists } from "./libraryActions";
 import { fetchSoundcloudProfile } from "./soundcloudActions";
@@ -108,4 +111,34 @@ export const closeSettings = () => dispatch => {
 
 export const updateProfile = (source, user) => dispatch => {
   return dispatch(fetchProfileAndPlaylists(source, user));
+};
+
+export const toggleAddToPlaylistForm = () => {
+  return {
+    type: TOGGLE_ADD_TO_PLAYLIST_FORM
+  };
+};
+
+export const toggleDeleteTrackForm = () => {
+  return {
+    type: TOGGLE_DELETE_TRACK_FORM
+  };
+};
+
+const setCurrentTrackDropdown = track => {
+  return {
+    type: SET_CURRENT_TRACK_DROPDOWN,
+    payload: track
+  };
+};
+
+export const openAddToPlaylistForm = track => dispatch => {
+  dispatch(setCurrentTrackDropdown(track));
+  dispatch(toggleAddToPlaylistForm());
+};
+
+export const openDeleteTrackForm = (playlistId, track, index) => dispatch => {
+  track = { ...track, index, playlistId };
+  dispatch(setCurrentTrackDropdown(track));
+  dispatch(toggleDeleteTrackForm());
 };
