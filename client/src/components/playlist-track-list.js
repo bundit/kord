@@ -239,6 +239,7 @@ const PlaylistTracklist = ({
               currentTrackID={currentTrackID}
               isPlaying={isPlaying}
               handlePlay={dispatchPlayTrack}
+              playlistId={id}
             />
             {isLoading && <LoadingSpinner />}
           </div>

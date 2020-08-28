@@ -1,85 +1,103 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { useAlert } from "react-alert";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 
+import { addTrackToPlaylists } from "../redux/actions/libraryActions";
+import { capitalizeWord, formatArtistName } from "../utils/formattingHelpers";
+import { getImgUrl } from "../utils/getImgUrl";
+import { toggleAddToPlaylistForm } from "../redux/actions/userActions";
 import FormCheckbox from "./form-checkbox";
 import Modal from "./modal";
 import styles from "../styles/modal.module.css";
 
-const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
+const AddToPlaylistForm = ({ show }) => {
+  const alert = useAlert();
+  const dispatch = useDispatch();
+  const track =
+    useSelector(state => state.user.settings.currentTrackDropdown) || {};
+  const playlists =
+    useSelector(state => state.library.playlists[track.source]) || [];
+
+  const connectedPlaylists = playlists.filter(playlist => playlist.isConnected);
+
   const [checkedPlaylists, setCheckedPlaylists] = useState(
-    initAttributesFromList(playlistTitles)
+    initCheckboxes(connectedPlaylists)
   );
 
-  const [newPlaylistField, setNewPlaylistField] = useState("");
-
-  const toggleCheckedPlaylist = value => {
-    const newValues = {
+  const toggleCheckedPlaylist = playlistId => {
+    setCheckedPlaylists({
       ...checkedPlaylists,
-      [value]: !checkedPlaylists[value]
-    };
-
-    setCheckedPlaylists(newValues);
-  };
-
-  const prepareFormData = () => {
-    // Only add to playlists that are toggled true
-    const playlistsToAddTo = [];
-    const titles = Object.keys(checkedPlaylists);
-    titles.forEach(title => {
-      if (checkedPlaylists[title]) {
-        playlistsToAddTo.push(title);
-      }
+      [playlistId]: !checkedPlaylists[playlistId]
     });
-
-    // If there is any value on the new playlist field, add it to the list
-    return newPlaylistField.length
-      ? [...playlistsToAddTo, newPlaylistField]
-      : playlistsToAddTo;
   };
 
   const clearForm = () => {
-    setNewPlaylistField("");
-    setCheckedPlaylists(initAttributesFromList(playlistTitles));
+    setCheckedPlaylists(initCheckboxes(connectedPlaylists));
   };
 
+  function handleClose() {
+    dispatch(toggleAddToPlaylistForm());
+    clearForm();
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const playlistIds = Object.keys(checkedPlaylists).filter(
+      playlistId => checkedPlaylists[playlistId]
+    );
+
+    dispatch(addTrackToPlaylists(playlistIds, track))
+      .then(responses => {
+        const numResponses = responses.length;
+
+        if (numResponses) {
+          alert.success(
+            `Track added to ${numResponses > 1 ? numResponses : ""} playlist${
+              numResponses > 1 ? "s" : ""
+            }`
+          );
+        }
+      })
+      .catch(e => alert.error(e.message));
+    handleClose();
+  }
+
   return (
-    <Modal title="Add to Playlist" show={show} onClose={onClose}>
-      <form
-        className={styles.modalForm}
-        onSubmit={e => {
-          e.preventDefault();
-          onSubmit(prepareFormData());
-          clearForm();
-        }}
-      >
+    <Modal
+      title={`Add to ${capitalizeWord(track.source)} Playlist`}
+      show={show}
+      onClose={handleClose}
+    >
+      <form className={styles.modalForm} onSubmit={handleSubmit}>
         <div className={styles.formInnerWrapper}>
-          <label
-            className={`${styles.textfieldCheckmarkLabel} ${
-              newPlaylistField.length ? styles.changesMade : null
-            }`}
-            htmlFor="newPlaylistField"
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }}
           >
-            <input
-              id="newPlaylistField"
-              type="text"
-              placeholder="Create New Playlist"
-              value={newPlaylistField}
-              onChange={e => setNewPlaylistField(e.target.value)}
+            <img
+              src={getImgUrl(track, "md")}
+              className={styles.confirmAlbumArt}
+              alt="album-art-md"
             />
-            <FontAwesomeIcon
-              icon={newPlaylistField.length ? faCheck : faPlus}
-              size="lg"
-            />
-          </label>
-          {playlistTitles.map((playlist, i) => (
+            <div className={styles.trackInfoWrap}>
+              <div>{track.title} </div>
+              <div>{formatArtistName(track.artist)}</div>
+            </div>
+          </div>
+          <div className={styles.formTitle}>Select playlists to add to</div>
+          {connectedPlaylists.map((playlist, i) => (
             <FormCheckbox
-              title={playlist}
-              key={playlist}
+              title={playlist.title}
+              key={`Add-to-${playlist.title}:${playlist.id}`}
               i={i}
-              value={checkedPlaylists[playlist]}
-              onChange={() => toggleCheckedPlaylist(playlist)}
+              value={checkedPlaylists[playlist.id]}
+              onChange={() => toggleCheckedPlaylist(playlist.id)}
+              numTracks={playlist.total}
             />
           ))}
         </div>
@@ -87,12 +105,12 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
           <button
             type="button"
             className={styles.formCancelButton}
-            onClick={onClose}
+            onClick={handleClose}
           >
             Cancel
           </button>
           <button type="submit" className={styles.formSubmitButton}>
-            Finish
+            Done
           </button>
         </div>
       </form>
@@ -100,25 +118,18 @@ const AddToPlaylistForm = ({ show, playlistTitles, onClose, onSubmit }) => {
   );
 };
 
-// This functions takes a list of strings and returns a new object with
-// the object's attributes set by the strings to be the value
-// E.g: initAttributesFromList(["a", "b"], true)
-// returns {a: true, b: true}
-function initAttributesFromList(list, value = false) {
+function initCheckboxes(playlists, value = false) {
   const object = {};
 
-  list.forEach(attribute => {
-    object[attribute] = value;
+  playlists.forEach(playlist => {
+    object[playlist.id] = value;
   });
 
   return object;
 }
 
 AddToPlaylistForm.propTypes = {
-  show: PropTypes.bool.isRequired,
-  playlistTitles: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  show: PropTypes.bool.isRequired
 };
 
 export default AddToPlaylistForm;

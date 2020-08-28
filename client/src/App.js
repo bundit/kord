@@ -9,6 +9,8 @@ import {
   useHashParamDetectionOnLoad,
   useKeepSessionAlive
 } from "./utils/hooks";
+import AddToPlaylistForm from "./components/add-to-playlist-form";
+import DeleteTrackForm from "./components/delete-track-form";
 import FallbackComponent from "./components/fallback-component";
 import Footer from "./components/layout/footer";
 import Header from "./components/layout/header";
@@ -30,6 +32,12 @@ const App = () => {
   );
   const settingsSource = useSelector(
     state => state.user.settings.settingsSource
+  );
+  const isAddToPlaylistFormOpen = useSelector(
+    state => state.user.settings.isAddToPlaylistFormOpen
+  );
+  const isDeleteTrackFormOpen = useSelector(
+    state => state.user.settings.isDeleteTrackFormOpen
   );
 
   function handleCloseSettings() {
@@ -97,6 +105,8 @@ const App = () => {
         onClose={handleCloseSettings}
         handleUpdate={handleUpdateProfile}
       />
+      <AddToPlaylistForm show={isAddToPlaylistFormOpen} />
+      <DeleteTrackForm show={isDeleteTrackFormOpen} />
     </>
   );
 };
