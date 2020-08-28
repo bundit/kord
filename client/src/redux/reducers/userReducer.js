@@ -4,11 +4,14 @@ import {
   SET_ACCESS_TOKEN,
   SET_CONNECTION,
   SET_CURRENT_PAGE,
+  SET_CURRENT_TRACK_DROPDOWN,
   SET_KORD_ID,
   SET_MAIN_CONNECTION,
   SET_PROFILE,
   SET_SETTINGS_OPEN_STATUS,
-  SET_SETTINGS_SOURCE
+  SET_SETTINGS_SOURCE,
+  TOGGLE_ADD_TO_PLAYLIST_FORM,
+  TOGGLE_DELETE_TRACK_FORM
 } from "../actions/types";
 
 const initialState = {
@@ -52,7 +55,10 @@ const initialState = {
   },
   settings: {
     isSettingsOpen: false,
-    settingsSource: ""
+    settingsSource: "",
+    isAddToPlaylistFormOpen: false,
+    isDeleteTrackFormOpen: false,
+    currentTrackDropdown: null
   }
 };
 
@@ -189,6 +195,42 @@ export default function(state = initialState, action) {
         settings: {
           ...state.settings,
           settingsSource: source
+        }
+      };
+    }
+
+    case TOGGLE_ADD_TO_PLAYLIST_FORM: {
+      const isAddToPlaylistFormOpen = state.settings.isAddToPlaylistFormOpen;
+
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          isAddToPlaylistFormOpen: !isAddToPlaylistFormOpen
+        }
+      };
+    }
+
+    case TOGGLE_DELETE_TRACK_FORM: {
+      const isDeleteTrackFormOpen = state.settings.isDeleteTrackFormOpen;
+
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          isDeleteTrackFormOpen: !isDeleteTrackFormOpen
+        }
+      };
+    }
+
+    case SET_CURRENT_TRACK_DROPDOWN: {
+      const currentTrack = action.payload;
+
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          currentTrackDropdown: currentTrack
         }
       };
     }
