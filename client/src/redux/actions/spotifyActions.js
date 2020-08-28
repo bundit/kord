@@ -232,6 +232,50 @@ const setSpotifyResults = payload => dispatch => {
   return Promise.resolve({ message: "Results set" });
 };
 
+export const addToSpotifyPlaylist = (
+  playlistId,
+  track,
+  tries = 3
+) => dispatch => {
+  let request;
+  const trackUri = `spotify:track:${track.id}`;
+
+  if (playlistId === "likes") {
+    request = spotifyApi.addToMySavedTracks([track.id]);
+  } else {
+    request = spotifyApi.addTracksToPlaylist(playlistId, [trackUri]);
+  }
+
+  return request.catch(e => {
+    if (tries) {
+      return dispatch(errorHandler(e)).then(() =>
+        dispatch(addToSpotifyPlaylist(playlistId, track.id, --tries))
+      );
+    } else return Promise.reject(e);
+  });
+};
+
+export const removeFromSpotifyPlaylist = (track, tries = 3) => dispatch => {
+  let request;
+  const trackUri = `spotify:track:${track.id}`;
+
+  if (track.playlistId === "likes") {
+    request = spotifyApi.removeFromMySavedTracks([track.id]);
+  } else {
+    request = spotifyApi.removeTracksFromPlaylist(track.playlistId, [
+      { uri: trackUri, positions: [track.index] }
+    ]);
+  }
+
+  return request.catch(e => {
+    if (tries) {
+      return dispatch(errorHandler(e)).then(() =>
+        dispatch(removeFromSpotifyPlaylist(track.playlistId, track.id, --tries))
+      );
+    } else return Promise.reject(e);
+  });
+};
+
 function errorHandler(err, tries = 3) {
   return dispatch => {
     if (!tries) {
