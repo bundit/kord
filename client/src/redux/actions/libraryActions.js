@@ -1,25 +1,29 @@
 import {
+  ADD_TRACK_TO_PLAYLIST,
   CLEAR_PLAYLIST_TRACKS,
   CLEAR_TRASH,
   IMPORT_LIKES,
   IMPORT_PLAYLISTS,
   IMPORT_PLAYLIST_TRACKS,
   MOVE_PLAYLISTS_TO_TRASH,
+  REMOVE_TRACK_FROM_PLAYLIST,
   RESTORE_PLAYLISTS_FROM_TRASH,
   SET_NEXT_PLAYLIST_HREF,
   SET_PLAYLIST_CONNECTIONS,
   SET_TRACK_UNSTREAMABLE
 } from "./types";
 import {
+  addToSpotifyPlaylist,
+  fetchSpotifyLikes,
+  fetchSpotifyPlaylistTracks,
+  fetchSpotifyPlaylists,
+  removeFromSpotifyPlaylist
+} from "./spotifyActions";
+import {
   fetchSoundcloudLikes,
   fetchSoundcloudPlaylistTracks,
   fetchSoundcloudPlaylists
 } from "./soundcloudActions";
-import {
-  fetchSpotifyLikes,
-  fetchSpotifyPlaylistTracks,
-  fetchSpotifyPlaylists
-} from "./spotifyActions";
 import {
   fetchYoutubePlaylistTracks,
   fetchYoutubePlaylists
@@ -141,5 +145,46 @@ export function setTrackUnstreamable(id) {
     type: SET_TRACK_UNSTREAMABLE,
     context,
     payload: id
+  };
+}
+
+export const addTrackToPlaylists = (playlistIds, track) => dispatch => {
+  let requests = [];
+
+  if (track.source === "spotify") {
+    requests = playlistIds.map(playlistId =>
+      dispatch(addToSpotifyPlaylist(playlistId, track)).then(() =>
+        dispatch(addTrackToPlaylistAction(playlistId, track))
+      )
+    );
+  }
+
+  return Promise.all(requests);
+};
+
+export const removeFromPlaylist = track => dispatch => {
+  if (track.source === "spotify") {
+    return dispatch(removeFromSpotifyPlaylist(track)).then(() =>
+      dispatch(removeFromPlaylistAction(track))
+    );
+  }
+
+  return Promise.resolve();
+};
+
+function addTrackToPlaylistAction(playlistId, track) {
+  return {
+    type: ADD_TRACK_TO_PLAYLIST,
+    playlistId,
+    payload: track
+  };
+}
+
+function removeFromPlaylistAction(track) {
+  return {
+    type: REMOVE_TRACK_FROM_PLAYLIST,
+    playlistId: track.playlistId,
+    index: track.index,
+    payload: track
   };
 }
