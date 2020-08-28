@@ -1,10 +1,12 @@
 import {
+  ADD_TRACK_TO_PLAYLIST,
   CLEAR_PLAYLIST_TRACKS,
   CLEAR_TRASH,
   IMPORT_LIKES,
   IMPORT_PLAYLISTS,
   IMPORT_PLAYLIST_TRACKS,
   MOVE_PLAYLISTS_TO_TRASH,
+  REMOVE_TRACK_FROM_PLAYLIST,
   RESTORE_PLAYLISTS_FROM_TRASH,
   SET_NEXT_PLAYLIST_HREF,
   SET_PLAYLIST_CONNECTIONS,
@@ -106,6 +108,59 @@ export default function(state = initialState, action) {
         playlists: {
           ...state.playlists,
           [source]: newPlaylistList
+        }
+      };
+    }
+
+    case ADD_TRACK_TO_PLAYLIST: {
+      const { playlistId, payload: trackToAdd } = action;
+      const { source } = trackToAdd;
+
+      return {
+        ...state,
+        playlists: {
+          ...state.playlists,
+          [source]: state.playlists[source].map(playlist => {
+            const isLikes = playlistId === "likes";
+
+            if (playlist.id === playlistId) {
+              playlist = {
+                ...playlist,
+                tracks: isLikes ? [trackToAdd, ...playlist.tracks] : [],
+                total: playlist.total + 1,
+                next: isLikes ? playlist.next : "start"
+              };
+            }
+            return playlist;
+          })
+        }
+      };
+    }
+
+    case REMOVE_TRACK_FROM_PLAYLIST: {
+      const { playlistId, index, payload: trackToRemove } = action;
+      const source = trackToRemove.source;
+
+      return {
+        ...state,
+        playlists: {
+          ...state.playlists,
+          [source]: state.playlists[source].map(playlist => {
+            if (playlist.id === playlistId) {
+              playlist = {
+                ...playlist,
+                total: playlist.total - 1,
+                tracks: playlist.tracks.filter((track, i) => {
+                  // eslint-disable-next-line
+                  if (track.id == trackToRemove.id && index === i) {
+                    return false;
+                  }
+                  return true;
+                })
+              };
+            }
+            return playlist;
+          })
         }
       };
     }
