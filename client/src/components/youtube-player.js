@@ -1,8 +1,14 @@
+import { useDispatch } from "react-redux";
 import React from "react";
 import YouTube from "react-youtube";
+import * as Sentry from "@sentry/react";
+
+import { nextTrack } from "../redux/actions/playerActions";
+import { setTrackUnstreamable } from "../redux/actions/libraryActions";
 import styles from "../styles/player.module.css";
 
 function YoutubePlayer({ isPlaying, current, volume, forwardRef, onEnd }) {
+  const dispatch = useDispatch();
   const isPlayingStyle = `${isPlaying &&
     current.source === "youtube" &&
     styles.youtubeIsPlaying}`;
@@ -17,7 +23,17 @@ function YoutubePlayer({ isPlaying, current, volume, forwardRef, onEnd }) {
   }
 
   function handleYoutubePlayerError(e) {
-    console.error(`Youtube player error ${e.toString()}`);
+    console.error(`Youtube player error ${e.data}`);
+    if (e.data === 2) {
+      Sentry.captureMessage(
+        `Invalid youtube iframe parameters. VideoId: ${current.id} PlaylistItemId: ${current.playlistItemId}`
+      );
+    }
+    const errorCodes = [5, 100, 101, 150];
+    if (errorCodes.includes(e.data)) {
+      dispatch(setTrackUnstreamable(current.id));
+      dispatch(nextTrack());
+    }
   }
 
   return (
