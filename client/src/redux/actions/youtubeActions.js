@@ -9,6 +9,7 @@ import {
 import { setAccessToken, setConnection, setUserProfile } from "./userActions";
 import { setMoreTrackResults, setTrackResults } from "./searchActions";
 import store from "../store";
+
 const YT_API = "https://www.googleapis.com/youtube/v3";
 
 export const setYoutubeAccessToken = accessToken => dispatch => {
@@ -234,6 +235,47 @@ export const fetchMoreYoutubeTrackResults = (next, tries = 3) => dispatch => {
     });
 };
 
+export const addToYoutubePlaylist = (
+  playlistId,
+  track,
+  tries = 3
+) => dispatch => {
+  const endpoint = `${YT_API}/playlistItems?part=snippet&key=${process.env.REACT_APP_YT_KEY}`;
+  const opts = {
+    ...generateYoutubeFetchOptionsAndHeaders("POST"),
+    body: JSON.stringify({
+      snippet: {
+        playlistId: playlistId,
+        resourceId: {
+          kind: "youtube#video",
+          videoId: track.id
+        }
+      }
+    })
+  };
+
+  return fetchGeneric(endpoint, opts).catch(e => {
+    if (tries) {
+      return dispatch(errorHandler(e)).then(() =>
+        dispatch(addToYoutubePlaylist(playlistId, track, --tries))
+      );
+    } else return Promise.reject(e);
+  });
+};
+
+export const removeFromYoutubePlaylist = (track, tries = 3) => dispatch => {
+  const endpoint = `${YT_API}/playlistItems?id=${track.playlistItemId}&key=${process.env.REACT_APP_YT_KEY}`;
+  const opts = generateYoutubeFetchOptionsAndHeaders("DELETE");
+
+  return fetchGeneric(endpoint, opts).catch(e => {
+    if (tries) {
+      return dispatch(errorHandler(e)).then(() =>
+        dispatch(removeFromYoutubePlaylist(track, --tries))
+      );
+    } else return Promise.reject(e);
+  });
+};
+
 function errorHandler(err, tries = 3) {
   return dispatch => {
     if (!tries) {
@@ -248,11 +290,11 @@ function errorHandler(err, tries = 3) {
   };
 }
 
-function generateYoutubeFetchOptionsAndHeaders() {
+function generateYoutubeFetchOptionsAndHeaders(method) {
   const youtubeToken = store.getState().user.youtube.token;
 
   return {
-    method: "GET",
+    method: method || "GET",
     headers: {
       Authorization: `Bearer ${youtubeToken}`,
       Accept: "application/json"
@@ -291,7 +333,8 @@ function mapJsonToTracks(json) {
     title: item.snippet.title,
     img: item.snippet.thumbnails,
     streamable: true,
-    source: "youtube"
+    source: "youtube",
+    playlistItemId: item.id
   }));
 }
 
