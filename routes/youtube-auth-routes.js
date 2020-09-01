@@ -9,7 +9,7 @@ router.get(
       "email",
       "profile",
       "openid",
-      "https://www.googleapis.com/auth/youtube.readonly"
+      "https://www.googleapis.com/auth/youtube"
     ],
     showDialog: true,
     prompt: "consent",
@@ -83,7 +83,7 @@ router.get(
       "email",
       "profile",
       "openid",
-      "https://www.googleapis.com/auth/youtube.readonly"
+      "https://www.googleapis.com/auth/youtube"
     ],
     showDialog: true,
     prompt: "consent",
