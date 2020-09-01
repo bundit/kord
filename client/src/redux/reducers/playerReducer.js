@@ -15,6 +15,7 @@ import {
   SET_QUEUE_INDEX,
   SET_SEEK,
   SET_TRACK,
+  SET_TRACK_UNSTREAMABLE,
   SET_VOLUME
 } from "../actions/types";
 
@@ -202,6 +203,20 @@ export default function(state = initialState, action) {
       return {
         ...state,
         isMuted: action.payload
+      };
+    }
+
+    case SET_TRACK_UNSTREAMABLE: {
+      const trackId = action.payload;
+      return {
+        ...state,
+        queue: state.queue.map(track => {
+          // eslint-disable-next-line
+          if (track.id == trackId) {
+            track.streamable = false;
+          }
+          return track;
+        })
       };
     }
 
