@@ -121,13 +121,13 @@ const TrackItem = ({
               source === "spotify"
                 ? faSpotify
                 : source === "soundcloud"
-                ? faSoundcloud
-                : faYoutube
+                  ? faSoundcloud
+                  : faYoutube
             }
             size="2x"
           />
         </div>
-        {track.source === "spotify" && (
+        {(track.source === "spotify" || track.source === "youtube") && (
           <button
             onClick={toggleDropdown}
             onDoubleClick={stopPropagation}

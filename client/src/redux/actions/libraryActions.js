@@ -20,14 +20,16 @@ import {
   removeFromSpotifyPlaylist
 } from "./spotifyActions";
 import {
+  addToYoutubePlaylist,
+  fetchYoutubePlaylistTracks,
+  fetchYoutubePlaylists,
+  removeFromYoutubePlaylist
+} from "./youtubeActions";
+import {
   fetchSoundcloudLikes,
   fetchSoundcloudPlaylistTracks,
   fetchSoundcloudPlaylists
 } from "./soundcloudActions";
-import {
-  fetchYoutubePlaylistTracks,
-  fetchYoutubePlaylists
-} from "./youtubeActions";
 import store from "../store";
 
 export function importLikes(source, likes) {
@@ -150,7 +152,8 @@ export function setTrackUnstreamable(id) {
 
 export const addTrackToPlaylists = (playlistIds, track) => dispatch => {
   const addTrack = {
-    spotify: addToSpotifyPlaylist
+    spotify: addToSpotifyPlaylist,
+    youtube: addToYoutubePlaylist
   };
 
   let requests = [];
@@ -170,7 +173,8 @@ export const addTrackToPlaylists = (playlistIds, track) => dispatch => {
 
 export const removeFromPlaylist = track => dispatch => {
   const removeTrack = {
-    spotify: removeFromSpotifyPlaylist
+    spotify: removeFromSpotifyPlaylist,
+    youtube: removeFromYoutubePlaylist
   };
 
   if (removeTrack[track.source]) {
