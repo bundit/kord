@@ -148,7 +148,8 @@ export function mapCollectionToTracks(collection) {
         name: track.user.username,
         img: track.user.avatar_url,
         id: track.user.id
-      }
+      },
+      permalink: `${track.user.permalink}/${track.permalink}`
       // date: track.created_at,
       // likes: track.likes_count,
       // genre: track.genre,
