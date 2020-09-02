@@ -2,6 +2,10 @@ export function YTDurationToMilliseconds(duration) {
   // https://stackoverflow.com/questions/22148885/converting-youtube-data-api-v3-video-duration-format-to-seconds-in-javascript-no
   var match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
 
+  if (duration === "P0D") {
+    return "Live";
+  }
+
   match = match.slice(1).map(function(x) {
     if (x != null) {
       return x.replace(/\D/, "");
