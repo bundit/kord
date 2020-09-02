@@ -127,16 +127,16 @@ const TrackItem = ({
             size="2x"
           />
         </div>
-        {(track.source === "spotify" || track.source === "youtube") && (
-          <button
-            onClick={toggleDropdown}
-            onDoubleClick={stopPropagation}
-            style={isDropdownOpen ? { color: "#fb1" } : null}
-            className={styles.trackSettingsButton}
-          >
-            <FontAwesomeIcon icon={faEllipsisV} />
-          </button>
-        )}
+
+        <button
+          onClick={toggleDropdown}
+          onDoubleClick={stopPropagation}
+          style={isDropdownOpen ? { color: "#fb1", opacity: 1 } : null}
+          className={styles.trackSettingsButton}
+        >
+          <FontAwesomeIcon icon={faEllipsisV} />
+        </button>
+
         <div className={styles.trackRightControls}>
           <div className={styles.duration}>
             {isNaN(ms) ? ms : msToDuration(ms)}
