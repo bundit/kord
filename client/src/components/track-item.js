@@ -121,8 +121,8 @@ const TrackItem = ({
               source === "spotify"
                 ? faSpotify
                 : source === "soundcloud"
-                  ? faSoundcloud
-                  : faYoutube
+                ? faSoundcloud
+                : faYoutube
             }
             size="2x"
           />
@@ -138,7 +138,9 @@ const TrackItem = ({
           </button>
         )}
         <div className={styles.trackRightControls}>
-          <div className={styles.duration}>{msToDuration(ms)}</div>
+          <div className={styles.duration}>
+            {isNaN(ms) ? ms : msToDuration(ms)}
+          </div>
         </div>
       </div>
       {isDropdownOpen && (
@@ -157,7 +159,8 @@ const TrackItem = ({
 TrackItem.propTypes = {
   track: PropTypes.shape({
     title: PropTypes.string.isRequired,
-    duration: PropTypes.number.isRequired,
+    duration: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+      .isRequired,
     artist: PropTypes.oneOfType([
       PropTypes.shape({ name: PropTypes.string.isRequired }),
       PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string.isRequired }))

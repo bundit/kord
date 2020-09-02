@@ -1,9 +1,9 @@
 import { useDispatch } from "react-redux";
 import React from "react";
-import YouTube from "react-youtube";
 import * as Sentry from "@sentry/react";
+import YouTube from "react-youtube";
 
-import { nextTrack } from "../redux/actions/playerActions";
+import { nextTrack, setDuration } from "../redux/actions/playerActions";
 import { setTrackUnstreamable } from "../redux/actions/libraryActions";
 import styles from "../styles/player.module.css";
 
@@ -36,6 +36,14 @@ function YoutubePlayer({ isPlaying, current, volume, forwardRef, onEnd }) {
     }
   }
 
+  function handleStateChange(e) {
+    const duration = e.target.getDuration();
+
+    if (duration && isNaN(current.duration) && current.source === "youtube") {
+      dispatch(setDuration(duration));
+    }
+  }
+
   return (
     <YouTube
       videoId={current.source === "youtube" ? current.id : null}
@@ -54,6 +62,7 @@ function YoutubePlayer({ isPlaying, current, volume, forwardRef, onEnd }) {
       onReady={handleYoutubeReady}
       onEnd={onEnd}
       onError={handleYoutubePlayerError}
+      onStateChange={handleStateChange}
     />
   );
 }
