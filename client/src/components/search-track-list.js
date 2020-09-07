@@ -106,6 +106,7 @@ const SearchTrackList = ({
           currentTrackID={currentTrackId}
           isPlaying={isPlaying}
           handlePlay={dispatchPlayTrack}
+          playlistId="search"
         />
       </div>
       {isLoading ? (

@@ -13,6 +13,7 @@ const TrackList = ({
   playlistId
 }) => {
   const queueIndex = useSelector(state => state.player.index);
+  const playingContext = useSelector(state => state.player.context);
 
   return (
     tracks &&
@@ -21,7 +22,11 @@ const TrackList = ({
         key={`${search ? "Search" : "Lib"}:${track.source}:${track.id}:${i}`}
         track={track}
         handlePlay={handlePlay}
-        isActive={currentTrackID === track.id && i === queueIndex}
+        isActive={
+          currentTrackID === track.id &&
+          i === queueIndex &&
+          playingContext.id === playlistId
+        }
         isPlaying={isPlaying}
         index={i}
         search={search}
