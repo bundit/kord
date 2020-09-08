@@ -49,31 +49,37 @@ export default function(state = initialState, action) {
     }
 
     case IMPORT_PLAYLISTS: {
-      const newPlaylists = action.payload;
+      let newPlaylists = action.payload;
       const source = action.source;
-      const prevPlaylists = state.playlists[source].slice();
-
-      // Combine previously loaded playlists with new playlists
-      // Going by order given by source, our new index may not match the last time request was made
-      const newAndOldCombined = newPlaylists.map(newPlaylist => {
-        const prevIndex = prevPlaylists.findIndex(
-          prevList => prevList.id === newPlaylist.id
+      const prevPlaylists = state.playlists[source]
+        .slice() // filter lists that are not returned in new list
+        .filter(
+          playlist =>
+            newPlaylists.findIndex(list => list.id === playlist.id) !== -1 ||
+            playlist.id === "likes"
         );
-        // If prevIndex found, set it to the state we had before
-        if (prevIndex !== -1) {
-          newPlaylist = {
-            ...prevPlaylists[prevIndex],
-            total: newPlaylist.total,
-            title: newPlaylist.title,
-            img: newPlaylist.img
+
+      const newAndOldCombined = prevPlaylists.map(playlist => {
+        const newIndex = newPlaylists.findIndex(
+          list => list.id === playlist.id
+        );
+
+        if (newIndex !== -1) {
+          playlist = {
+            ...playlist,
+            total: newPlaylists[newIndex].total,
+            title: newPlaylists[newIndex].title,
+            img: newPlaylists[newIndex].img
           };
+
+          newPlaylists = newPlaylists.filter(list => list.id !== playlist.id);
         }
-        return newPlaylist;
+
+        return playlist;
       });
 
-      const firstPlaylist = prevPlaylists[0];
-      if (firstPlaylist && firstPlaylist.id === "likes") {
-        newAndOldCombined.unshift(firstPlaylist);
+      if (newPlaylists.length) {
+        newAndOldCombined.push(...newPlaylists);
       }
 
       return {
