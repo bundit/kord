@@ -47,6 +47,7 @@ module.exports = {
         client.query("COMMIT");
       } catch (e) {
         client.query("ROLLBACK");
+        throw e;
       }
     } finally {
       client.release();

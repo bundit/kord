@@ -1,3 +1,4 @@
+const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const express = require("express");
 const passport = require("passport");
@@ -23,6 +24,7 @@ if (isProduction) {
   app.use(forceWWW);
 }
 app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
