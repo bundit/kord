@@ -199,7 +199,10 @@ export default function(state = initialState, action) {
 
       newSettings.forEach(updated => {
         const index = updateSettings.findIndex(old => old.id === updated.id);
-        updateSettings[index].isConnected = updated.isConnected;
+        updateSettings[index] = {
+          ...updateSettings[index],
+          isConnected: updated.isConnected
+        };
       });
 
       return {
