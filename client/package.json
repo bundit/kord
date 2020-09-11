@@ -28,6 +28,7 @@
     "react-youtube": "^7.11.2",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
+    "redux-watch": "^1.1.1",
     "spotify-web-api-js": "^1.2.0"
   },
   "scripts": {

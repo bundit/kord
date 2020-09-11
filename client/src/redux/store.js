@@ -1,42 +1,21 @@
-import { applyMiddleware, createStore } from "redux";
+import { applyMiddleware, createStore, compose } from "redux";
 import thunk from "redux-thunk";
 
-import { loadState, saveState } from "../utils/localStorage";
+import { loadState } from "../utils/localStorage";
+import { synchronizeDataStore } from "./sync";
 import rootReducer from "./reducers";
 
 const persistedState = loadState();
 const middlewares = [thunk];
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 const store = createStore(
   rootReducer,
   persistedState,
-  applyMiddleware(...middlewares)
+  composeEnhancers(applyMiddleware(...middlewares))
 );
 
-store.subscribe(() => {
-  const state = store.getState();
-  // Store the library in localStorage
-  saveState({
-    library: state.library,
-    user: {
-      ...state.user,
-      history: {
-        library: ["/app/library"],
-        search: [],
-        more: []
-      }
-    },
-    player: {
-      ...state.player,
-      isMuted: false,
-      isPlaying: false,
-      seek: 0,
-      context: state.player.context
-    },
-    search: {
-      history: state.search.history
-    }
-  });
-});
+synchronizeDataStore(store);
 
 export default store;
