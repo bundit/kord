@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/react";
+
 import {
   ADD_TRACK_TO_PLAYLIST,
   CLEAR_PLAYLIST_TRACKS,
@@ -25,11 +27,13 @@ import {
   fetchYoutubePlaylists,
   removeFromYoutubePlaylist
 } from "./youtubeActions";
+import { fetchGeneric } from "../../utils/fetchGeneric";
 import {
   fetchSoundcloudLikes,
   fetchSoundcloudPlaylistTracks,
   fetchSoundcloudPlaylists
 } from "./soundcloudActions";
+import { setConnection } from "./userActions";
 import store from "../store";
 
 export function importLikes(source, likes) {
@@ -202,3 +206,42 @@ function removeFromPlaylistAction(track) {
     payload: track
   };
 }
+
+export const fetchUserPlaylists = exclude => dispatch => {
+  return fetchGeneric(`/user/playlists?exclude=${exclude}`).then(playlists => {
+    playlists = playlists.map(playlist => {
+      try {
+        playlist.img = JSON.parse(playlist.img);
+      } catch (e) {
+        playlist.img = null;
+        Sentry.captureMessage(`Error parsing json ${playlist.img}`);
+      }
+
+      return {
+        ...playlist,
+        id: playlist.external_id,
+        img: playlist.img,
+        tracks: [],
+        next: "start"
+      };
+    });
+
+    // Get unique sources returned
+    const sources = playlists.reduce(
+      (unique, { source }) =>
+        unique.includes(source) ? unique : [...unique, source],
+      []
+    );
+
+    for (let source of sources) {
+      const filteredPlaylists = playlists.filter(
+        playlist => playlist.source === source
+      );
+
+      if (filteredPlaylists.length) {
+        dispatch(importPlaylists(source, filteredPlaylists));
+        dispatch(setConnection(source, true));
+      }
+    }
+  });
+};
