@@ -1,4 +1,5 @@
 import { formatArtistName } from "./formattingHelpers";
+import { getImgUrl } from "./getImgUrl";
 
 export function compareSongs(song1, song2) {
   const titleCompare = song1.title
@@ -33,4 +34,33 @@ export function compareArtists(artist1, artist2) {
 
 export function compareGenres(genre1, genre2) {
   return genre1.toLowerCase().localeCompare(genre2.toLowerCase());
+}
+
+export function hasNewPlaylistOrHasChanges(
+  newListOfPlaylists,
+  prevListOfPlaylists
+) {
+  if (prevListOfPlaylists.length !== newListOfPlaylists.length) {
+    return true;
+  }
+
+  for (let i = 0; i < newListOfPlaylists.length; i++) {
+    const newPlaylist = newListOfPlaylists[i];
+    const prevPlaylist = prevListOfPlaylists[i];
+
+    if (hasPlaylistChanges(newPlaylist, prevPlaylist)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function hasPlaylistChanges(newPlaylist, prevPlaylist) {
+  const keys = ["id", "title", "isConnected", "total"];
+
+  return (
+    keys.some(key => newPlaylist[key] !== prevPlaylist[key]) ||
+    getImgUrl(prevPlaylist, "lg") !== getImgUrl(newPlaylist, "lg")
+  );
 }

@@ -1,3 +1,5 @@
+import { getImgUrl } from "./getImgUrl";
+
 export function formatArtistName(artist) {
   if (!artist) {
     return "";
@@ -55,4 +57,22 @@ export function capitalizeWord(word) {
     return "";
   }
   return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+export function generatePlaylistsPayload(source, playlists) {
+  return {
+    source,
+    playlists: playlists.map((playlist, index) => {
+      const { id, isConnected, title, img, total } = playlist;
+
+      return {
+        id,
+        isConnected,
+        title,
+        index,
+        img,
+        total
+      };
+    })
+  };
 }
