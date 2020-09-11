@@ -1,3 +1,4 @@
+import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import {
   setKordId,
   setMainConnection
 } from "../redux/actions/userActions";
+import { fetchUserPlaylists } from "../redux/actions/libraryActions";
 import {
   nextTrack,
   pause,
@@ -25,6 +27,7 @@ export function useHashParamDetectionOnLoad() {
   const dispatch = useDispatch();
   const history = useHistory();
   const kordId = useSelector(state => state.user.kord.id);
+  const alert = useAlert();
 
   useEffect(() => {
     if (window.location.hash) {
@@ -42,6 +45,10 @@ export function useHashParamDetectionOnLoad() {
       }
 
       if (login) {
+        const exclude = source;
+        dispatch(fetchUserPlaylists(exclude)).catch(e =>
+          alert.error("Unable to restore playlists")
+        );
         dispatch(setMainConnection(source));
       }
 
@@ -52,7 +59,7 @@ export function useHashParamDetectionOnLoad() {
         dispatch(setConnection(source, true));
         dispatch(fetchProfileAndPlaylists(source))
           .catch(e => {
-            console.error(`There was an error: ${e.status}`);
+            alert.error("Unable to fetch profile");
           })
           .finally(() => {
             history.push("/app/library");
