@@ -294,7 +294,8 @@ function mapJsonToProfile(json) {
   return {
     username: json.display_name,
     image: json.images[0].url,
-    profileUrl: json.external_urls.spotify
+    profileUrl: json.external_urls.spotify,
+    id: json.id
   };
 }
 

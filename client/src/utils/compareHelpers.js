@@ -36,6 +36,16 @@ export function compareGenres(genre1, genre2) {
   return genre1.toLowerCase().localeCompare(genre2.toLowerCase());
 }
 
+export function hasProfileChanges(newProfile, prevProfile) {
+  if (!newProfile || !newProfile.id) {
+    return false;
+  }
+
+  const keys = ["isConnected", "id", "image", "username", "profileUrl"];
+
+  return keys.some(key => newProfile[key] !== prevProfile[key]);
+}
+
 export function hasNewPlaylistOrHasChanges(
   newListOfPlaylists,
   prevListOfPlaylists

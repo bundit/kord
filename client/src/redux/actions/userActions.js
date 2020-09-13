@@ -12,6 +12,7 @@ import {
   TOGGLE_ADD_TO_PLAYLIST_FORM,
   TOGGLE_DELETE_TRACK_FORM
 } from "./types";
+import { fetchGeneric } from "../../utils/fetchGeneric";
 import { fetchPlaylists } from "./libraryActions";
 import { fetchSoundcloudProfile } from "./soundcloudActions";
 import { fetchSpotifyProfile } from "./spotifyActions";
@@ -141,4 +142,19 @@ export const openDeleteTrackForm = (playlistId, track, index) => dispatch => {
   track = { ...track, index, playlistId };
   dispatch(setCurrentTrackDropdown(track));
   dispatch(toggleDeleteTrackForm());
+};
+
+export const fetchUserProfiles = exclude => dispatch => {
+  return fetchGeneric(`/user/profiles?exclude=${exclude}`).then(json => {
+    json.forEach(({ source, ...profile }) => {
+      if (source !== "google") {
+        dispatch(
+          setUserProfile(source, {
+            ...profile,
+            image: JSON.parse(profile.images)
+          })
+        );
+      }
+    });
+  });
 };

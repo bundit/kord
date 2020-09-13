@@ -2,12 +2,19 @@ import * as Sentry from "@sentry/react";
 import watch from "redux-watch";
 
 import { fetchGeneric } from "../utils/fetchGeneric";
-import { generatePlaylistsPayload } from "../utils/formattingHelpers";
-import { hasNewPlaylistOrHasChanges } from "../utils/compareHelpers";
+import {
+  generatePlaylistsPayload,
+  generateProfilePayload
+} from "../utils/formattingHelpers";
+import {
+  hasNewPlaylistOrHasChanges,
+  hasProfileChanges
+} from "../utils/compareHelpers";
 import { saveState } from "../utils/localStorage";
 
 export function synchronizeDataStore(store) {
   syncStateToLocalStorage(store);
+  syncProfilesToServer(store);
   syncPlaylistsToServer(store);
 }
 
@@ -37,6 +44,37 @@ function syncStateToLocalStorage(store) {
       }
     });
   });
+}
+
+function syncProfilesToServer(store) {
+  let watchProfiles = watch(store.getState, "user");
+
+  store.subscribe(
+    watchProfiles((newUserObj, prevUserObj, objectPath) => {
+      const sources = ["spotify", "soundcloud", "youtube", "mixcloud"];
+
+      for (let source of sources) {
+        const newProfile = newUserObj[source];
+        const prevProfile = prevUserObj[source];
+
+        if (hasProfileChanges(newProfile, prevProfile)) {
+          const payload = generateProfilePayload(source, newProfile);
+
+          fetch("/user/profiles", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+          }).catch(e =>
+            Sentry.captureMessage(
+              `Error syncing playlists with database. Source: ${source} Payload: ${payload.profile}`
+            )
+          );
+        }
+      }
+    })
+  );
 }
 
 function syncPlaylistsToServer(store) {
