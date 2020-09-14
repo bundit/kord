@@ -7,7 +7,8 @@ import {
 import {
   faSync,
   faExternalLinkAlt,
-  faPen
+  faPen,
+  faUserSlash
 } from "@fortawesome/free-solid-svg-icons";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +24,7 @@ import {
   setPlaylistConnections
 } from "../redux/actions/libraryActions";
 import { fetchSoundcloudProfile } from "../redux/actions/soundcloudActions";
-import { openSettings } from "../redux/actions/userActions";
+import { openSettings, removeUserProfile } from "../redux/actions/userActions";
 import FormCheckbox from "./form-checkbox";
 import LoadingSpinner from "./loading-spinner";
 import Modal from "./modal";
@@ -171,6 +172,16 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   function getActiveTabClassName(tabSource) {
     if (tabSource === source) {
       return styles.activeTab;
+    }
+  }
+
+  function handleRemoveAccount() {
+    const hasConfirmed = window.confirm("Are you sure?");
+
+    if (hasConfirmed) {
+      dispatch(removeUserProfile(source))
+        .then(() => alert.success("Account removed"))
+        .catch(e => alert.error("Error removing account", e.message));
     }
   }
 
@@ -347,6 +358,16 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
               ))
             )}
           </div>
+        )}
+        {isConnected && (
+          <button
+            className={styles.removeAccountButton}
+            type="button"
+            onClick={handleRemoveAccount}
+          >
+            <FontAwesomeIcon icon={faUserSlash} />
+            {" Remove this account"}
+          </button>
         )}
         <div className={styles.formCancelSubmitButtonGroup}>
           <button
