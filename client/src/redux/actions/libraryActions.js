@@ -8,6 +8,7 @@ import {
   IMPORT_PLAYLISTS,
   IMPORT_PLAYLIST_TRACKS,
   MOVE_PLAYLISTS_TO_TRASH,
+  REMOVE_PLAYLISTS,
   REMOVE_TRACK_FROM_PLAYLIST,
   RESTORE_PLAYLISTS_FROM_TRASH,
   SET_NEXT_PLAYLIST_HREF,
@@ -58,6 +59,13 @@ export function importPlaylistTracks(source, playlistId, tracks) {
     source,
     playlistId,
     payload: tracks
+  };
+}
+
+export function removePlaylists(source) {
+  return {
+    type: REMOVE_PLAYLISTS,
+    payload: source
   };
 }
 

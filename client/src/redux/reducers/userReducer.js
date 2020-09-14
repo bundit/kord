@@ -1,5 +1,6 @@
 import {
   PUSH_LIB_ROUTE,
+  REMOVE_PROFILE,
   SAVE_ROUTE,
   SET_ACCESS_TOKEN,
   SET_CONNECTION,
@@ -14,39 +15,23 @@ import {
   TOGGLE_DELETE_TRACK_FORM
 } from "../actions/types";
 
+const profileInitialState = {
+  isConnected: false,
+  username: null,
+  image: null,
+  profileUrl: null,
+  token: null
+};
+
 const initialState = {
   kord: {
     id: null,
     mainConnection: null
   },
-  soundcloud: {
-    isConnected: false,
-    username: null,
-    image: null,
-    profileUrl: null
-  },
-  spotify: {
-    isConnected: false,
-    token: null,
-    username: null,
-    image: null,
-    profileUrl: null,
-    market: null
-  },
-  youtube: {
-    isConnected: false,
-    token: null,
-    username: null,
-    image: null,
-    profileUrl: null
-  },
-  mixcloud: {
-    isConnected: false,
-    token: null,
-    username: null,
-    image: null,
-    profileUrl: null
-  },
+  soundcloud: profileInitialState,
+  spotify: profileInitialState,
+  youtube: profileInitialState,
+  mixcloud: profileInitialState,
   history: {
     library: [],
     search: [],
@@ -75,6 +60,7 @@ export default function(state = initialState, action) {
         }
       };
     }
+
     case SET_ACCESS_TOKEN: {
       const accessToken = action.payload;
       const source = action.source;
@@ -87,6 +73,7 @@ export default function(state = initialState, action) {
         }
       };
     }
+
     case SET_CONNECTION: {
       const isConnected = action.payload;
       const source = action.source;
@@ -99,6 +86,7 @@ export default function(state = initialState, action) {
         }
       };
     }
+
     case SET_MAIN_CONNECTION: {
       const source = action.payload;
 
@@ -110,6 +98,7 @@ export default function(state = initialState, action) {
         }
       };
     }
+
     case SET_PROFILE: {
       const source = action.source;
       const newProfile = action.payload;
@@ -120,6 +109,15 @@ export default function(state = initialState, action) {
           ...state[source],
           ...newProfile
         }
+      };
+    }
+
+    case REMOVE_PROFILE: {
+      const source = action.payload;
+
+      return {
+        ...state,
+        [source]: { ...profileInitialState }
       };
     }
 
