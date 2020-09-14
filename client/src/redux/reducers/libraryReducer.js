@@ -6,6 +6,7 @@ import {
   IMPORT_PLAYLISTS,
   IMPORT_PLAYLIST_TRACKS,
   MOVE_PLAYLISTS_TO_TRASH,
+  REMOVE_PLAYLISTS,
   REMOVE_TRACK_FROM_PLAYLIST,
   RESTORE_PLAYLISTS_FROM_TRASH,
   SET_NEXT_PLAYLIST_HREF,
@@ -114,6 +115,18 @@ export default function(state = initialState, action) {
         playlists: {
           ...state.playlists,
           [source]: newPlaylistList
+        }
+      };
+    }
+
+    case REMOVE_PLAYLISTS: {
+      const source = action.payload;
+
+      return {
+        ...state,
+        playlists: {
+          ...state.playlists,
+          [source]: []
         }
       };
     }

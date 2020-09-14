@@ -8,6 +8,7 @@ import { clearState } from "../redux/actions/stateActions";
 import { fetchGeneric } from "./fetchGeneric";
 import {
   fetchProfileAndPlaylists,
+  fetchUserProfiles,
   setAccessToken,
   setConnection,
   setKordId,
@@ -48,6 +49,9 @@ export function useHashParamDetectionOnLoad() {
         const exclude = source;
         dispatch(fetchUserPlaylists(exclude)).catch(e =>
           alert.error("Unable to restore playlists")
+        );
+        dispatch(fetchUserProfiles(exclude)).catch(e =>
+          alert.error("Unable to restore profiles")
         );
         dispatch(setMainConnection(source));
       }

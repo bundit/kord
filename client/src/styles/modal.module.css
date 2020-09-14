@@ -16,7 +16,7 @@
   left: 50vw;
   width: 80vw;
   height: auto;
-  max-height: 60vh;
+  max-height: 70vh;
   margin-top: -25vh;
   margin-left: -40vw;
   border-radius: 10px;
@@ -59,7 +59,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 0 6px 25px 0;
+  padding-bottom: 25px;
   align-items: center;
   flex-shrink: 1;
   overflow-y: hidden;
@@ -82,6 +82,7 @@
   overflow-y: scroll;
   overflow-x: hidden;
   scrollbar-width: thin;
+  box-sizing: border-box;
 }
 
 .formInnerWrapper::-webkit-scrollbar-track {
@@ -548,6 +549,27 @@
 
 .trackInfoWrap div:nth-child(2) {
   color: #ffd46b;
+}
+
+.removeAccountButton {
+  outline: none;
+  margin-top: 15px;
+  cursor: pointer;
+  border: 1px #ff441180 solid;
+  color: #ff4411cc;
+  border-radius: 7px;
+  padding: 10px;
+  transition: 0.2s ease;
+}
+
+.removeAccountButton:hover {
+  color: red;
+  background: #ff441120;
+}
+
+.removeAccountButton svg {
+  position: relative;
+  bottom: -1px;
 }
 
 @media (min-width: 800px) {

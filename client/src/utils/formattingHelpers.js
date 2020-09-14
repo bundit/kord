@@ -59,6 +59,18 @@ export function capitalizeWord(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
+export function generateProfilePayload(source, profile) {
+  return {
+    source,
+    profile: {
+      id: profile.id,
+      img: profile.image,
+      username: profile.username,
+      profile_url: profile.profileUrl
+    }
+  };
+}
+
 export function generatePlaylistsPayload(source, playlists) {
   return {
     source,

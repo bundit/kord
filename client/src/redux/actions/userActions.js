@@ -1,4 +1,5 @@
 import {
+  REMOVE_PROFILE,
   SAVE_ROUTE,
   SET_ACCESS_TOKEN,
   SET_CONNECTION,
@@ -12,7 +13,8 @@ import {
   TOGGLE_ADD_TO_PLAYLIST_FORM,
   TOGGLE_DELETE_TRACK_FORM
 } from "./types";
-import { fetchPlaylists } from "./libraryActions";
+import { fetchGeneric } from "../../utils/fetchGeneric";
+import { fetchPlaylists, removePlaylists } from "./libraryActions";
 import { fetchSoundcloudProfile } from "./soundcloudActions";
 import { fetchSpotifyProfile } from "./spotifyActions";
 import { fetchYoutubeProfile } from "./youtubeActions";
@@ -52,6 +54,13 @@ export const setUserProfile = (source, profile) => {
     type: SET_PROFILE,
     source,
     payload: profile
+  };
+};
+
+const removeProfile = source => {
+  return {
+    type: REMOVE_PROFILE,
+    payload: source
   };
 };
 
@@ -141,4 +150,28 @@ export const openDeleteTrackForm = (playlistId, track, index) => dispatch => {
   track = { ...track, index, playlistId };
   dispatch(setCurrentTrackDropdown(track));
   dispatch(toggleDeleteTrackForm());
+};
+
+export const removeUserProfile = source => dispatch => {
+  return fetchGeneric(`/user/profiles?provider=${source}`, {
+    method: "DELETE"
+  }).then(() => {
+    dispatch(removeProfile(source));
+    dispatch(removePlaylists(source));
+  });
+};
+
+export const fetchUserProfiles = exclude => dispatch => {
+  return fetchGeneric(`/user/profiles?exclude=${exclude}`).then(json => {
+    json.forEach(({ source, ...profile }) => {
+      if (source !== "google") {
+        dispatch(
+          setUserProfile(source, {
+            ...profile,
+            image: JSON.parse(profile.images)
+          })
+        );
+      }
+    });
+  });
 };
