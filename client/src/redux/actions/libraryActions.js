@@ -19,20 +19,17 @@ import {
   addToSpotifyPlaylist,
   fetchSpotifyLikes,
   fetchSpotifyPlaylistTracks,
-  fetchSpotifyPlaylists,
   removeFromSpotifyPlaylist
 } from "./spotifyActions";
 import {
   addToYoutubePlaylist,
   fetchYoutubePlaylistTracks,
-  fetchYoutubePlaylists,
   removeFromYoutubePlaylist
 } from "./youtubeActions";
 import { fetchGeneric } from "../../utils/fetchGeneric";
 import {
   fetchSoundcloudLikes,
-  fetchSoundcloudPlaylistTracks,
-  fetchSoundcloudPlaylists
+  fetchSoundcloudPlaylistTracks
 } from "./soundcloudActions";
 import { setConnection } from "./userActions";
 import store from "../store";
@@ -107,19 +104,10 @@ export const setPlaylistConnections = (source, newSettings) => {
   };
 };
 
-export const fetchPlaylists = (source, username) => dispatch => {
-  if (source === "spotify") {
-    return dispatch(fetchSpotifyPlaylists());
-  } else if (source === "soundcloud") {
-    return dispatch(fetchSoundcloudPlaylists(username));
-  } else if (source === "youtube") {
-    return dispatch(fetchYoutubePlaylists());
-  }
-};
-
 export const loadLikes = source => dispatch => {
   if (source === "spotify") {
-    return dispatch(fetchSpotifyLikes());
+    const setResults = true;
+    return dispatch(fetchSpotifyLikes(setResults));
   } else if (source === "soundcloud") {
     const userId = store.getState().user.soundcloud.id;
 

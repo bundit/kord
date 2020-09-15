@@ -14,10 +14,10 @@ import {
   TOGGLE_DELETE_TRACK_FORM
 } from "./types";
 import { fetchGeneric } from "../../utils/fetchGeneric";
-import { fetchPlaylists, removePlaylists } from "./libraryActions";
-import { fetchSoundcloudProfile } from "./soundcloudActions";
-import { fetchSpotifyProfile } from "./spotifyActions";
-import { fetchYoutubeProfile } from "./youtubeActions";
+import { fetchSoundcloudProfileAndPlaylists } from "./soundcloudActions";
+import { fetchSpotifyProfileAndPlaylists } from "./spotifyActions";
+import { fetchYoutubeProfileAndPlaylists } from "./youtubeActions";
+import { removePlaylists } from "./libraryActions";
 
 export const setKordId = userId => {
   return {
@@ -64,20 +64,14 @@ const removeProfile = source => {
   };
 };
 
-export const fetchProfile = (source, user) => dispatch => {
-  if (source === "spotify") {
-    return dispatch(fetchSpotifyProfile());
-  } else if (source === "soundcloud") {
-    return dispatch(fetchSoundcloudProfile(user));
-  } else if (source === "youtube") {
-    return dispatch(fetchYoutubeProfile());
-  }
-};
-
 export const fetchProfileAndPlaylists = (source, user) => dispatch => {
-  return dispatch(fetchProfile(source, user)).then(() =>
-    dispatch(fetchPlaylists(source, user))
-  );
+  const request = {
+    spotify: fetchSpotifyProfileAndPlaylists,
+    soundcloud: fetchSoundcloudProfileAndPlaylists,
+    youtube: fetchYoutubeProfileAndPlaylists
+  };
+
+  return dispatch(request[source](user));
 };
 
 export const saveRoute = (relativeRoute, route) => {

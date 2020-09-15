@@ -18,12 +18,11 @@ import { ReactComponent as KordLogo } from "../assets/kord-icon.svg";
 import { capitalizeWord } from "../utils/formattingHelpers";
 import {
   clearTrash,
-  fetchPlaylists,
   movePlaylistsToTrash,
   restorePlaylistsFromTrash,
   setPlaylistConnections
 } from "../redux/actions/libraryActions";
-import { fetchSoundcloudProfile } from "../redux/actions/soundcloudActions";
+import { fetchSoundcloudProfileAndPlaylists } from "../redux/actions/soundcloudActions";
 import { openSettings, removeUserProfile } from "../redux/actions/userActions";
 import FormCheckbox from "./form-checkbox";
 import LoadingSpinner from "./loading-spinner";
@@ -111,8 +110,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
       dispatch(movePlaylistsToTrash("soundcloud"));
       setIsLoading(true);
 
-      dispatch(fetchSoundcloudProfile(inputSuffix))
-        .then(() => dispatch(fetchPlaylists(source, inputSuffix)))
+      dispatch(fetchSoundcloudProfileAndPlaylists(inputSuffix))
         .then(() => {
           dispatch(clearTrash("soundcloud"));
           setShowUsernameInput(false);

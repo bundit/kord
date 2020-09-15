@@ -32,6 +32,18 @@ export const refreshSpotifyToken = () => dispatch => {
   });
 };
 
+export const fetchSpotifyProfileAndPlaylists = () => dispatch => {
+  const requests = [
+    dispatch(fetchSpotifyProfile()),
+    dispatch(fetchSpotifyPlaylists())
+  ];
+
+  return Promise.all(requests).then(([userLikes, playlists]) => {
+    const allPlaylists = [userLikes, ...playlists];
+    dispatch(importPlaylists("spotify", allPlaylists));
+  });
+};
+
 export const fetchSpotifyProfile = (tries = 3) => dispatch => {
   return spotifyApi
     .getMe({})
@@ -51,6 +63,7 @@ export const fetchSpotifyProfile = (tries = 3) => dispatch => {
 };
 
 export const fetchSpotifyLikes = (
+  setResults = false,
   limit = 50,
   offset = 0,
   market = "from_token",
@@ -73,14 +86,18 @@ export const fetchSpotifyLikes = (
         dateSynced: new Date()
       };
 
-      dispatch(importLikes("spotify", userLikes));
-
-      return { tracks, next };
+      if (setResults) {
+        dispatch(importLikes("spotify", userLikes));
+      } else {
+        return userLikes;
+      }
     })
     .catch(e => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
-          dispatch(fetchSpotifyLikes(limit, offset, market, --tries))
+          dispatch(
+            fetchSpotifyLikes(setResults, limit, offset, market, --tries)
+          )
         );
       } else return Promise.reject(e);
     });
@@ -93,11 +110,7 @@ export const fetchSpotifyPlaylists = (
 ) => dispatch => {
   return spotifyApi
     .getUserPlaylists({ limit, offset })
-    .then(json => {
-      const playlists = mapJsonToPlaylists(json);
-
-      dispatch(importPlaylists(SPOTIFY, playlists));
-    })
+    .then(json => mapJsonToPlaylists(json))
     .catch(e => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
@@ -295,7 +308,8 @@ function mapJsonToProfile(json) {
     username: json.display_name,
     image: json.images[0].url,
     profileUrl: json.external_urls.spotify,
-    id: json.id
+    id: json.id,
+    isConnected: true
   };
 }
 

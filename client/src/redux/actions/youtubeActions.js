@@ -24,6 +24,15 @@ export const refreshYoutubeToken = () => dispatch => {
   });
 };
 
+export const fetchYoutubeProfileAndPlaylists = () => dispatch => {
+  const requests = [
+    dispatch(fetchYoutubeProfile()),
+    dispatch(fetchYoutubePlaylists())
+  ];
+
+  return Promise.all(requests);
+};
+
 export const fetchYoutubeProfile = (tries = 3) => dispatch => {
   const endpoint = `${YT_API}/channels?part=snippet&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
   const opts = generateYoutubeFetchOptionsAndHeaders();

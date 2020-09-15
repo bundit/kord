@@ -10,7 +10,7 @@ import {
   setMoreTrackResults,
   setTrackResults
 } from "./searchActions";
-import { setConnection, setUserProfile } from "./userActions";
+import { setUserProfile } from "./userActions";
 
 const KEY = process.env.REACT_APP_SC_KEY;
 
@@ -18,30 +18,41 @@ const LINK = 1;
 const SC_API = "https://api.soundcloud.com";
 const SC_API_V2 = "https://api-v2.soundcloud.com";
 
-export const fetchSoundcloudProfile = userId => dispatch => {
-  const endpoint = `${SC_API}/users/${userId}?client_id=${KEY}`;
+export const fetchSoundcloudProfileAndPlaylists = username => dispatch => {
+  const requests = [
+    dispatch(fetchSoundcloudProfile(username)),
+    dispatch(fetchSoundcloudPlaylists(username))
+  ];
 
-  return fetchGeneric(endpoint)
-    .then(json => {
-      const profile = mapJsonToProfile(json);
-      const beginHref = `${SC_API_V2}/users/${json.id}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
+  return Promise.all(requests).then(([likes, playlists]) => {
+    const allPlaylists = [likes, ...playlists];
+    dispatch(importPlaylists("soundcloud", allPlaylists));
+  });
+};
 
-      const userLikes = {
-        id: "likes",
-        title: "Soundcloud Likes",
-        images: null,
-        source: "soundcloud",
-        tracks: [],
-        total: json.public_favorites_count,
-        next: beginHref,
-        isConnected: true,
-        dateSynced: new Date()
-      };
+export const fetchSoundcloudProfile = username => dispatch => {
+  const endpoint = `${SC_API}/users/${username}?client_id=${KEY}`;
 
-      dispatch(importLikes("soundcloud", userLikes));
-      dispatch(setUserProfile("soundcloud", profile));
-    })
-    .then(() => dispatch(setConnection("soundcloud", true)));
+  return fetchGeneric(endpoint).then(json => {
+    const profile = mapJsonToProfile(json);
+    const beginHref = `${SC_API_V2}/users/${json.id}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
+
+    const userLikes = {
+      id: "likes",
+      title: "Soundcloud Likes",
+      images: null,
+      source: "soundcloud",
+      tracks: [],
+      total: json.public_favorites_count,
+      next: beginHref,
+      isConnected: true,
+      dateSynced: new Date()
+    };
+
+    dispatch(setUserProfile("soundcloud", profile));
+
+    return userLikes;
+  });
 };
 
 export const fetchSoundcloudLikes = (next, userId) => dispatch => {
@@ -69,11 +80,9 @@ export const fetchSoundcloudLikes = (next, userId) => dispatch => {
 export const fetchSoundcloudPlaylists = username => dispatch => {
   const playlistEndpoint = `${SC_API}/users/${username}/playlists?client_id=${KEY}`;
 
-  return fetchGeneric(playlistEndpoint).then(data => {
-    const newPlaylists = mapCollectionToPlaylists(data);
-
-    dispatch(importPlaylists("soundcloud", newPlaylists));
-  });
+  return fetchGeneric(playlistEndpoint).then(data =>
+    mapCollectionToPlaylists(data)
+  );
 };
 
 export const fetchSoundcloudPlaylistTracks = (id, next) => dispatch => {
@@ -184,7 +193,8 @@ function mapJsonToProfile(json) {
     displayName: json.username,
     id: json.id,
     image: json.avatar_url,
-    profileUrl: json.permalink_url
+    profileUrl: json.permalink_url,
+    isConnected: true
   };
 }
 
