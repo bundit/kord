@@ -12,7 +12,7 @@ import {
   REMOVE_TRACK_FROM_PLAYLIST,
   RESTORE_PLAYLISTS_FROM_TRASH,
   SET_NEXT_PLAYLIST_HREF,
-  SET_PLAYLIST_CONNECTIONS,
+  SET_PLAYLIST_SETTINGS,
   SET_TRACK_UNSTREAMABLE
 } from "./types";
 import {
@@ -96,9 +96,9 @@ export function clearTrash(source) {
   };
 }
 
-export const setPlaylistConnections = (source, newSettings) => {
+export const setPlaylistSettingsAction = (source, newSettings) => {
   return {
-    type: SET_PLAYLIST_CONNECTIONS,
+    type: SET_PLAYLIST_SETTINGS,
     source,
     payload: newSettings
   };
