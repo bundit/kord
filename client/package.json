@@ -16,6 +16,7 @@
     "react": "^16.11.0",
     "react-alert": "^7.0.0",
     "react-alert-template-basic": "^1.0.0",
+    "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.11.0",
     "react-howler": "^3.7.4",
     "react-lazyload": "^2.6.5",

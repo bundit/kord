@@ -225,12 +225,26 @@
   box-sizing: border-box;
 }
 
+.checkboxLabel:hover .checkboxGrip {
+  opacity: 1;
+}
+
+.checkboxGrip {
+  color: #aaa;
+  opacity: 0;
+  cursor: move;
+  cursor: grab;
+  transition: 0.2s ease-out;
+}
+
 .checkboxLabel:hover {
   background-color: #2f3638;
 }
 
 .checkboxLabel:active {
-  background-color: #eee;
+  background-color: #ffbb1150;
+  color: black;
+  z-index: 5;
 }
 
 .checkboxLabel span {

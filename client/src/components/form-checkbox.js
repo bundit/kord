@@ -1,11 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faGripLines } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import React from "react";
 
 import styles from "../styles/modal.module.css";
 
-const FormCheckbox = ({ title, i, value, numTracks, onChange }) => {
+const FormCheckbox = ({
+  title,
+  i,
+  value,
+  numTracks,
+  onChange,
+  isDraggable
+}) => {
   function handleOnChange() {
     onChange(i);
   }
@@ -15,6 +22,9 @@ const FormCheckbox = ({ title, i, value, numTracks, onChange }) => {
       className={`${styles.checkboxLabel} ${value ? styles.changesMade : null}`}
       htmlFor={`checkbox${i}`}
     >
+      <span style={{ marginRight: "10px" }} className={styles.checkboxGrip}>
+        {isDraggable && <FontAwesomeIcon icon={faGripLines} size="lg" />}
+      </span>
       <span style={{ width: "260px" }}>{title}</span>
       <input
         id={`checkbox${i}`}
