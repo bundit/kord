@@ -107,7 +107,6 @@
 }
 
 .trackWrapper a {
-  color: black;
   text-decoration: none;
 }
 
@@ -143,7 +142,6 @@
 }
 
 .titleWrapper {
-  pointer-events: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -158,6 +156,11 @@
 
 .stackedArtistName {
   color: #ffd46b;
+  cursor: pointer;
+}
+
+.stackedArtistName:hover {
+  text-decoration: underline;
 }
 
 .singleSource {
