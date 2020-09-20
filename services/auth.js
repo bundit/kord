@@ -50,17 +50,16 @@ async function insertNewUser(client, email) {
 
 // Insert a new external user login profile
 async function insertUserProfile(client, user, provider) {
-  const { kordUserID, providerID, refreshToken, images } = user;
+  const { kordUserID, providerID, refreshToken } = user;
 
   const profileInsertQuery = {
-    text: `INSERT INTO user_profiles(user_id, oauth_provider, provider_id, refresh_token, images)
+    text: `INSERT INTO user_profiles(user_id, oauth_provider, provider_id, refresh_token)
              VALUES (
-               $1, $2, $3, $4, $5
+               $1, $2, $3, $4
              )
            ON CONFLICT (user_id, oauth_provider) DO UPDATE
-             SET refresh_token=$4,
-                 images=$5;`,
-    values: [kordUserID, provider, providerID, refreshToken, images]
+             SET refresh_token=$4`,
+    values: [kordUserID, provider, providerID, refreshToken]
   };
 
   await client.query(profileInsertQuery);
