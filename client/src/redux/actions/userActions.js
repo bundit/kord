@@ -159,12 +159,7 @@ export const fetchUserProfiles = exclude => dispatch => {
   return fetchGeneric(`/user/profiles?exclude=${exclude}`).then(json => {
     json.forEach(({ source, ...profile }) => {
       if (source !== "google") {
-        dispatch(
-          setUserProfile(source, {
-            ...profile,
-            image: JSON.parse(profile.images)
-          })
-        );
+        dispatch(setUserProfile(source, profile));
       }
     });
   });

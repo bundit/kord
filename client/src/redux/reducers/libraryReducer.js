@@ -10,7 +10,7 @@ import {
   REMOVE_TRACK_FROM_PLAYLIST,
   RESTORE_PLAYLISTS_FROM_TRASH,
   SET_NEXT_PLAYLIST_HREF,
-  SET_PLAYLIST_CONNECTIONS,
+  SET_PLAYLIST_SETTINGS,
   SET_TRACK_UNSTREAMABLE
 } from "../actions/types";
 
@@ -40,6 +40,7 @@ export default function(state = initialState, action) {
           tracks: [...firstPlaylist.tracks, ...likes.tracks]
         };
       } else rest = playlistsOfThisSource;
+
       return {
         ...state,
         playlists: {
@@ -205,16 +206,16 @@ export default function(state = initialState, action) {
       };
     }
 
-    case SET_PLAYLIST_CONNECTIONS: {
+    case SET_PLAYLIST_SETTINGS: {
       const source = action.source;
-      const newSettings = action.payload;
-      const updateSettings = state.playlists[source].slice();
+      const prevSettings = state.playlists[source].slice();
 
-      newSettings.forEach(updated => {
-        const index = updateSettings.findIndex(old => old.id === updated.id);
-        updateSettings[index] = {
-          ...updateSettings[index],
-          isConnected: updated.isConnected
+      const newSettings = action.payload.map(updated => {
+        const index = prevSettings.findIndex(prev => prev.id === updated.id);
+
+        return {
+          ...prevSettings[index],
+          ...updated
         };
       });
 
@@ -222,7 +223,7 @@ export default function(state = initialState, action) {
         ...state,
         playlists: {
           ...state.playlists,
-          [source]: updateSettings
+          [source]: newSettings
         }
       };
     }

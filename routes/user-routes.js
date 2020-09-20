@@ -23,7 +23,7 @@ router.get("/profiles", async (req, res) => {
   const exclude = req.query.exclude || "none";
 
   const query = {
-    text: `SELECT oauth_provider as source, provider_id as id, images, profile_url as "profileUrl", username
+    text: `SELECT oauth_provider as source, provider_id as id, images as image, profile_url as "profileUrl", username
            FROM user_profiles
            WHERE user_id=$1 AND oauth_provider!=$2`,
     values: [kordUser.id, exclude]
@@ -47,7 +47,7 @@ router.put("/profiles", async (req, res) => {
       kordUser.id,
       source,
       profile.id,
-      JSON.stringify(profile.img),
+      profile.img,
       profile.username,
       profile.profile_url
     ]

@@ -15,16 +15,17 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 
 import { ReactComponent as KordLogo } from "../assets/kord-icon.svg";
+import { PlaylistSettings } from "./playlist-settings";
 import { capitalizeWord } from "../utils/formattingHelpers";
 import {
   clearTrash,
   movePlaylistsToTrash,
   restorePlaylistsFromTrash,
-  setPlaylistConnections
+  setPlaylistSettingsAction
 } from "../redux/actions/libraryActions";
 import { fetchSoundcloudProfileAndPlaylists } from "../redux/actions/soundcloudActions";
 import { openSettings, removeUserProfile } from "../redux/actions/userActions";
-import FormCheckbox from "./form-checkbox";
+import { reorder } from "../utils/reorder";
 import LoadingSpinner from "./loading-spinner";
 import Modal from "./modal";
 import avatarImg from "../assets/avatar-placeholder.png";
@@ -83,7 +84,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
     e.preventDefault();
 
     if (isConnected) {
-      dispatch(setPlaylistConnections(source, playlistSettings));
+      dispatch(setPlaylistSettingsAction(source, playlistSettings));
     }
 
     onClose();
@@ -181,6 +182,20 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
         .then(() => alert.success("Account removed"))
         .catch(e => alert.error("Error removing account", e.message));
     }
+  }
+
+  function onDragEnd(result) {
+    if (!result.destination) {
+      return;
+    }
+
+    const reordered = reorder(
+      playlistSettings,
+      result.source.index,
+      result.destination.index
+    );
+
+    setPlaylistSettings([...reordered]);
   }
 
   const sourceTabs = {
@@ -343,17 +358,13 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
             {isLoading ? (
               <LoadingSpinner />
             ) : (
-              playlistSettings &&
-              playlistSettings.map((playlist, i) => (
-                <FormCheckbox
-                  title={playlist.title}
-                  i={i}
-                  key={i}
-                  value={playlist.isConnected}
-                  numTracks={playlist.total}
-                  onChange={toggleCheckbox}
+              playlistSettings && (
+                <PlaylistSettings
+                  settingsList={playlistSettings}
+                  handleToggle={toggleCheckbox}
+                  handleDragEnd={onDragEnd}
                 />
-              ))
+              )
             )}
           </div>
         )}
