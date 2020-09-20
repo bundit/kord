@@ -67,6 +67,11 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   }, [source, user]);
 
   useEffect(() => {
+    if (!show) {
+      setTimeout(() => setPlaylistSettings([]), 150);
+      return;
+    }
+
     if (sourcePlaylists) {
       const settings = sourcePlaylists.map(
         ({ title, id, isConnected, total }) => ({
@@ -78,7 +83,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
       );
       setPlaylistSettings(settings);
     }
-  }, [source, playlists, sourcePlaylists]);
+  }, [source, playlists, sourcePlaylists, show]);
 
   function onSubmit(e) {
     e.preventDefault();
