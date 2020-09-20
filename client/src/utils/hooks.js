@@ -28,12 +28,14 @@ export function useHashParamDetectionOnLoad() {
   const dispatch = useDispatch();
   const history = useHistory();
   const kordId = useSelector(state => state.user.kord.id);
+  const mainConnection = useSelector(state => state.user.kord.mainConnection);
   const alert = useAlert();
 
   useEffect(() => {
     if (window.location.hash) {
       // Get hash params excluding first #
       const URLParams = new URLSearchParams(window.location.hash.substr(1));
+      const accessToken = URLParams.get("accessToken");
       const source = URLParams.get("source");
       const userId = URLParams.get("userId");
       const login = URLParams.get("login");
@@ -45,29 +47,32 @@ export function useHashParamDetectionOnLoad() {
         dispatch(setKordId(userId));
       }
 
-      if (login) {
-        const exclude = source;
-        dispatch(fetchUserPlaylists(exclude)).catch(e =>
-          alert.error("Unable to restore playlists")
-        );
-        dispatch(fetchUserProfiles(exclude)).catch(e =>
-          alert.error("Unable to restore profiles")
-        );
-        dispatch(setMainConnection(source));
-      }
-
       if (source) {
-        const accessToken = URLParams.get("accessToken");
+        let fetchUserData;
 
-        dispatch(setAccessToken(source, accessToken));
-        dispatch(setConnection(source, true));
-        dispatch(fetchProfileAndPlaylists(source))
-          .catch(e => {
-            alert.error("Unable to fetch profile");
-          })
-          .finally(() => {
-            history.push("/app/library");
-          });
+        if (accessToken) {
+          dispatch(setAccessToken(source, accessToken));
+          dispatch(setConnection(source, true));
+        }
+
+        if (login) {
+          fetchUserData = dispatch(fetchUserProfiles())
+            .catch(e => alert.error("Unable to restore profiles"))
+            .then(() => dispatch(fetchUserPlaylists()))
+            .catch(e => alert.error("Unable to restore playlists"))
+            .then(() => dispatch(fetchProfileAndPlaylists(source)))
+            .catch(e => alert.error("Connect account failed"));
+        } else {
+          fetchUserData = dispatch(fetchProfileAndPlaylists(source)).catch(e =>
+            alert.error("Connect account failed")
+          );
+        }
+
+        if (!mainConnection) {
+          dispatch(setMainConnection(source));
+        }
+
+        fetchUserData.finally(() => history.push(window.location.pathname));
       }
     } // eslint-disable-next-line
   }, []);

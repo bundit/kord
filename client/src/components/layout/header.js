@@ -9,6 +9,7 @@ import {
   addToSearchHistory,
   setQuery
 } from "../../redux/actions/searchActions";
+import { clearState } from "../../redux/actions/stateActions";
 import { openSettings } from "../../redux/actions/userActions";
 import SearchBar from "../search-bar";
 import styles from "../../styles/header.module.css";
@@ -16,7 +17,8 @@ import styles from "../../styles/header.module.css";
 function Header({ location }) {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const mainConnection = useSelector(state => state.user.kord.mainConnection);
-  const mainUser = useSelector(state => state.user[mainConnection]) || "kord";
+  const mainUser =
+    useSelector(state => state.user[mainConnection]) || "spotify";
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -73,6 +75,9 @@ function Header({ location }) {
     const isProduction = process.env.NODE_ENV === "production";
 
     if (confirm) {
+      localStorage.clear();
+      dispatch(clearState());
+
       window.location.href = isProduction
         ? "/auth/logout"
         : "http://localhost:8888/auth/logout";
