@@ -15,7 +15,6 @@ import {
 import React from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
-import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
 import { openSettings } from "../redux/actions/userActions";
 import ConnectedSourceButton from "./connected-source-button";
 import PlaylistItem from "./playlist-item";
@@ -29,22 +28,11 @@ const Sidebar = ({ user, playlists }) => {
   const player = useSelector(state => state.player);
   const { context, isPlaying } = player; // eslint-disable-next-line
   const playingFromSearch = context.id == "search" && isPlaying;
+  const playlistComponents = [];
 
   function toggleSettingsForm(source) {
     dispatch(openSettings(source));
   }
-
-  const allPlaylists = flattenPlaylistObject(playlists);
-
-  const playlistComponents = allPlaylists
-    .filter(playlist => playlist.isConnected)
-    .map(playlist => (
-      <PlaylistItem
-        sidebar
-        key={`sidebar ${playlist.source} ${playlist.title} ${playlist.id}`}
-        playlist={playlist}
-      />
-    ));
 
   function handleSearchNavigationOnClick(e) {
     e.preventDefault();
@@ -56,24 +44,28 @@ const Sidebar = ({ user, playlists }) => {
     history.push(newPath);
   }
 
-  const sources = {
-    spotify: {
-      icon: faSpotify,
-      color: "#1db954"
-    },
-    soundcloud: {
-      icon: faSoundcloud,
-      color: "#ff5500"
-    },
-    youtube: {
-      icon: faYoutube,
-      color: "#ff0000"
-    }
-    // mixcloud: {
-    //   icon: faMixcloud,
-    //   color: "#5000ff"
-    // }
-  };
+  for (let source in playlists) {
+    const components = playlists[source]
+      .filter(playlist => playlist.isConnected)
+      .map(playlist => (
+        <PlaylistItem
+          sidebar
+          key={`sidebar ${playlist.source} ${playlist.title} ${playlist.id}`}
+          playlist={playlist}
+        />
+      ));
+
+    const className = `${source}PlaylistList`;
+
+    playlistComponents.push(
+      <div
+        className={`${styles.playlistContainer} ${styles[className]}`}
+        key={`sidebar:${source}:playlists`}
+      >
+        {components}
+      </div>
+    );
+  }
 
   return (
     <div className={styles.sidebarWrapper}>
@@ -122,7 +114,7 @@ const Sidebar = ({ user, playlists }) => {
 
       <div className={styles.sectionWrapper}>
         <h2>Playlists</h2>
-        <div className={styles.playlistContainer}>{playlistComponents}</div>
+        <div className={styles.sidebarScrollWrapper}>{playlistComponents}</div>
       </div>
       <div className={styles.sidebarFooter}>
         {Object.keys(sources).map(source => (
@@ -137,6 +129,25 @@ const Sidebar = ({ user, playlists }) => {
       </div>
     </div>
   );
+};
+
+const sources = {
+  spotify: {
+    icon: faSpotify,
+    color: "#1db954"
+  },
+  soundcloud: {
+    icon: faSoundcloud,
+    color: "#ff5500"
+  },
+  youtube: {
+    icon: faYoutube,
+    color: "#ff0000"
+  }
+  // mixcloud: {
+  //   icon: faMixcloud,
+  //   color: "#5000ff"
+  // }
 };
 
 const mapStateToProps = state => ({

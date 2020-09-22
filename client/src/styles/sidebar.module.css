@@ -58,19 +58,36 @@
 }
 
 .playlistContainer {
-  overflow-y: auto;
-  overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  transition: 0.2s ease-out;
+  border-radius: 7px;
 }
 
-.playlistContainer {
+.sidebarScrollWrapper {
   scrollbar-color: #6f7c7f #121a1d;
   scrollbar-width: thin;
+  overflow-y: auto;
 }
 
-.playlistContainer::-webkit-scrollbar-track {
+.sidebarScrollWrapper::-webkit-scrollbar-track {
   background-color: #121a1d;
+}
+
+.spotifyPlaylistList:hover {
+  background-color: #1db95410;
+}
+
+.soundcloudPlaylistList:hover {
+  background-color: #ff550010;
+}
+
+.youtubePlaylistList:hover {
+  background-color: #ff000010;
+}
+
+.mixcloudPlaylistList:hover {
+  background-color: #5000ff10;
 }
 
 .sectionWrapper h2 {
