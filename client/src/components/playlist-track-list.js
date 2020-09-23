@@ -1,5 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faSync, faPause } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlay,
+  faPause,
+  faSync,
+  faStar
+} from "@fortawesome/free-solid-svg-icons";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useRef, useState } from "react";
@@ -8,7 +13,8 @@ import { capitalizeWord } from "../utils/formattingHelpers";
 import {
   clearPlaylistTracks,
   loadLikes,
-  loadPlaylistTracks
+  loadPlaylistTracks,
+  toggleStarPlaylist
 } from "../redux/actions/libraryActions";
 import { getImgUrl } from "../utils/getImgUrl";
 import {
@@ -143,6 +149,10 @@ const PlaylistTracklist = ({
     e.preventDefault();
   }
 
+  function handleToggleStarPlaylist() {
+    dispatch(toggleStarPlaylist(id, source));
+  }
+
   const playlistPlayButtonStyles = {
     borderRadius: "50%",
     background:
@@ -189,7 +199,18 @@ const PlaylistTracklist = ({
                   {capitalizeWord(currentPlaylist.title)}
                 </h2>
                 <button
+                  type="button"
+                  className={`${styles.syncButton} ${styles.largeStarPlaylistButton}`}
+                  onClick={handleToggleStarPlaylist}
+                  style={{
+                    color: currentPlaylist.isStarred ? "#ffc842" : "#555"
+                  }}
+                >
+                  <FontAwesomeIcon icon={faStar} size="2x" />
+                </button>
+                <button
                   className={styles.syncButton}
+                  style={{ cursor: hasRefreshed ? "not-allowed" : "pointer" }}
                   type="button"
                   onClick={handleRefresh}
                   disabled={hasRefreshed}

@@ -1,6 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
-import { faPlay, faPause, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlay,
+  faPause,
+  faStar,
+  faVolumeUp
+} from "@fortawesome/free-solid-svg-icons";
 import {
   faSpotify,
   faSoundcloud,
@@ -13,14 +18,16 @@ import React from "react";
 import { capitalizeWord } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import { pause, play, playPlaylist } from "../redux/actions/playerActions";
+import { toggleStarPlaylist } from "../redux/actions/libraryActions";
 import sidebarStyles from "../styles/sidebar.module.css";
 import styles from "../styles/library.module.css";
 
-const PlaylistItem = ({ playlist, sidebar }) => {
+const PlaylistItem = ({ playlist, sidebar, isStarredPlaylist }) => {
   const { source, id, title } = playlist;
   const dispatch = useDispatch();
   const context = useSelector(state => state.player.context);
   const isPlaying = useSelector(state => state.player.isPlaying);
+  const isStarred = playlist.isStarred;
 
   const thisPlaylistIsPlaying = // eslint-disable-next-line
     context.source === source && context.id == id && isPlaying;
@@ -38,6 +45,13 @@ const PlaylistItem = ({ playlist, sidebar }) => {
 
   function handlePausePlaylist(e) {
     dispatch(pause());
+
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  function handleToggleStarPlaylist(e) {
+    dispatch(toggleStarPlaylist(id, source));
 
     e.stopPropagation();
     e.preventDefault();
@@ -85,10 +99,31 @@ const PlaylistItem = ({ playlist, sidebar }) => {
         {!sidebar ? (
           <div>
             <h3>{capitalizeWord(title)}</h3>
+            <button
+              type="button"
+              onClick={handleToggleStarPlaylist}
+              className={styles.smallStarPlaylistButton}
+              style={{
+                marginRight: "5px",
+                color: isStarred ? "#ffc842" : "#555"
+              }}
+            >
+              <FontAwesomeIcon icon={faStar} size="1x" />
+            </button>
             <span>{`${playlist.total} Tracks`}</span>
           </div>
         ) : (
           <div style={{ display: "flex" }}>
+            {isStarredPlaylist && (
+              <button
+                type="button"
+                onClick={handleToggleStarPlaylist}
+                className={styles.smallStarPlaylistButton}
+                style={{ color: isStarred ? "#ffc842" : "#555" }}
+              >
+                <FontAwesomeIcon icon={faStar} size="sm" />
+              </button>
+            )}
             <span
               style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}
             >

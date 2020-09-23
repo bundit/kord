@@ -15,9 +15,10 @@ import {
 import React from "react";
 
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
+import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
 import { openSettings } from "../redux/actions/userActions";
 import ConnectedSourceButton from "./connected-source-button";
-import PlaylistItem from "./playlist-item";
+import PlaylistList from "./playlist-list";
 import styles from "../styles/sidebar.module.css";
 
 const Sidebar = ({ user, playlists }) => {
@@ -28,7 +29,6 @@ const Sidebar = ({ user, playlists }) => {
   const player = useSelector(state => state.player);
   const { context, isPlaying } = player; // eslint-disable-next-line
   const playingFromSearch = context.id == "search" && isPlaying;
-  const playlistComponents = [];
 
   function toggleSettingsForm(source) {
     dispatch(openSettings(source));
@@ -44,28 +44,7 @@ const Sidebar = ({ user, playlists }) => {
     history.push(newPath);
   }
 
-  for (let source in playlists) {
-    const components = playlists[source]
-      .filter(playlist => playlist.isConnected)
-      .map(playlist => (
-        <PlaylistItem
-          sidebar
-          key={`sidebar ${playlist.source} ${playlist.title} ${playlist.id}`}
-          playlist={playlist}
-        />
-      ));
-
-    const className = `${source}PlaylistList`;
-
-    playlistComponents.push(
-      <div
-        className={`${styles.playlistContainer} ${styles[className]}`}
-        key={`sidebar:${source}:playlists`}
-      >
-        {components}
-      </div>
-    );
-  }
+  const playlistComponents = generatePlaylistSidebarComponents(playlists);
 
   return (
     <div className={styles.sidebarWrapper}>
@@ -130,6 +109,36 @@ const Sidebar = ({ user, playlists }) => {
     </div>
   );
 };
+
+function generatePlaylistSidebarComponents(playlists) {
+  const playlistComponents = [];
+
+  const starredPlaylists = (
+    <PlaylistList
+      playlists={flattenPlaylistObject(playlists).filter(
+        playlist => playlist.isStarred
+      )}
+      key={`sidebar:starred:playlists`}
+      isListOfStarredPlaylists
+      sidebar
+    />
+  );
+
+  playlistComponents.push(starredPlaylists);
+
+  for (let source in playlists) {
+    playlistComponents.push(
+      <PlaylistList
+        playlists={playlists[source].filter(playlist => !playlist.isStarred)}
+        source={source}
+        sidebar
+        key={`sidebar:${source}:playlists`}
+      />
+    );
+  }
+
+  return playlistComponents;
+}
 
 const sources = {
   spotify: {

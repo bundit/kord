@@ -519,7 +519,19 @@
   color: #aaa;
   padding: 10px;
   border-radius: 7px;
+  outline: none;
+  cursor: pointer;
+}
+
+.largeStarPlaylistButton {
+  border-color: transparent;
+  margin-right: 10px;
   margin-left: auto;
+}
+
+.smallStarPlaylistButton {
+  padding: 0;
+  outline: none;
 }
 
 .syncButton:disabled {
