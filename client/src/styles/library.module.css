@@ -157,6 +157,7 @@
 .stackedArtistName {
   color: #ffd46b;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .stackedArtistName:hover {

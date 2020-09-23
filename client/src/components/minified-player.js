@@ -15,13 +15,11 @@ import { ReactComponent as BackwardIcon } from "../assets/backward.svg";
 import { ReactComponent as ForwardIcon } from "../assets/forward.svg";
 import { ReactComponent as PauseIcon } from "../assets/pause-button.svg";
 import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
-import {
-  formatArtistName,
-  secondsToFormatted
-} from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
+import { secondsToFormatted } from "../utils/formattingHelpers";
 import { setMuted } from "../redux/actions/playerActions";
 import { useMobileDetection } from "../utils/hooks";
+import TrackInfo from "./track-info";
 import progressBarStyles from "../styles/progressBar.module.css";
 import styles from "../styles/player.module.css";
 
@@ -157,12 +155,7 @@ const MinifiedPlayer = ({
           >
             <img src={getImgUrl(current, "md")} alt="album-art" />
           </div>
-          <div className={styles.titleWrapper}>
-            <div className={styles.nowPlayingTitle}>{current.title}</div>
-            <div className={styles.nowPlayingArtist}>
-              {formatArtistName(current.artist)}
-            </div>
-          </div>
+          <TrackInfo track={current} isPlayer />
         </div>
         <button
           type="button"

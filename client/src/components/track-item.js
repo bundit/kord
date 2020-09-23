@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
 import { faPlay, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import {
   faSpotify,
@@ -12,6 +11,7 @@ import React from "react";
 import { getImgUrl } from "../utils/getImgUrl";
 import { msToDuration } from "../utils/formattingHelpers";
 import TrackDropdown from "./track-dropdown";
+import TrackInfo from "./track-info";
 import rippleEffect from "../utils/rippleEffect";
 import styles from "../styles/library.module.css";
 
@@ -26,9 +26,6 @@ const TrackItem = ({
 }) => {
   const { title, duration: ms, artist, source } = track;
   // const artistName = formatArtistName(artist);
-  const artistNames = Array.isArray(artist)
-    ? artist.map(a => a.name)
-    : [artist.name];
   const isStreamable = track.streamable || track.streamable === null;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
 
@@ -113,23 +110,7 @@ const TrackItem = ({
             </div>
           )}
         </div>
-        <div className={styles.titleWrapper}>
-          <div>
-            <strong>{title}</strong>
-          </div>
-
-          {artistNames.map((artistName, i) => (
-            <React.Fragment key={artistName}>
-              <Link
-                className={styles.stackedArtistName}
-                to={`/app/search/${encodeURIComponent(artistName)}`}
-              >
-                {artistName}
-              </Link>
-              {i < artistNames.length - 1 && ", "}
-            </React.Fragment>
-          ))}
-        </div>
+        <TrackInfo track={track} />
         <div className={styles.singleSource} style={{ opacity: isActive && 1 }}>
           <FontAwesomeIcon
             icon={
