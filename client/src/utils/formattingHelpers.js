@@ -1,5 +1,3 @@
-import { getImgUrl } from "./getImgUrl";
-
 export function formatArtistName(artist) {
   if (!artist) {
     return "";
@@ -75,7 +73,7 @@ export function generatePlaylistsPayload(source, playlists) {
   return {
     source,
     playlists: playlists.map((playlist, index) => {
-      const { id, isConnected, title, img, total } = playlist;
+      const { id, isConnected, title, img, total, isStarred } = playlist;
 
       return {
         id,
@@ -83,7 +81,8 @@ export function generatePlaylistsPayload(source, playlists) {
         title,
         index,
         img,
-        total
+        total,
+        isStarred
       };
     })
   };

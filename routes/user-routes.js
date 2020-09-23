@@ -96,7 +96,7 @@ router.get("/playlists", async (req, res) => {
   const exclude = req.query.exclude || "none";
 
   const query = {
-    text: `SELECT source, external_id, title, "isConnected", index, img, total
+    text: `SELECT source, external_id, title, is_connected as "isConnected", index, img, total, is_starred as "isStarred"
            FROM
              (users JOIN user_playlists
              ON users.id=user_playlists.user_id)
@@ -126,10 +126,10 @@ router.put("/playlists", (req, res) => {
       }
 
       playlists.forEach(
-        async ({ id, title, isConnected, index, img, total }) => {
+        async ({ id, title, isConnected, index, img, total, isStarred }) => {
           const insertQuery = {
-            text: `INSERT INTO user_playlists(user_id, source, external_id, title, "isConnected", index, img, total)
-                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`,
+            text: `INSERT INTO user_playlists(user_id, source, external_id, title, is_connected, index, img, total, is_starred)
+                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
             values: [
               kordUser.id,
               source,
@@ -138,78 +138,14 @@ router.put("/playlists", (req, res) => {
               isConnected,
               index,
               JSON.stringify(img),
-              total
+              total,
+              isStarred
             ]
           };
 
           await client.query(insertQuery);
         }
       );
-    })
-    .then(() => res.status(200).send("OK"))
-    .catch(e => res.status(400).json(e));
-});
-
-router.get("/playlists", async (req, res) => {
-  const kordUser = jwtDecode(req.cookies.kordUser);
-  const exclude = req.query.exclude || "none";
-
-  const query = {
-    text: `SELECT source, external_id, title, "isConnected", index, img, total
-           FROM
-             (users JOIN user_playlists
-             ON users.id=user_playlists.user_id)
-           WHERE users.id=$1 AND user_playlists.source!=$2
-           ORDER BY source, index;`,
-    values: [kordUser.id, exclude]
-  };
-
-  const result = await db.query(query);
-  res.json(result.rows);
-});
-
-router.put("/playlists", (req, res) => {
-  const kordUser = jwtDecode(req.cookies.kordUser);
-  const { source, playlists } = req.body;
-
-  return db
-    .transaction(async client => {
-      const deleteQuery = {
-        text: `DELETE FROM user_playlists
-               WHERE user_id=$1 AND source=$2;`,
-        values: [kordUser.id, source]
-      };
-
-      await client.query(deleteQuery);
-
-      let numValue = 1;
-      const stringValues = [];
-      const values = [];
-
-      playlists.forEach(playlist => {
-        stringValues.push(
-          // eslint-disable-next-line
-          `($${numValue++}, $${numValue++}, $${numValue++}, $${numValue++}, $${numValue++}, $${numValue++}, $${numValue++}, $${numValue++})`
-        );
-        values.push(
-          kordUser.id,
-          source,
-          playlist.id,
-          playlist.title,
-          playlist.isConnected,
-          playlist.index,
-          JSON.stringify(playlist.img),
-          playlist.total
-        );
-      });
-
-      const insertQuery = {
-        text: `INSERT INTO user_playlists(user_id, source, external_id, title, "isConnected", index, img, total)
-               VALUES ${stringValues};`,
-        values
-      };
-
-      await client.query(insertQuery);
     })
     .then(() => res.status(200).send("OK"))
     .catch(e => res.status(400).json(e));

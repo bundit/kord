@@ -70,7 +70,7 @@ export function hasNewPlaylistOrHasChanges(
 }
 
 function hasPlaylistChanges(newPlaylist, prevPlaylist) {
-  const keys = ["id", "title", "isConnected", "total"];
+  const keys = ["id", "title", "isConnected", "total", "isStarred"];
 
   return (
     keys.some(key => newPlaylist[key] !== prevPlaylist[key]) ||
