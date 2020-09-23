@@ -13,7 +13,8 @@ import {
   RESTORE_PLAYLISTS_FROM_TRASH,
   SET_NEXT_PLAYLIST_HREF,
   SET_PLAYLIST_SETTINGS,
-  SET_TRACK_UNSTREAMABLE
+  SET_TRACK_UNSTREAMABLE,
+  TOGGLE_STAR_PLAYLIST
 } from "./types";
 import {
   addToSpotifyPlaylist,
@@ -147,6 +148,14 @@ export function setTrackUnstreamable(id) {
     type: SET_TRACK_UNSTREAMABLE,
     context,
     payload: id
+  };
+}
+
+export function toggleStarPlaylist(playlistId, source) {
+  return {
+    type: TOGGLE_STAR_PLAYLIST,
+    source,
+    payload: playlistId
   };
 }
 

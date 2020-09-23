@@ -332,7 +332,8 @@ function mapJsonToPlaylists(json) {
     total: item.contentDetails.itemCount,
     next: "start",
     isConnected: true,
-    dateSynced: null
+    dateSynced: null,
+    isStarred: false
   }));
 }
 

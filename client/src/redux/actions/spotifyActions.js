@@ -355,6 +355,7 @@ function mapJsonToPlaylists(json) {
     total: item.tracks.total,
     next: "start",
     isConnected: true,
-    dateSynced: null
+    dateSynced: null,
+    isStarred: false
   }));
 }

@@ -11,7 +11,8 @@ import {
   RESTORE_PLAYLISTS_FROM_TRASH,
   SET_NEXT_PLAYLIST_HREF,
   SET_PLAYLIST_SETTINGS,
-  SET_TRACK_UNSTREAMABLE
+  SET_TRACK_UNSTREAMABLE,
+  TOGGLE_STAR_PLAYLIST
 } from "../actions/types";
 
 const initialState = {
@@ -321,6 +322,27 @@ export default function(state = initialState, action) {
         playlists: {
           ...state.playlists,
           [source]: updatedPlaylists
+        }
+      };
+    }
+
+    case TOGGLE_STAR_PLAYLIST: {
+      const { source, payload: playlistId } = action;
+
+      return {
+        ...state,
+        playlists: {
+          ...state.playlists,
+          [source]: state.playlists[source].map(playlist => {
+            if (playlist.id === playlistId) {
+              playlist = {
+                ...playlist,
+                isStarred: !playlist.isStarred
+              };
+            }
+
+            return playlist;
+          })
         }
       };
     }

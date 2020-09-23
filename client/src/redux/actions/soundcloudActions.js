@@ -182,7 +182,8 @@ function mapCollectionToPlaylists(collection) {
     tracks: mapCollectionToTracks(item.tracks),
     total: item.tracks.length,
     isConnected: true,
-    dateSynced: null
+    dateSynced: null,
+    isStarred: false
   }));
 }
 
