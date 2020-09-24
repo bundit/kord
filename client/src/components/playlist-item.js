@@ -11,6 +11,7 @@ import {
   faSoundcloud,
   faYoutube
 } from "@fortawesome/free-brands-svg-icons";
+import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
@@ -25,6 +26,7 @@ import styles from "../styles/library.module.css";
 const PlaylistItem = ({ playlist, sidebar, isStarredPlaylist }) => {
   const { source, id, title } = playlist;
   const dispatch = useDispatch();
+  const alert = useAlert();
   const context = useSelector(state => state.player.context);
   const isPlaying = useSelector(state => state.player.isPlaying);
   const isStarred = playlist.isStarred;
@@ -51,7 +53,9 @@ const PlaylistItem = ({ playlist, sidebar, isStarredPlaylist }) => {
   }
 
   function handleToggleStarPlaylist(e) {
-    dispatch(toggleStarPlaylist(id, source));
+    dispatch(toggleStarPlaylist(id, source)).catch(e =>
+      alert.error("Network Error")
+    );
 
     e.stopPropagation();
     e.preventDefault();

@@ -60,7 +60,7 @@ function syncProfilesToServer(store) {
         if (hasProfileChanges(newProfile, prevProfile)) {
           const payload = generateProfilePayload(source, newProfile);
 
-          fetch("/user/profiles", {
+          fetchGeneric("/user/profiles", {
             method: "PUT",
             headers: {
               "Content-Type": "application/json"

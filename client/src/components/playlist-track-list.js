@@ -150,7 +150,9 @@ const PlaylistTracklist = ({
   }
 
   function handleToggleStarPlaylist() {
-    dispatch(toggleStarPlaylist(id, source));
+    dispatch(toggleStarPlaylist(id, source)).catch(e =>
+      alert.error("Network Error")
+    );
   }
 
   const playlistPlayButtonStyles = {
