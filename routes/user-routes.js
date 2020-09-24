@@ -151,4 +151,28 @@ router.put("/playlists", (req, res) => {
     .catch(e => res.status(400).json(e));
 });
 
+router.patch("/playlists", (req, res) => {
+  const kordUser = jwtDecode(req.cookies.kordUser);
+  const operations = req.body;
+
+  db.getClient(client => {
+    operations.forEach(async ({ field, playlistId, value }) => {
+      const patchQuery = {
+        text: `UPDATE user_playlists
+                 SET ${field}=$3
+                 WHERE user_id=$1 AND external_id=$2`,
+        values: [kordUser.id, playlistId, value]
+      };
+
+      try {
+        await client.query(patchQuery);
+      } catch (e) {
+        return res.status(400).json(e);
+      }
+    });
+  });
+
+  return res.status(204).send();
+});
+
 module.exports = router;
