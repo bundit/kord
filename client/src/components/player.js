@@ -122,10 +122,6 @@ export const Player = ({
     setIsSpotifySdkReady(true);
   }
 
-  function handleSpotifyNotReady() {
-    setIsSpotifySdkReady(false);
-  }
-
   function handleOnEnd() {
     dispatch(nextTrack());
   }
@@ -163,7 +159,7 @@ export const Player = ({
       dispatch(setSeek(seconds));
     }
 
-    if (isSpotifySdkReady && current.source === "spotify") {
+    if (current.source === "spotify") {
       spotifyPlayer.current.seek(seconds * 1000);
     }
 
@@ -251,7 +247,6 @@ export const Player = ({
         volume={volume}
         track={current}
         onReady={handleSpotifyReady}
-        onNotReady={handleSpotifyNotReady}
         onAccountError={handleSpotifyAccountError}
       />
       <YoutubePlayer
