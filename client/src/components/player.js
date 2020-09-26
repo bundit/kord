@@ -248,6 +248,7 @@ export const Player = ({
         track={current}
         onReady={handleSpotifyReady}
         onAccountError={handleSpotifyAccountError}
+        controls={{ play: handlePlay, pause: handlePause }}
       />
       <YoutubePlayer
         isPlaying={isPlaying}

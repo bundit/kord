@@ -15,7 +15,8 @@ const SpotifyPlayer = ({
   onNotReady,
   onEnd,
   onAccountError,
-  volume
+  volume,
+  controls
 }) => {
   const dispatch = useDispatch();
   const player = useRef(null);
@@ -44,6 +45,7 @@ const SpotifyPlayer = ({
         player.current.onReady = onReady;
         player.current.onNotReady = onNotReady;
         player.current.onAccountError = onAccountError;
+        player.current.controls = controls;
 
         player.current.initPlayer();
 
@@ -75,6 +77,8 @@ const SpotifyPlayer = ({
       spotifyPlayer.disconnectPlayer();
       return;
     }
+
+    spotifyPlayer.isPlaying = isPlaying;
 
     if (isPlaying) {
       if (trackHasChanged) {
@@ -365,12 +369,22 @@ class SpotifyWebPlaybackSdk {
       const notPausedBeforeButPausedNow =
         !this.prevState.paused && state.paused;
 
+      const notPlayingBeforeButPlayingNow =
+        this.prevState.paused && !state.paused;
+
       if (currentTrackIsInPreviousTracks && notPausedBeforeButPausedNow) {
-        // Track ended
         this.stopTrackingSeekPosition();
 
         if (this.onTrackEnd) {
           this.onTrackEnd();
+        }
+      } else if (notPausedBeforeButPausedNow) {
+        if (this.controls) {
+          this.controls.pause();
+        }
+      } else if (notPlayingBeforeButPlayingNow) {
+        if (this.controls) {
+          this.controls.play();
         }
       }
     }
