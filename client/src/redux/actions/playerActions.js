@@ -1,5 +1,5 @@
 import {
-  ADD_TO_QUEUE,
+  ADD_TRACK_TO_USER_QUEUE,
   APPEND_QUEUE,
   NEXT_TRACK,
   PAUSE,
@@ -91,7 +91,7 @@ export function setSeek(time) {
   };
 }
 
-function next() {
+function nextTrackAction() {
   return {
     type: NEXT_TRACK
   };
@@ -102,15 +102,18 @@ export const nextTrack = () => dispatch => {
   let index = state.player.index;
   const queue = state.player.queue;
 
+  // Check if more tracks need to be loaded or not
   do {
     index++;
   } while (index < queue.length && !queue[index].streamable);
 
   if (index >= queue.length) {
-    return dispatch(loadMoreQueueTracks()).then(() => dispatch(next()));
+    return dispatch(loadMoreQueueTracks()).then(() =>
+      dispatch(nextTrackAction())
+    );
   }
 
-  return dispatch(next());
+  return dispatch(nextTrackAction());
 };
 
 export function prevTrack() {
@@ -119,9 +122,9 @@ export function prevTrack() {
   };
 }
 
-export function addToQueue(track) {
+export function addTrackToUserQueue(track) {
   return {
-    type: ADD_TO_QUEUE,
+    type: ADD_TRACK_TO_USER_QUEUE,
     payload: track
   };
 }

@@ -1,5 +1,5 @@
 import {
-  ADD_TO_QUEUE,
+  ADD_TRACK_TO_USER_QUEUE,
   APPEND_QUEUE,
   NEXT_TRACK,
   PAUSE,
@@ -34,6 +34,8 @@ const initialState = {
   volume: 0.5,
   index: 0,
   queue: [],
+  userQueueIndex: 0,
+  userQueue: [],
   context: {
     source: "source",
     id: "id"
@@ -100,28 +102,46 @@ export default function(state = initialState, action) {
 
     case NEXT_TRACK: {
       let nextIndex = state.index;
+      let nextUserQueueIndex = state.userQueueIndex;
       const queue = state.queue;
+      const userQueue = state.userQueue || [];
 
+      // If there is a user queued song
+      if (nextUserQueueIndex < userQueue.length) {
+        const nextTrackInUserQueue = userQueue[nextUserQueueIndex];
+        return {
+          ...state,
+          currentTrack: nextTrackInUserQueue,
+          userQueueIndex: nextUserQueueIndex + 1,
+          duration: nextTrackInUserQueue.duration
+        };
+      }
+
+      // Else play from list queue
       do {
         nextIndex++;
       } while (nextIndex < queue.length && !queue[nextIndex].streamable);
 
-      const nextTrack = state.queue[nextIndex];
-
+      // No more songs in list queue and user queue
       if (nextIndex >= queue.length) {
         return {
           ...initialState,
           isPlaying: false,
-          volume: state.volume
+          volume: state.volume,
+          isMuted: state.isMuted
+        };
+      } else {
+        const nextTrackInListQueue = state.queue[nextIndex];
+
+        return {
+          ...state,
+          currentTrack: nextTrackInListQueue,
+          duration: nextTrackInListQueue.duration,
+          index: nextIndex,
+          userQueue: [],
+          userQueueIndex: 0
         };
       }
-
-      return {
-        ...state,
-        currentTrack: nextTrack,
-        duration: nextTrack.duration,
-        index: nextIndex
-      };
     }
 
     case PREV_TRACK: {
@@ -147,13 +167,10 @@ export default function(state = initialState, action) {
       };
     }
 
-    case ADD_TO_QUEUE: {
-      const newQ = state.queue;
-      newQ.push(action.payload);
-
+    case ADD_TRACK_TO_USER_QUEUE: {
       return {
         ...state,
-        queue: newQ
+        userQueue: [...(state.userQueue || []), action.payload]
       };
     }
 
