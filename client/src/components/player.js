@@ -78,7 +78,7 @@ export const Player = ({
     }
 
     theRaf.current = raf(renderSeekPos);
-  }, [current.source, dispatch]);
+  }, [current, dispatch]);
 
   useRenderSeekPosition(current, theRaf, renderSeekPos, isPlaying);
   useDetectMediaSession();

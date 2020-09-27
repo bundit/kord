@@ -2,12 +2,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faTrash,
-  faExternalLinkAlt
+  faExternalLinkAlt,
+  faListUl
 } from "@fortawesome/free-solid-svg-icons";
+import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
+import { addTrackToUserQueue } from "../redux/actions/playerActions";
 import { capitalizeWord } from "../utils/formattingHelpers";
 import {
   openAddToPlaylistForm,
@@ -23,6 +26,8 @@ const TrackDropdown = ({
   playlistId
 }) => {
   const dispatch = useDispatch();
+  const alert = useAlert();
+  const isStreamable = track.streamable || track.streamable === null;
 
   function handleAddToPlaylistForm(e) {
     dispatch(openAddToPlaylistForm(track));
@@ -44,8 +49,27 @@ const TrackDropdown = ({
     e.stopPropagation();
   }
 
+  function handleAddTrackToQueue(e) {
+    dispatch(addTrackToUserQueue(track));
+    alert.success("Track added to queue");
+    toggleDropdown();
+    e.stopPropagation();
+  }
+
   return (
     <div className={styles.trackDropdown} style={{ borderRadius: "7px" }}>
+      {isStreamable && (
+        <button
+          className={styles.dropdownOption}
+          onClick={handleAddTrackToQueue}
+          type="button"
+        >
+          <span>
+            <FontAwesomeIcon icon={faListUl} />
+          </span>
+          <span>Add to Queue</span>
+        </button>
+      )}
       {(track.source === "youtube" || track.source === "spotify") && (
         <>
           <button
@@ -72,6 +96,7 @@ const TrackDropdown = ({
           )}
         </>
       )}
+
       <button
         className={styles.dropdownOption}
         onClick={handleTrackExternalLink}
