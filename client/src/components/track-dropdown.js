@@ -23,7 +23,8 @@ const TrackDropdown = ({
   track,
   search,
   trackIndex,
-  playlistId
+  playlistId,
+  isFromQueue
 }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
@@ -82,7 +83,7 @@ const TrackDropdown = ({
             </span>
             <span>Add to Playlist</span>
           </button>
-          {!search && (
+          {!search && !isFromQueue && (
             <button
               className={styles.dropdownOption}
               onClick={handleRemoveTrack}

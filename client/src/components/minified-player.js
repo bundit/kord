@@ -5,7 +5,8 @@ import {
   faPauseCircle,
   faVolumeMute,
   faVolumeDown,
-  faVolumeUp
+  faVolumeUp,
+  faListUl
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
@@ -18,8 +19,10 @@ import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import { getImgUrl } from "../utils/getImgUrl";
 import { secondsToFormatted } from "../utils/formattingHelpers";
 import { setMuted } from "../redux/actions/playerActions";
+import { toggleUserQueue } from "../redux/actions/userActions";
 import { useMobileDetection } from "../utils/hooks";
 import TrackInfo from "./track-info";
+import UserQueue from "./user-queue";
 import progressBarStyles from "../styles/progressBar.module.css";
 import styles from "../styles/player.module.css";
 
@@ -93,6 +96,10 @@ const MinifiedPlayer = ({
 
   function handleToggleMute() {
     dispatch(setMuted(!isMuted));
+  }
+
+  function handleToggleShowQueue() {
+    dispatch(toggleUserQueue());
   }
 
   return (
@@ -196,33 +203,42 @@ const MinifiedPlayer = ({
             {secondsToFormatted(duration || 0)}
           </span>
         </div>
-
-        <div className={styles.volumeWrapper}>
+        <div className={styles.playerRightControls}>
           <button
+            className={styles.queueButton}
             type="button"
-            onClick={handleToggleMute}
-            className={styles.volumeIconButton}
+            onClick={handleToggleShowQueue}
           >
-            <FontAwesomeIcon icon={volumeIcon} size="sm" />
+            <FontAwesomeIcon icon={faListUl} size="sm" />
           </button>
+          <span className={styles.volumeWrapper}>
+            <button
+              type="button"
+              onClick={handleToggleMute}
+              className={styles.volumeIconButton}
+            >
+              <FontAwesomeIcon icon={volumeIcon} size="sm" />
+            </button>
 
-          <span
-            className={styles.volumeLowerFill}
-            style={{ width: volumeWidth, right: volumeRight }}
-          ></span>
-          <input
-            type="range"
-            className={styles.volumeSlider}
-            value={isUserSettingVolume ? userVolumeValue : volume}
-            min="0"
-            max="1"
-            step="0.05"
-            onChange={handleOnChangeVolume}
-            onMouseDown={handleMouseDownVolume}
-            onMouseUp={handleMouseUpVolume}
-          />
+            <span
+              className={styles.volumeLowerFill}
+              style={{ width: volumeWidth, right: volumeRight }}
+            ></span>
+            <input
+              type="range"
+              className={styles.volumeSlider}
+              value={isUserSettingVolume ? userVolumeValue : volume}
+              min="0"
+              max="1"
+              step="0.05"
+              onChange={handleOnChangeVolume}
+              onMouseDown={handleMouseDownVolume}
+              onMouseUp={handleMouseUpVolume}
+            />
+          </span>
         </div>
       </div>
+      <UserQueue />
     </div>
   );
 };

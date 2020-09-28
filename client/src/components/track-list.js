@@ -5,12 +5,13 @@ import React from "react";
 import TrackItem from "./track-item";
 
 const TrackList = ({
-  search,
   tracks,
   handlePlay,
   currentTrackID,
   isPlaying,
-  playlistId
+  playlistId,
+  search,
+  isFromQueue
 }) => {
   const queueIndex = useSelector(state => state.player.index);
   const playingContext = useSelector(state => state.player.context);
@@ -29,8 +30,9 @@ const TrackList = ({
         }
         isPlaying={isPlaying}
         index={i}
-        search={search}
         playlistId={playlistId}
+        search={search}
+        isFromQueue={isFromQueue}
       />
     ))
   );

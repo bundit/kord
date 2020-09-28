@@ -212,6 +212,10 @@
   width: 100%;
 }
 
+.playerRightControls {
+  display: none;
+}
+
 .volumeWrapper {
   display: none;
   cursor: pointer;
@@ -221,13 +225,20 @@
   background-color: #ffc842;
 }
 
-.volumeWrapper:hover svg {
+.volumeWrapper:hover .volumeIconButton svg {
+  color: #ffc842;
+}
+
+.queueButton {
+  display: none;
+}
+
+.queueButton:hover svg {
   color: #ffc842;
 }
 
 .volumeIconButton {
   width: 25px;
-  margin-left: auto;
 }
 
 .volumeIconButton:hover ~ .volumeLowerFill {
@@ -378,8 +389,15 @@ input[type="range"].volumeSlider:focus::-ms-fill-upper {
     justify-content: flex-start;
   }
 
-  .volumeWrapper {
+  .playerRightControls {
     flex: 1;
+    position: relative;
+    align-items: center;
+    display: flex;
+    height: 10px;
+  }
+
+  .volumeWrapper {
     position: relative;
     align-items: center;
     display: flex;
@@ -391,5 +409,13 @@ input[type="range"].volumeSlider:focus::-ms-fill-upper {
   .backwardButton,
   .volumeSlider {
     display: block;
+  }
+}
+
+@media (min-width: 870px) {
+  .queueButton {
+    display: inline;
+    margin-left: auto;
+    margin-right: 10px;
   }
 }

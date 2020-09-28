@@ -22,10 +22,10 @@ const TrackItem = ({
   isPlaying,
   index,
   search,
+  isFromQueue,
   playlistId
 }) => {
-  const { title, duration: ms, artist, source } = track;
-  // const artistName = formatArtistName(artist);
+  const { duration: ms, source } = track;
   const isStreamable = track.streamable || track.streamable === null;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
 
@@ -71,7 +71,8 @@ const TrackItem = ({
     <div style={{ position: "relative" }}>
       <div
         className={`${styles.trackWrapper} ${isActive &&
-          styles.playingNow} ${!isStreamable && styles.notStreamable}`}
+          styles.playingNow} ${!isStreamable &&
+          styles.notStreamable} ${isFromQueue && styles.queueTrackItem}`}
         onClick={rippleEffect}
         onDoubleClick={handlePlayTrack}
         role="button"
@@ -146,6 +147,7 @@ const TrackItem = ({
           search={search}
           trackIndex={index}
           playlistId={playlistId}
+          isFromQueue={isFromQueue}
         />
       )}
     </div>

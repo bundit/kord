@@ -85,7 +85,8 @@ const SearchTrackList = ({
   function dispatchPlayTrack(index) {
     const context = {
       source: tracks.list[index].source,
-      id: "search"
+      id: "search",
+      title: capitalizeWord(query)
     };
     dispatch(playTrack(index, tracks.list, tracks.next, context));
   }

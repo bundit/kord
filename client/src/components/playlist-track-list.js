@@ -121,7 +121,8 @@ const PlaylistTracklist = ({
   function dispatchPlayTrack(index) {
     const context = {
       source: tracks[index].source,
-      id: id
+      id: id,
+      title: capitalizeWord(currentPlaylist.title)
     };
     dispatch(playTrack(index, tracks, currentPlaylist.next, context));
   }
