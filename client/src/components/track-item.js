@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlay,
+  faEllipsisV,
+  faTimes
+} from "@fortawesome/free-solid-svg-icons";
 import {
   faSpotify,
   faSoundcloud,
@@ -23,7 +27,8 @@ const TrackItem = ({
   index,
   search,
   isFromQueue,
-  playlistId
+  playlistId,
+  handleRemove
 }) => {
   const { duration: ms, source } = track;
   const isStreamable = track.streamable || track.streamable === null;
@@ -65,6 +70,10 @@ const TrackItem = ({
 
   function removeScrollListener() {
     window.removeEventListener("scroll", scrollListener, true);
+  }
+
+  function handleRemoveFromQueue() {
+    handleRemove(index);
   }
 
   return (
@@ -135,7 +144,19 @@ const TrackItem = ({
         </button>
 
         <div className={styles.trackRightControls}>
-          <div className={styles.duration}>
+          {handleRemove && (
+            <button
+              type="button"
+              className={styles.removeFromQueueButton}
+              onClick={handleRemoveFromQueue}
+            >
+              <FontAwesomeIcon icon={faTimes} size="lg" />
+            </button>
+          )}
+          <div
+            className={styles.duration}
+            style={{ display: !handleRemove ? "block" : null }}
+          >
             {isNaN(ms) ? ms : msToDuration(ms)}
           </div>
         </div>

@@ -317,6 +317,18 @@
   background-color: transparent;
 }
 
+.removeFromQueueButton {
+  display: none;
+}
+
+.queueTrackItem:hover .removeFromQueueButton {
+  display: block;
+}
+
+.queueTrackItem:hover .duration {
+  display: none;
+}
+
 .queueTrackItem {
   background-color: transparent;
 }
@@ -752,6 +764,15 @@
     overflow: hidden;
     z-index: -1;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  }
+
+  .removeFromQueueButton {
+    cursor: pointer;
+    color: #aaa;
+  }
+
+  .removeFromQueueButton:hover {
+    color: #eee;
   }
 }
 

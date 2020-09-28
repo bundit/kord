@@ -11,7 +11,8 @@ const TrackList = ({
   isPlaying,
   playlistId,
   search,
-  isFromQueue
+  isFromQueue,
+  handleRemoveTrack
 }) => {
   const queueIndex = useSelector(state => state.player.index);
   const playingContext = useSelector(state => state.player.context);
@@ -33,6 +34,7 @@ const TrackList = ({
         playlistId={playlistId}
         search={search}
         isFromQueue={isFromQueue}
+        handleRemove={handleRemoveTrack}
       />
     ))
   );

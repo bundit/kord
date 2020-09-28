@@ -7,7 +7,8 @@ import React from "react";
 import {
   play,
   playFromQueue,
-  playFromUserQueue
+  playFromUserQueue,
+  removeTrackFromQueue
 } from "../redux/actions/playerActions";
 import { toggleUserQueue } from "../redux/actions/userActions";
 import TrackItem from "./track-item";
@@ -52,18 +53,28 @@ const UserQueue = () => {
     dispatch(playFromQueue(index));
   }
 
+  function handleRemoveTrackFromUserQueue(offset) {
+    dispatch(removeTrackFromQueue(offset, "userQueue"));
+  }
+
+  function handleRemoveTrackFromQueue(offset) {
+    dispatch(removeTrackFromQueue(offset, "queue"));
+  }
+
   const queueList = [
     {
       list: nextInUserQueue,
       id: "user-queue",
       title: "Next in your Queue",
-      handlePlay: handlePlayFromUserAddedQueue
+      handlePlay: handlePlayFromUserAddedQueue,
+      handleRemove: handleRemoveTrackFromUserQueue
     },
     {
       list: nextInPlayerQueue,
       id: "queue",
       title: `Next from ${context.title}`,
-      handlePlay: handlePlayFromQueue
+      handlePlay: handlePlayFromQueue,
+      handleRemove: handleRemoveTrackFromQueue
     }
   ];
 
@@ -78,11 +89,8 @@ const UserQueue = () => {
           tracks={queue.list}
           isPlaying={isPlaying}
           currentTrackID={currentTrack.id}
-          handlePlay={
-            queue.id === "user-queue"
-              ? handlePlayFromUserAddedQueue
-              : handlePlayFromQueue
-          }
+          handlePlay={queue.handlePlay}
+          handleRemoveTrack={queue.handleRemove}
           isFromQueue
         />
       </React.Fragment>
