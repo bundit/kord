@@ -7,6 +7,7 @@ import {
   PLAY_FROM_QUEUE,
   PLAY_FROM_USER_QUEUE,
   PREV_TRACK,
+  REMOVE_TRACK_FROM_QUEUE,
   SEEK,
   SET_CONTEXT,
   SET_DURATION,
@@ -173,6 +174,30 @@ export default function(state = initialState, action) {
       return {
         ...state,
         userQueue: [...(state.userQueue || []), action.payload]
+      };
+    }
+
+    case REMOVE_TRACK_FROM_QUEUE: {
+      const { offset, whichQueue } = action.payload;
+      const { index, userQueueIndex } = state;
+
+      if (whichQueue === "userQueue") {
+        const newUserQueue = state.userQueue.slice();
+        newUserQueue.splice(userQueueIndex + offset, 1);
+
+        return {
+          ...state,
+          userQueue: newUserQueue
+        };
+      }
+
+      // else normal queue
+      const newQueue = state.queue.slice();
+      newQueue.splice(index + offset + 1, 1);
+
+      return {
+        ...state,
+        queue: newQueue
       };
     }
 

@@ -7,6 +7,7 @@ import {
   PLAY_FROM_QUEUE,
   PLAY_FROM_USER_QUEUE,
   PREV_TRACK,
+  REMOVE_TRACK_FROM_QUEUE,
   SEEK,
   SET_CONTEXT,
   SET_DURATION,
@@ -128,6 +129,16 @@ export function addTrackToUserQueue(track) {
   return {
     type: ADD_TRACK_TO_USER_QUEUE,
     payload: track
+  };
+}
+
+export function removeTrackFromQueue(offset, whichQueue) {
+  return {
+    type: REMOVE_TRACK_FROM_QUEUE,
+    payload: {
+      offset,
+      whichQueue
+    }
   };
 }
 
