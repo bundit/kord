@@ -4,6 +4,8 @@ import {
   NEXT_TRACK,
   PAUSE,
   PLAY,
+  PLAY_FROM_QUEUE,
+  PLAY_FROM_USER_QUEUE,
   PREV_TRACK,
   SEEK,
   SET_CONTEXT,
@@ -234,6 +236,29 @@ export default function(state = initialState, action) {
           }
           return track;
         })
+      };
+    }
+
+    case PLAY_FROM_QUEUE: {
+      const offset = action.payload;
+      const index = state.index;
+      return {
+        ...state,
+        currentTrack: state.queue[index + offset + 1],
+        index: index + offset + 1,
+        isPlaying: true
+      };
+    }
+
+    case PLAY_FROM_USER_QUEUE: {
+      const offset = action.payload;
+      const userQueueIndex = state.userQueueIndex;
+
+      return {
+        ...state,
+        currentTrack: state.userQueue[userQueueIndex + offset],
+        userQueueIndex: userQueueIndex + offset + 1,
+        isPlaying: true
       };
     }
 

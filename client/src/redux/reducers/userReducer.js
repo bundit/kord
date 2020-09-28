@@ -12,7 +12,8 @@ import {
   SET_SETTINGS_OPEN_STATUS,
   SET_SETTINGS_SOURCE,
   TOGGLE_ADD_TO_PLAYLIST_FORM,
-  TOGGLE_DELETE_TRACK_FORM
+  TOGGLE_DELETE_TRACK_FORM,
+  TOGGLE_USER_QUEUE
 } from "../actions/types";
 
 const profileInitialState = {
@@ -43,7 +44,8 @@ const initialState = {
     settingsSource: "",
     isAddToPlaylistFormOpen: false,
     isDeleteTrackFormOpen: false,
-    currentTrackDropdown: null
+    currentTrackDropdown: null,
+    isUserQueueOpen: false
   }
 };
 
@@ -217,6 +219,18 @@ export default function(state = initialState, action) {
         settings: {
           ...state.settings,
           isDeleteTrackFormOpen: !isDeleteTrackFormOpen
+        }
+      };
+    }
+
+    case TOGGLE_USER_QUEUE: {
+      const isUserQueueOpen = state.settings.isUserQueueOpen;
+
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          isUserQueueOpen: !isUserQueueOpen
         }
       };
     }

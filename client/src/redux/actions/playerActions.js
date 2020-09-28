@@ -4,6 +4,8 @@ import {
   NEXT_TRACK,
   PAUSE,
   PLAY,
+  PLAY_FROM_QUEUE,
+  PLAY_FROM_USER_QUEUE,
   PREV_TRACK,
   SEEK,
   SET_CONTEXT,
@@ -168,6 +170,20 @@ function setContext(context) {
   return {
     type: SET_CONTEXT,
     payload: context
+  };
+}
+
+export function playFromQueue(offset) {
+  return {
+    type: PLAY_FROM_QUEUE,
+    payload: offset
+  };
+}
+
+export function playFromUserQueue(offset) {
+  return {
+    type: PLAY_FROM_USER_QUEUE,
+    payload: offset
   };
 }
 

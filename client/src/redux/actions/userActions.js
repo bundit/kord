@@ -11,7 +11,8 @@ import {
   SET_SETTINGS_OPEN_STATUS,
   SET_SETTINGS_SOURCE,
   TOGGLE_ADD_TO_PLAYLIST_FORM,
-  TOGGLE_DELETE_TRACK_FORM
+  TOGGLE_DELETE_TRACK_FORM,
+  TOGGLE_USER_QUEUE
 } from "./types";
 import { fetchGeneric } from "../../utils/fetchGeneric";
 import { fetchSoundcloudProfileAndPlaylists } from "./soundcloudActions";
@@ -125,6 +126,12 @@ export const toggleAddToPlaylistForm = () => {
 export const toggleDeleteTrackForm = () => {
   return {
     type: TOGGLE_DELETE_TRACK_FORM
+  };
+};
+
+export const toggleUserQueue = () => {
+  return {
+    type: TOGGLE_USER_QUEUE
   };
 };
 
