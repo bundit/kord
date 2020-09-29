@@ -12,6 +12,8 @@ import {
 import PropTypes from "prop-types";
 import React from "react";
 
+import LazyLoad from "react-lazyload";
+
 import { getImgUrl } from "../utils/getImgUrl";
 import { msToDuration } from "../utils/formattingHelpers";
 import TrackDropdown from "./track-dropdown";
@@ -75,92 +77,96 @@ const TrackItem = ({
   function handleRemoveFromQueue() {
     handleRemove(index);
   }
-
   return (
     <div style={{ position: "relative" }}>
-      <div
-        className={`${styles.trackWrapper} ${isActive &&
-          styles.playingNow} ${!isStreamable &&
-          styles.notStreamable} ${isFromQueue && styles.queueTrackItem}`}
-        onClick={rippleEffect}
-        onDoubleClick={handlePlayTrack}
-        role="button"
-        tabIndex="0"
-        onKeyPress={handlePlayTrack}
-      >
-        <div className={styles.trackImageWrap}>
-          <img
-            className={styles.trackImage}
-            src={getImgUrl(track, "sm")}
-            alt="track"
-          />
-          {isStreamable && (
-            <div className={styles.overlay}>
-              {isPlaying && isActive ? (
-                <>
-                  <div
-                    className={`${styles.bar} ${!isPlaying && styles.paused}`}
-                  />
-                  <div
-                    className={`${styles.bar} ${styles.midBar} ${!isPlaying &&
-                      styles.paused}`}
-                  />
-                  <div
-                    className={`${styles.bar} ${!isPlaying && styles.paused}`}
-                  />
-                </>
-              ) : (
-                <button
-                  onClick={handlePlayTrack}
-                  className={styles.trackPlayButton}
-                >
-                  <FontAwesomeIcon icon={faPlay} size="lg" />
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-        <TrackInfo track={track} />
-        <div className={styles.singleSource} style={{ opacity: isActive && 1 }}>
-          <FontAwesomeIcon
-            icon={
-              source === "spotify"
-                ? faSpotify
-                : source === "soundcloud"
-                ? faSoundcloud
-                : faYoutube
-            }
-            size="2x"
-          />
-        </div>
-
-        <button
-          onClick={toggleDropdown}
-          onDoubleClick={stopPropagation}
-          style={isDropdownOpen ? { color: "#fb1", opacity: 1 } : null}
-          className={styles.trackSettingsButton}
+      <LazyLoad height={65} once>
+        <div
+          className={`${styles.trackWrapper} ${isActive &&
+            styles.playingNow} ${!isStreamable &&
+            styles.notStreamable} ${isFromQueue && styles.queueTrackItem}`}
+          onClick={rippleEffect}
+          onDoubleClick={handlePlayTrack}
+          role="button"
+          tabIndex="0"
+          onKeyPress={handlePlayTrack}
         >
-          <FontAwesomeIcon icon={faEllipsisV} />
-        </button>
-
-        <div className={styles.trackRightControls}>
-          {handleRemove && (
-            <button
-              type="button"
-              className={styles.removeFromQueueButton}
-              onClick={handleRemoveFromQueue}
-            >
-              <FontAwesomeIcon icon={faTimes} size="lg" />
-            </button>
-          )}
+          <div className={styles.trackImageWrap}>
+            <img
+              className={styles.trackImage}
+              src={getImgUrl(track, "sm")}
+              alt="track"
+            />
+            {isStreamable && (
+              <div className={styles.overlay}>
+                {isPlaying && isActive ? (
+                  <>
+                    <div
+                      className={`${styles.bar} ${!isPlaying && styles.paused}`}
+                    />
+                    <div
+                      className={`${styles.bar} ${styles.midBar} ${!isPlaying &&
+                        styles.paused}`}
+                    />
+                    <div
+                      className={`${styles.bar} ${!isPlaying && styles.paused}`}
+                    />
+                  </>
+                ) : (
+                  <button
+                    onClick={handlePlayTrack}
+                    className={styles.trackPlayButton}
+                  >
+                    <FontAwesomeIcon icon={faPlay} size="lg" />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+          <TrackInfo track={track} />
           <div
-            className={styles.duration}
-            style={{ display: !handleRemove ? "block" : null }}
+            className={styles.singleSource}
+            style={{ opacity: isActive && 1 }}
           >
-            {isNaN(ms) ? ms : msToDuration(ms)}
+            <FontAwesomeIcon
+              icon={
+                source === "spotify"
+                  ? faSpotify
+                  : source === "soundcloud"
+                  ? faSoundcloud
+                  : faYoutube
+              }
+              size="2x"
+            />
+          </div>
+
+          <button
+            onClick={toggleDropdown}
+            onDoubleClick={stopPropagation}
+            style={isDropdownOpen ? { color: "#fb1", opacity: 1 } : null}
+            className={styles.trackSettingsButton}
+          >
+            <FontAwesomeIcon icon={faEllipsisV} />
+          </button>
+
+          <div className={styles.trackRightControls}>
+            {handleRemove && (
+              <button
+                type="button"
+                className={styles.removeFromQueueButton}
+                onClick={handleRemoveFromQueue}
+              >
+                <FontAwesomeIcon icon={faTimes} size="lg" />
+              </button>
+            )}
+            <div
+              className={styles.duration}
+              style={{ display: !handleRemove ? "block" : null }}
+            >
+              {isNaN(ms) ? ms : msToDuration(ms)}
+            </div>
           </div>
         </div>
-      </div>
+      </LazyLoad>
       {isDropdownOpen && (
         <TrackDropdown
           toggleDropdown={toggleDropdown}

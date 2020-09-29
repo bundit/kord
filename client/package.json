@@ -19,7 +19,7 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.11.0",
     "react-howler": "^3.7.4",
-    "react-lazyload": "^2.6.5",
+    "react-lazyload": "^3.0.0",
     "react-loading-overlay": "^1.0.1",
     "react-particles-js": "^2.7.0",
     "react-redux": "^7.1.1",

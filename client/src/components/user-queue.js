@@ -1,6 +1,7 @@
 import { CSSTransition } from "react-transition-group";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { forceCheck } from "react-lazyload";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 
@@ -118,6 +119,7 @@ const UserQueue = () => {
         </div>
         <div
           className={modalStyles.formInnerWrapper}
+          onScroll={forceCheck}
           style={{ maxHeight: "515px" }}
         >
           <span className={`${modalStyles.formTitle} ${styles.queueTitle}`}>

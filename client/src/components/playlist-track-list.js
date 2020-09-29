@@ -5,6 +5,7 @@ import {
   faSync,
   faStar
 } from "@fortawesome/free-solid-svg-icons";
+import { forceCheck } from "react-lazyload";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useRef, useState } from "react";
@@ -297,6 +298,7 @@ function useLoadTracksOnScroll(
   loadMoreTracks
 ) {
   return function(e) {
+    forceCheck();
     const eScrollTop = e.target.scrollTop;
     const eHeight = e.target.getBoundingClientRect().height;
     const eScrollHeight = e.target.scrollHeight - 10;

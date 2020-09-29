@@ -7,6 +7,7 @@ import {
   faYoutube,
   faMixcloud
 } from "@fortawesome/free-brands-svg-icons";
+import { forceCheck } from "react-lazyload";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 import queryString from "query-string";
@@ -67,7 +68,10 @@ const SearchResults = () => {
   ));
 
   return (
-    <div style={{ overflowY: "scroll", margin: "80px 0" }}>
+    <div
+      onScroll={forceCheck}
+      style={{ overflowY: "scroll", margin: "80px 0" }}
+    >
       <h3
         className={styles.listTitle}
         style={{ color: "#aaa", fontSize: "20px" }}
