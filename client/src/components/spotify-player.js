@@ -342,6 +342,8 @@ class SpotifyWebPlaybackSdk {
         this.queuedTrack = null;
       }
 
+      this.setVolume(this.volume);
+
       if (this.onReady) {
         this.onReady();
       }
