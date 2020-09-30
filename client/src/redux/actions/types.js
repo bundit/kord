@@ -54,7 +54,7 @@ export const SET_CONTEXT = "SET_CONTEXT";
 export const APPEND_QUEUE = "APPEND_QUEUE";
 export const SET_MUTED = "SET_MUTED";
 export const PLAY_FROM_QUEUE = "PLAY_FROM_QUEUE";
-export const PLAY_FROM_USER_QUEUE = "PLAY_FROM_USER_QUEUE";
+export const SET_RELATED_TRACKS = "SET_RELATED_TRACKS";
 
 // Search Reducer
 export const SET_QUERY = "SET_QUERY";

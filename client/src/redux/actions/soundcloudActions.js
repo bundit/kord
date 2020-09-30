@@ -139,6 +139,18 @@ function fetchScArtists(endpoint) {
   return fetchGeneric(endpoint).then(json => mapJsonToArtists(json));
 }
 
+export const fetchRelatedSouncloudTracks = (
+  trackId,
+  limit = 20
+) => dispatch => {
+  const endpoint = `https://api-v2.soundcloud.com/stations/soundcloud:track-stations:${trackId}/tracks?limit=${limit}&offset=0&linked_partitioning=1`;
+  const proxyHref = `/api?url=${encodeURIComponent(`${endpoint}`)}`;
+
+  return fetchGeneric(proxyHref).then(json =>
+    mapCollectionToTracks(json.collection)
+  );
+};
+
 export function mapCollectionToTracks(collection) {
   if (!collection) {
     throw new Error("Collection is invalid");
@@ -150,7 +162,7 @@ export function mapCollectionToTracks(collection) {
       title: track.title,
       id: track.id,
       duration: track.duration,
-      streamable: track.streamable,
+      streamable: true,
       img: track.artwork_url,
       source: "soundcloud",
       artist: {

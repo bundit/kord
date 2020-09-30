@@ -5,7 +5,6 @@ import {
   PAUSE,
   PLAY,
   PLAY_FROM_QUEUE,
-  PLAY_FROM_USER_QUEUE,
   PREV_TRACK,
   REMOVE_TRACK_FROM_QUEUE,
   SEEK,
@@ -16,6 +15,7 @@ import {
   SET_PLAYER,
   SET_QUEUE,
   SET_QUEUE_INDEX,
+  SET_RELATED_TRACKS,
   SET_SEEK,
   SET_TRACK,
   SET_TRACK_UNSTREAMABLE,
@@ -39,6 +39,8 @@ const initialState = {
   queue: [],
   userQueueIndex: 0,
   userQueue: [],
+  relatedTracksIndex: 0,
+  relatedTracks: [],
   context: {
     source: "source",
     id: "id"
@@ -104,47 +106,60 @@ export default function(state = initialState, action) {
     }
 
     case NEXT_TRACK: {
-      let nextIndex = state.index;
-      let nextUserQueueIndex = state.userQueueIndex;
-      const queue = state.queue;
-      const userQueue = state.userQueue || [];
+      let { index, userQueueIndex, relatedTracksIndex } = state;
+      let { queue, userQueue, relatedTracks } = state;
+
+      userQueue = userQueue || [];
+      relatedTracks = relatedTracks || [];
 
       // If there is a user queued song
-      if (nextUserQueueIndex < userQueue.length) {
-        const nextTrackInUserQueue = userQueue[nextUserQueueIndex];
+      if (userQueueIndex < userQueue.length) {
+        const nextTrackInUserQueue = userQueue[userQueueIndex];
         return {
           ...state,
           currentTrack: nextTrackInUserQueue,
-          userQueueIndex: nextUserQueueIndex + 1,
+          userQueueIndex: userQueueIndex + 1,
           duration: nextTrackInUserQueue.duration
         };
       }
 
       // Else play from list queue
       do {
-        nextIndex++;
-      } while (nextIndex < queue.length && !queue[nextIndex].streamable);
+        index++;
+      } while (index < queue.length && !queue[index].streamable);
 
-      // No more songs in list queue and user queue
-      if (nextIndex >= queue.length) {
-        return {
-          ...initialState,
-          isPlaying: false,
-          volume: state.volume,
-          isMuted: state.isMuted
-        };
-      } else {
-        const nextTrackInListQueue = state.queue[nextIndex];
-
+      if (index < queue.length) {
+        const nextTrackInListQueue = queue[index];
         return {
           ...state,
           currentTrack: nextTrackInListQueue,
           duration: nextTrackInListQueue.duration,
-          index: nextIndex,
+          index: index,
           userQueue: [],
           userQueueIndex: 0
         };
       }
+
+      // Else play from related tracks
+      if (relatedTracksIndex < relatedTracks.length) {
+        const nextTrackInRelated = relatedTracks[relatedTracksIndex];
+        return {
+          ...state,
+          currentTrack: nextTrackInRelated,
+          duration: nextTrackInRelated.duration,
+          relatedTracksIndex: relatedTracksIndex + 1,
+          queue: [],
+          index: 0
+        };
+      }
+
+      // No more tracks in all queues
+      return {
+        ...initialState,
+        isPlaying: false,
+        volume: state.volume,
+        isMuted: state.isMuted
+      };
     }
 
     case PREV_TRACK: {
@@ -179,9 +194,17 @@ export default function(state = initialState, action) {
 
     case REMOVE_TRACK_FROM_QUEUE: {
       const { offset, whichQueue } = action.payload;
-      const { index, userQueueIndex } = state;
+      const { index, userQueueIndex, relatedTracksIndex } = state;
 
-      if (whichQueue === "userQueue") {
+      if (whichQueue === "queue") {
+        const newQueue = state.queue.slice();
+        newQueue.splice(index + offset + 1, 1);
+
+        return {
+          ...state,
+          queue: newQueue
+        };
+      } else if (whichQueue === "userQueue") {
         const newUserQueue = state.userQueue.slice();
         newUserQueue.splice(userQueueIndex + offset, 1);
 
@@ -189,16 +212,17 @@ export default function(state = initialState, action) {
           ...state,
           userQueue: newUserQueue
         };
+      } else if (whichQueue === "relatedTracks") {
+        const newRelatedTracks = state.relatedTracks.slice();
+        newRelatedTracks.splice(relatedTracksIndex + offset, 1);
+
+        return {
+          ...state,
+          relatedTracks: newRelatedTracks
+        };
       }
 
-      // else normal queue
-      const newQueue = state.queue.slice();
-      newQueue.splice(index + offset + 1, 1);
-
-      return {
-        ...state,
-        queue: newQueue
-      };
+      return state;
     }
 
     case SET_QUEUE: {
@@ -265,25 +289,44 @@ export default function(state = initialState, action) {
     }
 
     case PLAY_FROM_QUEUE: {
-      const offset = action.payload;
-      const index = state.index;
-      return {
-        ...state,
-        currentTrack: state.queue[index + offset + 1],
-        index: index + offset + 1,
-        isPlaying: true
-      };
+      const { offset, whichQueue } = action.payload;
+      const { queue, userQueue, relatedTracks } = state;
+      const { index, userQueueIndex, relatedTracksIndex } = state;
+
+      // const index = state.index;
+      if (whichQueue === "queue") {
+        return {
+          ...state,
+          currentTrack: queue[index + offset + 1],
+          index: index + offset + 1,
+          isPlaying: true
+        };
+      } else if (whichQueue === "userQueue") {
+        return {
+          ...state,
+          currentTrack: userQueue[userQueueIndex + offset],
+          userQueueIndex: userQueueIndex + offset + 1,
+          isPlaying: true
+        };
+      } else if (whichQueue === "relatedTracks") {
+        return {
+          ...state,
+          currentTrack: relatedTracks[relatedTracksIndex + offset],
+          relatedTracksIndex: relatedTracksIndex + offset + 1,
+          isPlaying: true
+        };
+      }
+
+      return state;
     }
 
-    case PLAY_FROM_USER_QUEUE: {
-      const offset = action.payload;
-      const userQueueIndex = state.userQueueIndex;
+    case SET_RELATED_TRACKS: {
+      const relatedTracks = action.payload;
 
       return {
         ...state,
-        currentTrack: state.userQueue[userQueueIndex + offset],
-        userQueueIndex: userQueueIndex + offset + 1,
-        isPlaying: true
+        relatedTracks: relatedTracks,
+        relatedTracksIndex: 0
       };
     }
 

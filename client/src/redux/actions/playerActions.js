@@ -5,7 +5,6 @@ import {
   PAUSE,
   PLAY,
   PLAY_FROM_QUEUE,
-  PLAY_FROM_USER_QUEUE,
   PREV_TRACK,
   REMOVE_TRACK_FROM_QUEUE,
   SEEK,
@@ -15,6 +14,7 @@ import {
   SET_NEXT_QUEUE_HREF,
   SET_QUEUE,
   SET_QUEUE_INDEX,
+  SET_RELATED_TRACKS,
   SET_SEEK,
   SET_TRACK,
   SET_VOLUME
@@ -22,11 +22,19 @@ import {
 import { fetchGeneric } from "../../utils/fetchGeneric";
 import {
   fetchMoreYoutubeTrackResults,
+  fetchRelatedYoutubeTracks,
   fetchYoutubePlaylistTracks
 } from "./youtubeActions";
+import {
+  fetchRelatedSouncloudTracks,
+  mapCollectionToTracks
+} from "./soundcloudActions";
+import {
+  fetchRelatedSpotifyTracks,
+  mapJsonToTracks,
+  spotifyApi
+} from "./spotifyActions";
 import { loadPlaylistTracks } from "./libraryActions";
-import { mapCollectionToTracks } from "./soundcloudActions";
-import { mapJsonToTracks, spotifyApi } from "./spotifyActions";
 import store from "../store";
 
 export const playTrack = (index, tracklist, nextHref, context) => dispatch => {
@@ -38,6 +46,7 @@ export const playTrack = (index, tracklist, nextHref, context) => dispatch => {
   dispatch(setTrack(currentTrack));
   dispatch(setQueueIndex(index));
   dispatch(setQueue(tracklist));
+  dispatch(setRelatedTracks([]));
   dispatch(setNextQueueHref(nextHref));
   dispatch(setContext(context));
 };
@@ -102,18 +111,40 @@ function nextTrackAction() {
 
 export const nextTrack = () => dispatch => {
   let state = store.getState();
-  let index = state.player.index;
-  const queue = state.player.queue;
+  let { index, userQueueIndex, relatedTracksIndex } = state.player;
+  const { queue, userQueue, currentTrack, relatedTracks } = state.player;
 
   // Check if more tracks need to be loaded or not
   do {
     index++;
   } while (index < queue.length && !queue[index].streamable);
 
-  if (index >= queue.length) {
-    return dispatch(loadMoreQueueTracks()).then(() =>
-      dispatch(nextTrackAction())
-    );
+  while (
+    userQueueIndex < userQueue.length &&
+    !userQueue[userQueueIndex].streamable
+  ) {
+    userQueueIndex++;
+  }
+
+  while (
+    relatedTracksIndex < relatedTracks.length &&
+    !relatedTracks[relatedTracksIndex].streamable
+  ) {
+    relatedTracksIndex++;
+  }
+
+  const hasTracksLeftInAnyQueue =
+    index < queue.length ||
+    userQueueIndex < userQueue.length ||
+    relatedTracksIndex < relatedTracks.length;
+
+  // if (index >= queue.length && userQueueIndex >= userQueue.length) {
+  if (!hasTracksLeftInAnyQueue) {
+    return dispatch(loadMoreQueueTracks())
+      .catch(() =>
+        dispatch(fetchRelatedQueueTracks(currentTrack.source, currentTrack))
+      )
+      .then(() => dispatch(nextTrackAction()));
   }
 
   return dispatch(nextTrackAction());
@@ -184,17 +215,20 @@ function setContext(context) {
   };
 }
 
-export function playFromQueue(offset) {
+export function playFromQueue(offset, whichQueue) {
   return {
     type: PLAY_FROM_QUEUE,
-    payload: offset
+    payload: {
+      offset,
+      whichQueue
+    }
   };
 }
 
-export function playFromUserQueue(offset) {
+function setRelatedTracks(relatedTracks) {
   return {
-    type: PLAY_FROM_USER_QUEUE,
-    payload: offset
+    type: SET_RELATED_TRACKS,
+    payload: relatedTracks
   };
 }
 
@@ -233,7 +267,7 @@ const loadMoreQueueTracks = () => dispatch => {
   } = playerState;
 
   if (!nextHref) {
-    return Promise.resolve("No more results");
+    return Promise.reject("No more results");
   }
 
   let promise;
@@ -274,4 +308,18 @@ const loadMoreQueueTracks = () => dispatch => {
     dispatch(appendQueue(tracks));
     dispatch(setNextQueueHref(next));
   });
+};
+
+const fetchRelatedQueueTracks = (source, track) => dispatch => {
+  const fetchRelated = {
+    soundcloud: fetchRelatedSouncloudTracks,
+    spotify: fetchRelatedSpotifyTracks,
+    youtube: fetchRelatedYoutubeTracks
+  };
+
+  if (fetchRelated[source]) {
+    return dispatch(fetchRelated[source](track.id)).then(tracks =>
+      dispatch(setRelatedTracks(tracks))
+    );
+  }
 };

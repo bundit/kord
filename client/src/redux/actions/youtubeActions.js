@@ -136,7 +136,7 @@ function fetchYoutubeTrackInfo(videoIds) {
 }
 
 export const searchYoutube = (query, limit = 25, tries = 3) => dispatch => {
-  const searchEndpoint = `${YT_API}/search?type=video&part=snippet%2Cid&maxResults=${limit}&q=${query}&key=${process.env.REACT_APP_YT_KEY}`;
+  const searchEndpoint = `${YT_API}/search?type=video&part=snippet%2Cid&videoCategoryId=10&maxResults=${limit}&q=${query}&key=${process.env.REACT_APP_YT_KEY}`;
   const opts = generateYoutubeFetchOptionsAndHeaders();
   const storageKey = `YT:${query}`;
 
@@ -189,6 +189,49 @@ export const searchYoutube = (query, limit = 25, tries = 3) => dispatch => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
           dispatch(searchYoutube(query, limit, --tries))
+        );
+      } else return Promise.reject(e);
+    });
+};
+
+export const fetchRelatedYoutubeTracks = (
+  videoId,
+  limit = 20,
+  tries = 3
+) => dispatch => {
+  return fetchGeneric(
+    `${YT_API}/search?type=video&part=snippet%2Cid&videoCategoryId=10&maxResults=${limit}&relatedToVideoId=${videoId}&key=${process.env.REACT_APP_YT_KEY}`
+  )
+    .then(json => {
+      const tracks = mapJsonSearchToTracks(json).filter(
+        tracks => tracks.title !== "Private video"
+      );
+
+      return tracks;
+    })
+    .then(tracks => {
+      const videoIds = tracks.map(track => track.id);
+
+      return fetchYoutubeTrackInfo(videoIds).then(json => {
+        json.items.forEach(item => {
+          tracks = tracks.map(track => {
+            if (track.id === item.id) {
+              track = {
+                ...track,
+                ...mapDurationAndChannelToTracks(item)
+              };
+            }
+            return track;
+          });
+        });
+
+        return tracks;
+      });
+    })
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchRelatedYoutubeTracks(videoId, limit, --tries))
         );
       } else return Promise.reject(e);
     });

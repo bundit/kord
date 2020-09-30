@@ -206,6 +206,28 @@ export const fetchMoreSpotifyTrackResults = (next, tries = 3) => dispatch => {
     });
 };
 
+export const fetchRelatedSpotifyTracks = (
+  trackId,
+  limit = 20,
+  tries = 3
+) => dispatch => {
+  const options = {
+    limit,
+    market: "from_token",
+    seed_tracks: [trackId]
+  };
+  return spotifyApi
+    .getRecommendations(options)
+    .then(json => mapToTracks(json.tracks))
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchRelatedSpotifyTracks(trackId, limit, --tries))
+        );
+      } else return Promise.reject(e);
+    });
+};
+
 function parseSpotifyResults(json) {
   // eslint-disable-next-line
   const { tracks, artists, album } = json;
@@ -318,6 +340,25 @@ export function mapJsonToTracks(json, search = false) {
     json = json.items.map(trackData => trackData.track);
   } else json = json.items;
 
+  return json.map(track => ({
+    album: {
+      title: track.album.name,
+      id: track.album.id
+    },
+    id: track.id,
+    duration: track.duration_ms,
+    title: track.name,
+    artist: track.artists.map(artist => ({
+      id: artist.id,
+      name: artist.name
+    })),
+    img: track.album.images,
+    streamable: track.is_playable,
+    source: "spotify"
+  }));
+}
+
+function mapToTracks(json) {
   return json.map(track => ({
     album: {
       title: track.album.name,
