@@ -8,7 +8,6 @@ import React from "react";
 import {
   play,
   playFromQueue,
-  playFromUserQueue,
   removeTrackFromQueue
 } from "../redux/actions/playerActions";
 import { toggleUserQueue } from "../redux/actions/userActions";
@@ -31,12 +30,17 @@ const UserQueue = () => {
     queue,
     userQueueIndex,
     userQueue,
+    relatedTracksIndex,
+    relatedTracks,
     context
   } = useSelector(state => state.player);
   const nextInUserQueue = userQueue
     ? userQueue.slice(userQueueIndex, userQueue.length)
     : [];
   const nextInPlayerQueue = queue.slice(index + 1);
+  const nextInRelatedTracks = relatedTracks
+    ? relatedTracks.slice(relatedTracksIndex)
+    : [];
 
   function handleToggleShowQueue() {
     dispatch(toggleUserQueue());
@@ -46,12 +50,16 @@ const UserQueue = () => {
     dispatch(play());
   }
 
-  function handlePlayFromUserAddedQueue(index) {
-    dispatch(playFromUserQueue(index));
+  function handlePlayFromUserAddedQueue(offset) {
+    dispatch(playFromQueue(offset, "userQueue"));
   }
 
-  function handlePlayFromQueue(index) {
-    dispatch(playFromQueue(index));
+  function handlePlayFromQueue(offset) {
+    dispatch(playFromQueue(offset, "queue"));
+  }
+
+  function handlePlayFromRelated(offset) {
+    dispatch(playFromQueue(offset, "relatedTracks"));
   }
 
   function handleRemoveTrackFromUserQueue(offset) {
@@ -62,10 +70,14 @@ const UserQueue = () => {
     dispatch(removeTrackFromQueue(offset, "queue"));
   }
 
+  function handleRemoveFromRelated(offset) {
+    dispatch(removeTrackFromQueue(offset, "relatedTracks"));
+  }
+
   const queueList = [
     {
       list: nextInUserQueue,
-      id: "user-queue",
+      id: "userQueue",
       title: "Next in your Queue",
       handlePlay: handlePlayFromUserAddedQueue,
       handleRemove: handleRemoveTrackFromUserQueue
@@ -76,6 +88,13 @@ const UserQueue = () => {
       title: `Next from ${context.title}`,
       handlePlay: handlePlayFromQueue,
       handleRemove: handleRemoveTrackFromQueue
+    },
+    {
+      list: nextInRelatedTracks,
+      id: "relatedTracks",
+      title: "Next Suggested",
+      handlePlay: handlePlayFromRelated,
+      handleRemove: handleRemoveFromRelated
     }
   ];
 
