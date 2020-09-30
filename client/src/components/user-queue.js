@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 
 import {
+  clearRestOfQueue,
   play,
   playFromQueue,
   removeTrackFromQueue
@@ -74,27 +75,42 @@ const UserQueue = () => {
     dispatch(removeTrackFromQueue(offset, "relatedTracks"));
   }
 
+  function handleClearRestOfUserQueue(offset) {
+    dispatch(clearRestOfQueue("userQueue"));
+  }
+
+  function handleClearRestOfQueue(offset) {
+    dispatch(clearRestOfQueue("queue"));
+  }
+
+  function handleClearRestOfRelated(offset) {
+    dispatch(clearRestOfQueue("relatedTracks"));
+  }
+
   const queueList = [
     {
       list: nextInUserQueue,
       id: "userQueue",
       title: "Next in your Queue",
       handlePlay: handlePlayFromUserAddedQueue,
-      handleRemove: handleRemoveTrackFromUserQueue
+      handleRemove: handleRemoveTrackFromUserQueue,
+      handleClear: handleClearRestOfUserQueue
     },
     {
       list: nextInPlayerQueue,
       id: "queue",
       title: `Next from ${context.title}`,
       handlePlay: handlePlayFromQueue,
-      handleRemove: handleRemoveTrackFromQueue
+      handleRemove: handleRemoveTrackFromQueue,
+      handleClear: handleClearRestOfQueue
     },
     {
       list: nextInRelatedTracks,
       id: "relatedTracks",
       title: "Next Suggested",
       handlePlay: handlePlayFromRelated,
-      handleRemove: handleRemoveFromRelated
+      handleRemove: handleRemoveFromRelated,
+      handleClear: handleClearRestOfRelated
     }
   ];
 
@@ -102,9 +118,13 @@ const UserQueue = () => {
     .filter(queue => queue.list && queue.list.length)
     .map(queue => (
       <React.Fragment key={queue.id}>
-        <span className={`${modalStyles.formTitle} ${styles.queueTitle}`}>
-          {queue.title}
-        </span>
+        <div
+          className={`${modalStyles.formTitle} ${styles.queueTitle}`}
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          <span>{queue.title}</span>
+          <ClearQueueButton handleClear={queue.handleClear} />
+        </div>
         <TrackList
           tracks={queue.list}
           isPlaying={isPlaying}
@@ -139,7 +159,7 @@ const UserQueue = () => {
         <div
           className={modalStyles.formInnerWrapper}
           onScroll={forceCheck}
-          style={{ maxHeight: "515px" }}
+          style={{ height: "515px" }}
         >
           <span className={`${modalStyles.formTitle} ${styles.queueTitle}`}>
             Currently Playing
@@ -157,5 +177,13 @@ const UserQueue = () => {
     </CSSTransition>
   );
 };
+
+function ClearQueueButton({ handleClear }) {
+  return (
+    <button className={styles.clearQueueButton} onClick={handleClear}>
+      Clear
+    </button>
+  );
+}
 
 export default UserQueue;

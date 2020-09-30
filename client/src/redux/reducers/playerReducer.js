@@ -1,6 +1,7 @@
 import {
   ADD_TRACK_TO_USER_QUEUE,
   APPEND_QUEUE,
+  CLEAR_REST_OF_QUEUE,
   NEXT_TRACK,
   PAUSE,
   PLAY,
@@ -328,6 +329,38 @@ export default function(state = initialState, action) {
         relatedTracks: relatedTracks,
         relatedTracksIndex: 0
       };
+    }
+
+    case CLEAR_REST_OF_QUEUE: {
+      const {
+        index,
+        queue,
+        userQueueIndex,
+        userQueue,
+        relatedTracksIndex,
+        relatedTracks
+      } = state;
+      const whichQueue = action.payload;
+
+      if (whichQueue === "queue") {
+        return {
+          ...state,
+          queue: queue.slice(0, index + 1),
+          nextHref: null
+        };
+      } else if (whichQueue === "userQueue") {
+        return {
+          ...state,
+          userQueue: userQueue.slice(0, userQueueIndex)
+        };
+      } else if (whichQueue === "relatedTracks") {
+        return {
+          ...state,
+          relatedTracks: relatedTracks.slice(0, relatedTracksIndex)
+        };
+      }
+
+      return state;
     }
 
     default:

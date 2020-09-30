@@ -664,6 +664,13 @@
   color: #aaa;
 }
 
+.queueTitle span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 5px;
+}
+
 @media (min-width: 800px) {
   .singleSource {
     margin-right: 30px;
@@ -769,6 +776,21 @@
   .removeFromQueueButton {
     cursor: pointer;
     color: #aaa;
+  }
+
+  .clearQueueButton {
+    margin-left: auto;
+    border: 1px #383f41 solid;
+    color: #aaa;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease-out;
+  }
+
+  .clearQueueButton:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
   }
 
   .removeFromQueueButton:hover {

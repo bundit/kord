@@ -1,6 +1,7 @@
 import {
   ADD_TRACK_TO_USER_QUEUE,
   APPEND_QUEUE,
+  CLEAR_REST_OF_QUEUE,
   NEXT_TRACK,
   PAUSE,
   PLAY,
@@ -229,6 +230,13 @@ function setRelatedTracks(relatedTracks) {
   return {
     type: SET_RELATED_TRACKS,
     payload: relatedTracks
+  };
+}
+
+export function clearRestOfQueue(whichQueue) {
+  return {
+    type: CLEAR_REST_OF_QUEUE,
+    payload: whichQueue
   };
 }
 

@@ -301,9 +301,8 @@
 
 .formTitle {
   font-weight: 600;
-  padding-left: 10px;
+  padding: 0 10px 10px 10px;
   margin: 35px 25px 0 25px;
-  padding-bottom: 10px;
   font-size: 16px;
   border-bottom: 1px #383f41 solid;
 }
