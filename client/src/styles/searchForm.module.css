@@ -29,7 +29,7 @@
   opacity: 1;
 }
 
-.searchBar:focus {
+.searchForm:focus-within .searchBar {
   background-color: #fff;
   width: 330px;
 }
@@ -69,4 +69,90 @@
 
 .visibleButton {
   transform: translateX(0);
+}
+
+.searchCompletionWrapper {
+  position: absolute;
+  top: 60px;
+  width: 330px;
+  display: none;
+  flex-direction: column;
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px #383f41 solid;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+.searchForm:focus-within .searchCompletionWrapper {
+  display: flex;
+  animation: fadeInFromNone 0.5s ease-out;
+  display: flex;
+}
+
+.searchCompleteItem {
+  position: relative;
+  background-color: #151d20;
+  border-bottom: 1px #383f41 solid;
+  width: 100%;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s ease-out;
+}
+
+.searchCompleteItem:hover a,
+.selectedItem a {
+  color: white;
+}
+
+.searchCompleteItem:hover,
+.searchCompleteItem:focus-within,
+.selectedItem {
+  background-color: #2f3638;
+}
+
+.searchCompletionWrapper .searchCompleteItem:last-child {
+  border-bottom: none;
+}
+
+.searchCompleteItem a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  padding-left: 25px;
+  color: #bbb;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.searchCompleteItem button {
+  position: absolute;
+  right: 12px;
+  outline: none;
+  height: 100%;
+  color: white;
+}
+
+@keyframes fadeInFromNone {
+  /* https://stackoverflow.com/questions/8449933/animation-css3-display-opacity/8450102 */
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  1% {
+    display: flex;
+    opacity: 0;
+  }
+
+  100% {
+    display: flex;
+    opacity: 1;
+  }
+  101% {
+    display: flex;
+  }
 }

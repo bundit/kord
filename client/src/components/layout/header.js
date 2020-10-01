@@ -5,10 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 
-import {
-  addToSearchHistory,
-  setQuery
-} from "../../redux/actions/searchActions";
 import { clearState } from "../../redux/actions/stateActions";
 import { openSettings } from "../../redux/actions/userActions";
 import SearchBar from "../search-bar";
@@ -25,8 +21,6 @@ function Header({ location }) {
   const { pathname } = location;
   const baseUrls = ["Library", "Search", "More", ""];
 
-  const query = useSelector(state => state.search.query);
-
   // Get only last route
   let title = pathname.slice(pathname.lastIndexOf("/") + 1);
   // Make it capitalized
@@ -35,23 +29,6 @@ function Header({ location }) {
   }
   // Previous route within tab
   const prevRoute = pathname.slice(0, pathname.lastIndexOf("/"));
-
-  function handleSearchChange(e) {
-    dispatch(setQuery(e.target.value));
-  }
-
-  function handleSearchSubmit(e) {
-    e.preventDefault();
-
-    if (query && query.length) {
-      history.push(`/app/search/${query}`);
-      dispatch(addToSearchHistory(query));
-    }
-  }
-
-  function handleResetQuery() {
-    dispatch(setQuery(""));
-  }
 
   function handleGoBack() {
     history.goBack();
@@ -120,13 +97,7 @@ function Header({ location }) {
               <FontAwesomeIcon size="lg" icon={faAngleRight} />
             </button>
           </div>
-          <SearchBar
-            placeholder="Search for Music"
-            query={query}
-            onChange={handleSearchChange}
-            onSubmit={handleSearchSubmit}
-            onReset={handleResetQuery}
-          />
+          <SearchBar placeholder="Search for Music" />
 
           <span className={styles.userSettingsButtonWrapper}>
             <button
