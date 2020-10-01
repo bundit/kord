@@ -2,6 +2,7 @@ import {
   ADD_TO_SEARCH_HISTORY,
   REMOVE_FROM_SEARCH_HISTORY,
   SET_ARTIST_RESULTS,
+  SET_AUTOCOMPLETE_RESULTS,
   SET_MORE_TRACK_RESULTS,
   SET_QUERY,
   SET_TRACK_RESULTS
@@ -9,6 +10,7 @@ import {
 
 const initialState = {
   query: "",
+  autoCompleteResults: [],
   spotify: {
     tracks: {
       list: [],
@@ -88,7 +90,7 @@ export default function(state = initialState, action) {
     }
 
     case ADD_TO_SEARCH_HISTORY: {
-      const newQuery = action.payload;
+      const newQuery = action.payload.trim();
       let history = state.history.slice();
       history = history.filter(query => query !== newQuery);
 
@@ -107,6 +109,13 @@ export default function(state = initialState, action) {
       return {
         ...state,
         history: filteredHistory
+      };
+    }
+
+    case SET_AUTOCOMPLETE_RESULTS: {
+      return {
+        ...state,
+        autoCompleteResults: action.payload
       };
     }
 

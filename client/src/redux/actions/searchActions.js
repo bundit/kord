@@ -2,10 +2,12 @@ import {
   ADD_TO_SEARCH_HISTORY,
   REMOVE_FROM_SEARCH_HISTORY,
   SET_ARTIST_RESULTS,
+  SET_AUTOCOMPLETE_RESULTS,
   SET_MORE_TRACK_RESULTS,
   SET_QUERY,
   SET_TRACK_RESULTS
 } from "./types";
+import { fetchGeneric } from "../../utils/fetchGeneric";
 import {
   fetchMoreSoundcloudTrackResults,
   searchSoundcloudTracks
@@ -58,6 +60,13 @@ export function removeFromSearchHistory(query) {
   };
 }
 
+export function setAutoCompleteResults(results) {
+  return {
+    type: SET_AUTOCOMPLETE_RESULTS,
+    payload: results
+  };
+}
+
 export const searchForMusic = (source, query) => dispatch => {
   let request;
 
@@ -90,4 +99,10 @@ export const loadMoreTrackResults = (source, next) => dispatch => {
   } else if (source === "youtube") {
     return dispatch(fetchMoreYoutubeTrackResults(next));
   }
+};
+
+export const fetchAutoCompleteResults = query => dispatch => {
+  return fetchGeneric(
+    `https://cors-anywhere.herokuapp.com/http://suggestqueries.google.com/complete/search?client=chrome&ds=yt&q=${query}`
+  ).then(res => dispatch(setAutoCompleteResults(res[1])));
 };
