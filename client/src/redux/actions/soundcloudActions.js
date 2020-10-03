@@ -60,20 +60,10 @@ export const fetchSoundcloudLikes = (next, userId) => dispatch => {
     next = `${SC_API_V2}/users/${userId}/likes?&limit=30&offset=0&linked_partitioning=${LINK}`;
   }
 
-  const proxyHref = `/api?url=${encodeURIComponent(`${next}`)}`;
+  return dispatch(fetchSoundcloudTracks(next)).then(fetchedTracks => {
+    dispatch(importLikes("soundcloud", fetchedTracks));
 
-  return fetchGeneric(proxyHref).then(json => {
-    const tracks = mapCollectionToTracks(json.collection);
-    const next = json.next_href;
-
-    const likes = {
-      tracks,
-      next
-    };
-
-    dispatch(importLikes("soundcloud", likes));
-
-    return likes;
+    return fetchedTracks;
   });
 };
 
@@ -107,22 +97,16 @@ export const searchSoundcloudTracks = (query, limit = 50) => dispatch => {
     return Promise.resolve();
   }
 
-  return fetchGeneric(trackSearchEndpoint).then(json => {
-    const tracks = {
-      list: mapCollectionToTracks(json.collection),
-      next: json.next_href
-    };
-
-    dispatch(setTrackResults("soundcloud", tracks));
-    cacheValue(storageKey, tracks);
-  });
+  return dispatch(fetchSoundcloudTracks(trackSearchEndpoint)).then(
+    ({ tracks, next }) => {
+      dispatch(setTrackResults("soundcloud", { list: tracks, next }));
+      cacheValue(storageKey, { list: tracks, next });
+    }
+  );
 };
 
 export const fetchMoreSoundcloudTrackResults = next => dispatch => {
-  return fetchGeneric(next).then(json => {
-    const tracks = mapCollectionToTracks(json.collection);
-    const next = json.next_href;
-
+  return dispatch(fetchSoundcloudTracks(next)).then(({ tracks, next }) => {
     dispatch(setMoreTrackResults("soundcloud", { list: tracks, next }));
   });
 };
@@ -143,13 +127,86 @@ export const fetchRelatedSouncloudTracks = (
   trackId,
   limit = 20
 ) => dispatch => {
-  const endpoint = `https://api-v2.soundcloud.com/stations/soundcloud:track-stations:${trackId}/tracks?limit=${limit}&offset=0&linked_partitioning=1`;
-  const proxyHref = `/api?url=${encodeURIComponent(`${endpoint}`)}`;
+  const endpoint = `${SC_API_V2}/stations/soundcloud:track-stations:${trackId}/tracks?limit=${limit}&offset=0&linked_partitioning=1`;
 
-  return fetchGeneric(proxyHref).then(json =>
-    mapCollectionToTracks(json.collection)
+  return dispatch(fetchSoundcloudTracks(endpoint)).then(
+    ({ tracks, next }) => tracks
   );
 };
+
+export const fetchSoundcloudArtist = artistId => dispatch => {
+  return fetchGeneric(
+    `${SC_API}/users/${artistId}?client_id=${process.env.REACT_APP_SC_KEY}`
+  ).then(json => mapSoundcloudArtist(json));
+};
+
+export const fetchSoundcloudSpotlight = artistId => dispatch => {
+  const endpoint = `${SC_API_V2}/users/${artistId}/spotlight?&limit=20&linked_partitioning=1`;
+  const proxyHref = `/api?url=${encodeURIComponent(endpoint)}`;
+  return fetchGeneric(proxyHref).then(json =>
+    mapCollectionToPlaylistsOrTracks(json.collection)
+  );
+};
+
+export const fetchSoundcloudArtistTopTracks = artistId => dispatch => {
+  const endpoint = `${SC_API_V2}/users/${artistId}/toptracks?limit=30&linked_partitioning=1`;
+
+  return dispatch(fetchSoundcloudTracks(endpoint));
+};
+
+export const fetchSoundcloudArtistTracks = artistId => dispatch => {
+  const endpoint = `${SC_API_V2}/stream/users/${artistId}?limit=30&linked_partitioning=1`;
+
+  return dispatch(fetchSoundcloudTracks(endpoint));
+};
+
+export const fetchSoundcloudTracks = endpoint => dispatch => {
+  if (endpoint.includes("api-v2")) {
+    endpoint = `/api?url=${encodeURIComponent(endpoint)}`;
+  }
+
+  return fetchGeneric(endpoint).then(json => mapTracksAndNextHref(json));
+};
+
+function mapTracksAndNextHref(json) {
+  return {
+    next: json.next_href,
+    tracks: mapCollectionToTracks(json.collection)
+  };
+}
+
+function mapCollectionToPlaylistsOrTracks(collection) {
+  return collection.map(item =>
+    item.kind === "playlist" ? mapSoundcloudPlaylist(item) : mapToTrack(item)
+  );
+}
+
+function mapSoundcloudPlaylist(playlist) {
+  return {
+    id: playlist.id,
+    url: playlist.permalink_url,
+    title: playlist.title,
+    artist: {
+      id: playlist.user.id,
+      img: playlist.user.avatar_url,
+      name: playlist.user.username,
+      permalink: playlist.user.permalink
+    },
+    kind: "playlist",
+    tracks: mapCollectionToTracks(playlist.tracks)
+  };
+}
+
+function mapSoundcloudArtist(json) {
+  return {
+    img: json.avatar_url,
+    url: json.permalink_url,
+    name: json.username,
+    followers_count: json.followers_count,
+    track_count: json.track_count,
+    source: "soundcloud"
+  };
+}
 
 export function mapCollectionToTracks(collection) {
   if (!collection) {
@@ -158,26 +215,28 @@ export function mapCollectionToTracks(collection) {
 
   return collection
     .map(track => track.track || track.playlist || track)
-    .map(track => ({
-      title: track.title,
-      id: track.id,
-      duration: track.duration,
-      streamable: true,
-      img: track.artwork_url,
-      source: "soundcloud",
-      artist: {
-        name: track.user.username,
-        img: track.user.avatar_url,
-        id: track.user.id
-      },
-      permalink: `${track.user.permalink}/${track.permalink}`
-      // date: track.created_at,
-      // likes: track.likes_count,
-      // genre: track.genre,
-      // uri: track.uri,
-      // wave: track.waveform_url,
-      // streamUrl: track.stream_url,
-    }));
+    .filter(track => track.title && track.kind === "track")
+    .map(track => mapToTrack(track));
+}
+
+export function mapToTrack(track) {
+  return {
+    title: track.title,
+    id: track.id,
+    duration: track.duration,
+    img: track.artwork_url,
+    artist: track.user && {
+      name: track.user.username,
+      img: track.user.avatar_url,
+      id: track.user.id
+    },
+    permalink: track.user
+      ? `${track.user.permalink}/${track.permalink}`
+      : track.permalink,
+    type: track.type,
+    source: "soundcloud",
+    streamable: true
+  };
 }
 
 function mapCollectionToPlaylists(collection) {
