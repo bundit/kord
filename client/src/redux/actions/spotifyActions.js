@@ -206,28 +206,6 @@ export const fetchMoreSpotifyTrackResults = (next, tries = 3) => dispatch => {
     });
 };
 
-export const fetchRelatedSpotifyTracks = (
-  trackId,
-  limit = 20,
-  tries = 3
-) => dispatch => {
-  const options = {
-    limit,
-    market: "from_token",
-    seed_tracks: [trackId]
-  };
-  return spotifyApi
-    .getRecommendations(options)
-    .then(json => mapToTracks(json.tracks))
-    .catch(e => {
-      if (tries) {
-        return dispatch(errorHandler(e)).then(() =>
-          dispatch(fetchRelatedSpotifyTracks(trackId, limit, --tries))
-        );
-      } else return Promise.reject(e);
-    });
-};
-
 function parseSpotifyResults(json) {
   // eslint-disable-next-line
   const { tracks, artists, album } = json;
@@ -265,6 +243,28 @@ const setSpotifyResults = payload => dispatch => {
   }
 
   return Promise.resolve({ message: "Results set" });
+};
+
+export const fetchRelatedSpotifyTracks = (
+  trackId,
+  limit = 20,
+  tries = 3
+) => dispatch => {
+  const options = {
+    limit,
+    market: "from_token",
+    seed_tracks: [trackId]
+  };
+  return spotifyApi
+    .getRecommendations(options)
+    .then(json => mapToTracks(json.tracks))
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchRelatedSpotifyTracks(trackId, limit, --tries))
+        );
+      } else return Promise.reject(e);
+    });
 };
 
 export const addToSpotifyPlaylist = (
@@ -311,6 +311,68 @@ export const removeFromSpotifyPlaylist = (track, tries = 3) => dispatch => {
   });
 };
 
+export const fetchSpotifyArtist = (artistId, tries = 3) => dispatch => {
+  return spotifyApi
+    .getArtist(artistId, {})
+    .then(json => mapSpotifyArtist(json))
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchSpotifyArtist(artistId, --tries))
+        );
+      } else return Promise.reject(e);
+    });
+};
+
+export const fetchSpotifyArtistTopTracks = (
+  artistId,
+  tries = 3
+) => dispatch => {
+  return spotifyApi
+    .getArtistTopTracks(artistId, "from_token")
+    .then(json => ({ tracks: mapToTracks(json.tracks) }))
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchSpotifyArtistTopTracks(artistId, --tries))
+        );
+      } else return Promise.reject(e);
+    });
+};
+
+export const fetchSpotifyArtistTracks = (
+  artistId,
+  artistName,
+  tries = 3
+) => dispatch => {
+  return spotifyApi
+    .search(`artist:${artistName}`, ["track"], { artist: artistId })
+
+    .then(({ tracks }) => ({
+      tracks: mapJsonToTracks(tracks, true),
+      next: tracks.next,
+      total: tracks.total
+    }));
+};
+
+export const fetchSpotifyTracks = (next, tries = 3) => dispatch => {
+  return spotifyApi
+    .getGeneric(next)
+    .then(json => parseSpotifyResults(json))
+    .then(({ tracksPayload: { list, next, total } }) => ({
+      tracks: list,
+      next,
+      total
+    }))
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchSpotifyTracks(next, --tries))
+        );
+      } else return Promise.reject(e);
+    });
+};
+
 function errorHandler(err, tries = 3) {
   return dispatch => {
     if (!tries) {
@@ -322,6 +384,17 @@ function errorHandler(err, tries = 3) {
     }
 
     return dispatch(errorHandler(err, --tries));
+  };
+}
+
+function mapSpotifyArtist(json) {
+  return {
+    img: json.images,
+    url: json.external_urls.spotify,
+    name: json.name,
+    followers_count: json.followers.total,
+    genres: json.genres,
+    source: "spotify"
   };
 }
 
@@ -353,7 +426,7 @@ export function mapJsonToTracks(json, search = false) {
       name: artist.name
     })),
     img: track.album.images,
-    streamable: track.is_playable,
+    streamable: track.is_playable === undefined ? true : track.is_playable,
     source: "spotify"
   }));
 }
