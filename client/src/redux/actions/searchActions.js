@@ -10,10 +10,28 @@ import {
 import { fetchGeneric } from "../../utils/fetchGeneric";
 import {
   fetchMoreSoundcloudTrackResults,
+  fetchSoundcloudArtist,
+  fetchSoundcloudArtistTopTracks,
+  fetchSoundcloudArtistTracks,
+  fetchSoundcloudTracks,
   searchSoundcloudTracks
 } from "./soundcloudActions";
-import { fetchMoreSpotifyTrackResults, searchSpotify } from "./spotifyActions";
-import { fetchMoreYoutubeTrackResults, searchYoutube } from "./youtubeActions";
+import {
+  fetchMoreSpotifyTrackResults,
+  fetchSpotifyArtist,
+  fetchSpotifyArtistTopTracks,
+  fetchSpotifyArtistTracks,
+  fetchSpotifyTracks,
+  searchSpotify
+} from "./spotifyActions";
+import {
+  fetchMoreYoutubeTrackResults,
+  fetchYoutubeArtist,
+  fetchYoutubeArtistTopTracks,
+  fetchYoutubeArtistTracks,
+  fetchYoutubeTracks,
+  searchYoutube
+} from "./youtubeActions";
 
 export function setQuery(query) {
   return {
@@ -105,4 +123,48 @@ export const fetchAutoCompleteResults = query => dispatch => {
   return fetchGeneric(
     `https://cors-anywhere.herokuapp.com/http://suggestqueries.google.com/complete/search?client=chrome&ds=yt&q=${query}`
   ).then(res => dispatch(setAutoCompleteResults(res[1])));
+};
+
+export const fetchArtist = (artistId, source) => dispatch => {
+  const requests = {
+    soundcloud: fetchSoundcloudArtist,
+    spotify: fetchSpotifyArtist,
+    youtube: fetchYoutubeArtist
+  };
+
+  return dispatch(requests[source](artistId));
+};
+
+export const fetchArtistTracks = (
+  artistId,
+  source,
+  type,
+  artistName
+) => dispatch => {
+  const requests = {
+    soundcloud: {
+      allTracks: fetchSoundcloudArtistTracks,
+      topTracks: fetchSoundcloudArtistTopTracks
+    },
+    spotify: {
+      allTracks: fetchSpotifyArtistTracks,
+      topTracks: fetchSpotifyArtistTopTracks
+    },
+    youtube: {
+      allTracks: fetchYoutubeArtistTracks,
+      topTracks: fetchYoutubeArtistTopTracks
+    }
+  };
+
+  return dispatch(requests[source][type](artistId, artistName));
+};
+
+export const fetchMoreArtistTracks = (next, source) => dispatch => {
+  const requests = {
+    soundcloud: fetchSoundcloudTracks,
+    spotify: fetchSpotifyTracks,
+    youtube: fetchYoutubeTracks
+  };
+
+  return dispatch(requests[source](next));
 };

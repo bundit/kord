@@ -53,7 +53,7 @@ export const fetchYoutubeProfile = (tries = 3) => dispatch => {
 };
 
 export const fetchYoutubePlaylists = (limit = 50, tries = 3) => dispatch => {
-  const endpoint = `${YT_API}/playlists?part=snippet%2CcontentDetails%2Cid&maxResults=${limit}&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
+  const endpoint = `${YT_API}/playlists?part=snippet%2CcontentDetails&maxResults=${limit}&mine=true&key=${process.env.REACT_APP_YT_KEY}`;
   const opts = generateYoutubeFetchOptionsAndHeaders();
 
   return fetchGeneric(endpoint, opts)
@@ -74,51 +74,23 @@ export const fetchYoutubePlaylists = (limit = 50, tries = 3) => dispatch => {
 export const fetchYoutubePlaylistTracks = (
   id,
   next,
-  limit = 50,
+  limit = 15,
   tries = 3
 ) => dispatch => {
   let playlistEndpoint;
-  const opts = generateYoutubeFetchOptionsAndHeaders();
+  const isPlaylistTracks = true;
 
   if (next === "start") {
-    playlistEndpoint = `${YT_API}/playlistItems?part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
+    playlistEndpoint = `${YT_API}/playlistItems?part=snippet&maxResults=${limit}&playlistId=${id}`;
   } else {
     playlistEndpoint = next;
   }
 
-  return fetchGeneric(playlistEndpoint, opts)
-    .then(json => {
-      const tracks = mapJsonToTracks(json).filter(
-        tracks => tracks.title !== "Private video"
-      );
-
-      const next =
-        json.nextPageToken &&
-        `${YT_API}/playlistItems?pageToken=${json.nextPageToken}&part=id%2Csnippet&maxResults=${limit}&playlistId=${id}&key=${process.env.REACT_APP_YT_KEY}`;
-      dispatch(setNextPlaylistHref("youtube", id, next));
-
-      return { tracks, next };
-    })
+  return dispatch(fetchYoutubeTracks(playlistEndpoint, isPlaylistTracks))
     .then(({ tracks, next }) => {
-      const videoIds = tracks.map(track => track.id);
-
-      return fetchYoutubeTrackInfo(videoIds).then(json => {
-        json.items.forEach(item => {
-          tracks = tracks.map(track => {
-            if (track.id === item.id) {
-              track = {
-                ...track,
-                ...mapDurationAndChannelToTracks(item)
-              };
-            }
-            return track;
-          });
-        });
-
-        dispatch(importPlaylistTracks("youtube", id, tracks));
-
-        return { tracks, next };
-      });
+      dispatch(importPlaylistTracks("youtube", id, tracks));
+      dispatch(setNextPlaylistHref("youtube", id, next));
+      return { tracks, next };
     })
     .catch(e => {
       if (tries) {
@@ -135,9 +107,8 @@ function fetchYoutubeTrackInfo(videoIds) {
   return fetchGeneric(videoEndpoint);
 }
 
-export const searchYoutube = (query, limit = 25, tries = 3) => dispatch => {
-  const searchEndpoint = `${YT_API}/search?type=video&part=snippet%2Cid&videoCategoryId=10&maxResults=${limit}&q=${query}&key=${process.env.REACT_APP_YT_KEY}`;
-  const opts = generateYoutubeFetchOptionsAndHeaders();
+export const searchYoutube = (query, limit = 10, tries = 3) => dispatch => {
+  const searchEndpoint = `${YT_API}/search?type=video&part=snippet&videoCategoryId=10&maxResults=${limit}&q=${query}`;
   const storageKey = `YT:${query}`;
 
   const cachedSearch = loadCachedValue(storageKey);
@@ -146,44 +117,17 @@ export const searchYoutube = (query, limit = 25, tries = 3) => dispatch => {
     return Promise.resolve();
   }
 
-  return fetchGeneric(searchEndpoint, opts)
-    .then(json => {
-      const tracks = mapJsonSearchToTracks(json).filter(
-        tracks => tracks.title !== "Private video"
-      );
+  return dispatch(fetchYoutubeTracks(searchEndpoint))
+    .then(({ tracks, next }) => {
+      const tracksPayload = {
+        list: tracks,
+        next: next
+      };
 
-      const next =
-        json.nextPageToken &&
-        `${YT_API}/search?pageToken=${json.nextPageToken}&type=video&part=snippet%2Cid&maxResults=${limit}&key=${process.env.REACT_APP_YT_KEY}`;
+      dispatch(setTrackResults("youtube", tracksPayload));
+      cacheValue(storageKey, tracksPayload);
 
       return { tracks, next };
-    })
-    .then(({ tracks, next }) => {
-      const videoIds = tracks.map(track => track.id);
-
-      return fetchYoutubeTrackInfo(videoIds).then(json => {
-        json.items.forEach(item => {
-          tracks = tracks.map(track => {
-            if (track.id === item.id) {
-              track = {
-                ...track,
-                ...mapDurationAndChannelToTracks(item)
-              };
-            }
-            return track;
-          });
-        });
-
-        const tracksPayload = {
-          list: tracks,
-          next: next
-        };
-
-        dispatch(setTrackResults("youtube", tracksPayload));
-        cacheValue(storageKey, tracksPayload);
-
-        return { tracks, next };
-      });
     })
     .catch(e => {
       if (tries) {
@@ -196,38 +140,13 @@ export const searchYoutube = (query, limit = 25, tries = 3) => dispatch => {
 
 export const fetchRelatedYoutubeTracks = (
   videoId,
-  limit = 20,
+  limit = 10,
   tries = 3
 ) => dispatch => {
-  return fetchGeneric(
-    `${YT_API}/search?type=video&part=snippet%2Cid&videoCategoryId=10&maxResults=${limit}&relatedToVideoId=${videoId}&key=${process.env.REACT_APP_YT_KEY}`
-  )
-    .then(json => {
-      const tracks = mapJsonSearchToTracks(json).filter(
-        tracks => tracks.title !== "Private video"
-      );
+  const relatedEndpoint = `${YT_API}/search?type=video&part=snippet%2Cid&videoCategoryId=10&maxResults=${limit}&relatedToVideoId=${videoId}`;
 
-      return tracks;
-    })
-    .then(tracks => {
-      const videoIds = tracks.map(track => track.id);
-
-      return fetchYoutubeTrackInfo(videoIds).then(json => {
-        json.items.forEach(item => {
-          tracks = tracks.map(track => {
-            if (track.id === item.id) {
-              track = {
-                ...track,
-                ...mapDurationAndChannelToTracks(item)
-              };
-            }
-            return track;
-          });
-        });
-
-        return tracks;
-      });
-    })
+  return dispatch(fetchYoutubeTracks(relatedEndpoint))
+    .then(({ tracks, next }) => tracks)
     .catch(e => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
@@ -238,45 +157,16 @@ export const fetchRelatedYoutubeTracks = (
 };
 
 export const fetchMoreYoutubeTrackResults = (next, tries = 3) => dispatch => {
-  const opts = generateYoutubeFetchOptionsAndHeaders();
+  return dispatch(fetchYoutubeTracks(next))
+    .then(({ tracks, next }) => {
+      const tracksPayload = {
+        list: tracks,
+        next: next
+      };
 
-  return fetchGeneric(next, opts)
-    .then(json => {
-      const tracks = mapJsonSearchToTracks(json).filter(
-        tracks => tracks.title !== "Private video"
-      );
-
-      const next =
-        json.nextPageToken &&
-        `${YT_API}/search?pageToken=${json.nextPageToken}&type=video&part=snippet%2Cid&maxResults=25&key=${process.env.REACT_APP_YT_KEY}`;
+      dispatch(setMoreTrackResults("youtube", tracksPayload));
 
       return { tracks, next };
-    })
-    .then(({ tracks, next }) => {
-      const videoIds = tracks.map(track => track.id);
-
-      return fetchYoutubeTrackInfo(videoIds).then(json => {
-        json.items.forEach(item => {
-          tracks = tracks.map(track => {
-            if (track.id === item.id) {
-              track = {
-                ...track,
-                ...mapDurationAndChannelToTracks(item)
-              };
-            }
-            return track;
-          });
-        });
-
-        const tracksPayload = {
-          list: tracks,
-          next: next
-        };
-
-        dispatch(setMoreTrackResults("youtube", tracksPayload));
-
-        return { tracks, next };
-      });
     })
     .catch(e => {
       if (tries) {
@@ -326,6 +216,85 @@ export const removeFromYoutubePlaylist = (track, tries = 3) => dispatch => {
       );
     } else return Promise.reject(e);
   });
+};
+
+export const fetchYoutubeArtist = (artistId, tries = 3) => dispatch => {
+  const endpoint = `${YT_API}/channels?part=snippet%2Cstatistics&id=${artistId}&key=${process.env.REACT_APP_YT_KEY}`;
+  const opts = generateYoutubeFetchOptionsAndHeaders();
+
+  return fetchGeneric(endpoint, opts)
+    .then(json => mapYoutubeArtist(json))
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchYoutubeArtist(artistId, --tries))
+        );
+      } else return Promise.reject(e);
+    });
+};
+
+export const fetchYoutubeArtistTopTracks = () => dispatch => {
+  return Promise.resolve({ tracks: [], next: null });
+};
+
+export const fetchYoutubeArtistTracks = (artistId, tries = 3) => dispatch => {
+  const endpoint = `${YT_API}/search?type=video&channelId=${artistId}&part=snippet&order=date&maxResults=10`;
+
+  return dispatch(fetchYoutubeTracks(endpoint)).catch(e => {
+    if (tries) {
+      return dispatch(errorHandler(e)).then(() =>
+        dispatch(fetchYoutubeArtistTracks(artistId, --tries))
+      );
+    } else return Promise.reject(e);
+  });
+};
+
+export const fetchYoutubeTracks = (
+  endpoint,
+  isPlaylistTracks = false,
+  tries = 3
+) => dispatch => {
+  endpoint = `${endpoint}&key=${process.env.REACT_APP_YT_KEY}`;
+  const opts = generateYoutubeFetchOptionsAndHeaders();
+
+  return fetchGeneric(endpoint, opts)
+    .then(json => {
+      let tracks = isPlaylistTracks
+        ? mapJsonToPlaylistTracks(json)
+        : mapJsonSearchToTracks(json);
+
+      tracks = tracks.filter(tracks => tracks.title !== "Private video");
+
+      const next =
+        json.nextPageToken && `${endpoint}&pageToken=${json.nextPageToken}`;
+
+      return { tracks, next };
+    })
+    .then(({ tracks, next }) => {
+      const videoIds = tracks.map(track => track.id);
+
+      return fetchYoutubeTrackInfo(videoIds).then(json => {
+        json.items.forEach(item => {
+          tracks = tracks.map(track => {
+            if (track.id === item.id) {
+              track = {
+                ...track,
+                ...mapDurationAndChannelToTracks(item)
+              };
+            }
+            return track;
+          });
+        });
+        return { tracks, next };
+      });
+    })
+    .catch(e => {
+      if (tries) {
+        return dispatch(errorHandler(e)).then(() =>
+          dispatch(fetchYoutubeTracks(endpoint, isPlaylistTracks, --tries))
+        );
+      } else return Promise.reject(e);
+    });
 };
 
 function errorHandler(err, tries = 3) {
@@ -380,7 +349,7 @@ function mapJsonToPlaylists(json) {
   }));
 }
 
-function mapJsonToTracks(json) {
+function mapJsonToPlaylistTracks(json) {
   return json.items.map(item => ({
     id: item.snippet.resourceId.videoId,
     title: item.snippet.title,
@@ -408,5 +377,17 @@ function mapDurationAndChannelToTracks(item) {
       id: item.snippet.channelId,
       name: item.snippet.channelTitle
     }
+  };
+}
+
+function mapYoutubeArtist(json) {
+  const channel = json.items[0];
+  return {
+    img: channel.snippet.thumbnails,
+    url: `https://www.youtube.com/channel/${channel.id}`,
+    name: channel.snippet.title,
+    followers_count: channel.statistics.subscriberCount,
+    track_count: channel.statistics.videoCount,
+    source: "youtube"
   };
 }
