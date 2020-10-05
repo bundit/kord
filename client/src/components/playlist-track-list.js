@@ -26,6 +26,7 @@ import {
 } from "../redux/actions/playerActions";
 import { timeSince } from "../utils/dateHelpers";
 import { usePrevious } from "../utils/hooks";
+import LargePlayPauseButton from "./large-play-pause-button";
 import LoadingSpinner from "./loading-spinner";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
@@ -157,16 +158,6 @@ const PlaylistTracklist = ({
     );
   }
 
-  const playlistPlayButtonStyles = {
-    borderRadius: "50%",
-    background:
-      "linear-gradient(330deg, rgba(255,187,17,1) 0%, rgba(255,200,66,1) 70%, rgba(255,255,255,1) 100%)",
-    color: "#192124",
-    marginLeft: "0",
-    cursor: "pointer",
-    fontSize: "19px"
-  };
-
   return (
     !isEmptyObject(currentPlaylist) && (
       <div
@@ -231,25 +222,13 @@ const PlaylistTracklist = ({
                   marginTop: "auto"
                 }}
               >
-                {!tracks.length ? null : !thisPlaylistIsPlaying ? (
-                  <button
-                    type="button"
-                    onClick={handlePlayPlaylist}
-                    className={styles.playlistPlayButton}
-                    style={playlistPlayButtonStyles}
-                  >
-                    <FontAwesomeIcon icon={faPlay} />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handlePausePlaylist}
-                    className={styles.playlistPlayButton}
-                    style={playlistPlayButtonStyles}
-                  >
-                    <FontAwesomeIcon icon={faPause} />
-                  </button>
-                )}
+                {tracks.length ? (
+                  <LargePlayPauseButton
+                    isCurrentlyPlaying={thisPlaylistIsPlaying}
+                    handlePlay={handlePlayPlaylist}
+                    handlePause={handlePausePlaylist}
+                  />
+                ) : null}
                 <div style={{ marginLeft: "auto" }}>
                   Last synced:{" "}
                   {isLoading ? "..." : timeSince(currentPlaylist.dateSynced)}{" "}

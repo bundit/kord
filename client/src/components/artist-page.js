@@ -1,9 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faExternalLinkAlt,
-  faPlay,
-  faPause
-} from "@fortawesome/free-solid-svg-icons";
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { forceCheck } from "react-lazyload";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -19,6 +15,7 @@ import {
 import { fetchArtistInfo } from "../redux/actions/lastFmActions";
 import { getImgUrl } from "../utils/getImgUrl";
 import { pause, play, playTrack } from "../redux/actions/playerActions";
+import LargePlayPauseButton from "./large-play-pause-button";
 import LoadingSpinner from "./loading-spinner";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
@@ -347,38 +344,6 @@ const ArtistPage = () => {
     </div>
   );
 };
-
-function LargePlayPauseButton({ isContextPlaying, handlePlay, handlePause }) {
-  const playlistPlayButtonStyles = {
-    borderRadius: "50%",
-    background:
-      "linear-gradient(330deg, rgba(255,187,17,1) 0%, rgba(255,200,66,1) 70%, rgba(255,255,255,1) 100%)",
-    color: "#192124",
-    marginLeft: "0",
-    cursor: "pointer",
-    fontSize: "19px"
-  };
-
-  return !isContextPlaying ? (
-    <button
-      type="button"
-      onClick={handlePlay}
-      className={styles.playlistPlayButton}
-      style={playlistPlayButtonStyles}
-    >
-      <FontAwesomeIcon icon={faPlay} />
-    </button>
-  ) : (
-    <button
-      type="button"
-      onClick={handlePause}
-      className={styles.playlistPlayButton}
-      style={playlistPlayButtonStyles}
-    >
-      <FontAwesomeIcon icon={faPause} />
-    </button>
-  );
-}
 
 function useLoadTracksOnScroll(loadMoreTracks) {
   return function(e) {

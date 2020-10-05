@@ -561,6 +561,20 @@
   transform: scale(1);
 }
 
+.largePlayPauseButton {
+  border-radius: 50%;
+  color: #192124;
+  background: linear-gradient(
+    330deg,
+    rgba(255, 187, 17, 1) 0%,
+    rgba(255, 200, 66, 1) 70%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  margin-left: 0;
+  cursor: pointer;
+  font-size: 19px;
+}
+
 .syncButton {
   border: 2px #383f41 solid;
   color: #aaa;
