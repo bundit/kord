@@ -28,7 +28,8 @@ const Sidebar = ({ user, playlists }) => {
   const location = useLocation();
   const player = useSelector(state => state.player);
   const { context, isPlaying } = player; // eslint-disable-next-line
-  const isPlayingFromSearch = context.id == "search" && isPlaying;
+  const isPlayingFromSearch =
+    (context.id === "search" || context.search) && isPlaying;
 
   function toggleSettingsForm(source) {
     dispatch(openSettings(source));
@@ -81,16 +82,6 @@ const Sidebar = ({ user, playlists }) => {
   );
 };
 
-function getPlayingFromSearchIcon(isPlayingFromSearch) {
-  if (isPlayingFromSearch) {
-    return (
-      <span style={{ marginLeft: "auto" }}>
-        <FontAwesomeIcon icon={faVolumeUp} />
-      </span>
-    );
-  }
-}
-
 function generateAppNavLinkComponents(isPlayingFromSearch, searchOnClick) {
   const navLinks = [
     { title: "Library", to: "/app/library", exact: true, icon: faMusic },
@@ -117,6 +108,16 @@ function generateAppNavLinkComponents(isPlayingFromSearch, searchOnClick) {
       {link.title === "Search" && getPlayingFromSearchIcon(isPlayingFromSearch)}
     </NavLink>
   ));
+}
+
+function getPlayingFromSearchIcon(isPlayingFromSearch) {
+  if (isPlayingFromSearch) {
+    return (
+      <span style={{ marginLeft: "auto" }}>
+        <FontAwesomeIcon icon={faVolumeUp} />
+      </span>
+    );
+  }
 }
 
 function generatePlaylistNavlinkComponents(playlists) {

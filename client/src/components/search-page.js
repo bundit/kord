@@ -1,6 +1,7 @@
 import { Route } from "react-router-dom";
 import React, { useEffect } from "react";
 
+import ArtistPage from "./artist-page";
 import SearchHistory from "./search-history";
 import SearchResults from "./search-results";
 
@@ -20,6 +21,11 @@ const SearchPage = () => {
     <>
       <Route exact path="/app/search" component={SearchHistory} />
       <Route exact path="/app/search/:query" component={SearchResults} />
+      <Route
+        exact
+        path="/app/search/artist/:source/:artistId/:artistName"
+        component={ArtistPage}
+      />
     </>
   );
 };

@@ -5,9 +5,7 @@ import libraryStyles from "../styles/library.module.css";
 import playerStyles from "../styles/player.module.css";
 
 const TrackInfo = ({ track, isPlayer }) => {
-  const artistNames = Array.isArray(track.artist)
-    ? track.artist.map(a => a.name)
-    : [track.artist.name];
+  const artists = Array.isArray(track.artist) ? track.artist : [track.artist];
 
   const styles = isPlayer ? playerStyles : libraryStyles;
 
@@ -21,17 +19,20 @@ const TrackInfo = ({ track, isPlayer }) => {
         </div>
       )}
       <div>
-        {artistNames.map((artistName, i) => (
-          <React.Fragment key={artistName}>
-            <Link
-              className={`${libraryStyles.stackedArtistName}`}
-              to={`/app/search/${encodeURIComponent(artistName)}`}
-            >
-              {artistName}
-            </Link>
-            {i < artistNames.length - 1 && ", "}
-          </React.Fragment>
-        ))}
+        {track.artist &&
+          artists.map((artist, i) => (
+            <React.Fragment key={artist.name}>
+              <Link
+                className={`${libraryStyles.stackedArtistName}`}
+                to={`/app/search/artist/${track.source}/${
+                  artist.id
+                }/${encodeURIComponent(artist.name)}`}
+              >
+                {artist.name}
+              </Link>
+              {i < artists.length - 1 && ", "}
+            </React.Fragment>
+          ))}
       </div>
     </div>
   );

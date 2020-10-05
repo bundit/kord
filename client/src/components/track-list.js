@@ -26,8 +26,8 @@ const TrackList = ({
         handlePlay={handlePlay}
         isActive={
           currentTrackID === track.id &&
-          i === queueIndex &&
-          playingContext.id === playlistId
+          playingContext.id === playlistId &&
+          (search || i === queueIndex)
         }
         isPlaying={isPlaying}
         index={i}
