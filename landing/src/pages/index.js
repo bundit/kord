@@ -41,6 +41,35 @@ const IndexPage = () => {
   const textCTA = isLoggedIn ? "Open Player" : "Join now";
   const linkCTA = isLoggedIn ? "/app/library" : "/login";
 
+  const sourceCards = [
+    {
+      source: "spotify",
+      text: "Spotify",
+      icon: faSpotify,
+      delay: 500,
+      loginHref: "/auth/spotify"
+    },
+    {
+      source: "soundcloud",
+      text: "Soundcloud",
+      icon: faSoundcloud,
+      delay: 700
+    },
+    {
+      source: "youtube",
+      text: "Youtube",
+      icon: faYoutube,
+      delay: 900,
+      loginHref: "/auth/youtube"
+    },
+    { source: "mixcloud", text: "Coming Soon!", icon: faMixcloud, delay: 1100 }
+  ];
+
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://www.kord.app"
+      : "http://localhost:8888";
+
   return (
     <>
       <SEO title="Music from everywhere" />
@@ -93,54 +122,24 @@ const IndexPage = () => {
         </div>
 
         <div className={styles.sectionContainer}>
-          <div className={`${styles.sourceCard} ${styles.spotify}`}>
-            <div
-              data-aos="fade-right"
-              data-aos-easing="ease-in-out-back"
-              data-aos-duration={sourceTransitionDuration}
-              // data-aos-delay="800"
-              data-aos-delay="500"
-            >
-              <FontAwesomeIcon icon={faSpotify} />
-              <h3>Spotify</h3>
+          {sourceCards.map(card => (
+            <div className={`${styles.sourceCard} ${styles[card.source]}`}>
+              <div
+                data-aos="fade-right"
+                data-aos-easing="ease-in-out-back"
+                data-aos-duration={sourceTransitionDuration}
+                data-aos-delay={card.delay}
+              >
+                <FontAwesomeIcon icon={card.icon} />
+                <h3>{card.text}</h3>
+              </div>
+              {card.loginHref ? (
+                <a href={`${baseUrl}${card.loginHref}`}>
+                  <span>Get Started</span>
+                </a>
+              ) : null}
             </div>
-          </div>
-          <div className={`${styles.sourceCard} ${styles.soundcloud}`}>
-            <div
-              data-aos="fade-right"
-              data-aos-easing="ease-in-out-back"
-              data-aos-duration={sourceTransitionDuration}
-              // data-aos-delay="1100"
-              data-aos-delay="700"
-            >
-              <FontAwesomeIcon icon={faSoundcloud} />
-              <h3>Soundcloud</h3>
-            </div>
-          </div>
-          <div className={`${styles.sourceCard} ${styles.youtube}`}>
-            <div
-              data-aos="fade-right"
-              data-aos-easing="ease-in-out-back"
-              data-aos-duration={sourceTransitionDuration}
-              // data-aos-delay="1400"
-              data-aos-delay="900"
-            >
-              <FontAwesomeIcon icon={faYoutube} />
-              <h3>Coming soon!</h3>
-            </div>
-          </div>
-          <div className={`${styles.sourceCard} ${styles.mixcloud}`}>
-            <div
-              data-aos="fade-right"
-              data-aos-easing="ease-in-out-back"
-              data-aos-duration={sourceTransitionDuration}
-              // data-aos-delay="1700"
-              data-aos-delay="1100"
-            >
-              <FontAwesomeIcon icon={faMixcloud} />
-              <h3>Coming soon!</h3>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
       <div className={styles.p1} style={{ height: "auto" }}>

@@ -157,6 +157,42 @@
   background-color: white;
 }
 
+.sourceCard a {
+  opacity: 0;
+  transition: 0.3s ease;
+  text-decoration: none;
+  color: black;
+  font-family: "Open Sans";
+  font-weight: bold;
+  border-radius: 7px;
+  border: 1px transparent solid;
+  border: 1px #333 solid;
+  padding: 5px 10px;
+  margin-top: auto;
+  background: #ffd46b;
+  transition-delay: 0s;
+}
+
+.sourceCard:hover a {
+  transition-delay: 0.3s;
+  opacity: 1;
+}
+
+.sourceCard a:hover {
+  transition-delay: 0s;
+  border-color: #555;
+  background-color: white;
+  color: inherit;
+}
+
+.spotify a:hover {
+  border: 1px #1db954 solid;
+}
+
+.youtube a:hover {
+  border: 1px red solid;
+}
+
 .sourceCard:after {
   content: "";
   display: block;
