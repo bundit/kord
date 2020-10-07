@@ -14,7 +14,7 @@ import {
   fetchSoundcloudArtistTopTracks,
   fetchSoundcloudArtistTracks,
   fetchSoundcloudTracks,
-  searchSoundcloudTracks
+  searchSoundcloud
 } from "./soundcloudActions";
 import {
   fetchMoreSpotifyTrackResults,
@@ -89,7 +89,7 @@ export const searchForMusic = (source, query) => dispatch => {
   let request;
 
   if (source === "soundcloud") {
-    request = searchSoundcloudTracks;
+    request = searchSoundcloud;
   }
 
   if (source === "spotify") {

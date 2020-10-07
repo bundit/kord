@@ -87,6 +87,12 @@ export const fetchSoundcloudPlaylistTracks = (id, next) => dispatch => {
   });
 };
 
+export const searchSoundcloud = query => dispatch => {
+  const requests = [searchSoundcloudTracks, searchSoundcloudArtists];
+
+  return Promise.all(requests.map(request => dispatch(request(query))));
+};
+
 export const searchSoundcloudTracks = (query, limit = 50) => dispatch => {
   const trackSearchEndpoint = `${SC_API}/tracks?q=${query}&limit=${limit}&format=json&client_id=${KEY}&linked_partitioning=1`;
   const storageKey = `SC:${query}:artists`;
@@ -275,6 +281,7 @@ function mapJsonToArtists(json) {
     name: artist.username,
     id: artist.id,
     numFollowers: artist.followers_count,
-    img: artist.avatar_url
+    img: artist.avatar_url,
+    source: "soundcloud"
   }));
 }

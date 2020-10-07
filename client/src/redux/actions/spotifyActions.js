@@ -455,7 +455,8 @@ function mapJsonToArtists(json) {
     name: artist.name,
     id: artist.id,
     numFollowers: artist.followers.total,
-    img: artist.images
+    img: artist.images,
+    source: "spotify"
   }));
 }
 

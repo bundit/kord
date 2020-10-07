@@ -29,7 +29,8 @@ const SearchTrackList = ({
   const alert = useAlert();
   const [isLoading, setIsLoading] = useState(restored ? false : true);
   const [numShowTracks, setNumShowTracks] = useState(restored ? 10 : 0);
-  const searchHasMoreToShow = tracks.next || numShowTracks < tracks.list.length;
+  const searchHasMoreToShow =
+    (tracks && tracks.next) || numShowTracks < tracks.list.length;
   const listHeight = Math.min(tracks.list.length, numShowTracks);
 
   useEffect(() => {
@@ -93,7 +94,7 @@ const SearchTrackList = ({
 
   return (
     <div className={styles.listContainer}>
-      <h2 className={styles.listTitle}>{capitalizeWord(source)}</h2>
+      <h2 className={styles.listTitle}>{capitalizeWord(source) + " Tracks"}</h2>
       <div
         className={`${styles.libraryWrapper}`}
         style={{

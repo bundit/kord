@@ -14,6 +14,7 @@ import queryString from "query-string";
 
 import { cacheValue, loadCachedValue } from "../utils/sessionStorage";
 import { capitalizeWord } from "../utils/formattingHelpers";
+import ArtistList from "./artist-list";
 import SearchTrackList from "./search-track-list";
 import styles from "../styles/library.module.css";
 
@@ -54,6 +55,14 @@ const SearchResults = () => {
     );
     setSourcesToSearch(updatedSources);
   }
+
+  const artistComponents = sourcesToSearch.map(source => (
+    <ArtistList
+      key={`Artist:List:${source}`}
+      source={source}
+      artists={results[source] ? results[source].artists : []}
+    />
+  ));
 
   const resultsComponents = sourcesToSearch.map(source => (
     <SearchTrackList
@@ -110,6 +119,12 @@ const SearchResults = () => {
             {capitalizeWord(source)}
           </button>
         ))}
+      </div>
+      <div
+        className={`${styles.libraryWrapper} ${styles.playlistList}`}
+        style={{ marginTop: "50px" }}
+      >
+        {artistComponents}
       </div>
       <div className={styles.pageWrapper} style={{ margin: 0 }}>
         {resultsComponents}
