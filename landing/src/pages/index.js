@@ -13,6 +13,8 @@ import React, { useState } from "react";
 import { useAuthDetection } from "../utils/auth-provider";
 import SEO from "../components/seo";
 import styles from "../styles/landing.module.css";
+import ArtistMockup from "../assets/mockup-artist.jpg";
+import SearchMockup from "../assets/mockup-search.jpg";
 
 const IndexPage = () => {
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -140,6 +142,74 @@ const IndexPage = () => {
               ) : null}
             </div>
           ))}
+        </div>
+      </div>
+      <div className={styles.p2} style={{ boxShadow: "none" }}>
+        <div
+          data-aos="zoom-out"
+          data-aos-easing="ease-in-out-back"
+          data-aos-duration="1000"
+          data-aos-offset="200"
+        >
+          <h1>Experience your music from any computer</h1>
+          <h3 className={styles.p2Blurb}>
+            Easily browse your saved online music from all platforms in one
+            place on your desktop, laptop, or work computer.
+          </h3>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            padding: "0 50px"
+          }}
+        >
+          <div
+            data-aos="fade-right"
+            data-aos-easing="ease-in-out-back"
+            data-aos-duration="1000"
+            data-aos-offset="300"
+          >
+            <img
+              style={{ width: "60vw", height: "auto" }}
+              src={ArtistMockup}
+              alt="artist-mockup"
+            />
+          </div>
+        </div>
+      </div>
+      <div className={styles.p2} style={{ boxShadow: "none" }}>
+        <div
+          data-aos="zoom-out"
+          data-aos-easing="ease-in-out-back"
+          data-aos-duration="1000"
+          data-aos-offset="200"
+        >
+          <h1>Search across platforms in an instant</h1>
+          <h3 className={styles.p2Blurb}>
+            Couldn&apos;t find the song you&apos;re looking for? No need to
+            switch websites.
+          </h3>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            padding: "0 50px"
+          }}
+        >
+          <div
+            data-aos="fade-left"
+            data-aos-easing="ease-in-out-back"
+            data-aos-duration="1000"
+            data-aos-offset="300"
+          >
+            <img
+              style={{ width: "60vw", height: "auto" }}
+              src={SearchMockup}
+              alt="artist-mockup"
+            />
+          </div>
         </div>
       </div>
       <div className={styles.p1} style={{ height: "auto" }}>
