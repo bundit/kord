@@ -205,3 +205,26 @@ export function useKeepSessionAlive() {
     return clearInterval;
   }, []);
 }
+
+const keysPressed = {};
+
+export function useKeyControls(handleKeyControls) {
+  useEffect(() => {
+    window.onkeydown = e => {
+      const { key } = e;
+
+      if (keysPressed[key] && key !== "Shift") {
+        // Prevent holding down key rapid fire
+        return;
+      }
+
+      keysPressed[key] = true;
+
+      handleKeyControls(key, keysPressed["Shift"]);
+    };
+
+    window.onkeyup = e => {
+      delete keysPressed[e.key];
+    };
+  }, [handleKeyControls]);
+}

@@ -92,3 +92,15 @@ export function formatNumber(x) {
   //https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+export function keepWithinVolumeRange(volume) {
+  if (volume < 0) {
+    return 0;
+  }
+
+  if (volume > 1) {
+    return 1;
+  }
+
+  return volume;
+}

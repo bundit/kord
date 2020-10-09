@@ -6,7 +6,11 @@ import React, { useState, useRef } from "react";
 import ReactHowler from "react-howler";
 import raf from "raf";
 
-import { capitalizeWord, formatArtistName } from "../utils/formattingHelpers";
+import {
+  capitalizeWord,
+  formatArtistName,
+  keepWithinVolumeRange
+} from "../utils/formattingHelpers";
 import {
   nextTrack,
   pause,
@@ -17,8 +21,10 @@ import {
   setVolume
 } from "../redux/actions/playerActions";
 import { setTrackUnstreamable } from "../redux/actions/libraryActions";
+import { toggleUserQueue } from "../redux/actions/userActions";
 import {
   useDetectMediaSession,
+  useKeyControls,
   usePauseIfSdkNotReady,
   useRenderSeekPosition,
   useSetDurationOnTrackChange
@@ -53,9 +59,12 @@ export const Player = ({
   const alert = useAlert();
   const dispatch = useDispatch();
   const currentPage = useSelector(state => state.user.history.currentPage);
+  const seekAmount = useSelector(state => state.player.seekAmount) || 15;
 
+  useKeyControls(handleKeyControls);
   useSetDurationOnTrackChange(current);
   usePauseIfSdkNotReady(current, isPlaying, isSpotifySdkReady);
+
   const renderSeekPos = React.useCallback(() => {
     let currentPos;
     try {
@@ -84,15 +93,6 @@ export const Player = ({
   useDetectMediaSession();
 
   React.useEffect(() => {
-    window.onkeydown = e => {
-      if (e.keyCode === 32) {
-        handlePlayPause(e);
-        e.preventDefault();
-      }
-    }; // eslint-disable-next-line
-  }, [isPlaying]);
-
-  React.useEffect(() => {
     if (isPlaying) {
       document.title = `${current.title} ◦ ${formatArtistName(current.artist)}`;
     } else {
@@ -115,7 +115,9 @@ export const Player = ({
       handlePlay();
     }
 
-    e.stopPropagation();
+    if (e) {
+      e.stopPropagation();
+    }
   }
 
   function handleSpotifyReady() {
@@ -170,6 +172,55 @@ export const Player = ({
     dispatch(setSeek(seconds));
 
     setTimeout(() => renderSeekPos(), 300);
+  }
+
+  function handleToggleMute() {
+    dispatch(setMuted(!isMuted));
+  }
+
+  function handleToggleQueue() {
+    dispatch(toggleUserQueue());
+  }
+
+  // eslint-disable-next-line
+  function handleKeyControls(key, shiftPressed) {
+    switch (key) {
+      case " ": {
+        return handlePlayPause();
+      }
+      case "ArrowLeft": {
+        return handleSeek(seek - seekAmount);
+      }
+      case "ArrowRight": {
+        return handleSeek(seek + seekAmount);
+      }
+      case "ArrowUp": {
+        if (shiftPressed) {
+          const volumeUp = keepWithinVolumeRange(volume + 0.1);
+          dispatch(setVolume(volumeUp));
+        }
+        return;
+      }
+      case "ArrowDown": {
+        if (shiftPressed) {
+          const volumeDown = keepWithinVolumeRange(volume - 0.1);
+          dispatch(setVolume(volumeDown));
+        }
+        return;
+      }
+      case "m": {
+        return handleToggleMute();
+      }
+      case "q": {
+        return handleToggleQueue();
+      }
+      default: {
+        if (key >= 1 || key <= 9) {
+          handleSeek(Math.floor(duration * (key / 10)));
+        }
+        return;
+      }
+    }
   }
 
   function handleMouseDownSeek() {

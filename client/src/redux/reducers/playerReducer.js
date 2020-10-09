@@ -46,7 +46,8 @@ const initialState = {
     source: "source",
     id: "id"
   },
-  nextHref: null
+  nextHref: null,
+  seekAmount: 15
 };
 
 export default function(state = initialState, action) {
