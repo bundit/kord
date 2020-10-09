@@ -205,3 +205,32 @@ export function useKeepSessionAlive() {
     return clearInterval;
   }, []);
 }
+
+const keysPressed = {};
+
+export function useKeyControls(handleKeyControls) {
+  useEffect(() => {
+    window.onkeydown = e => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const { key } = e;
+
+      if (keysPressed[key] && key !== "Shift") {
+        // Prevent holding down key rapid fire
+        return;
+      }
+
+      keysPressed[key] = true;
+
+      handleKeyControls(key, keysPressed["Shift"]);
+    };
+
+    window.onkeyup = e => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      delete keysPressed[e.key];
+    };
+  }, [handleKeyControls]);
+}
