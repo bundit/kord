@@ -22,6 +22,10 @@ import {
 } from "../redux/actions/playerActions";
 import { setTrackUnstreamable } from "../redux/actions/libraryActions";
 import {
+  toggleKeyboardControlsMenu,
+  toggleUserQueue
+} from "../redux/actions/userActions";
+import {
   useDetectMediaSession,
   useKeyControls,
   usePauseIfSdkNotReady,
@@ -177,6 +181,14 @@ export const Player = ({
     dispatch(setMuted(!isMuted));
   }
 
+  function handleToggleQueue() {
+    dispatch(toggleUserQueue());
+  }
+
+  function handleToggleControls() {
+    dispatch(toggleKeyboardControlsMenu());
+  }
+
   // eslint-disable-next-line
   function handleKeyControls(key, shiftPressed) {
     switch (key) {
@@ -205,6 +217,12 @@ export const Player = ({
       }
       case "m": {
         return handleToggleMute();
+      }
+      case "q": {
+        return handleToggleQueue();
+      }
+      case "h": {
+        return handleToggleControls();
       }
       default: {
         if (key >= 1 || key <= 9) {

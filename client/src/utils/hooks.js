@@ -211,9 +211,6 @@ const keysPressed = {};
 export function useKeyControls(handleKeyControls) {
   useEffect(() => {
     window.onkeydown = e => {
-      e.preventDefault();
-      e.stopPropagation();
-
       const { key } = e;
 
       if (keysPressed[key] && key !== "Shift") {
@@ -227,9 +224,6 @@ export function useKeyControls(handleKeyControls) {
     };
 
     window.onkeyup = e => {
-      e.preventDefault();
-      e.stopPropagation();
-
       delete keysPressed[e.key];
     };
   }, [handleKeyControls]);

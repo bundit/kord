@@ -216,7 +216,20 @@
   display: none;
 }
 
+.playerRightControls button:hover svg {
+  color: #ffc842;
+}
+
+.playerRightControls > button {
+  display: none;
+}
+
+.playerRightControls > :first-child {
+  margin-left: auto;
+}
+
 .volumeWrapper {
+  margin-left: auto;
   display: none;
   cursor: pointer;
 }
@@ -226,14 +239,6 @@
 }
 
 .volumeWrapper:hover .volumeIconButton svg {
-  color: #ffc842;
-}
-
-.queueButton {
-  display: none;
-}
-
-.queueButton:hover svg {
   color: #ffc842;
 }
 
@@ -412,10 +417,13 @@ input[type="range"].volumeSlider:focus::-ms-fill-upper {
   }
 }
 
-@media (min-width: 870px) {
-  .queueButton {
+@media (min-width: 900px) {
+  .volumeWrapper {
+    margin-left: 0;
+  }
+  .playerRightControls button {
     display: inline;
-    margin-left: auto;
-    margin-right: 10px;
+    width: 25px;
+    margin-right: 5px;
   }
 }
