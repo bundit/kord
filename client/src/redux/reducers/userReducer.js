@@ -13,6 +13,7 @@ import {
   SET_SETTINGS_SOURCE,
   TOGGLE_ADD_TO_PLAYLIST_FORM,
   TOGGLE_DELETE_TRACK_FORM,
+  TOGGLE_KEYBOARD_CONTROLS_MENU,
   TOGGLE_USER_QUEUE
 } from "../actions/types";
 
@@ -45,7 +46,8 @@ const initialState = {
     isAddToPlaylistFormOpen: false,
     isDeleteTrackFormOpen: false,
     currentTrackDropdown: null,
-    isUserQueueOpen: false
+    isUserQueueOpen: false,
+    isKeyboardControlsOpen: false
   }
 };
 
@@ -231,6 +233,18 @@ export default function(state = initialState, action) {
         settings: {
           ...state.settings,
           isUserQueueOpen: !isUserQueueOpen
+        }
+      };
+    }
+
+    case TOGGLE_KEYBOARD_CONTROLS_MENU: {
+      const isKeyboardControlsOpen = state.settings.isKeyboardControlsOpen;
+
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          isKeyboardControlsOpen: !isKeyboardControlsOpen
         }
       };
     }

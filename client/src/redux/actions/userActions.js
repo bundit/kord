@@ -12,6 +12,7 @@ import {
   SET_SETTINGS_SOURCE,
   TOGGLE_ADD_TO_PLAYLIST_FORM,
   TOGGLE_DELETE_TRACK_FORM,
+  TOGGLE_KEYBOARD_CONTROLS_MENU,
   TOGGLE_USER_QUEUE
 } from "./types";
 import { fetchGeneric } from "../../utils/fetchGeneric";
@@ -132,6 +133,12 @@ export const toggleDeleteTrackForm = () => {
 export const toggleUserQueue = () => {
   return {
     type: TOGGLE_USER_QUEUE
+  };
+};
+
+export const toggleKeyboardControlsMenu = () => {
+  return {
+    type: TOGGLE_KEYBOARD_CONTROLS_MENU
   };
 };
 

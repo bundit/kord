@@ -1,0 +1,30 @@
+.controlsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px 50px;
+
+  h2 {
+    color: #bbb;
+    font-weight: 300;
+    width: 50%;
+    font-family: "Open Sans";
+    font-size: 15px;
+  }
+
+  > div {
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  span {
+    font-family: "Pacifico";
+    padding: 5px 12px;
+    border-radius: 7px;
+    border: 1px #383f41 solid;
+    box-shadow: 1px 2px 0px #383f41;
+    font-size: 12px;
+  }
+}

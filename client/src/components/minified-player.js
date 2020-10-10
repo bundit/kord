@@ -6,7 +6,8 @@ import {
   faVolumeMute,
   faVolumeDown,
   faVolumeUp,
-  faListUl
+  faListUl,
+  faKeyboard
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
@@ -19,7 +20,10 @@ import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import { getImgUrl } from "../utils/getImgUrl";
 import { secondsToFormatted } from "../utils/formattingHelpers";
 import { setMuted } from "../redux/actions/playerActions";
-import { toggleUserQueue } from "../redux/actions/userActions";
+import {
+  toggleKeyboardControlsMenu,
+  toggleUserQueue
+} from "../redux/actions/userActions";
 import { useMobileDetection } from "../utils/hooks";
 import TrackInfo from "./track-info";
 import UserQueue from "./user-queue";
@@ -100,6 +104,10 @@ const MinifiedPlayer = ({
 
   function handleToggleShowQueue() {
     dispatch(toggleUserQueue());
+  }
+
+  function handleToggleShowControls() {
+    dispatch(toggleKeyboardControlsMenu());
   }
 
   return (
@@ -204,11 +212,10 @@ const MinifiedPlayer = ({
           </span>
         </div>
         <div className={styles.playerRightControls}>
-          <button
-            className={styles.queueButton}
-            type="button"
-            onClick={handleToggleShowQueue}
-          >
+          <button type="button" onClick={handleToggleShowControls}>
+            <FontAwesomeIcon icon={faKeyboard} size="sm" />
+          </button>
+          <button type="button" onClick={handleToggleShowQueue}>
             <FontAwesomeIcon icon={faListUl} size="sm" />
           </button>
           <span className={styles.volumeWrapper}>

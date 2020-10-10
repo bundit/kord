@@ -10,6 +10,7 @@ import {
   useKeepSessionAlive
 } from "./utils/hooks";
 import AddToPlaylistForm from "./components/add-to-playlist-form";
+import ControlsModal from "./components/controls-modal";
 import DeleteTrackForm from "./components/delete-track-form";
 import FallbackComponent from "./components/fallback-component";
 import Footer from "./components/layout/footer";
@@ -107,6 +108,7 @@ const App = () => {
       />
       <AddToPlaylistForm show={isAddToPlaylistFormOpen} />
       <DeleteTrackForm show={isDeleteTrackFormOpen} />
+      <ControlsModal />
     </>
   );
 };
