@@ -19,15 +19,14 @@ const SC_API = "https://api.soundcloud.com";
 const SC_API_V2 = "https://api-v2.soundcloud.com";
 
 export const fetchSoundcloudProfileAndPlaylists = username => dispatch => {
-  const requests = [
-    dispatch(fetchSoundcloudProfile(username)),
-    dispatch(fetchSoundcloudPlaylists(username))
-  ];
-
-  return Promise.all(requests).then(([likes, playlists]) => {
-    const allPlaylists = [likes, ...playlists];
-    dispatch(importPlaylists("soundcloud", allPlaylists));
-  });
+  return dispatch(fetchSoundcloudProfile(username)).then(
+    ({ likes, userId }) => {
+      return dispatch(fetchSoundcloudPlaylists(userId)).then(playlists => {
+        const allPlaylists = [likes, ...playlists];
+        dispatch(importPlaylists("soundcloud", allPlaylists));
+      });
+    }
+  );
 };
 
 export const fetchSoundcloudProfile = username => dispatch => {
@@ -51,7 +50,7 @@ export const fetchSoundcloudProfile = username => dispatch => {
 
     dispatch(setUserProfile("soundcloud", profile));
 
-    return userLikes;
+    return { likes: userLikes, userId: profile.id };
   });
 };
 
@@ -70,8 +69,8 @@ export const fetchSoundcloudLikes = (next, userId) => dispatch => {
 export const fetchSoundcloudPlaylists = username => dispatch => {
   const playlistEndpoint = `${SC_API}/users/${username}/playlists?client_id=${KEY}`;
 
-  return fetchGeneric(playlistEndpoint).then(data =>
-    mapCollectionToPlaylists(data)
+  return fetchGeneric(playlistEndpoint).then(
+    data => console.log(data) || mapCollectionToPlaylists(data)
   );
 };
 
