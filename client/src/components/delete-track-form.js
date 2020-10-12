@@ -23,14 +23,11 @@ const DeleteTrackForm = ({ show }) => {
   }
 
   function handleSubmit(e) {
-    e.preventDefault();
-
     dispatch(removeFromPlaylist(track))
       .then(() => {
         alert.success("Track removed");
       })
       .catch(e => alert.error(e.message));
-    handleClose();
   }
 
   return (
@@ -38,62 +35,49 @@ const DeleteTrackForm = ({ show }) => {
       title={`Remove Track from Playlist`}
       show={show}
       onClose={handleClose}
+      onSubmit={handleSubmit}
     >
-      <form className={styles.modalForm} onSubmit={handleSubmit}>
+      <div
+        className={styles.formInnerWrapper}
+        style={{
+          padding: "30px",
+          paddingLeft: "36px",
+          boxSizing: "border-box",
+          overflow: "hidden"
+        }}
+      >
         <div
-          className={styles.formInnerWrapper}
+          className={styles.formTitle}
           style={{
-            padding: "30px",
-            paddingLeft: "36px",
-            boxSizing: "border-box",
-            overflow: "hidden"
+            borderColor: "transparent",
+            margin: "auto auto auto 0",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            padding: 0
           }}
         >
-          <div
-            className={styles.formTitle}
-            style={{
-              borderColor: "transparent",
-              margin: "auto auto auto 0",
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              padding: 0
-            }}
-          >
-            <div style={{ marginRight: "20px" }}>
-              <FontAwesomeIcon
-                icon={faExclamationTriangle}
-                size="3x"
-                style={{ color: "#ff4411" }}
-              />
-            </div>
-            <span>Are you sure you want to remove this track?</span>
-          </div>
-          <div style={{ margin: "0 auto" }}>
-            <img
-              src={getImgUrl(track, "md")}
-              className={styles.confirmAlbumArt}
-              alt="album-art-md"
+          <div style={{ marginRight: "20px" }}>
+            <FontAwesomeIcon
+              icon={faExclamationTriangle}
+              size="3x"
+              style={{ color: "#ff4411" }}
             />
           </div>
-          <div className={styles.trackInfoWrap}>
-            <div>{track.title} </div>
-            <div>{formatArtistName(track.artist)}</div>
-          </div>
+          <span>Are you sure you want to remove this track?</span>
         </div>
-        <div className={styles.formCancelSubmitButtonGroup}>
-          <button
-            type="button"
-            className={styles.formCancelButton}
-            onClick={handleClose}
-          >
-            Cancel
-          </button>
-          <button type="submit" className={styles.formSubmitButton}>
-            Confirm
-          </button>
+        <div style={{ margin: "0 auto" }}>
+          <img
+            src={getImgUrl(track, "md")}
+            className={styles.confirmAlbumArt}
+            alt="album-art-md"
+          />
         </div>
-      </form>
+        <div className={styles.trackInfoWrap}>
+          <div>{track.title} </div>
+          <div>{formatArtistName(track.artist)}</div>
+        </div>
+      </div>
     </Modal>
   );
 };

@@ -1,20 +1,21 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faSoundcloud,
-  faSpotify,
-  faYoutube
-} from "@fortawesome/free-brands-svg-icons";
-import {
-  faSync,
   faExternalLinkAlt,
   faPen,
+  faSync,
   faUserSlash
 } from "@fortawesome/free-solid-svg-icons";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 
-import { ReactComponent as KordLogo } from "../assets/kord-icon.svg";
+import { COLORS, ICONS, SOURCES } from "../utils/constants";
+import {
+  DangerousButton,
+  SettingsTabButton,
+  SubmitButton,
+  LargeIconButton as SyncButton
+} from "./buttons";
 import { PlaylistSettings } from "./playlist-settings";
 import { capitalizeWord } from "../utils/formattingHelpers";
 import {
@@ -86,13 +87,9 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   }, [source, playlists, sourcePlaylists, show]);
 
   function onSubmit(e) {
-    e.preventDefault();
-
     if (isConnected) {
       dispatch(setPlaylistSettingsAction(source, playlistSettings));
     }
-
-    onClose();
   }
 
   function toggleCheckbox(index) {
@@ -108,6 +105,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
 
   function handleSubmitUsername(e) {
     e.preventDefault();
+    e.stopPropagation();
     const inputPrefix = usernameInput.slice(0, 15);
     const inputSuffix = usernameInput.slice(15);
 
@@ -161,22 +159,8 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
     }
   }
 
-  function getSourceLink(source) {
-    if (process.env.NODE_ENV === "development") {
-      return `http://localhost:8888/auth/${source}/link`;
-    }
-
-    return `/auth/${source}/link`;
-  }
-
   function handleChangeSettingsTab(e) {
     dispatch(openSettings(e.currentTarget.value));
-  }
-
-  function getActiveTabClassName(tabSource) {
-    if (tabSource === source) {
-      return styles.activeTab;
-    }
   }
 
   function handleRemoveAccount() {
@@ -203,80 +187,40 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
     setPlaylistSettings([...reordered]);
   }
 
-  const sourceTabs = {
-    kord: {
-      className: styles.kordTab,
-      color: "#fb1"
-    },
-    spotify: {
-      className: styles.spotifyTab,
-      icon: faSpotify,
-      color: "#1db954"
-    },
-    soundcloud: {
-      className: styles.soundcloudTab,
-      icon: faSoundcloud,
-      color: "#ff5500"
-    },
-    youtube: {
-      className: styles.youtubeTab,
-      icon: faYoutube,
-      color: "#ff0000"
-    }
-    // mixcloud: {
-    //   className: styles.mixcloudTab,
-    //   icon: faMixcloud,
-    //   color: "#5000ff",
-    // }
-  };
-
   return (
     <Modal
       title={`${capitalizeWord(source)} Settings`}
       show={show}
       onClose={onClose}
+      onSubmit={onSubmit}
     >
       <div className={styles.settingsTabsWrapper}>
-        {Object.keys(sourceTabs).map(source => (
-          <button
-            className={`${styles.settingsTab} ${
-              sourceTabs[source].className
-            } ${getActiveTabClassName(source)}`}
+        {["kord", ...SOURCES].map(tabSource => (
+          <SettingsTabButton
+            source={tabSource}
+            isActive={tabSource === source}
             onClick={handleChangeSettingsTab}
-            value={source}
-            key={`${source}-tab`}
+            value={tabSource}
+            key={`${tabSource}-tab`}
           >
-            {source === "kord" ? (
-              <KordLogo />
+            {tabSource === "kord" ? (
+              ICONS[tabSource]
             ) : (
               <FontAwesomeIcon
-                icon={sourceTabs[source].icon}
+                icon={ICONS[tabSource]}
                 size="lg"
-                style={{
-                  color: sourceTabs[source] ? sourceTabs[source].color : null
-                }}
+                style={{ color: COLORS[tabSource] }}
               />
             )}
-            {capitalizeWord(source)}
-          </button>
+            {capitalizeWord(tabSource)}
+          </SettingsTabButton>
         ))}
       </div>
 
       {source === "kord" ? (
         <div>kord settings placeholder</div>
       ) : !isConnected && source !== "soundcloud" ? (
-        <a
-          className={`${styles.connectSourceLink} ${styles[`${source}Link`]}`}
-          href={getSourceLink(source)}
-        >
-          <FontAwesomeIcon
-            icon={sourceTabs[source] ? sourceTabs[source].icon : null}
-            style={{
-              color: sourceTabs[source] ? sourceTabs[source].color : null
-            }}
-          />
-          {`Connect ${capitalizeWord(source)} Account`}
-        </a>
+        <ConnectSourceLink source={source} />
       ) : (
         <>
           <div className={styles.profileWrap}>
@@ -302,102 +246,128 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
                     <div>{settings && settings.username}</div>
                   )}
 
-                  <div className={styles.profileLinkWrapper}>
-                    <a
-                      href={settings && settings.profileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.profileAnchor}
-                    >
-                      <span>{settings && settings.profileUrl}</span>
-
-                      <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
-                    </a>
-                  </div>
+                  <ProfileExternalLink settings={settings} />
                 </>
               ) : (
-                <form
-                  className={styles.usernameForm}
-                  onSubmit={handleSubmitUsername}
-                >
-                  <label
-                    htmlFor="soundcloudURL"
-                    className={styles.usernameInputLabel}
-                  >
-                    <span>Enter your Soundcloud Profile URL</span>
-                    <span style={{ display: "flex" }}>
-                      <input
-                        id="soundcloudURL"
-                        className={styles.usernameInput}
-                        type="text"
-                        placeholder="Enter Soundcloud Profile URL"
-                        onChange={handleInputChange}
-                        value={usernameInput}
-                      />
-                      <button type="submit" style={{ marginLeft: "auto" }}>
-                        Submit
-                      </button>
-                    </span>
-                  </label>
-                </form>
+                <SoundcloudInput
+                  handleSubmitUsername={handleSubmitUsername}
+                  handleInputChange={handleInputChange}
+                  usernameInput={usernameInput}
+                />
               )}
             </div>
-
-            <button
-              className={styles.syncButton}
-              type="button"
+            <SyncButton
+              icon={faSync}
               onClick={handleSync}
               disabled={hasSynced}
-            >
-              <FontAwesomeIcon size="2x" icon={faSync} />
-            </button>
+              style={{ borderColor: "#383f41", marginLeft: "auto" }}
+            />
           </div>
           <div className={styles.formTitle}>
             Your {capitalizeWord(source)} playlists
           </div>
         </>
       )}
-      <form className={styles.modalForm} onSubmit={onSubmit}>
-        {isConnected && (
-          <div className={styles.formInnerWrapper}>
-            {isLoading ? (
-              <LoadingSpinner />
-            ) : (
-              playlistSettings && (
-                <PlaylistSettings
-                  settingsList={playlistSettings}
-                  handleToggle={toggleCheckbox}
-                  handleDragEnd={onDragEnd}
-                />
-              )
-            )}
-          </div>
+
+      <div className={styles.formInnerWrapper}>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          playlistSettings &&
+          source !== "kord" && (
+            <PlaylistSettings
+              settingsList={playlistSettings}
+              handleToggle={toggleCheckbox}
+              handleDragEnd={onDragEnd}
+            />
+          )
         )}
-        {isConnected && (
-          <button
-            className={styles.removeAccountButton}
-            type="button"
-            onClick={handleRemoveAccount}
-          >
-            <FontAwesomeIcon icon={faUserSlash} />
-            {" Remove this account"}
-          </button>
-        )}
-        <div className={styles.formCancelSubmitButtonGroup}>
-          <button
-            type="button"
-            className={styles.formCancelButton}
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-          <button type="submit" className={styles.formSubmitButton}>
-            Done
-          </button>
-        </div>
-      </form>
+      </div>
+      {isConnected && (
+        <DangerousButton
+          onClick={handleRemoveAccount}
+          style={{ alignSelf: "center" }}
+        >
+          <FontAwesomeIcon icon={faUserSlash} />
+          {" Remove this account"}
+        </DangerousButton>
+      )}
     </Modal>
   );
 };
+
+function ConnectSourceLink({ source }) {
+  function getSourceLink() {
+    if (process.env.NODE_ENV === "development") {
+      return `http://localhost:8888/auth/${source}/link`;
+    }
+
+    return `/auth/${source}/link`;
+  }
+
+  return (
+    <a
+      className={`${styles.connectSourceLink} ${styles[`${source}Link`]}`}
+      href={getSourceLink()}
+    >
+      <FontAwesomeIcon
+        icon={ICONS[source]}
+        style={{
+          color: COLORS[source]
+        }}
+      />
+      {`Connect ${capitalizeWord(source)} Account`}
+    </a>
+  );
+}
+
+function ProfileExternalLink({ settings }) {
+  return (
+    <div className={styles.profileLinkWrapper}>
+      <a
+        href={settings && settings.profileUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.profileAnchor}
+      >
+        <span>{settings && settings.profileUrl}</span>
+        <FontAwesomeIcon size="sm" icon={faExternalLinkAlt} />
+      </a>
+    </div>
+  );
+}
+
+function SoundcloudInput({
+  handleSubmitUsername,
+  handleInputChange,
+  usernameInput
+}) {
+  return (
+    <label htmlFor="soundcloudURL" className={styles.usernameInputLabel}>
+      <span>Enter your Soundcloud Profile URL</span>
+      <span style={{ display: "flex" }}>
+        <input
+          id="soundcloudURL"
+          className={styles.usernameInput}
+          type="text"
+          placeholder="Enter Soundcloud Profile URL"
+          onChange={handleInputChange}
+          value={usernameInput}
+        />
+        <SubmitButton
+          style={{ fontSize: "11px", padding: "8px", marginLeft: "auto" }}
+          onClick={handleSubmitUsername}
+          type="button" // Prevent closing modal due to type submit
+        >
+          Submit
+        </SubmitButton>
+        <button
+          type="submit"
+          style={{ marginLeft: "auto", padding: "5px" }}
+        ></button>
+      </span>
+    </label>
+  );
+}
 
 export default SettingsForm;

@@ -356,7 +356,6 @@ export const Player = ({
           isPlaying={isPlaying}
           seek={seek}
           duration={duration}
-          volume={volume}
           isUserSeeking={isUserSeeking}
           userSeekPos={Number(userSeekPos)}
           handleOnChangeUserSeek={handleOnChangeUserSeek}

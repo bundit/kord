@@ -3,13 +3,10 @@ import {
   faAngleUp,
   faPlay,
   faPauseCircle,
-  faVolumeMute,
-  faVolumeDown,
-  faVolumeUp,
   faListUl,
   faKeyboard
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import React, { useState, useRef } from "react";
 
@@ -17,9 +14,15 @@ import { ReactComponent as BackwardIcon } from "../assets/backward.svg";
 import { ReactComponent as ForwardIcon } from "../assets/forward.svg";
 import { ReactComponent as PauseIcon } from "../assets/pause-button.svg";
 import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
+import {
+  IconButton as QueueButton,
+  IconButton as ControlsButton,
+  IconButton as BackwardButton,
+  IconButton as PlayPauseButton,
+  IconButton as ForwardButton
+} from "./buttons";
 import { getImgUrl } from "../utils/getImgUrl";
 import { secondsToFormatted } from "../utils/formattingHelpers";
-import { setMuted } from "../redux/actions/playerActions";
 import {
   toggleKeyboardControlsMenu,
   toggleUserQueue
@@ -27,6 +30,7 @@ import {
 import { useMobileDetection } from "../utils/hooks";
 import TrackInfo from "./track-info";
 import UserQueue from "./user-queue";
+import VolumeControls from "./volume-controls";
 import progressBarStyles from "../styles/progressBar.module.css";
 import styles from "../styles/player.module.css";
 
@@ -38,7 +42,6 @@ const MinifiedPlayer = ({
   isUserSeeking,
   userSeekPos,
   seek,
-  volume,
   duration,
   handleOnChangeUserSeek,
   handleMouseDownSeek,
@@ -56,27 +59,10 @@ const MinifiedPlayer = ({
   const [isUserHovering, setIsUserHovering] = useState(false);
   const seekWrap = useRef(null);
 
-  const isMuted = useSelector(state => state.player.isMuted);
-
   const isMobile = useMobileDetection();
 
   const progress = (isUserSeeking ? userSeekPos : seek) / duration;
   const progressPercent = `${progress * 100}%`;
-
-  const currentVolumeValue = isMuted
-    ? 0
-    : Number(isUserSettingVolume ? userVolumeValue : volume);
-  const sliderWidth = 125; // px
-
-  const volumeWidth = currentVolumeValue * sliderWidth;
-  const volumeRight = sliderWidth - volumeWidth;
-
-  const volumeIcon =
-    currentVolumeValue === 0
-      ? faVolumeMute
-      : currentVolumeValue < 0.5
-      ? faVolumeDown
-      : faVolumeUp;
 
   const hoverRatio =
     Number(hoverOffset) /
@@ -98,10 +84,6 @@ const MinifiedPlayer = ({
     setIsUserHovering(false);
   }
 
-  function handleToggleMute() {
-    dispatch(setMuted(!isMuted));
-  }
-
   function handleToggleShowQueue() {
     dispatch(toggleUserQueue());
   }
@@ -109,6 +91,19 @@ const MinifiedPlayer = ({
   function handleToggleShowControls() {
     dispatch(toggleKeyboardControlsMenu());
   }
+
+  const forwardBackwardButtonStyle = {
+    height: "30px",
+    width: "30px",
+    fontSize: "1.3"
+  };
+
+  const playPauseButtonStyle = {
+    height: "50px",
+    width: "50px",
+    fontSize: "2rem",
+    margin: "0 10px"
+  };
 
   return (
     <div className={styles.playerAndSeekContainer}>
@@ -186,63 +181,47 @@ const MinifiedPlayer = ({
           >
             {secondsToFormatted(isUserSeeking ? userSeekPos : seek || 0)}
           </span>
-          <button
-            type="button"
-            className={styles.backwardButton}
+
+          <BackwardButton
             onClick={handlePrev}
+            style={{ ...forwardBackwardButtonStyle, marginLeft: "10px" }}
           >
             <BackwardIcon />
-          </button>
-          <button
-            type="button"
-            className={styles.desktopPlayPauseButton}
+          </BackwardButton>
+          <PlayPauseButton
             onClick={handlePlayPause}
+            style={playPauseButtonStyle}
           >
             {isPlaying ? <PauseIcon /> : <PlayIcon />}
-          </button>
-          <button
-            type="button"
-            className={styles.forwardButton}
+          </PlayPauseButton>
+          <ForwardButton
             onClick={handleNext}
+            style={{ ...forwardBackwardButtonStyle, marginRight: "10px" }}
           >
             <ForwardIcon />
-          </button>
+          </ForwardButton>
           <span className={progressBarStyles.timeContainer}>
             {secondsToFormatted(duration || 0)}
           </span>
         </div>
         <div className={styles.playerRightControls}>
-          <button type="button" onClick={handleToggleShowControls}>
-            <FontAwesomeIcon icon={faKeyboard} size="sm" />
-          </button>
-          <button type="button" onClick={handleToggleShowQueue}>
-            <FontAwesomeIcon icon={faListUl} size="sm" />
-          </button>
-          <span className={styles.volumeWrapper}>
-            <button
-              type="button"
-              onClick={handleToggleMute}
-              className={styles.volumeIconButton}
-            >
-              <FontAwesomeIcon icon={volumeIcon} size="sm" />
-            </button>
-
-            <span
-              className={styles.volumeLowerFill}
-              style={{ width: volumeWidth, right: volumeRight }}
-            ></span>
-            <input
-              type="range"
-              className={styles.volumeSlider}
-              value={isUserSettingVolume ? userVolumeValue : volume}
-              min="0"
-              max="1"
-              step="0.05"
-              onChange={handleOnChangeVolume}
-              onMouseDown={handleMouseDownVolume}
-              onMouseUp={handleMouseUpVolume}
-            />
-          </span>
+          <ControlsButton
+            onClick={handleToggleShowControls}
+            icon={faKeyboard}
+            size="sm"
+          />
+          <QueueButton
+            onClick={handleToggleShowQueue}
+            icon={faListUl}
+            size="sm"
+          />
+          <VolumeControls
+            isUserSettingVolume={isUserSettingVolume}
+            userVolumeValue={userVolumeValue}
+            handleOnChangeVolume={handleOnChangeVolume}
+            handleMouseDownVolume={handleMouseDownVolume}
+            handleMouseUpVolume={handleMouseUpVolume}
+          />
         </div>
       </div>
       <UserQueue />

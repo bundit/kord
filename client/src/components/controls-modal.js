@@ -49,7 +49,7 @@ const ControlsModal = () => {
     >
       <ul
         className={modalStyles.formInnerWrapper}
-        style={{ marginTop: "30px" }}
+        style={{ paddingTop: "30px" }}
       >
         {controlsList.map(({ title, keys }) => (
           <li className={styles.controlsWrapper} key={title}>
@@ -73,14 +73,6 @@ const ControlsModal = () => {
           </li>
         ))}
       </ul>
-
-      <form className={modalStyles.modalForm} onSubmit={handleCloseControls}>
-        <div className={modalStyles.formCancelSubmitButtonGroup}>
-          <button type="submit" className={modalStyles.formSubmitButton}>
-            Done
-          </button>
-        </div>
-      </form>
     </Modal>
   );
 };

@@ -1,10 +1,10 @@
 import { CSSTransition } from "react-transition-group";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { forceCheck } from "react-lazyload";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 
+import { LargeIconButton as CloseButton } from "./buttons";
 import {
   clearRestOfQueue,
   play,
@@ -148,13 +148,11 @@ const UserQueue = () => {
           <span className={modalStyles.modalTitle} style={{ color: "#ccc" }}>
             Your Queue
           </span>
-          <button
-            className={modalStyles.closeButton}
+          <CloseButton
+            icon={faTimes}
             onClick={handleToggleShowQueue}
-            type="button"
-          >
-            <FontAwesomeIcon icon={faTimes} size="2x" />
-          </button>
+            style={{ marginLeft: "auto", fontSize: "12px" }}
+          />
         </div>
         <div
           className={modalStyles.formInnerWrapper}

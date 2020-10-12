@@ -4,6 +4,7 @@ import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
 import React, { useState, useEffect } from "react";
 
+import { ShowMoreResultsButton } from "./buttons";
 import { cacheValue, loadCachedValue } from "../utils/sessionStorage";
 import { capitalizeWord } from "../utils/formattingHelpers";
 import {
@@ -114,22 +115,37 @@ const SearchTrackList = ({
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <button
-          type="button"
-          onClick={handleShowMore}
-          className={
-            searchHasMoreToShow ? styles.showMoreButton : styles.endOfResults
-          }
-        >
-          {searchHasMoreToShow ? (
-            <>
-              {"Show More "}
-              <FontAwesomeIcon icon={faAngleDown} />
-            </>
-          ) : (
-            "End of results"
-          )}
-        </button>
+        <>
+          <ShowMoreResultsButton
+            onClick={handleShowMore}
+            disabled={!searchHasMoreToShow}
+          >
+            {searchHasMoreToShow ? (
+              <>
+                {"Show More "}
+                <FontAwesomeIcon icon={faAngleDown} />
+              </>
+            ) : (
+              "End of results"
+            )}
+          </ShowMoreResultsButton>
+          <button
+            type="button"
+            onClick={handleShowMore}
+            className={
+              searchHasMoreToShow ? styles.showMoreButton : styles.endOfResults
+            }
+          >
+            {searchHasMoreToShow ? (
+              <>
+                {"Show More "}
+                <FontAwesomeIcon icon={faAngleDown} />
+              </>
+            ) : (
+              "End of results"
+            )}
+          </button>
+        </>
       )}
     </div>
   );

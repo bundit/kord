@@ -42,8 +42,6 @@ const AddToPlaylistForm = ({ show }) => {
   }
 
   function handleSubmit(e) {
-    e.preventDefault();
-
     const playlistIds = Object.keys(checkedPlaylists).filter(
       playlistId => checkedPlaylists[playlistId]
     );
@@ -61,7 +59,6 @@ const AddToPlaylistForm = ({ show }) => {
         }
       })
       .catch(e => alert.error(e.message));
-    handleClose();
   }
 
   return (
@@ -69,51 +66,38 @@ const AddToPlaylistForm = ({ show }) => {
       title={`Add to ${capitalizeWord(track.source)} Playlist`}
       show={show}
       onClose={handleClose}
+      onSubmit={handleSubmit}
     >
-      <form className={styles.modalForm} onSubmit={handleSubmit}>
-        <div className={styles.formInnerWrapper}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center"
-            }}
-          >
-            <img
-              src={getImgUrl(track, "md")}
-              className={styles.confirmAlbumArt}
-              alt="album-art-md"
-            />
-            <div className={styles.trackInfoWrap}>
-              <div>{track.title} </div>
-              <div>{formatArtistName(track.artist)}</div>
-            </div>
+      <div className={styles.formInnerWrapper}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }}
+        >
+          <img
+            src={getImgUrl(track, "md")}
+            className={styles.confirmAlbumArt}
+            alt="album-art-md"
+          />
+          <div className={styles.trackInfoWrap}>
+            <div>{track.title} </div>
+            <div>{formatArtistName(track.artist)}</div>
           </div>
-          <div className={styles.formTitle}>Select playlists to add to</div>
-          {connectedPlaylists.map((playlist, i) => (
-            <FormCheckbox
-              title={playlist.title}
-              key={`Add-to-${playlist.title}:${playlist.id}`}
-              i={i}
-              value={checkedPlaylists[playlist.id]}
-              onChange={() => toggleCheckedPlaylist(playlist.id)}
-              numTracks={playlist.total}
-            />
-          ))}
         </div>
-        <div className={styles.formCancelSubmitButtonGroup}>
-          <button
-            type="button"
-            className={styles.formCancelButton}
-            onClick={handleClose}
-          >
-            Cancel
-          </button>
-          <button type="submit" className={styles.formSubmitButton}>
-            Done
-          </button>
-        </div>
-      </form>
+        <div className={styles.formTitle}>Select playlists to add to</div>
+        {connectedPlaylists.map((playlist, i) => (
+          <FormCheckbox
+            title={playlist.title}
+            key={`Add-to-${playlist.title}:${playlist.id}`}
+            i={i}
+            value={checkedPlaylists[playlist.id]}
+            onChange={() => toggleCheckedPlaylist(playlist.id)}
+            numTracks={playlist.total}
+          />
+        ))}
+      </div>
     </Modal>
   );
 };

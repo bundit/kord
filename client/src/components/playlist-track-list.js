@@ -1,15 +1,13 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlay,
-  faPause,
-  faSync,
-  faStar
-} from "@fortawesome/free-solid-svg-icons";
+import { faStar, faSync } from "@fortawesome/free-solid-svg-icons";
 import { forceCheck } from "react-lazyload";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useRef, useState } from "react";
 
+import {
+  LargeIconButton as SyncButton,
+  LargeIconButton as StarPlaylistButton
+} from "./buttons";
 import { capitalizeWord } from "../utils/formattingHelpers";
 import {
   clearPlaylistTracks,
@@ -193,25 +191,21 @@ const PlaylistTracklist = ({
                 >
                   {capitalizeWord(currentPlaylist.title)}
                 </h2>
-                <button
-                  type="button"
-                  className={`${styles.syncButton} ${styles.largeStarPlaylistButton}`}
+                <StarPlaylistButton
                   onClick={handleToggleStarPlaylist}
+                  icon={faStar}
+                  size="2x"
                   style={{
-                    color: currentPlaylist.isStarred ? "#ffc842" : "#555"
+                    color: currentPlaylist.isStarred ? "#ffc842" : null,
+                    margin: "0 10px 0 auto"
                   }}
-                >
-                  <FontAwesomeIcon icon={faStar} size="2x" />
-                </button>
-                <button
-                  className={styles.syncButton}
-                  style={{ cursor: hasRefreshed ? "not-allowed" : "pointer" }}
-                  type="button"
+                />
+                <SyncButton
+                  icon={faSync}
                   onClick={handleRefresh}
                   disabled={hasRefreshed}
-                >
-                  <FontAwesomeIcon size="2x" icon={faSync} />
-                </button>
+                  style={{ borderColor: "#383f41" }}
+                />
               </div>
               <div>{`${currentPlaylist.source.toUpperCase()} PLAYLIST`}</div>
               <div>{`${currentPlaylist.total} Tracks`}</div>

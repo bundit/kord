@@ -50,20 +50,12 @@
 
 .submitSearchButton {
   transform: translateX(-100px);
-  cursor: pointer;
-  height: 35px;
-  width: 80px;
-  border: none;
-  transition: 0.3s ease-in-out;
-  border-radius: 7px;
-  color: black;
-  background-color: #ce9300;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .searchBar:focus + .searchButtonContainer > button,
-.searchBar:hover + .searchButtonContainer > button,
-.submitSearchButton:hover {
+.searchBar:hover + .searchButtonContainer > button {
   background-color: #fb1;
 }
 

@@ -1,0 +1,147 @@
+@import "variables";
+
+.volumeWrapper {
+  margin-left: auto;
+  display: none;
+  cursor: pointer;
+
+  svg {
+    margin-bottom: 0;
+    color: #b3b3b3;
+    transition: 0.3s ease-out;
+  }
+
+  &:hover button svg {
+    color: $primaryLight;
+  }
+}
+
+.volumeWrapper:hover .volumeLowerFill {
+  background-color: $primaryLight;
+}
+
+.volumeWrapper button:hover ~ .volumeLowerFill {
+  background-color: #b3b3b3;
+}
+
+.volumeLowerFill {
+  transition: 0.3s ease-out;
+  position: absolute;
+  bottom: 3px;
+  min-height: 5px;
+  max-height: 5px;
+  border-radius: 5px;
+  background-color: #b3b3b3;
+  pointer-events: none;
+}
+
+input[type="range"].volumeSlider {
+  outline: none;
+  -webkit-appearance: none;
+  width: 100%;
+  max-width: 125px;
+  background: #151d20;
+  margin-bottom: 4px;
+  margin-right: 0;
+  padding: 5px 0;
+  background-color: transparent;
+  cursor: pointer;
+
+  &::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    background: #444444;
+    border-radius: 25px;
+  }
+
+  &::-webkit-slider-thumb {
+    height: 5px;
+    width: 5px;
+    border-radius: 5px;
+    /* Thumb Color */
+    background: #444444;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: 0px;
+  }
+
+  &:focus::-webkit-slider-runnable-track {
+    background: #444444;
+  }
+
+  &::-moz-range-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    background: #444444;
+    border-radius: 5px;
+  }
+
+  &::-moz-range-thumb {
+    height: 0px;
+    width: 0px;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0;
+  }
+
+  &::-ms-track {
+    width: 100%;
+    height: 27px;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+
+  &::-ms-fill-lower {
+    background: #444444;
+    border-radius: 50px;
+  }
+
+  &::-ms-fill-lower {
+    background: #444444;
+    border-radius: 50px;
+  }
+
+  &::-ms-fill-upper {
+    background: #444444;
+    border-radius: 50px;
+  }
+
+  &::-ms-thumb {
+    width: 10px;
+    border-radius: 50px;
+    background: #ffffff;
+    cursor: pointer;
+    height: 10px;
+  }
+
+  &:focus::-ms-fill-lower {
+    background: #444444;
+  }
+
+  &:focus::-ms-fill-upper {
+    background: #444444;
+  }
+}
+
+@media (min-width: 800px) {
+  .volumeWrapper {
+    position: relative;
+    align-items: center;
+    display: flex;
+    height: 10px;
+  }
+
+  .volumeSlider {
+    display: block;
+  }
+}
+
+@media (min-width: 900px) {
+  .volumeWrapper {
+    margin-left: 0;
+  }
+}

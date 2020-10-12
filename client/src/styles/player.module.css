@@ -38,58 +38,12 @@
   opacity: 1;
 }
 
-.youtubeContainer iframe {
-  /* width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0; */
-}
-
-.miniPlayer button,
-.miniPlayer button svg {
-  transition: 0.3s ease;
-  padding: 0;
-}
-.miniPlayer button:hover svg {
-  fill: #ffd46b;
-}
-.miniPlayer button:focus {
-  outline: none;
-}
-.miniPlayer button:hover {
-  cursor: pointer;
-}
-.miniPlayer button:active {
-  transform: scale(0.9);
-}
-.miniPlayerExpandButton,
-.miniPlayerPlayButton,
-.forwardButton,
-.backwardButton {
-  height: 30px;
-  width: 30px;
-  border-radius: 7px;
-}
-
-.forwardButton {
-  margin-right: 10px;
-}
-
-.backwardButton {
-  margin-left: 10px;
-}
-
-.desktopPlayPauseButton {
-  width: 50px;
-  height: 50px;
-  margin: 0 10px;
-}
 .desktopButtonGroup,
 .miniPlayerImageWrap,
 .volumeSlider {
   display: none;
 }
+
 .desktopButtonGroup {
   min-width: 200px;
 }
@@ -116,9 +70,7 @@
 }
 
 .playerWrapper svg {
-  color: white;
-  fill: white;
-  font-size: 1.3rem;
+  font-size: 16px;
 }
 
 .nowPlaying {
@@ -172,21 +124,16 @@
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
 }
 
-.closeButton {
+/* .closeButton {
   align-self: flex-start;
   margin: 1rem 0 0 1rem;
-}
+} */
 
 .expandedPlayerControls {
   width: 100%;
   display: flex;
   justify-content: center;
   margin-bottom: 1rem;
-}
-
-/* Svg Icon inside second button (Play button) */
-.expandedPlayerControls button:nth-child(2) svg {
-  font-size: 5rem;
 }
 
 .titleWrapperExpanded {
@@ -216,9 +163,9 @@
   display: none;
 }
 
-.playerRightControls button:hover svg {
+/* .playerRightControls button:hover svg {
   color: #ffc842;
-}
+} */
 
 .playerRightControls > button {
   display: none;
@@ -226,123 +173,6 @@
 
 .playerRightControls > :first-child {
   margin-left: auto;
-}
-
-.volumeWrapper {
-  margin-left: auto;
-  display: none;
-  cursor: pointer;
-}
-
-.volumeWrapper:hover .volumeLowerFill {
-  background-color: #ffc842;
-}
-
-.volumeWrapper:hover .volumeIconButton svg {
-  color: #ffc842;
-}
-
-.volumeIconButton {
-  width: 25px;
-}
-
-.volumeIconButton:hover ~ .volumeLowerFill {
-  background-color: #b3b3b3;
-}
-
-.volumeWrapper svg {
-  margin-bottom: 0;
-
-  color: #b3b3b3;
-  transition: 0.3s ease-out;
-}
-
-.volumeLowerFill {
-  transition: 0.3s ease-out;
-  position: absolute;
-  bottom: 3px;
-  min-height: 5px;
-  max-height: 5px;
-  border-radius: 5px;
-  background-color: #b3b3b3;
-  pointer-events: none;
-}
-
-input[type="range"].volumeSlider {
-  outline: none;
-  -webkit-appearance: none;
-  width: 100%;
-  max-width: 125px;
-  background: #151d20;
-  margin-bottom: 4px;
-  margin-right: 0;
-  padding: 5px 0;
-  background-color: transparent;
-  cursor: pointer;
-}
-
-input[type="range"].volumeSlider::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 5px;
-  cursor: pointer;
-  background: #444444;
-  border-radius: 25px;
-}
-input[type="range"].volumeSlider::-webkit-slider-thumb {
-  height: 5px;
-  width: 5px;
-  border-radius: 5px;
-  /* Thumb Color */
-  background: #444444;
-  cursor: pointer;
-  -webkit-appearance: none;
-  margin-top: 0px;
-}
-input[type="range"].volumeSlider:focus::-webkit-slider-runnable-track {
-  background: #444444;
-}
-input[type="range"].volumeSlider::-moz-range-track {
-  width: 100%;
-  height: 5px;
-  cursor: pointer;
-  background: #444444;
-  border-radius: 5px;
-}
-input[type="range"].volumeSlider::-moz-range-thumb {
-  height: 0px;
-  width: 0px;
-  border-radius: 5px;
-  cursor: pointer;
-  opacity: 0;
-}
-input[type="range"].volumeSlider::-ms-track {
-  width: 100%;
-  height: 27px;
-  cursor: pointer;
-  background: transparent;
-  border-color: transparent;
-  color: transparent;
-}
-input[type="range"].volumeSlider::-ms-fill-lower {
-  background: #444444;
-  border-radius: 50px;
-}
-input[type="range"].volumeSlider::-ms-fill-upper {
-  background: #444444;
-  border-radius: 50px;
-}
-input[type="range"].volumeSlider::-ms-thumb {
-  width: 10px;
-  border-radius: 50px;
-  background: #ffffff;
-  cursor: pointer;
-  height: 10px;
-}
-input[type="range"].volumeSlider:focus::-ms-fill-lower {
-  background: #444444;
-}
-input[type="range"].volumeSlider:focus::-ms-fill-upper {
-  background: #444444;
 }
 
 @media (min-width: 800px) {

@@ -1,17 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import {
-  faSoundcloud,
-  faSpotify,
-  faYoutube,
-  faMixcloud
-} from "@fortawesome/free-brands-svg-icons";
 import { forceCheck } from "react-lazyload";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 import queryString from "query-string";
 
+import { COLORS, ICONS } from "../utils/constants";
+import { SourceSearchButton } from "./buttons";
 import { cacheValue, loadCachedValue } from "../utils/sessionStorage";
 import { capitalizeWord } from "../utils/formattingHelpers";
 import ArtistList from "./artist-list";
@@ -44,14 +40,14 @@ const SearchResults = () => {
     cacheValue(`Search:sources:${query}`, sourcesToSearch);
   }, [query, sourcesToSearch]);
 
-  function handleSearchSource(e) {
-    const updatedSources = [...sourcesToSearch, e.target.value];
+  function handleSearchSource(sourceToSearch) {
+    const updatedSources = [...sourcesToSearch, sourceToSearch];
     setSourcesToSearch(updatedSources);
   }
 
-  function handleHideSearch(e) {
+  function handleHideSearch(sourceToHide) {
     const updatedSources = sourcesToSearch.filter(
-      source => source !== e.target.value
+      source => source !== sourceToHide
     );
     setSourcesToSearch(updatedSources);
   }
@@ -95,30 +91,34 @@ const SearchResults = () => {
         </span>
       </h3>
       <div className={styles.searchButtonsWrapper}>
-        {allSources.map(source => (
-          <button
-            className={sourceButtons[source].className}
-            key={`Search:button:${source}`}
-            value={source}
-            onClick={
-              sourcesToSearch.includes(source)
-                ? handleHideSearch
-                : handleSearchSource
+        {allSources.map(source => {
+          function handleSearchButtonClick(e) {
+            if (sourcesToSearch.includes(source)) {
+              handleHideSearch(source);
+            } else {
+              handleSearchSource(source);
             }
-            disabled={!connectedSources.includes(source)}
-          >
-            <FontAwesomeIcon
-              icon={sourceButtons[source].icon}
-              style={{
-                color: sourcesToSearch.includes(source)
-                  ? sourceButtons[source].color
-                  : null
-              }}
-            />
-            {sourcesToSearch.includes(source) ? ` Hide` : ` Show`}{" "}
-            {capitalizeWord(source)}
-          </button>
-        ))}
+          }
+          return (
+            <SourceSearchButton
+              key={`Search:button:${source}`}
+              source={source}
+              onClick={handleSearchButtonClick}
+              disabled={!connectedSources.includes(source)}
+            >
+              <FontAwesomeIcon
+                icon={ICONS[source]}
+                style={{
+                  color: sourcesToSearch.includes(source)
+                    ? COLORS[source]
+                    : null
+                }}
+              />
+              {sourcesToSearch.includes(source) ? ` Hide` : ` Show`}{" "}
+              {capitalizeWord(source)}
+            </SourceSearchButton>
+          );
+        })}
       </div>
       <div
         className={`${styles.libraryWrapper} ${styles.playlistList}`}
@@ -131,30 +131,6 @@ const SearchResults = () => {
       </div>
     </div>
   );
-};
-
-const sourceButtons = {
-  spotify: {
-    className: styles.searchSpotifyButton,
-    icon: faSpotify,
-    color: "#1db954b3"
-  },
-  soundcloud: {
-    className: styles.searchSoundcloudButton,
-    icon: faSoundcloud,
-    color: "#ff5500b3"
-  },
-  youtube: {
-    className: styles.searchYoutubeButton,
-    icon: faYoutube,
-    color: "#ff0000b3"
-  },
-
-  mixcloud: {
-    className: styles.searchMixcloudButton,
-    icon: faMixcloud,
-    color: "#5000ffcc"
-  }
 };
 
 export default SearchResults;

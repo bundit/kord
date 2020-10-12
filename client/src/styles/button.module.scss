@@ -1,0 +1,182 @@
+@import "variables";
+
+.button {
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s ease-out;
+  font-family: "Open Sans";
+  font-weight: bold;
+  border-radius: 7px;
+  padding: 10px 15px;
+  font-size: 15px;
+}
+
+@mixin generateSecondaryButton($color) {
+  color: rgba($color, 0.8);
+  border: 1px solid rgba($color, 0.3);
+  background: rgba($color, 0.05);
+  font-size: 13px;
+  font-weight: 300;
+
+  &:hover {
+    color: $color;
+    background: rgba($color, 0.15);
+  }
+}
+
+.primaryButton {
+  background-color: $primaryDark;
+  color: black;
+
+  &:hover {
+    background-color: $primary;
+  }
+}
+
+.cancelButton {
+  color: $iconButton;
+
+  &:hover {
+    color: $iconButtonHighlight;
+  }
+}
+
+.dangerousButton {
+  @include generateSecondaryButton($dangerous);
+  margin-top: 15px;
+  padding: 10px;
+}
+
+.spotifySearchButton {
+  @include generateSecondaryButton($spotify);
+}
+
+.soundcloudSearchButton {
+  @include generateSecondaryButton($soundcloud);
+}
+
+.youtubeSearchButton {
+  @include generateSecondaryButton($youtube);
+}
+
+.mixcloudSearchButton {
+  @include generateSecondaryButton($mixcloud);
+}
+
+.searchSourceButton {
+  color: #ccc;
+
+  &:hover {
+    color: white;
+  }
+
+  &:disabled,
+  &:hover:disabled {
+    color: #666;
+    border-color: #666;
+    background: transparent;
+    cursor: not-allowed;
+  }
+}
+
+.settingsTabButton {
+  font-size: 13px;
+  font-weight: 300;
+  border-radius: 7px 7px 0 0;
+  border: 1px solid transparent;
+  padding: 8px 10px;
+  bottom: -1px;
+  position: relative;
+  transition: 0.2s ease;
+  color: $textDarkBg;
+
+  svg {
+    margin-right: 5px;
+    opacity: 0.6;
+    transition: 0.2s ease;
+  }
+
+  &:hover {
+    color: white;
+  }
+
+  &:hover svg {
+    opacity: 1;
+  }
+}
+
+.activeTab {
+  border-color: $borderAccent;
+  background-color: $bg7;
+  border-bottom-color: $bg7;
+  color: white;
+  transform: scale(1.05) translateY(-1px);
+}
+
+.kordTab svg {
+  height: 19px;
+  vertical-align: -4px;
+}
+
+.showMoreResultsButton {
+  @include generateSecondaryButton($primary);
+  padding: 8px 10px;
+  margin: 12px 0;
+  background-color: transparent;
+
+  &:disabled {
+    color: #ccc;
+    background-color: transparent;
+    border-color: transparent;
+    cursor: auto;
+  }
+}
+
+.iconButton {
+  width: 25px;
+  padding: 0;
+  color: white;
+
+  svg {
+    transition: 0.2s linear;
+    color: inherit;
+    fill: white;
+  }
+
+  &:hover {
+    color: $primaryLight;
+
+    svg {
+      color: $primaryLight;
+      fill: $primaryLight;
+    }
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.largeIconButton {
+  color: $iconButton;
+  padding: 10px;
+  border: 1px transparent solid;
+
+  &:hover {
+    color: $iconButtonHighlight;
+  }
+
+  &:disabled {
+    color: $disabled;
+    cursor: not-allowed;
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &:disabled:active,
+  &:hover:disabled {
+    background-color: inherit;
+  }
+}

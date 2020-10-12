@@ -1,3 +1,5 @@
+import { SubmitButton } from "./buttons";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useHistory } from "react-router-dom";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -183,13 +185,12 @@ const SearchBar = ({ placeholder }) => {
         spellCheck="false"
       />
       <div className={styles.searchButtonContainer}>
-        <button
-          type="submit"
+        <SubmitButton
           className={`${styles.submitSearchButton} ${query.length &&
             styles.visibleButton}`}
         >
           Search
-        </button>
+        </SubmitButton>
       </div>
       {searchCompletionComponents && searchCompletionComponents.length ? (
         <div className={styles.searchCompletionWrapper}>

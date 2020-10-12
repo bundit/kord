@@ -1,15 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import {
-  faSpotify,
-  faSoundcloud,
-  faYoutube,
-  faMixcloud
-} from "@fortawesome/free-brands-svg-icons";
-import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import React from "react";
 
+import { COLORS, ICONS } from "../utils/constants";
 import { formatArtistName } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import avatarImg from "../assets/avatar-placeholder.png";
@@ -28,7 +22,7 @@ const ArtistItem = ({ artist }) => {
         <div className={styles.artistWrapper}>
           <div
             className={`${styles.artistImage}`}
-            style={{ color: `${colors[source]}` }}
+            style={{ color: `${COLORS[source]}` }}
           >
             <img src={getImgUrl(artist, "md")} alt={artistName} />
           </div>
@@ -37,27 +31,13 @@ const ArtistItem = ({ artist }) => {
         </div>
         <div
           className={styles.artistSourceIcon}
-          style={{ color: colors[source] }}
+          style={{ color: COLORS[source] }}
         >
-          <FontAwesomeIcon icon={icons[source]} />
+          <FontAwesomeIcon icon={ICONS[source]} />
         </div>
       </Link>
     </div>
   );
-};
-
-const icons = {
-  spotify: faSpotify,
-  soundcloud: faSoundcloud,
-  youtube: faYoutube,
-  mixcloud: faMixcloud
-};
-
-const colors = {
-  spotify: "#1db954",
-  soundcloud: "#ff5500",
-  youtube: "#ff0000",
-  mixcloud: "#5000ff"
 };
 
 ArtistItem.propTypes = {

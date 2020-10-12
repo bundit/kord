@@ -45,22 +45,11 @@
   color: #aaa;
 }
 
-.closeButton {
-  cursor: pointer;
-  color: #aaa;
-}
-
-.closeButton:hover {
-  transition: 0.2s ease;
-  color: white;
-}
-
 .modalForm {
   display: flex;
   flex-direction: column;
   flex: 1;
   padding-bottom: 25px;
-  align-items: center;
   flex-shrink: 1;
   overflow-y: hidden;
   overflow-x: hidden;
@@ -72,7 +61,6 @@
 }
 
 .formInnerWrapper {
-  flex: 1;
   width: 100%;
   padding-left: 10px;
   padding-bottom: 25px;
@@ -111,12 +99,6 @@
   color: black;
 }
 
-.usernameForm {
-  width: 300px;
-  display: flex;
-  height: 100%;
-}
-
 .usernameInputLabel {
   display: flex;
   flex-direction: column;
@@ -125,23 +107,15 @@
   justify-content: space-around;
 }
 
-.usernameInputLabel button {
-  color: inherit;
-  border-radius: 7px;
-  border: 1px #383f41 solid;
-}
-
 .usernameInput {
   margin-right: auto;
-  transition: 0.4s ease;
-  width: 150px;
+  width: 230px;
   padding: 3px 10px;
 }
 
 .usernameInput:focus {
   outline: none;
   background-color: #fff;
-  width: 230px;
 }
 
 .usernameInput:hover {
@@ -164,31 +138,8 @@
   margin: 20px 25px 0 auto;
 }
 
-.formCancelSubmitButtonGroup button {
-  font-size: 15px;
-  font-weight: 600;
-  padding: 10px 15px;
-  border-radius: 7px;
-}
-
-.formCancelButton {
-  color: #999;
-  margin-right: 20px;
-}
-
-.formSubmitButton {
-  transition: 0.3s ease-out;
-  background-color: #ce9300;
-  color: black;
-  outline: none;
-}
-
-.formSubmitButton:hover {
-  background-color: #fb1;
-}
-
-.formSubmitButton:hover {
-  cursor: pointer;
+.formCancelSubmitButtonGroup button:last-of-type {
+  margin-left: 20px;
 }
 
 .textfieldCheckmarkLabel {
@@ -283,22 +234,6 @@
   width: inherit;
 }
 
-.confirmWrapper {
-  position: relative;
-  height: 10rem;
-  top: 50%;
-  display: flex;
-  justify-content: space-around;
-}
-
-.confirmWrapper button {
-  align-self: center;
-  height: auto;
-  background-color: black;
-  border-radius: 7px;
-  color: white;
-}
-
 .formTitle {
   font-weight: 600;
   padding: 0 10px 10px 10px;
@@ -391,32 +326,6 @@
   opacity: 1;
 }
 
-.syncButton {
-  padding: 10px;
-  margin-left: auto;
-  color: #aaa;
-  border-radius: 7px;
-  border: 2px #383f41 solid;
-  transition: 0.3s ease;
-  outline: none;
-}
-
-.syncButton:disabled {
-  color: #383f41;
-}
-
-.syncButton svg {
-  margin-top: auto;
-}
-
-.syncButton:active {
-  background-color: #eee;
-}
-
-.syncButton:disabled:active {
-  background-color: inherit;
-}
-
 .rotate {
   transition: 1s ease;
   transform: rotate(360deg);
@@ -429,51 +338,6 @@
   padding-top: 20px;
   border-bottom: 1px #383f41 solid;
   background-color: #192124;
-}
-
-.settingsTab {
-  outline: none;
-  border-radius: 7px 7px 0 0;
-  border-width: 1px;
-  border-style: solid;
-  padding: 8px 10px;
-  border-color: transparent;
-  bottom: -1px;
-  position: relative;
-  transition: 0.2s ease;
-  cursor: pointer;
-  color: #888;
-}
-
-.settingsTab:hover {
-  color: white;
-}
-
-.settingsTab:hover svg {
-  opacity: 1;
-}
-
-.settingsTab svg {
-  margin-right: 5px;
-  opacity: 0.6;
-  transition: 0.2s ease;
-}
-
-.activeTab {
-  border-color: #383f41;
-  background-color: #232a2d;
-  border-bottom-color: #232a2d;
-  color: white;
-  transform: scale(1.05) translateY(-1px);
-}
-
-.activeTab svg {
-  opacity: 1;
-}
-
-.kordTab svg {
-  height: 19px;
-  vertical-align: -4px;
 }
 
 .connectSourceLink {
@@ -562,27 +426,6 @@
 
 .trackInfoWrap div:nth-child(2) {
   color: #ffd46b;
-}
-
-.removeAccountButton {
-  outline: none;
-  margin-top: 15px;
-  cursor: pointer;
-  border: 1px #ff441180 solid;
-  color: #ff4411cc;
-  border-radius: 7px;
-  padding: 10px;
-  transition: 0.2s ease;
-}
-
-.removeAccountButton:hover {
-  color: red;
-  background: #ff441120;
-}
-
-.removeAccountButton svg {
-  position: relative;
-  bottom: -1px;
 }
 
 @media (min-width: 800px) {

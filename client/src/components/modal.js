@@ -1,12 +1,16 @@
 import { CSSTransition } from "react-transition-group";
 import { createPortal } from "react-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import React from "react";
 
-import slideTransition from "../styles/slideModal.module.css";
+import {
+  CancelButton,
+  LargeIconButton as CloseButton,
+  SubmitButton
+} from "./buttons";
 import fadeTransition from "../styles/fadeModal.module.css";
+import slideTransition from "../styles/slideModal.module.css";
 import styles from "../styles/modal.module.css";
 import usePortal from "../utils/usePortal";
 
@@ -14,10 +18,20 @@ const Modal = ({
   title,
   show,
   onClose,
+  onSubmit,
   children,
   isBackdropClosable = true
 }) => {
   const target = usePortal("portal");
+
+  function handleSubmit(e) {
+    if (onSubmit) {
+      onSubmit();
+    }
+
+    onClose();
+    e.preventDefault();
+  }
 
   return createPortal(
     <>
@@ -46,15 +60,15 @@ const Modal = ({
         >
           <div className={styles.modalHeader}>
             <span className={styles.modalTitle}>{title}</span>
-            <button
-              className={styles.closeButton}
-              onClick={() => onClose()}
-              type="button"
-            >
-              <FontAwesomeIcon icon={faTimes} size="2x" />
-            </button>
+            <CloseButton icon={faTimes} onClick={onClose} />
           </div>
-          {children}
+          <form onSubmit={handleSubmit} className={styles.modalForm}>
+            {children}
+            <div className={styles.formCancelSubmitButtonGroup}>
+              {onSubmit && <CancelButton onClick={onClose} />}
+              <SubmitButton>Done</SubmitButton>
+            </div>
+          </form>
         </div>
       </CSSTransition>
     </>,
