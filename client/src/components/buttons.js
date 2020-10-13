@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 
 import styles from "../styles/button.module.scss";
@@ -53,8 +54,8 @@ export const ShowMoreResultsButton = props => (
   <Button {...props} className={styles.showMoreResultsButton} />
 );
 
-export const IconButton = ({ icon, size, children, ...props }) => (
-  <Button {...props} className={styles.iconButton}>
+export const IconButton = ({ className, icon, size, children, ...props }) => (
+  <Button {...props} className={`${styles.iconButton} ${className}`}>
     {icon && <FontAwesomeIcon icon={icon} size={size} />}
     {children}
   </Button>
@@ -62,6 +63,24 @@ export const IconButton = ({ icon, size, children, ...props }) => (
 
 export const LargeIconButton = ({ icon, ...props }) => (
   <Button {...props} className={styles.largeIconButton}>
-    <FontAwesomeIcon size="2x" icon={icon} />
+    {<FontAwesomeIcon size="2x" icon={icon} />}
+  </Button>
+);
+
+export const PlayPauseButton = ({ isPlaying, size, ...props }) => (
+  <Button {...props} className={styles.playPauseButton}>
+    <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} size={size || "2x"} />
+  </Button>
+);
+
+export const LargePlayPauseButton = ({ isPlaying, ...props }) => (
+  <Button {...props} className={styles.largePlayPauseButton}>
+    <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
+  </Button>
+);
+
+export const ClearQueueButton = props => (
+  <Button {...props} className={styles.clearQueueButton}>
+    Clear
   </Button>
 );

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import React, { useRef, useState, useEffect } from "react";
 
+import { LargePlayPauseButton } from "./buttons";
 import { cacheValue, loadCachedValue } from "../utils/sessionStorage";
 import { capitalizeWord, formatNumber } from "../utils/formattingHelpers";
 import {
@@ -15,7 +16,6 @@ import {
 import { fetchArtistInfo } from "../redux/actions/lastFmActions";
 import { getImgUrl } from "../utils/getImgUrl";
 import { pause, play, playTrack } from "../redux/actions/playerActions";
-import LargePlayPauseButton from "./large-play-pause-button";
 import LoadingSpinner from "./loading-spinner";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
@@ -48,6 +48,9 @@ const ArtistPage = () => {
   const isPlaying = useSelector(state => state.player.isPlaying);
   const context = useSelector(state => state.player.context);
   const currentTrackId = useSelector(state => state.player.currentTrack.id);
+  const { topTracks, allTracks } = artistTracks;
+  const thisArtistIsPlaying = // eslint-disable-next-line
+    context.source === source && context.id == artistId && isPlaying;
 
   useEffect(() => {
     const cachedArtist = loadCachedValue(`Artist:${artistId}:${source}`);
@@ -182,25 +185,21 @@ const ArtistPage = () => {
     }
   }
 
-  function handlePlayArtist() {
-    if (context.id === artistId) {
-      dispatch(play());
+  function handlePlayPauseArtist() {
+    if (thisArtistIsPlaying) {
+      dispatch(pause());
     } else {
-      handlePlayTrack(0, "topTracks");
+      if (context.id === artistId) {
+        dispatch(play());
+      } else {
+        handlePlayTrack(0, "topTracks");
+      }
     }
-  }
-
-  function handlePauseArtist() {
-    dispatch(pause());
   }
 
   function toggleShowFullBio() {
     setShowFullBio(!showFullBio);
   }
-
-  const { topTracks, allTracks } = artistTracks;
-  const thisArtistIsPlaying = // eslint-disable-next-line
-    context.source === source && context.id == artistId && isPlaying;
 
   return (
     <div
@@ -251,9 +250,8 @@ const ArtistPage = () => {
 
             <div style={{ marginTop: "auto" }}>
               <LargePlayPauseButton
-                isCurrentlyPlaying={thisArtistIsPlaying}
-                handlePlay={handlePlayArtist}
-                handlePause={handlePauseArtist}
+                isPlaying={thisArtistIsPlaying}
+                onClick={handlePlayPauseArtist}
               />
             </div>
           </div>

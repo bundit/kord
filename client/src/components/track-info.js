@@ -1,20 +1,17 @@
 import { Link } from "react-router-dom";
 import React from "react";
 
-import libraryStyles from "../styles/library.module.css";
-import playerStyles from "../styles/player.module.css";
+import styles from "../styles/track-item.module.scss";
 
 const TrackInfo = ({ track, isPlayer }) => {
   const artists = Array.isArray(track.artist) ? track.artist : [track.artist];
 
-  const styles = isPlayer ? playerStyles : libraryStyles;
-
   return (
     <div className={styles.titleWrapper}>
       {isPlayer ? (
-        <div className={styles.nowPlayingTitle}>{track.title}</div>
+        <div>{track.title}</div>
       ) : (
-        <div styles={styles.nowPlayingTitle}>
+        <div>
           <strong>{track.title}</strong>
         </div>
       )}
@@ -23,7 +20,7 @@ const TrackInfo = ({ track, isPlayer }) => {
           artists.map((artist, i) => (
             <React.Fragment key={artist.name}>
               <Link
-                className={`${libraryStyles.stackedArtistName}`}
+                className={`${styles.stackedArtistName}`}
                 to={`/app/search/artist/${track.source}/${
                   artist.id
                 }/${encodeURIComponent(artist.name)}`}

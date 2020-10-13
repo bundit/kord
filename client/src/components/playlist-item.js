@@ -1,21 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
 import {
-  faPlay,
-  faPause,
-  faStar,
-  faVolumeUp
-} from "@fortawesome/free-solid-svg-icons";
-import {
   faSpotify,
   faSoundcloud,
   faYoutube
 } from "@fortawesome/free-brands-svg-icons";
+import { faStar, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
+import { PlayPauseButton } from "./buttons";
 import { capitalizeWord } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import { pause, play, playPlaylist } from "../redux/actions/playerActions";
@@ -31,22 +27,20 @@ const PlaylistItem = ({ playlist, sidebar, isStarredPlaylist }) => {
   const isPlaying = useSelector(state => state.player.isPlaying);
   const isStarred = playlist.isStarred;
 
-  const thisPlaylistIsPlaying = // eslint-disable-next-line
-    context.source === source && context.id == id && isPlaying;
+  // eslint-disable-next-line
+  const thisPlaylistHasContext = context.source === source && context.id == id;
+  const thisPlaylistIsPlaying = thisPlaylistHasContext && isPlaying;
 
-  function handlePlayPlaylist(e) {
-    if (context.id === id && context.source === source) {
-      dispatch(play());
+  function handlePlayPausePlaylist(e) {
+    if (thisPlaylistIsPlaying) {
+      dispatch(pause());
     } else {
-      dispatch(playPlaylist(playlist));
+      if (context.id === id && context.source === source) {
+        dispatch(play());
+      } else {
+        dispatch(playPlaylist(playlist));
+      }
     }
-
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
-  function handlePausePlaylist(e) {
-    dispatch(pause());
 
     e.stopPropagation();
     e.preventDefault();
@@ -78,23 +72,17 @@ const PlaylistItem = ({ playlist, sidebar, isStarredPlaylist }) => {
       {!sidebar && (
         <div className={styles.playlistImageWrap}>
           <img src={getImgUrl(playlist, "lg")} alt={`${title}-art`} />
-          <div className={styles.playlistImageOverlay}>
-            {!playlist.total ? null : !thisPlaylistIsPlaying ? (
-              <button
-                type="button"
-                className={styles.playlistPlayButton}
-                onClick={handlePlayPlaylist}
-              >
-                <FontAwesomeIcon icon={faPlay} size="4x" />
-              </button>
-            ) : (
-              <button
-                type="button"
-                className={styles.playlistPlayButton}
-                onClick={handlePausePlaylist}
-              >
-                <FontAwesomeIcon icon={faPause} size="4x" />
-              </button>
+          <div
+            className={styles.playlistImageOverlay}
+            style={{ opacity: thisPlaylistHasContext ? 1 : null }}
+          >
+            {!playlist.total ? null : (
+              <PlayPauseButton
+                onClick={handlePlayPausePlaylist}
+                isPlaying={thisPlaylistIsPlaying}
+                size="3x"
+                style={{ margin: "0 auto" }}
+              />
             )}
           </div>
         </div>

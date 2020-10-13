@@ -4,7 +4,7 @@ import { forceCheck } from "react-lazyload";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 
-import { LargeIconButton as CloseButton } from "./buttons";
+import { ClearQueueButton, LargeIconButton as CloseButton } from "./buttons";
 import {
   clearRestOfQueue,
   play,
@@ -123,7 +123,7 @@ const UserQueue = () => {
           style={{ display: "flex", alignItems: "center" }}
         >
           <span>{queue.title}</span>
-          <ClearQueueButton handleClear={queue.handleClear} />
+          <ClearQueueButton onClick={queue.handleClear} />
         </div>
         <TrackList
           tracks={queue.list}
@@ -175,13 +175,5 @@ const UserQueue = () => {
     </CSSTransition>
   );
 };
-
-function ClearQueueButton({ handleClear }) {
-  return (
-    <button className={styles.clearQueueButton} onClick={handleClear}>
-      Clear
-    </button>
-  );
-}
 
 export default UserQueue;

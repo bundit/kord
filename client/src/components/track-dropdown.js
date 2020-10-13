@@ -16,7 +16,7 @@ import {
   openAddToPlaylistForm,
   openDeleteTrackForm
 } from "../redux/actions/userActions";
-import styles from "../styles/library.module.css";
+import styles from "../styles/track-item.module.scss";
 
 const TrackDropdown = ({
   toggleDropdown,

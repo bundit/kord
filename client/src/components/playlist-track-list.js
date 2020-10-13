@@ -5,8 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useRef, useState } from "react";
 
 import {
-  LargeIconButton as SyncButton,
-  LargeIconButton as StarPlaylistButton
+  LargePlayPauseButton,
+  LargeIconButton as StarPlaylistButton,
+  LargeIconButton as SyncButton
 } from "./buttons";
 import { capitalizeWord } from "../utils/formattingHelpers";
 import {
@@ -24,7 +25,6 @@ import {
 } from "../redux/actions/playerActions";
 import { timeSince } from "../utils/dateHelpers";
 import { usePrevious } from "../utils/hooks";
-import LargePlayPauseButton from "./large-play-pause-button";
 import LoadingSpinner from "./loading-spinner";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
@@ -129,22 +129,18 @@ const PlaylistTracklist = ({
 
   function handleRefresh() {
     dispatch(clearPlaylistTracks(source, currentPlaylist.id));
-    // setHasRefreshed(true);
   }
 
-  function handlePlayPlaylist(e) {
-    if (context.id === id && context.source === source) {
-      dispatch(play());
+  function handlePlayPausePlaylist(e) {
+    if (thisPlaylistIsPlaying) {
+      dispatch(pause());
     } else {
-      dispatch(playPlaylist(currentPlaylist));
+      if (context.id === id && context.source === source) {
+        dispatch(play());
+      } else {
+        dispatch(playPlaylist(currentPlaylist));
+      }
     }
-
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
-  function handlePausePlaylist(e) {
-    dispatch(pause());
 
     e.stopPropagation();
     e.preventDefault();
@@ -218,9 +214,8 @@ const PlaylistTracklist = ({
               >
                 {tracks.length ? (
                   <LargePlayPauseButton
-                    isCurrentlyPlaying={thisPlaylistIsPlaying}
-                    handlePlay={handlePlayPlaylist}
-                    handlePause={handlePausePlaylist}
+                    isPlaying={thisPlaylistIsPlaying}
+                    onClick={handlePlayPausePlaylist}
                   />
                 ) : null}
                 <div style={{ marginLeft: "auto" }}>

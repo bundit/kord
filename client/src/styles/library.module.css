@@ -77,248 +77,6 @@
   color: white;
 }
 
-/* .showMoreButton {
-  border: 1px #a2740080 solid;
-  color: #ce9300;
-  font-weight: 600;
-  border-radius: 7px;
-  padding: 10px;
-  transition: 0.3s ease-out;
-  cursor: pointer;
-  margin: 12px 0;
-  outline: none;
-  font-size: 12px;
-}
-
-.showMoreButton:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fb1;
-}
-
-.endOfResults {
-  color: #ccc;
-} */
-
-.trackWrapper {
-  display: flex;
-  align-items: center;
-  min-height: 65px;
-  width: 100%;
-  padding: 1rem 2rem;
-  box-sizing: border-box;
-  text-decoration: none;
-  color: #ddd;
-  background-color: inherit;
-  position: relative;
-  overflow: hidden;
-  font-size: 12px;
-  border-radius: 7px;
-}
-
-.trackWrapper:focus {
-  outline: none;
-}
-
-.trackWrapper a {
-  text-decoration: none;
-}
-
-.trackWrapper:focus,
-.trackWrapper:hover {
-  transition: 0.3s ease-out;
-  background-color: #2f3638;
-}
-
-.trackWrapper:hover .singleSource {
-  opacity: 1;
-}
-
-.trackWrapper:hover .trackSettingsButton {
-  opacity: 1;
-}
-
-.trackSettingsButton {
-  opacity: 0;
-  cursor: pointer;
-  color: #999;
-  outline: none;
-  padding: 5px 10px;
-  transition: 0.2s ease-out;
-}
-
-.trackSettingsButton svg {
-  font-size: 18px;
-}
-
-.trackSettingsButton:hover {
-  color: white;
-}
-
-.titleWrapper {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex-grow: 1;
-}
-
-.titleWrapper > div {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.stackedArtistName {
-  color: #ffd46b;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.stackedArtistName:hover {
-  text-decoration: underline;
-}
-
-.singleSource {
-  transition: 0.3s ease-out;
-  opacity: 0;
-}
-
-.ellipsisV {
-  transition: 0.3s ease;
-  opacity: 0;
-  width: 100px;
-  text-align: left;
-}
-
-.ellipsisH,
-.ellipsisV {
-  color: #aaa;
-  text-align: center;
-}
-
-.trackDropdown {
-  position: absolute;
-  top: 4rem;
-  right: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  background-color: #383f41;
-  padding: 0.5rem;
-  padding-left: 0.7rem;
-  box-shadow: 0 1rem 1rem rgb(0, 0, 0, 0.2);
-  z-index: 1;
-}
-
-.trackDropdown > * {
-  margin-top: 0.5rem;
-}
-
-.dropDownButton {
-  width: 35px;
-  height: 35px;
-  border-radius: 6px;
-  transition: 0.4s ease;
-}
-
-.dropDownButton:hover {
-  background-color: #192124;
-  border: 1px #2f3638 solid;
-  cursor: pointer;
-}
-
-.dropDownButton:active {
-  transform: scale(1.3);
-}
-
-.activeDropDown {
-  color: black;
-  border: 1px #2f3638 solid;
-  background-color: #192124;
-}
-
-.activeDropDown span,
-.dropDownButton:hover span {
-  color: #ffd46b;
-}
-
-.dropDownButton:focus {
-  outline: none;
-}
-
-.dropdownOption {
-  margin: 3px 0;
-  color: #ccc;
-  display: flex;
-  width: inherit;
-  padding-left: 0;
-}
-
-.dropdownOption:hover {
-  cursor: pointer;
-  color: white;
-}
-
-.dropdownOption:active {
-  color: #fb1;
-  outline: none;
-}
-
-.dropdownOption *:first-child {
-  padding-right: 0.5rem;
-  width: 1rem;
-}
-
-.playingNow {
-  transition: 0.3s ease-out;
-  background-color: #2f3638;
-}
-
-.notStreamable {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.duration {
-  color: #bbb;
-}
-
-.trackRightControls {
-  margin-left: auto;
-  min-width: 45px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.trackImageWrap {
-  position: relative;
-  min-height: 3rem;
-  min-width: 3rem;
-  margin-right: 1rem;
-  border-radius: 7px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.trackImageWrap,
-.overlay,
-.trackPlayButton {
-  height: 3rem;
-  width: 3rem;
-}
-
-.trackImageWrap img {
-  max-height: 100%;
-  width: auto;
-}
-
-.trackImage {
-  border-radius: 7px;
-}
-
 .artistImage {
   border-radius: 50%;
   height: 100px;
@@ -395,84 +153,6 @@
   opacity: 1;
 }
 
-.playingNow .overlay,
-.trackWrapper:hover .overlay {
-  opacity: 1;
-}
-
-.queueTrackItem:hover,
-.queueTrackItem:focus {
-  background-color: transparent;
-}
-
-.removeFromQueueButton {
-  display: none;
-}
-
-.queueTrackItem:hover .removeFromQueueButton {
-  display: block;
-}
-
-.queueTrackItem:hover .duration {
-  display: none;
-}
-
-.queueTrackItem {
-  background-color: transparent;
-}
-
-.queueTrackItem .singleSource {
-  display: none;
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(0, 0, 0, 0.5);
-  border-radius: 0.5rem;
-  opacity: 0;
-  transition: 0.3s ease-out;
-}
-
-.trackPlayButton {
-  transition: 0.3s ease;
-  cursor: pointer;
-  color: white;
-  opacity: 1;
-  font-size: 14px;
-  outline: none;
-}
-
-.trackPlayButton:hover {
-  transform: scale(1.2);
-}
-
-.trackPlayButton:active {
-  transform: scale(1);
-}
-
-.bar {
-  min-width: 4px;
-  height: 1.9rem;
-  background-color: white;
-  margin: auto 3px;
-  border-radius: 3px;
-  animation: mainBar ease-in-out 0.9s infinite;
-}
-
-.midBar {
-  height: 1.9rem;
-  animation: secBar ease-in-out 0.9s infinite;
-}
-
-.paused {
-  animation-play-state: paused;
-}
-
 .mobileAddPlaylist {
   color: red;
   position: fixed;
@@ -537,10 +217,6 @@
 .playlistItem,
 .playlistImageOverlay {
   transition: 0.3s ease-out;
-}
-
-.playlistPlayButton {
-  transition: 0.1s linear;
 }
 
 .playlistItem h3 {
@@ -610,36 +286,6 @@
   align-items: center;
   opacity: 0;
   background-color: rgba(0, 0, 0, 0.5);
-}
-
-.playlistPlayButton {
-  height: 60px;
-  width: 60px;
-  color: white;
-  margin: 0 auto;
-  outline: none;
-}
-
-.playlistPlayButton:hover {
-  transform: scale(1.1);
-}
-
-.playlistPlayButton:active {
-  transform: scale(1);
-}
-
-.largePlayPauseButton {
-  border-radius: 50%;
-  color: #192124;
-  background: linear-gradient(
-    330deg,
-    rgba(255, 187, 17, 1) 0%,
-    rgba(255, 200, 66, 1) 70%,
-    rgba(255, 255, 255, 1) 100%
-  );
-  margin-left: 0;
-  cursor: pointer;
-  font-size: 19px;
 }
 
 .smallStarPlaylistButton {
@@ -724,10 +370,6 @@
 }
 
 @media (min-width: 800px) {
-  .singleSource {
-    margin-right: 30px;
-  }
-
   .libraryWrapper {
     margin: 1rem 2rem 0 2rem;
     padding: 1rem;
@@ -767,49 +409,6 @@
     background-color: #1e2629;
   }
 
-  .mobileCategoryList {
-    display: none;
-  }
-
-  .desktopCategoryList {
-    display: flex;
-    text-align: center;
-    position: sticky;
-    top: 245px;
-    z-index: 1;
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: flex-start;
-  }
-
-  .categoryWrapper {
-    max-width: 1200px;
-    font-size: 17px;
-    width: auto;
-    margin: 15px 30px;
-    padding: 10px 10px;
-    text-align: center;
-    border-bottom: none;
-    transition: 0.3s ease;
-    border-radius: 7px;
-  }
-
-  .categoryWrapper:hover {
-    color: white;
-  }
-
-  .activeSection {
-    margin: 15px 10px;
-    padding: 10px 30px;
-
-    background-color: #232a2d;
-    color: #b8ced3;
-  }
-
-  .mobileAddPlaylist {
-    display: none;
-  }
-
   .queueWrapper {
     display: block;
     position: fixed;
@@ -824,38 +423,11 @@
     z-index: -1;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   }
-
-  .removeFromQueueButton {
-    cursor: pointer;
-    color: #aaa;
-  }
-
-  .clearQueueButton {
-    margin-left: auto;
-    border: 1px #383f41 solid;
-    color: #aaa;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s ease-out;
-  }
-
-  .clearQueueButton:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: white;
-  }
-
-  .removeFromQueueButton:hover {
-    color: #eee;
-  }
 }
 
 @media (min-width: 1025px) {
   .listTitle {
     font-size: 40px;
-  }
-  .dropDownButton {
-    margin-left: 0;
   }
 }
 
@@ -863,28 +435,4 @@
 }
 
 @media (min-width: 1600px) {
-}
-
-@keyframes mainBar {
-  0% {
-    height: 1.8rem;
-  }
-  60% {
-    height: 0.6rem;
-  }
-  100% {
-    height: 2rem;
-  }
-}
-
-@keyframes secBar {
-  0% {
-    height: 0.4rem;
-  }
-  60% {
-    height: 1.9rem;
-  }
-  100% {
-    height: 0.6rem;
-  }
 }

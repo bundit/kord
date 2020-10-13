@@ -1,25 +1,22 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlay,
-  faEllipsisV,
-  faTimes
-} from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisV, faTimes } from "@fortawesome/free-solid-svg-icons";
 import {
   faSpotify,
   faSoundcloud,
   faYoutube
 } from "@fortawesome/free-brands-svg-icons";
+import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import React from "react";
 
-import LazyLoad from "react-lazyload";
-
+import { IconButton, IconButton as ToggleDropDownButton } from "./buttons";
 import { getImgUrl } from "../utils/getImgUrl";
 import { msToDuration } from "../utils/formattingHelpers";
+import ActiveImageOverlay from "./active-image-overlay";
 import TrackDropdown from "./track-dropdown";
 import TrackInfo from "./track-info";
 import rippleEffect from "../utils/rippleEffect";
-import styles from "../styles/library.module.css";
+import styles from "../styles/track-item.module.scss";
 
 const TrackItem = ({
   track,
@@ -97,29 +94,11 @@ const TrackItem = ({
               alt="track"
             />
             {isStreamable && (
-              <div className={styles.overlay}>
-                {isPlaying && isActive ? (
-                  <>
-                    <div
-                      className={`${styles.bar} ${!isPlaying && styles.paused}`}
-                    />
-                    <div
-                      className={`${styles.bar} ${styles.midBar} ${!isPlaying &&
-                        styles.paused}`}
-                    />
-                    <div
-                      className={`${styles.bar} ${!isPlaying && styles.paused}`}
-                    />
-                  </>
-                ) : (
-                  <button
-                    onClick={handlePlayTrack}
-                    className={styles.trackPlayButton}
-                  >
-                    <FontAwesomeIcon icon={faPlay} size="lg" />
-                  </button>
-                )}
-              </div>
+              <ActiveImageOverlay
+                isPlaying={isPlaying}
+                isActive={isActive}
+                handlePlayTrack={handlePlayTrack}
+              />
             )}
           </div>
           <TrackInfo track={track} />
@@ -139,24 +118,23 @@ const TrackItem = ({
             />
           </div>
 
-          <button
+          <ToggleDropDownButton
             onClick={toggleDropdown}
             onDoubleClick={stopPropagation}
-            style={isDropdownOpen ? { color: "#fb1", opacity: 1 } : null}
             className={styles.trackSettingsButton}
-          >
-            <FontAwesomeIcon icon={faEllipsisV} />
-          </button>
+            style={isDropdownOpen ? { color: "#fb1", opacity: 1 } : null}
+            icon={faEllipsisV}
+            size="lg"
+          />
 
           <div className={styles.trackRightControls}>
             {handleRemove && (
-              <button
-                type="button"
-                className={styles.removeFromQueueButton}
+              <IconButton
                 onClick={handleRemoveFromQueue}
-              >
-                <FontAwesomeIcon icon={faTimes} size="lg" />
-              </button>
+                className={styles.removeFromQueueButton}
+                icon={faTimes}
+                size="lg"
+              />
             )}
             <div
               className={styles.duration}

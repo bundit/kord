@@ -1,0 +1,61 @@
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s ease-out;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 0.5rem;
+  opacity: 0;
+  height: 3rem;
+  width: 3rem;
+
+  > button svg {
+    color: white;
+  }
+}
+
+.bar {
+  min-width: 4px;
+  height: 1.9rem;
+  background-color: white;
+  margin: auto 3px;
+  border-radius: 3px;
+  animation: mainBar ease-in-out 0.9s infinite;
+}
+
+.midBar {
+  height: 1.9rem;
+  animation: secBar ease-in-out 0.9s infinite;
+}
+
+.paused {
+  animation-play-state: paused;
+}
+
+@keyframes mainBar {
+  0% {
+    height: 1.8rem;
+  }
+  60% {
+    height: 0.6rem;
+  }
+  100% {
+    height: 2rem;
+  }
+}
+
+@keyframes secBar {
+  0% {
+    height: 0.4rem;
+  }
+  60% {
+    height: 1.9rem;
+  }
+  100% {
+    height: 0.6rem;
+  }
+}

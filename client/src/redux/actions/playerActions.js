@@ -20,6 +20,7 @@ import {
   SET_TRACK,
   SET_VOLUME
 } from "./types";
+import { capitalizeWord } from "../../utils/formattingHelpers";
 import { fetchGeneric } from "../../utils/fetchGeneric";
 import {
   fetchMoreYoutubeTrackResults,
@@ -244,7 +245,8 @@ export const playPlaylist = playlist => dispatch => {
   const { source, id, next, tracks, total } = playlist;
   const context = {
     source: source,
-    id: id
+    id: id,
+    title: capitalizeWord(playlist.title)
   };
 
   if (total === 0) return;
