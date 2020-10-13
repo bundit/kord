@@ -227,22 +227,6 @@
   white-space: nowrap;
 }
 
-.queueWrapper {
-  display: none;
-}
-
-.queueTitle {
-  margin: 15px 5px 0px 5px;
-  color: #aaa;
-}
-
-.queueTitle span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: 5px;
-}
-
 .trackSectionTitle {
   font-family: "Open Sans";
   font-size: 25px;
@@ -297,21 +281,6 @@
 
   .listContainer {
     background-color: #1e2629;
-  }
-
-  .queueWrapper {
-    display: block;
-    position: fixed;
-    bottom: 95px;
-    right: 15px;
-    max-height: 65vh;
-    width: 400px;
-    background-color: #232a2d;
-    border: 1px #383f41 solid;
-    border-radius: 7px;
-    overflow: hidden;
-    z-index: -1;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   }
 }
 

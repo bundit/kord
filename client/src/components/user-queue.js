@@ -16,7 +16,7 @@ import TrackItem from "./track-item";
 import TrackList from "./track-list";
 import modalStyles from "../styles/modal.module.css";
 import slideTransition from "../styles/slideModal.module.css";
-import styles from "../styles/library.module.css";
+import styles from "../styles/user-queue.module.scss";
 
 const UserQueue = () => {
   const dispatch = useDispatch();
@@ -123,7 +123,10 @@ const UserQueue = () => {
           style={{ display: "flex", alignItems: "center" }}
         >
           <span>{queue.title}</span>
-          <ClearQueueButton onClick={queue.handleClear} />
+          <ClearQueueButton
+            onClick={queue.handleClear}
+            style={{ marginRight: "7px" }}
+          />
         </div>
         <TrackList
           tracks={queue.list}

@@ -30,8 +30,9 @@ const SearchTrackList = ({
   const alert = useAlert();
   const [isLoading, setIsLoading] = useState(restored ? false : true);
   const [numShowTracks, setNumShowTracks] = useState(restored ? 10 : 0);
+  const numTracks = tracks.list ? tracks.list.length : 0;
   const searchHasMoreToShow =
-    (tracks && tracks.next) || numShowTracks < tracks.list.length;
+    (tracks && tracks.next) || numShowTracks < numTracks;
   const listHeight = Math.min(tracks.list.length, numShowTracks);
 
   useEffect(() => {
