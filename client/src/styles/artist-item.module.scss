@@ -1,0 +1,78 @@
+@import "variables";
+
+.artistLink {
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  color: $textDarkBg;
+
+  & * {
+    transition: 0.3s ease-out;
+  }
+
+  &:hover .artistName {
+    color: white;
+  }
+
+  &:hover .artistImage {
+    box-shadow: 0 0 15px;
+  }
+
+  .artistSourceIcon {
+    opacity: 0.7;
+    position: absolute;
+    bottom: 40px;
+    right: 30px;
+    font-size: 35px;
+  }
+}
+
+.artistWrapper {
+  height: 150px;
+  width: 150px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .artistImage {
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .artistName {
+    text-align: center;
+    margin-top: 10px;
+  }
+}
+
+.artistShowMoreLessButton {
+  cursor: pointer;
+  outline: none;
+
+  .showMoreLessCircle {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+  }
+
+  &:hover .showMoreLessCircle {
+    opacity: 1;
+  }
+}

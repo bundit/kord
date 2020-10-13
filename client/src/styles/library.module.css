@@ -77,82 +77,6 @@
   color: white;
 }
 
-.artistImage {
-  border-radius: 50%;
-  height: 100px;
-  width: 100px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-.artistImage img {
-  max-width: 100%;
-  max-height: 100%;
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
-.artistWrapper {
-  height: 150px;
-  width: 150px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.artistLink {
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  color: #999;
-}
-
-.artistLink * {
-  transition: 0.2s ease-out;
-}
-
-.artistLink:hover .artistName {
-  color: #ddd;
-}
-
-.artistLink:hover .artistImage {
-  box-shadow: 0 0 15px;
-}
-
-.artistName {
-  text-align: center;
-  margin-top: 10px;
-}
-
-.artistSourceIcon {
-  opacity: 0.7;
-  position: absolute;
-  bottom: 40px;
-  right: 30px;
-  font-size: 35px;
-}
-
-.artistShowMoreLessButton {
-  cursor: pointer;
-  outline: none;
-}
-
-.showMoreLessCircle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.7;
-}
-
-.artistShowMoreLessButton:hover .showMoreLessCircle {
-  opacity: 1;
-}
-
 .mobileAddPlaylist {
   color: red;
   position: fixed;
@@ -160,31 +84,6 @@
   right: 0;
   z-index: 3;
   font-size: 2rem;
-}
-
-.categoryListWrapper {
-  display: flex;
-  flex-direction: column;
-  padding-left: 0;
-  background-color: #171e21;
-}
-
-.desktopCategoryList {
-  display: none;
-}
-
-.categoryWrapper {
-  font-size: 20px;
-  font-weight: 600;
-  width: 100%;
-  padding: 1rem;
-  box-sizing: border-box;
-  border-bottom: 1px #333 solid;
-  color: inherit;
-  background-color: inherit;
-  overflow: hidden;
-  text-decoration: none;
-  color: #626d70;
 }
 
 .playlistList {
@@ -352,15 +251,6 @@
   border-bottom: 1px #383f41 solid;
   font-weight: 300;
   padding: 0 10px 10px 10px;
-}
-
-.artistHeaderInfo {
-  display: flex;
-  flex-direction: column;
-}
-
-.artistHeaderInfo svg {
-  margin-right: 10px;
 }
 
 .artistSubHeader {

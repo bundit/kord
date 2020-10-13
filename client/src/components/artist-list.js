@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 
+import { COLORS } from "../utils/constants";
 import { formatArtistName } from "../utils/formattingHelpers";
 import ArtistItem from "./artist-item";
-import styles from "../styles/library.module.css";
+import styles from "../styles/artist-item.module.scss";
 
 const ArtistList = ({ artists, source }) => {
   const defaultShowValue = 1;
@@ -43,13 +44,17 @@ const ArtistList = ({ artists, source }) => {
           key={`${source}:showlessmore`}
         >
           <div
-            className={`${styles.artistImage} ${styles.showMoreLessCircle}`}
+            className={styles.showMoreLessCircle}
             style={{
-              border: `1px ${colors[source]}40 solid`,
-              color: colors[source]
+              border: `1px ${COLORS[source]}40 solid`,
+              color: COLORS[source] + "80"
             }}
           >
-            <span>{showAll ? "Show Less" : "Show More"}</span>
+            <div className={styles.artistImage}>
+              <span style={{ color: COLORS[source] }}>
+                {showAll ? "Show Less" : "Show More"}
+              </span>
+            </div>
           </div>
           {!showAll && (
             <div className={styles.artistName}>{`${resultsLeft} more result${
@@ -60,13 +65,6 @@ const ArtistList = ({ artists, source }) => {
       )}
     </>
   );
-};
-
-const colors = {
-  spotify: "#1db954",
-  soundcloud: "#ff5500",
-  youtube: "#ff0000",
-  mixcloud: "#5000ff"
 };
 
 ArtistList.propTypes = {

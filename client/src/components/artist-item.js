@@ -7,7 +7,7 @@ import { COLORS, ICONS } from "../utils/constants";
 import { formatArtistName } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import avatarImg from "../assets/avatar-placeholder.png";
-import styles from "../styles/library.module.css";
+import styles from "../styles/artist-item.module.scss";
 
 const ArtistItem = ({ artist }) => {
   const artistName = formatArtistName(artist);
@@ -22,7 +22,7 @@ const ArtistItem = ({ artist }) => {
         <div className={styles.artistWrapper}>
           <div
             className={`${styles.artistImage}`}
-            style={{ color: `${COLORS[source]}` }}
+            style={{ color: `${COLORS[source]}80` }}
           >
             <img src={getImgUrl(artist, "md")} alt={artistName} />
           </div>
