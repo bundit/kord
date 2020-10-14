@@ -41,3 +41,23 @@ $spotify: #1db954;
 $soundcloud: #ff5500;
 $youtube: #ff0000;
 $mixcloud: #5000ff;
+
+@keyframes fadeInFromNone {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+  }
+
+  100% {
+    display: block;
+    opacity: 1;
+  }
+  101% {
+    display: block;
+  }
+}

@@ -7,27 +7,27 @@ import {
   faCompass,
   faVolumeUp
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faSoundcloud,
-  faSpotify,
-  faYoutube
-} from "@fortawesome/free-brands-svg-icons";
 import React from "react";
 
+import { ICONS, SOURCES } from "../utils/constants";
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
 import { openSettings } from "../redux/actions/userActions";
 import ConnectedSourceButton from "./connected-source-button";
 import PlaylistList from "./playlist-list";
-import styles from "../styles/sidebar.module.css";
+import styles from "../styles/sidebar.module.scss";
 
-const Sidebar = ({ user, playlists }) => {
-  const dispatch = useDispatch();
-  const history = useHistory();
+const Sidebar = () => {
+  const playlists = useSelector(state => state.library.playlists);
   const userHistory = useSelector(state => state.user.history);
+  const user = useSelector(state => state.user);
+  const context = useSelector(state => state.player.context);
+  const isPlaying = useSelector(state => state.player.isPlaying);
+
+  const dispatch = useDispatch();
   const location = useLocation();
-  const player = useSelector(state => state.player);
-  const { context, isPlaying } = player; // eslint-disable-next-line
+  const history = useHistory();
+
   const isPlayingFromSearch =
     (context.id === "search" || context.search) && isPlaying;
 
@@ -45,62 +45,60 @@ const Sidebar = ({ user, playlists }) => {
     history.push(newPath);
   }
 
-  const appNavLinkComponents = generateAppNavLinkComponents(
-    isPlayingFromSearch,
-    handleSearchNavigationOnClick
-  );
-  const sourceButtonComponents = generateSourceButtonComponents(
-    user,
-    toggleSettingsForm
-  );
-  const playlistNavLinkComponents = generatePlaylistNavlinkComponents(
-    playlists
-  );
-
   return (
     <div className={styles.sidebarWrapper}>
-      <div className={styles.sidebarHeader}>
+      <header className={styles.sidebarHeader}>
         <Link to="/app/">
           <div className={styles.logoWrapper}>
             <Kord3d />
           </div>
         </Link>
-      </div>
+      </header>
+
       <div className={styles.sectionWrapper}>
         <h2>App</h2>
-        {appNavLinkComponents}
+        <AppNavLinks
+          isPlayingFromSearch={isPlayingFromSearch}
+          handleSearchNavigationOnClick={handleSearchNavigationOnClick}
+        />
       </div>
 
       <div className={styles.sectionWrapper}>
         <h2>Playlists</h2>
         <div className={styles.sidebarScrollWrapper}>
-          {playlistNavLinkComponents}
+          <StarredPlaylistsNavLinks playlists={playlists} />
+          <RemainingPlaylistNavs playlists={playlists} />
         </div>
       </div>
-      <div className={styles.sidebarFooter}>{sourceButtonComponents}</div>
+
+      <div className={styles.sidebarFooter}>
+        <SourceButtonList user={user} toggleSettingsForm={toggleSettingsForm} />
+      </div>
     </div>
   );
 };
 
-function generateAppNavLinkComponents(isPlayingFromSearch, searchOnClick) {
+function AppNavLinks({ isPlayingFromSearch, handleSearchNavigationOnClick }) {
   const navLinks = [
     { title: "Library", to: "/app/library", exact: true, icon: faMusic },
     { title: "Search", to: "/app/search", icon: faSearch },
     { title: "Explore", to: "/app/explore", icon: faCompass }
   ];
 
+  function getLinkStyle(title) {
+    if (title === "Search") {
+      return { display: "flex", alignItems: "center" };
+    }
+  }
+
   return navLinks.map(link => (
     <NavLink
       to={link.to}
       exact={link.exact}
-      onClick={link.title === "Search" ? searchOnClick : null}
+      onClick={link.title === "Search" ? handleSearchNavigationOnClick : null}
       className={styles.sidebarNavLink}
       activeClassName={styles.activeNavLink}
-      style={
-        link.title === "Search"
-          ? { display: "flex", alignItems: "center" }
-          : null
-      }
+      style={getLinkStyle(link.title)}
       key={link.title + "sidebarNav"}
     >
       <FontAwesomeIcon size="lg" icon={link.icon} />
@@ -120,50 +118,47 @@ function getPlayingFromSearchIcon(isPlayingFromSearch) {
   }
 }
 
-function generatePlaylistNavlinkComponents(playlists) {
-  const playlistComponents = [];
-
-  const starredPlaylists = (
-    <PlaylistList
-      playlists={flattenPlaylistObject(playlists).filter(
-        playlist => playlist.isStarred
-      )}
-      key={`sidebar:starred:playlists`}
-      isListOfStarredPlaylists
-      sidebar
-    />
+function StarredPlaylistsNavLinks({ playlists }) {
+  const starredPlaylists = flattenPlaylistObject(playlists).filter(
+    playlist => playlist.isStarred
   );
 
-  playlistComponents.push(starredPlaylists);
+  return (
+    <div className={styles.playlistContainer} key={`sidebar:starred:playlists`}>
+      <PlaylistList
+        playlists={starredPlaylists}
+        isListOfStarredPlaylists
+        sidebar
+      />
+    </div>
+  );
+}
 
-  for (let source in playlists) {
-    playlistComponents.push(
+function RemainingPlaylistNavs({ playlists }) {
+  return SOURCES.map(source => (
+    <div
+      className={`${styles.playlistContainer} ${
+        styles[`${source}PlaylistSection`]
+      }`}
+      key={`sidebar:${source}:playlists`}
+    >
       <PlaylistList
         playlists={playlists[source].filter(playlist => !playlist.isStarred)}
         source={source}
         sidebar
-        key={`sidebar:${source}:playlists`}
       />
-    );
-  }
-
-  return playlistComponents;
+    </div>
+  ));
 }
 
-function generateSourceButtonComponents(user, toggleSettingsForm) {
-  const sourceButtons = [
-    { source: "spotify", icon: faSpotify, color: "#1db954" },
-    { source: "soundcloud", icon: faSoundcloud, color: "#ff5500" },
-    { source: "youtube", icon: faYoutube, color: "#ff0000" }
-  ];
-
-  return sourceButtons.map(button => (
+function SourceButtonList({ user, toggleSettingsForm }) {
+  return SOURCES.map(source => (
     <ConnectedSourceButton
-      key={`Connect-${button.source}`}
-      isConnected={user[button.source].isConnected}
+      key={`Connect-${source}`}
+      isConnected={user[source].isConnected}
       openSettings={toggleSettingsForm}
-      source={button.source}
-      icon={button.icon}
+      source={source}
+      icon={ICONS[source]}
     />
   ));
 }

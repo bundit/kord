@@ -9,6 +9,7 @@ import {
   removeFromSearchHistory
 } from "../redux/actions/searchActions";
 import styles from "../styles/library.module.css";
+import playlistItemStyles from "../styles/playlist-item.module.scss";
 
 const SearchHistory = () => {
   const searchHistory = useSelector(state => state.search.history) || [];
@@ -68,7 +69,7 @@ const SearchHistory = () => {
             >
               <Link
                 to={`/app/search/${searchPhrase}`}
-                className={`${styles.playlistItem} ${styles.redoSearchLink}`}
+                className={`${playlistItemStyles.playlistItem} ${styles.redoSearchLink}`}
                 onClick={handleRedoSearch}
               >
                 <span style={{ marginTop: "auto", display: "block" }}>

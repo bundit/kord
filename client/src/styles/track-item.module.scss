@@ -1,3 +1,5 @@
+@import "variables";
+
 .trackWrapper {
   transition: 0.3s ease-out;
   display: flex;
@@ -58,12 +60,19 @@
   }
 
   svg {
-    color: #b3b3b3;
+    color: $bgAccent;
   }
 
   &:focus,
   &:hover {
-    background-color: #2f3638;
+    background-color: $bg12;
+
+    .singleSource,
+    .trackSettingsButton {
+      display: block;
+      animation: fadeInFromNone 0.3s ease-out;
+      display: block;
+    }
   }
 
   &:hover * {
@@ -72,7 +81,7 @@
 }
 
 .stackedArtistName {
-  color: #ffd46b;
+  color: $primaryLightest;
   cursor: pointer;
   text-decoration: none;
 
@@ -84,12 +93,17 @@
 .trackSettingsButton,
 .singleSource {
   opacity: 0;
-  color: #b3b3b3;
+
+  color: $bgAccent;
   padding: 5px 10px;
 
   svg {
     color: inherit;
   }
+}
+
+.singleSource {
+  display: none;
 }
 
 .notStreamable {
@@ -98,7 +112,7 @@
 }
 
 .playingNow {
-  background-color: #2f3638;
+  background-color: $bg12;
 
   * {
     opacity: 1;
@@ -115,7 +129,7 @@
   right: 1.5rem;
   display: flex;
   flex-direction: column;
-  background-color: #383f41;
+  background-color: $bg16;
   padding: 0.5rem;
   padding-left: 0.7rem;
   box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.2);
@@ -127,12 +141,13 @@
 
   .dropdownOption {
     margin: 3px 0;
-    color: #ccc;
+    color: $smallheader;
     display: flex;
     width: inherit;
     padding-left: 0;
     cursor: pointer;
     outline: none;
+    transition: 0.1s ease-out;
 
     span:first-child {
       padding-right: 0.5rem;
@@ -140,12 +155,11 @@
     }
 
     &:hover {
-      cursor: pointer;
       color: white;
     }
 
     &:active {
-      color: #fb1;
+      color: $primary;
     }
   }
 }
@@ -169,6 +183,28 @@
 
   &:hover .removeFromQueueButton {
     display: block;
+  }
+}
+
+.formTrackTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-size: 13px;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  width: 100%;
+
+  div {
+    max-width: 90%;
+    margin: 0 10px;
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
   }
 }
 

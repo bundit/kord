@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
-import styles from "../styles/sidebar.module.css";
+import styles from "../styles/sidebar.module.scss";
 
 const ConnectedSourceButton = ({ isConnected, openSettings, source, icon }) => {
   function handleClick() {
@@ -10,7 +10,8 @@ const ConnectedSourceButton = ({ isConnected, openSettings, source, icon }) => {
 
   return (
     <button
-      className={`${isConnected && styles.connectedSource}`}
+      className={`${styles.sourceButton} ${isConnected &&
+        styles.connectedSource}`}
       type="button"
       onClick={handleClick}
     >

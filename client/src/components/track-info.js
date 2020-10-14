@@ -3,11 +3,13 @@ import React from "react";
 
 import styles from "../styles/track-item.module.scss";
 
-const TrackInfo = ({ track, isPlayer }) => {
+const TrackInfo = ({ track, isPlayer, isForm, handleArtistClick }) => {
   const artists = Array.isArray(track.artist) ? track.artist : [track.artist];
 
   return (
-    <div className={styles.titleWrapper}>
+    <div
+      className={`${styles.titleWrapper} ${isForm && styles.formTrackTitle}`}
+    >
       {isPlayer ? (
         <div>{track.title}</div>
       ) : (
@@ -24,6 +26,7 @@ const TrackInfo = ({ track, isPlayer }) => {
                 to={`/app/search/artist/${track.source}/${
                   artist.id
                 }/${encodeURIComponent(artist.name)}`}
+                onClick={handleArtistClick}
               >
                 {artist.name}
               </Link>

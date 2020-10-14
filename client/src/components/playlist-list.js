@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
 import React from "react";
 
+import { filterUnconnected } from "../utils/formattingHelpers";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
 import PlaylistItem from "./playlist-item";
-import styles from "../styles/library.module.css";
-import sidebarStyles from "../styles/sidebar.module.css";
 
 const ListOfPlaylists = ({
   playlists,
@@ -12,34 +11,18 @@ const ListOfPlaylists = ({
   isListOfStarredPlaylists,
   source
 }) => {
-  const allPlaylists = Array.isArray(playlists)
-    ? playlists
-    : flattenPlaylistObject(playlists);
-
-  const playlistComponents = allPlaylists
-    .filter(playlist => playlist.isConnected)
-    .map(playlist => (
-      <PlaylistItem
-        key={`${playlist.source} ${playlist.title} ${playlist.id}`}
-        playlist={playlist}
-        sidebar={sidebar}
-        isStarredPlaylist={isListOfStarredPlaylists}
-      />
-    ));
-
-  function getPlaylistWrapperClasses() {
-    if (sidebar) {
-      return `${sidebarStyles.playlistContainer} ${
-        sidebarStyles[`${source}PlaylistList`]
-      }`;
-    } else {
-      return `${styles.libraryWrapper} ${styles.playlistList}`;
-    }
+  if (!Array.isArray(playlists)) {
+    playlists = flattenPlaylistObject(playlists);
   }
 
-  return (
-    <div className={getPlaylistWrapperClasses()}>{playlistComponents}</div>
-  );
+  return filterUnconnected(playlists).map(playlist => (
+    <PlaylistItem
+      key={`${playlist.source} ${playlist.title} ${playlist.id}`}
+      playlist={playlist}
+      sidebar={sidebar}
+      isStarredPlaylist={isListOfStarredPlaylists}
+    />
+  ));
 };
 
 ListOfPlaylists.propTypes = {

@@ -1,0 +1,97 @@
+@import "variables";
+
+.playlistItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 2rem;
+  background-color: $bg5;
+  text-decoration: none;
+  color: $smallheader;
+  border-radius: 7px;
+
+  &,
+  .playlistImageOverlay {
+    transition: 0.3s ease-out;
+  }
+
+  &:after {
+    // Keep aspect ratio
+    content: "";
+    display: block;
+    height: 0;
+    width: 0;
+    padding-top: calc(2 / 16 * 100%);
+  }
+
+  &:hover {
+    background-color: $bg12;
+    color: white;
+  }
+
+  h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 5px;
+  }
+
+  .playlistInfoWrap {
+    width: 100%;
+    text-align: left;
+  }
+}
+
+.playlistItem:hover .playlistImageOverlay,
+.playlistItem:focus .playlistImageOverlay {
+  transition: 0.3s ease-out;
+  opacity: 1;
+}
+
+.playlistImageWrap,
+.playlistImageOverlay,
+.playlistImageWrap img {
+  width: 100%;
+  height: 100%;
+}
+
+.playlistImageWrap {
+  padding-top: 100%;
+  position: relative;
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px $borderAccent solid;
+  margin: 0 0 auto 0;
+
+  .playlistImageOverlay {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .playlistImageOverlay,
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  img {
+    left: 50%;
+    /* margin-left: calc(100%-25%); */
+    position: absolute;
+    /* move the element half way across the screen */
+    left: 50%;
+    /* allow the width to be calculated dynamically */
+    width: auto;
+    /* then move the element back again using a transform */
+    transform: translateX(-50%);
+  }
+}
+
+.smallStarPlaylistButton {
+  padding: 0;
+  outline: none;
+}

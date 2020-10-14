@@ -25,6 +25,7 @@ import {
 } from "../redux/actions/playerActions";
 import { timeSince } from "../utils/dateHelpers";
 import { usePrevious } from "../utils/hooks";
+import Image from "./image";
 import LoadingSpinner from "./loading-spinner";
 import TrackList from "./track-list";
 import styles from "../styles/library.module.css";
@@ -155,29 +156,26 @@ const PlaylistTracklist = ({
   return (
     !isEmptyObject(currentPlaylist) && (
       <div
-        className={`${styles.pageWrapper} ${styles.tracksScrollContainer}`}
+        className={styles.pageWrapper}
         ref={scrollContainer}
         onScroll={loadTracksOnScroll}
+        style={{ overflowY: "scroll" }}
       >
         <div
           className={styles.listContainer}
           style={{ backgroundColor: "inherit" }}
         >
           <div className={styles.playlistHeader}>
-            <div
-              className={styles.playlistImageWrap}
+            <Image
+              src={getImgUrl(currentPlaylist, "lg")}
+              alt={`${currentPlaylist.title}-art`}
               style={{
                 width: "200px",
                 height: "200px",
                 paddingTop: 0,
                 marginLeft: "20px"
               }}
-            >
-              <img
-                src={getImgUrl(currentPlaylist, "lg")}
-                alt={`${currentPlaylist.title}-art`}
-              />
-            </div>
+            />
 
             <div className={styles.listTitleWrapper}>
               <div style={{ display: "flex", alignItems: "flex-start" }}>

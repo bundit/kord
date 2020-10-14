@@ -4,11 +4,13 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 
 import { addTrackToPlaylists } from "../redux/actions/libraryActions";
-import { capitalizeWord, formatArtistName } from "../utils/formattingHelpers";
+import { capitalizeWord, filterUnconnected } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import { toggleAddToPlaylistForm } from "../redux/actions/userActions";
 import FormCheckbox from "./form-checkbox";
+import Image from "./image";
 import Modal from "./modal";
+import TrackInfo from "./track-info";
 import styles from "../styles/modal.module.css";
 
 const AddToPlaylistForm = ({ show }) => {
@@ -19,7 +21,7 @@ const AddToPlaylistForm = ({ show }) => {
   const playlists =
     useSelector(state => state.library.playlists[track.source]) || [];
 
-  const connectedPlaylists = playlists.filter(playlist => playlist.isConnected);
+  const connectedPlaylists = filterUnconnected(playlists); //playlists.filter(playlist => playlist.isConnected);
 
   const [checkedPlaylists, setCheckedPlaylists] = useState(
     initCheckboxes(connectedPlaylists)
@@ -76,15 +78,12 @@ const AddToPlaylistForm = ({ show }) => {
             alignItems: "center"
           }}
         >
-          <img
+          <Image
             src={getImgUrl(track, "md")}
-            className={styles.confirmAlbumArt}
             alt="album-art-md"
+            style={{ margin: "30px auto 10px auto" }}
           />
-          <div className={styles.trackInfoWrap}>
-            <div>{track.title} </div>
-            <div>{formatArtistName(track.artist)}</div>
-          </div>
+          <TrackInfo track={track} isForm handleArtistClick={handleClose} />
         </div>
         <div className={styles.formTitle}>Select playlists to add to</div>
         {connectedPlaylists.map((playlist, i) => (

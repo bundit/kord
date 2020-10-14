@@ -39,8 +39,7 @@
 }
 
 .desktopButtonGroup,
-.miniPlayerImageWrap,
-.volumeSlider {
+.miniPlayerImageWrap {
   display: none;
 }
 
@@ -79,6 +78,7 @@
   overflow: hidden;
   display: flex;
   align-items: flex-start;
+  justify-content: center;
 }
 
 .titleWrapper {
@@ -124,11 +124,6 @@
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
 }
 
-/* .closeButton {
-  align-self: flex-start;
-  margin: 1rem 0 0 1rem;
-} */
-
 .expandedPlayerControls {
   width: 100%;
   display: flex;
@@ -162,10 +157,6 @@
 .playerRightControls {
   display: none;
 }
-
-/* .playerRightControls button:hover svg {
-  color: #ffc842;
-} */
 
 .playerRightControls > button {
   display: none;
@@ -224,6 +215,14 @@
     justify-content: flex-start;
   }
 
+  .nowPlaying > :last-child,
+  .nowPlaying > div > div {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .playerRightControls {
     flex: 1;
     position: relative;
@@ -232,25 +231,13 @@
     height: 10px;
   }
 
-  .volumeWrapper {
-    position: relative;
-    align-items: center;
-    display: flex;
-    /* max-height: 5px; */
-    height: 10px;
-  }
-
   .forwardButton,
-  .backwardButton,
-  .volumeSlider {
+  .backwardButton {
     display: block;
   }
 }
 
 @media (min-width: 900px) {
-  .volumeWrapper {
-    margin-left: 0;
-  }
   .playerRightControls button {
     display: inline;
     width: 25px;

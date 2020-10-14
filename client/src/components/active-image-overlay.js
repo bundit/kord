@@ -6,7 +6,7 @@ import styles from "../styles/active-image-overlay.module.scss";
 
 function ActiveImageOverlay({ isPlaying, isActive, handlePlayTrack }) {
   return (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} style={{ opacity: isActive ? 1 : null }}>
       {isPlaying && isActive ? (
         <>
           <div className={`${styles.bar} ${!isPlaying && styles.paused}`} />

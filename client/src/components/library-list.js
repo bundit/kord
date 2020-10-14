@@ -1,50 +1,45 @@
 import { useSelector } from "react-redux";
 import React from "react";
 
-import { capitalizeWord } from "../utils/formattingHelpers";
+import { SOURCES } from "../utils/constants";
+import { capitalizeWord, filterUnconnected } from "../utils/formattingHelpers";
 import PlaylistList from "./playlist-list";
 import styles from "../styles/library.module.css";
 
 const LibraryList = () => {
   let playlists = useSelector(state => state.library.playlists);
-  const keys = Object.keys(playlists);
-
-  let components = [];
-  keys.forEach(key => {
-    const numConnected = countNumConnected(playlists[key]);
-
-    if (numConnected > 0) {
-      components.push(
-        <div className={styles.listWrapper} key={`Lib:${key}:Title`}>
-          <h2 style={{ marginTop: "50px" }} className={styles.listTitle}>
-            {capitalizeWord(key)}
-          </h2>
-          <PlaylistList key={`Lib:${key}`} playlists={playlists[key]} />
-        </div>
-      );
-    }
-  });
 
   return (
     <div
       className={styles.pageWrapper}
       style={{ display: "flex", flexDirection: "column" }}
     >
-      {components}
+      {SOURCES.map(source => (
+        <PlaylistSection
+          source={source}
+          playlists={filterUnconnected(playlists[source])}
+          key={`Lib:${source}:Title`}
+        />
+      ))}
     </div>
   );
 };
 
-function countNumConnected(playlists) {
-  let numConnected = 0;
+function PlaylistSection({ source, playlists }) {
+  if (!playlists || !playlists.length) {
+    return null;
+  }
 
-  playlists.forEach(playlist => {
-    if (playlist.isConnected) {
-      numConnected++;
-    }
-  });
-
-  return numConnected;
+  return (
+    <div className={styles.listWrapper}>
+      <h2 style={{ marginTop: "50px" }} className={styles.listTitle}>
+        {capitalizeWord(source)}
+      </h2>
+      <div className={`${styles.libraryWrapper} ${styles.playlistList}`}>
+        <PlaylistList key={`Lib:${source}`} playlists={playlists} />
+      </div>
+    </div>
+  );
 }
 
 export default LibraryList;

@@ -104,3 +104,7 @@ export function keepWithinVolumeRange(volume) {
 
   return volume;
 }
+
+export function filterUnconnected(playlists) {
+  return playlists.filter(playlist => playlist.isConnected);
+}

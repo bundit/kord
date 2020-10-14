@@ -30,7 +30,7 @@ const SearchTrackList = ({
   const alert = useAlert();
   const [isLoading, setIsLoading] = useState(restored ? false : true);
   const [numShowTracks, setNumShowTracks] = useState(restored ? 10 : 0);
-  const numTracks = tracks.list ? tracks.list.length : 0;
+  const numTracks = tracks && tracks.list ? tracks.list.length : 0;
   const searchHasMoreToShow =
     (tracks && tracks.next) || numShowTracks < numTracks;
   const listHeight = Math.min(tracks.list.length, numShowTracks);
@@ -116,37 +116,19 @@ const SearchTrackList = ({
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <>
-          <ShowMoreResultsButton
-            onClick={handleShowMore}
-            disabled={!searchHasMoreToShow}
-          >
-            {searchHasMoreToShow ? (
-              <>
-                {"Show More "}
-                <FontAwesomeIcon icon={faAngleDown} />
-              </>
-            ) : (
-              "End of results"
-            )}
-          </ShowMoreResultsButton>
-          <button
-            type="button"
-            onClick={handleShowMore}
-            className={
-              searchHasMoreToShow ? styles.showMoreButton : styles.endOfResults
-            }
-          >
-            {searchHasMoreToShow ? (
-              <>
-                {"Show More "}
-                <FontAwesomeIcon icon={faAngleDown} />
-              </>
-            ) : (
-              "End of results"
-            )}
-          </button>
-        </>
+        <ShowMoreResultsButton
+          onClick={handleShowMore}
+          disabled={!searchHasMoreToShow}
+        >
+          {searchHasMoreToShow ? (
+            <>
+              {"Show More "}
+              <FontAwesomeIcon icon={faAngleDown} />
+            </>
+          ) : (
+            "End of results"
+          )}
+        </ShowMoreResultsButton>
       )}
     </div>
   );

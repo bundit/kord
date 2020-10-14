@@ -1,0 +1,191 @@
+@import "variables";
+
+.sidebarWrapper {
+  position: fixed;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  height: 100vh;
+  padding: 0 10px;
+  box-sizing: border-box;
+
+  background-color: $bg0;
+
+  > * {
+    overflow: hidden;
+  }
+
+  .sidebarHeader {
+    min-height: 80px;
+    max-height: 80px;
+    text-align: center;
+    box-sizing: border-box;
+
+    .logoWrapper {
+      display: flex;
+      height: 70px;
+      width: inherit;
+      border-radius: 7px;
+      margin: 10px;
+      transition: 0.3s ease;
+
+      svg {
+        margin-top: 15px;
+        margin-left: 15px;
+        width: 60%;
+        height: 60%;
+      }
+
+      &:hover {
+        background-color: $bg3;
+      }
+    }
+  }
+}
+
+.sectionWrapper {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  h2 {
+    padding-left: 5px;
+    margin: 12px;
+    margin-bottom: 0;
+    color: #ccc;
+    font-size: 17px;
+    font-weight: 300;
+    padding-bottom: 5px;
+  }
+
+  &:nth-child(2) {
+    /* App bar navigation */
+    min-height: 180px;
+  }
+
+  .sidebarScrollWrapper {
+    scrollbar-color: $scrollBar $bg0;
+    scrollbar-width: thin;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar-track {
+      background-color: $bg0;
+    }
+
+    .playlistContainer {
+      display: flex;
+      flex-direction: column;
+      transition: 0.2s ease-out;
+      border-radius: 7px;
+    }
+  }
+}
+
+.sidebarNavLink {
+  color: $textDarkBg;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 7px 0 7px 18px;
+  margin: 0 12px;
+  border-radius: 7px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: 0.4s ease-out;
+  position: relative;
+
+  svg {
+    margin-right: 10px;
+  }
+
+  .sourceIcon {
+    margin-left: auto;
+    display: none;
+  }
+
+  .speakerIcon {
+    margin-left: auto;
+  }
+
+  &:hover {
+    color: white;
+
+    .speakerIcon {
+      display: none;
+    }
+
+    .sourceIcon {
+      display: block;
+      animation: fadeInFromNone 0.5s ease-out;
+      display: block;
+    }
+  }
+}
+
+.activeNavLink {
+  color: white;
+  background-color: $bg7;
+}
+
+.spotifyPlaylistSection:hover {
+  background: rgba($spotify, 0.08);
+}
+
+.soundcloudPlaylistSection:hover {
+  background: rgba($soundcloud, 0.08);
+}
+
+.youtubePlaylistSection:hover {
+  background: rgba($youtube, 0.08);
+}
+
+.mixcloudPlaylistSection:hover {
+  background: rgba($mixcloud, 0.08);
+}
+
+.sidebarFooter {
+  border-top: 1px $borderAccent solid;
+  margin-top: auto;
+  min-height: 80px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  svg {
+    font-size: 30px;
+  }
+}
+
+.sourceButton {
+  transition: 0.3s ease-out;
+  outline: none;
+  font-size: 30px;
+  color: $iconButton;
+  cursor: pointer;
+
+  &:hover {
+    color: $iconButtonHighlight;
+  }
+}
+
+.connectedSource {
+  color: $primaryLight;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(1);
+  }
+}
+
+@media (min-width: 800px) {
+  .sidebarWrapper {
+    display: flex;
+    width: 230px;
+  }
+}

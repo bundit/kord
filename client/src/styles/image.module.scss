@@ -1,0 +1,20 @@
+@import "variables";
+
+.imageWrapper {
+  position: relative;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px $borderAccent solid;
+  overflow: hidden;
+  box-sizing: border-box;
+  min-width: 36px;
+
+  img {
+    min-width: 100%;
+    min-height: 100%;
+    width: inherit;
+    object-fit: cover;
+  }
+}

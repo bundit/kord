@@ -1,14 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faTimes } from "@fortawesome/free-solid-svg-icons";
-import {
-  faSpotify,
-  faSoundcloud,
-  faYoutube
-} from "@fortawesome/free-brands-svg-icons";
 import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import React from "react";
 
+import { ICONS } from "../utils/constants";
 import { IconButton, IconButton as ToggleDropDownButton } from "./buttons";
 import { getImgUrl } from "../utils/getImgUrl";
 import { msToDuration } from "../utils/formattingHelpers";
@@ -74,13 +70,30 @@ const TrackItem = ({
   function handleRemoveFromQueue() {
     handleRemove(index);
   }
+
+  function getTrackWrapperClasses() {
+    let className = styles.trackWrapper;
+
+    if (isActive) {
+      className += " " + styles.playingNow;
+    }
+
+    if (!isStreamable) {
+      className += " " + styles.notStreamable;
+    }
+
+    if (isFromQueue) {
+      className += " " + styles.queueTrackItem;
+    }
+
+    return className;
+  }
+
   return (
     <div style={{ position: "relative" }}>
       <LazyLoad height={65} once>
         <div
-          className={`${styles.trackWrapper} ${isActive &&
-            styles.playingNow} ${!isStreamable &&
-            styles.notStreamable} ${isFromQueue && styles.queueTrackItem}`}
+          className={getTrackWrapperClasses()}
           onClick={rippleEffect}
           onDoubleClick={handlePlayTrack}
           role="button"
@@ -104,25 +117,25 @@ const TrackItem = ({
           <TrackInfo track={track} />
           <div
             className={styles.singleSource}
-            style={{ opacity: isActive && 1 }}
+            style={isActive ? isActiveStyles : null}
           >
-            <FontAwesomeIcon
-              icon={
-                source === "spotify"
-                  ? faSpotify
-                  : source === "soundcloud"
-                  ? faSoundcloud
-                  : faYoutube
-              }
-              size="2x"
-            />
+            <FontAwesomeIcon icon={ICONS[source]} size="2x" />
           </div>
 
           <ToggleDropDownButton
             onClick={toggleDropdown}
             onDoubleClick={stopPropagation}
             className={styles.trackSettingsButton}
-            style={isDropdownOpen ? { color: "#fb1", opacity: 1 } : null}
+            style={
+              isDropdownOpen
+                ? {
+                    color: "#fb1",
+                    ...isActiveStyles
+                  }
+                : isActive
+                ? isActiveStyles
+                : null
+            }
             icon={faEllipsisV}
             size="lg"
           />
@@ -157,6 +170,12 @@ const TrackItem = ({
       )}
     </div>
   );
+};
+
+const isActiveStyles = {
+  opacity: 1,
+  display: "block",
+  animation: "none"
 };
 
 TrackItem.propTypes = {

@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
-import { formatArtistName } from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import { removeFromPlaylist } from "../redux/actions/libraryActions";
 import { toggleDeleteTrackForm } from "../redux/actions/userActions";
+import Image from "./image";
 import Modal from "./modal";
+import TrackInfo from "./track-info";
 import styles from "../styles/modal.module.css";
 
 const DeleteTrackForm = ({ show }) => {
@@ -66,17 +67,12 @@ const DeleteTrackForm = ({ show }) => {
           </div>
           <span>Are you sure you want to remove this track?</span>
         </div>
-        <div style={{ margin: "0 auto" }}>
-          <img
-            src={getImgUrl(track, "md")}
-            className={styles.confirmAlbumArt}
-            alt="album-art-md"
-          />
-        </div>
-        <div className={styles.trackInfoWrap}>
-          <div>{track.title} </div>
-          <div>{formatArtistName(track.artist)}</div>
-        </div>
+        <Image
+          src={getImgUrl(track, "md")}
+          alt="album-art-md"
+          style={{ margin: "30px auto 10px auto" }}
+        />
+        <TrackInfo track={track} isForm handleArtistClick={handleClose} />
       </div>
     </Modal>
   );
