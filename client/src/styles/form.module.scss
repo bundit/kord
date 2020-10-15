@@ -1,0 +1,83 @@
+@import "variables";
+
+.formInnerWrapper {
+  width: 100%;
+  padding-left: 10px;
+  padding-bottom: 25px;
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  box-sizing: border-box;
+
+  &::-webkit-scrollbar-track {
+    background-color: $bg7;
+  }
+}
+
+.formTitle {
+  font-weight: 600;
+  padding: 0 10px 10px 10px;
+  margin: 35px 25px 0 25px;
+  font-size: 16px;
+  border-bottom: 1px $borderAccent solid;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  transition: 0.3s ease-out;
+
+  margin: 0 25px;
+  padding: 5px 20px;
+  border-radius: 7px;
+  min-height: 30px;
+  box-sizing: border-box;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+
+  &:hover {
+    background-color: $bg12;
+
+    .checkboxGrip {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    background-color: rgba($primary, 0.1);
+    color: black;
+  }
+
+  .checkboxGrip {
+    color: $iconButton;
+    opacity: 0;
+    cursor: move;
+    cursor: grab;
+    transition: 0.2s ease-out;
+
+    &:hover {
+      color: white;
+    }
+  }
+
+  span {
+    height: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  & > input[type="checkbox"] {
+    margin-left: auto;
+    opacity: 0;
+  }
+}
+
+.changesMade {
+  color: $primaryLightest;
+}

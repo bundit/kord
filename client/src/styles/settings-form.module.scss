@@ -1,0 +1,172 @@
+@import "variables";
+
+.settingsTabsWrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: 20px;
+  border-bottom: 1px $borderAccent solid;
+  background-color: $bg5;
+}
+
+.profileWrap {
+  display: flex;
+  padding: 25px 35px 0 35px;
+
+  .profileLinkWrapper {
+    max-width: inherit;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: inherit;
+  }
+
+  & button:last-child {
+    // Sync button - to prevent flex stretching
+    align-self: center;
+  }
+}
+
+// Child of profileWrap
+.profileDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-left: 15px;
+  flex: 1;
+
+  svg {
+    opacity: 0;
+    margin-left: 5px;
+    color: white;
+  }
+
+  button,
+  a,
+  svg {
+    transition: 0.3s ease-out;
+  }
+
+  .editUsernameButton {
+    display: flex;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+    cursor: pointer;
+    outline: none;
+
+    &:hover {
+      color: white;
+    }
+
+    &:hover svg {
+      opacity: 1;
+    }
+  }
+
+  .profileAnchor {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      color: white;
+    }
+
+    &:hover svg {
+      opacity: 1;
+    }
+  }
+}
+
+.soundcloudUsernameInputLabel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+  cursor: text;
+
+  .soundcloudUsernameInput {
+    outline: none;
+
+    transition: 0.3s ease-out;
+    width: 150px;
+    padding: 3px 10px;
+    border-radius: 7px;
+    background: $textFieldBg;
+    box-sizing: border-box;
+    border: none;
+    margin-right: 15px;
+    width: 80%;
+
+    &:hover,
+    &:focus {
+      background-color: white;
+
+      & ~ button {
+        background-color: $primary;
+      }
+    }
+
+    &::placeholder {
+      color: black;
+    }
+  }
+}
+
+.inputAndButtonWrapper {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+
+  button {
+    margin: 0 15px;
+  }
+}
+
+@mixin generateSourceLink($color) {
+  border: 1px solid rgba($color, 0.3);
+  background: rgba($color, 0.05);
+  color: $smallheader;
+
+  text-decoration: none;
+  margin: 50px auto 20px auto;
+  padding: 10px 20px 20px 20px;
+  width: 260px;
+  box-sizing: border-box;
+
+  font-family: "Open Sans";
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 7px;
+  transition: 0.3s ease-out;
+
+  svg {
+    font-size: 28px;
+    margin-right: 10px;
+    position: relative;
+    bottom: -6px;
+  }
+
+  &:hover {
+    color: white;
+    background: rgba($color, 0.15);
+  }
+}
+
+.spotifyLink {
+  @include generateSourceLink($spotify);
+}
+
+.soundcloudLink {
+  @include generateSourceLink($soundcloud);
+}
+
+.youtubeLink {
+  @include generateSourceLink($youtube);
+}
+
+.mixcloudLink {
+  @include generateSourceLink($mixcloud);
+}

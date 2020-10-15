@@ -11,7 +11,7 @@ import FormCheckbox from "./form-checkbox";
 import Image from "./image";
 import Modal from "./modal";
 import TrackInfo from "./track-info";
-import styles from "../styles/modal.module.css";
+import styles from "../styles/form.module.scss";
 
 const AddToPlaylistForm = ({ show }) => {
   const alert = useAlert();

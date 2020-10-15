@@ -12,7 +12,7 @@ import {
 
 import { toggleKeyboardControlsMenu } from "../redux/actions/userActions";
 import Modal from "./modal";
-import modalStyles from "../styles/modal.module.css";
+import formStyles from "../styles/form.module.scss";
 import styles from "../styles/keyboardControls.module.scss";
 
 const ControlsModal = () => {
@@ -48,7 +48,7 @@ const ControlsModal = () => {
       onClose={handleCloseControls}
     >
       <ul
-        className={modalStyles.formInnerWrapper}
+        className={formStyles.formInnerWrapper}
         style={{ paddingTop: "30px" }}
       >
         {controlsList.map(({ title, keys }) => (

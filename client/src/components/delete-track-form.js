@@ -11,7 +11,7 @@ import { toggleDeleteTrackForm } from "../redux/actions/userActions";
 import Image from "./image";
 import Modal from "./modal";
 import TrackInfo from "./track-info";
-import styles from "../styles/modal.module.css";
+import styles from "../styles/form.module.scss";
 
 const DeleteTrackForm = ({ show }) => {
   const alert = useAlert();

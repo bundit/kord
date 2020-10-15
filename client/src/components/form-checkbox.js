@@ -3,7 +3,7 @@ import { faCheck, faGripLines } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import React from "react";
 
-import styles from "../styles/modal.module.css";
+import styles from "../styles/form.module.scss";
 
 const FormCheckbox = ({
   title,
@@ -19,13 +19,13 @@ const FormCheckbox = ({
 
   return (
     <label
-      className={`${styles.checkboxLabel} ${value ? styles.changesMade : null}`}
+      className={`${styles.checkboxLabel} ${value && styles.changesMade}`}
       htmlFor={`checkbox${i}`}
     >
       <span style={{ marginRight: "10px" }} className={styles.checkboxGrip}>
         {isDraggable && <FontAwesomeIcon icon={faGripLines} size="lg" />}
       </span>
-      <span style={{ width: "260px" }}>{title}</span>
+      <span style={{ width: "240px" }}>{title}</span>
       <input
         id={`checkbox${i}`}
         type="checkbox"
@@ -33,8 +33,8 @@ const FormCheckbox = ({
         onChange={handleOnChange}
       />
       <span>{`${numTracks} tracks`}</span>
-      <span style={{ width: "16px", marginLeft: "auto" }}>
-        {value && <FontAwesomeIcon icon={value && faCheck} size="lg" />}
+      <span style={{ width: "20px", marginLeft: "15px" }}>
+        {value && <FontAwesomeIcon icon={faCheck} size="lg" />}
       </span>
     </label>
   );

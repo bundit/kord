@@ -14,7 +14,8 @@ import {
 import { toggleUserQueue } from "../redux/actions/userActions";
 import TrackItem from "./track-item";
 import TrackList from "./track-list";
-import modalStyles from "../styles/modal.module.css";
+import formStyles from "../styles/form.module.scss";
+import modalStyles from "../styles/modal.module.scss";
 import slideTransition from "../styles/slideModal.module.css";
 import styles from "../styles/user-queue.module.scss";
 
@@ -119,7 +120,7 @@ const UserQueue = () => {
     .map(queue => (
       <React.Fragment key={queue.id}>
         <div
-          className={`${modalStyles.formTitle} ${styles.queueTitle}`}
+          className={`${formStyles.formTitle} ${styles.queueTitle}`}
           style={{ display: "flex", alignItems: "center" }}
         >
           <span>{queue.title}</span>
@@ -158,11 +159,11 @@ const UserQueue = () => {
           />
         </div>
         <div
-          className={modalStyles.formInnerWrapper}
+          className={formStyles.formInnerWrapper}
           onScroll={forceCheck}
           style={{ height: "515px" }}
         >
-          <span className={`${modalStyles.formTitle} ${styles.queueTitle}`}>
+          <span className={`${formStyles.formTitle} ${styles.queueTitle}`}>
             Currently Playing
           </span>
           <TrackItem

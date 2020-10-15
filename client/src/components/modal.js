@@ -11,17 +11,10 @@ import {
 } from "./buttons";
 import fadeTransition from "../styles/fadeModal.module.css";
 import slideTransition from "../styles/slideModal.module.css";
-import styles from "../styles/modal.module.css";
+import styles from "../styles/modal.module.scss";
 import usePortal from "../utils/usePortal";
 
-const Modal = ({
-  title,
-  show,
-  onClose,
-  onSubmit,
-  children,
-  isBackdropClosable = true
-}) => {
+const Modal = ({ title, show, onClose, onSubmit, children }) => {
   const target = usePortal("portal");
 
   function handleSubmit(e) {
@@ -35,18 +28,7 @@ const Modal = ({
 
   return createPortal(
     <>
-      <CSSTransition
-        in={show}
-        timeout={300}
-        classNames={fadeTransition}
-        unmountOnExit
-      >
-        <div
-          className={styles.backdrop}
-          role="presentation"
-          onClick={isBackdropClosable ? onClose : null}
-        />
-      </CSSTransition>
+      <ModalBackdrop show={show} handleClick={onClose} />
       <CSSTransition
         in={show}
         timeout={350}
@@ -75,6 +57,23 @@ const Modal = ({
     target
   );
 };
+
+function ModalBackdrop({ show, handleClick }) {
+  return (
+    <CSSTransition
+      in={show}
+      timeout={300}
+      classNames={fadeTransition}
+      unmountOnExit
+    >
+      <div
+        className={styles.backdrop}
+        role="presentation"
+        onClick={handleClick}
+      />
+    </CSSTransition>
+  );
+}
 
 Modal.propTypes = {
   onClose: PropTypes.func.isRequired,

@@ -27,10 +27,12 @@ import {
 import { fetchSoundcloudProfileAndPlaylists } from "../redux/actions/soundcloudActions";
 import { openSettings, removeUserProfile } from "../redux/actions/userActions";
 import { reorder } from "../utils/reorder";
+import Image from "./image";
 import LoadingSpinner from "./loading-spinner";
 import Modal from "./modal";
 import avatarImg from "../assets/avatar-placeholder.png";
-import styles from "../styles/modal.module.css";
+import formStyles from "../styles/form.module.scss";
+import styles from "../styles/settings-form.module.scss";
 
 const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   const user = useSelector(state => state.user);
@@ -194,28 +196,10 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
       onClose={onClose}
       onSubmit={onSubmit}
     >
-      <div className={styles.settingsTabsWrapper}>
-        {["kord", ...SOURCES].map(tabSource => (
-          <SettingsTabButton
-            source={tabSource}
-            isActive={tabSource === source}
-            onClick={handleChangeSettingsTab}
-            value={tabSource}
-            key={`${tabSource}-tab`}
-          >
-            {tabSource === "kord" ? (
-              ICONS[tabSource]
-            ) : (
-              <FontAwesomeIcon
-                icon={ICONS[tabSource]}
-                size="lg"
-                style={{ color: COLORS[tabSource] }}
-              />
-            )}
-            {capitalizeWord(tabSource)}
-          </SettingsTabButton>
-        ))}
-      </div>
+      <SettingsTabsHeader
+        handleTabClick={handleChangeSettingsTab}
+        currerntSource={source}
+      />
 
       {source === "kord" ? (
         <div>kord settings placeholder</div>
@@ -224,12 +208,11 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
       ) : (
         <>
           <div className={styles.profileWrap}>
-            <div className={styles.profilePicWrap}>
-              <img
-                src={settings && settings.image ? settings.image : avatarImg}
-                alt=""
-              />
-            </div>
+            <Image
+              src={settings && settings.image ? settings.image : avatarImg}
+              alt={`${source}-profile-pic`}
+              style={{ height: "70px", width: "70px", boxSizing: "border-box" }}
+            />
 
             <div className={styles.profileDetails}>
               {!showUsernameInput ? (
@@ -263,13 +246,13 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
               style={{ borderColor: "#383f41", marginLeft: "auto" }}
             />
           </div>
-          <div className={styles.formTitle}>
+          <div className={formStyles.formTitle}>
             Your {capitalizeWord(source)} playlists
           </div>
         </>
       )}
 
-      <div className={styles.formInnerWrapper}>
+      <div className={formStyles.formInnerWrapper}>
         {isLoading ? (
           <LoadingSpinner />
         ) : (
@@ -296,6 +279,33 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   );
 };
 
+function SettingsTabsHeader({ handleTabClick, currerntSource }) {
+  return (
+    <div className={styles.settingsTabsWrapper}>
+      {["kord", ...SOURCES].map(tabSource => (
+        <SettingsTabButton
+          source={tabSource}
+          isActive={tabSource === currerntSource}
+          onClick={handleTabClick}
+          value={tabSource}
+          key={`${tabSource}-tab`}
+        >
+          {tabSource === "kord" ? (
+            ICONS[tabSource]
+          ) : (
+            <FontAwesomeIcon
+              icon={ICONS[tabSource]}
+              size="lg"
+              style={{ color: COLORS[tabSource] }}
+            />
+          )}
+          {capitalizeWord(tabSource)}
+        </SettingsTabButton>
+      ))}
+    </div>
+  );
+}
+
 function ConnectSourceLink({ source }) {
   function getSourceLink() {
     if (process.env.NODE_ENV === "development") {
@@ -306,10 +316,7 @@ function ConnectSourceLink({ source }) {
   }
 
   return (
-    <a
-      className={`${styles.connectSourceLink} ${styles[`${source}Link`]}`}
-      href={getSourceLink()}
-    >
+    <a className={styles[`${source}Link`]} href={getSourceLink()}>
       <FontAwesomeIcon
         icon={ICONS[source]}
         style={{
@@ -340,15 +347,19 @@ function ProfileExternalLink({ settings }) {
 function SoundcloudInput({
   handleSubmitUsername,
   handleInputChange,
-  usernameInput
+  usernameInput,
+  original
 }) {
   return (
-    <label htmlFor="soundcloudURL" className={styles.usernameInputLabel}>
+    <label
+      htmlFor="soundcloudURL"
+      className={styles.soundcloudUsernameInputLabel}
+    >
       <span>Enter your Soundcloud Profile URL</span>
-      <span style={{ display: "flex" }}>
+      <div className={styles.inputAndButtonWrapper} style={{ display: "flex" }}>
         <input
           id="soundcloudURL"
-          className={styles.usernameInput}
+          className={styles.soundcloudUsernameInput}
           type="text"
           placeholder="Enter Soundcloud Profile URL"
           onChange={handleInputChange}
@@ -357,15 +368,11 @@ function SoundcloudInput({
         <SubmitButton
           style={{ fontSize: "11px", padding: "8px", marginLeft: "auto" }}
           onClick={handleSubmitUsername}
-          type="button" // Prevent closing modal due to type submit
+          type="button" // Necessary to Prevent closing modal due to type submit
         >
           Submit
         </SubmitButton>
-        <button
-          type="submit"
-          style={{ marginLeft: "auto", padding: "5px" }}
-        ></button>
-      </span>
+      </div>
     </label>
   );
 }

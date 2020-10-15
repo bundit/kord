@@ -1,0 +1,80 @@
+@import "variables";
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 4;
+}
+
+.modal {
+  position: fixed;
+  top: 40vh;
+  left: 50vw;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 80vw;
+  height: auto;
+  max-height: 70vh;
+  margin-top: -25vh;
+  margin-left: -40vw;
+  border-radius: 7px;
+  color: $textbg;
+  background-color: $bg7;
+  z-index: 4;
+  overflow: hidden;
+
+  .modalForm {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 1;
+    flex: 1;
+
+    padding-bottom: 25px;
+    overflow: hidden;
+
+    .formCancelSubmitButtonGroup {
+      display: flex;
+      align-self: flex-end;
+      justify-content: flex-end;
+
+      min-height: 45px;
+      margin: 20px 25px 0 auto;
+
+      button:last-of-type {
+        margin-left: 20px;
+      }
+    }
+  }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 80px;
+  border-radius: 7px 7px 0 0;
+  background-color: $bg1;
+  border-bottom: 1px $borderAccent solid;
+  padding: 0 25px;
+
+  .modalTitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: $smallSubHeader;
+  }
+}
+
+@media (min-width: 800px) {
+  .modal {
+    left: 50%;
+    width: 500px;
+    margin-left: -250px;
+  }
+}
