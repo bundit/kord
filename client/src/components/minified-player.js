@@ -160,7 +160,7 @@ const MinifiedPlayer = ({
             style={
               current.source === "youtube"
                 ? { minWidth: "100px", height: "56px" }
-                : {}
+                : { minWidth: "56px" }
             }
           >
             <img src={getImgUrl(current, "md")} alt="album-art" />
