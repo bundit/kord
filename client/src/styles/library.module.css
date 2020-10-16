@@ -27,9 +27,12 @@
   transition: 0.4s ease-in-out;
   text-align: center;
   border-radius: 7px;
-  background-color: #1e2629;
-  padding: 1rem 0 2rem 0;
+  /* background-color: #1e2629; */
+  /* padding: 1rem 1rem 2rem 1rem; */
+  padding: 3rem;
   box-sizing: content-box;
+  box-sizing: border-box;
+  background-color: inherit;
 }
 
 .listContainer > button {
@@ -94,10 +97,6 @@
   background-color: #192124;
 }
 
-.playlistHeader {
-  display: none;
-}
-
 .deleteSearchButton {
   position: absolute;
   align-self: flex-end;
@@ -155,19 +154,6 @@
     padding: 1rem;
   }
 
-  .playlistHeader {
-    display: flex;
-  }
-
-  .listTitleWrapper {
-    padding-left: 20px;
-    color: #aaa;
-    flex: 1;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-  }
-
   .listTitle {
     padding-left: 3.4rem;
     color: #bbb;
@@ -186,7 +172,7 @@
   }
 
   .listContainer {
-    background-color: #1e2629;
+    background-color: #1b2326;
   }
 }
 

@@ -24,7 +24,12 @@ const SearchPage = () => {
       <Route
         exact
         path="/app/search/artist/:source/:artistId/:artistName"
-        component={ArtistPage}
+        render={({
+          match: {
+            params: { source, artistId, artistName }
+          }
+        }) => <ArtistPage key={`artist/${source}:${artistId}:${artistName}`} />}
+        key
       />
     </>
   );

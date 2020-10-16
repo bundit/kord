@@ -1,0 +1,77 @@
+@import "variables";
+
+.pageHeader {
+  display: flex;
+
+  .pageHeaderImage {
+    min-width: 200px;
+    width: 200px;
+    height: 200px;
+  }
+
+  .titleWrapper {
+    padding-left: 20px;
+    color: $textbg;
+    flex: 1;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .headerTitle {
+    text-align: left;
+    padding-left: 2rem;
+    color: $smallheader;
+    font-weight: 300;
+    font-size: 25px;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    * {
+      transition: 0.3s ease-out;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      // External link icon
+      svg {
+        font-size: 12px;
+        margin: 0 0 2px 5px;
+        opacity: 0;
+      }
+    }
+
+    a:hover {
+      color: white;
+
+      svg {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+@media (min-width: 800px) {
+  .pageHeader {
+    .headerTitle {
+      padding-left: 3.4rem;
+      font-size: 30px;
+      margin-bottom: 5px;
+      color: $largeHeader;
+    }
+  }
+}
+
+@media (min-width: 1025px) {
+  .pageHeader {
+    .titleWrapper {
+      .headerTitle {
+        font-size: 40px;
+      }
+    }
+  }
+}

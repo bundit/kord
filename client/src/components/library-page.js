@@ -4,23 +4,20 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import LibraryList from "./library-list";
-import PlaylistTracklist from "./playlist-track-list";
+import PlaylistPage from "./playlist-page";
 
-const LibraryPage = ({ playlists, currentTrackID, isPlaying }) => {
+const LibraryPage = () => {
   return (
     <>
       <Route exact path="/app/library" component={LibraryList} />
       <Route
         exact
         path="/app/library/playlists/:source/:id/:title"
-        render={props => (
-          <PlaylistTracklist
-            {...props.match.params}
-            playlists={playlists}
-            isPlaying={isPlaying}
-            currentTrackID={currentTrackID}
-          />
-        )}
+        render={({
+          match: {
+            params: { source, id, title }
+          }
+        }) => <PlaylistPage key={`playlists/${source}:${id}:${title}`} />}
       />
     </>
   );
