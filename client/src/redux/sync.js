@@ -28,8 +28,8 @@ function syncStateToLocalStorage(store) {
         ...state.user,
         history: {
           library: ["/app/library"],
-          search: [],
-          more: []
+          search: ["/app/search"],
+          explore: ["/app/explore"]
         }
       },
       player: {

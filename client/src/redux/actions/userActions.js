@@ -1,9 +1,9 @@
 import {
+  DEQUE_ROUTE,
   REMOVE_PROFILE,
   SAVE_ROUTE,
   SET_ACCESS_TOKEN,
   SET_CONNECTION,
-  SET_CURRENT_PAGE,
   SET_CURRENT_TRACK_DROPDOWN,
   SET_KORD_ID,
   SET_MAIN_CONNECTION,
@@ -84,10 +84,11 @@ export const saveRoute = (relativeRoute, route) => {
   };
 };
 
-export const setCurrentPage = page => {
+export const dequeRoute = (relativeRoute, pathname) => {
   return {
-    type: SET_CURRENT_PAGE,
-    payload: page
+    type: DEQUE_ROUTE,
+    pathname,
+    payload: relativeRoute
   };
 };
 

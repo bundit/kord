@@ -1,14 +1,21 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NavLink, useHistory } from "react-router-dom";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 
+import {
+  IconButton as BackwardButton,
+  IconButton as ForwardButton,
+  IconButton,
+  Button as UserSettingsButton
+} from "../buttons";
 import { clearState } from "../../redux/actions/stateActions";
-import { openSettings } from "../../redux/actions/userActions";
+import { dequeRoute, openSettings } from "../../redux/actions/userActions";
+import { getTitleFromPathname } from "../../utils/formattingHelpers";
+import Image from "../image";
 import SearchBar from "../search-bar";
-import styles from "../../styles/header.module.css";
+import styles from "../../styles/header.module.scss";
 
 function Header({ location }) {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -19,16 +26,7 @@ function Header({ location }) {
   const history = useHistory();
 
   const { pathname } = location;
-  const baseUrls = ["Library", "Search", "More", ""];
-
-  // Get only last route
-  let title = pathname.slice(pathname.lastIndexOf("/") + 1);
-  // Make it capitalized
-  if (title.length > 0) {
-    title = `${title[0].toUpperCase()}${title.slice(1)}`;
-  }
-  // Previous route within tab
-  const prevRoute = pathname.slice(0, pathname.lastIndexOf("/"));
+  const title = getTitleFromPathname(pathname);
 
   function handleGoBack() {
     history.goBack();
@@ -64,49 +62,39 @@ function Header({ location }) {
   return (
     <>
       <header className={styles.header}>
-        <div className={styles.mobileContainer}>
+        {/* Mobile Header */}
+        <div className={styles.mobileHeader}>
           <div className={styles.placeholder}>
-            {!baseUrls.includes(title) && (
-              <NavLink
-                style={{ color: "red", marginLeft: "0.3rem" }}
-                to={`${prevRoute}`}
-              >
-                <FontAwesomeIcon icon={faAngleLeft} size="3x" />
-              </NavLink>
-            )}
+            <MobileBackButton pathname={pathname} />
           </div>
-
           <h1>{title.length ? title : "kord"}</h1>
-
           <div className={styles.placeholder} />
         </div>
-      </header>
 
-      {/* Desktop Header */}
-      <header className={styles.deskHeader}>
-        <div className={styles.deskHeaderContainer}>
-          <div className={styles.navGroup}>
-            <button type="button" onClick={handleGoBack}>
-              <FontAwesomeIcon size="lg" icon={faAngleLeft} />
-            </button>
-            <button
-              disabed={window.history.next}
-              type="button"
-              onClick={handleGoForward}
-            >
-              <FontAwesomeIcon size="lg" icon={faAngleRight} />
-            </button>
+        {/* Desktop Header */}
+        <div className={styles.desktopHeader}>
+          <div className={styles.backForwardNavigationWrapper}>
+            <BackwardButton onClick={handleGoBack} icon={faAngleLeft} />
+            <ForwardButton onClick={handleGoForward} icon={faAngleRight} />
           </div>
+
           <SearchBar placeholder="Search for Music" />
 
           <span className={styles.userSettingsButtonWrapper}>
-            <button
+            <UserSettingsButton
               className={styles.userSettingsButton}
               onClick={toggleSettingsMenu}
-              style={{ borderWidth: `${isProfileDropdownOpen ? 2 : 1}px` }}
             >
-              <img src={mainUser.image} alt="profilePic" />
-            </button>
+              <Image
+                src={mainUser.image}
+                alt="profilePic"
+                style={{
+                  width: "inherit",
+                  height: "inherit",
+                  borderRadius: "50%"
+                }}
+              />
+            </UserSettingsButton>
 
             {isProfileDropdownOpen && (
               <span className={styles.profileMenu}>
@@ -123,6 +111,34 @@ function Header({ location }) {
       </header>
     </>
   );
+}
+
+function MobileBackButton({ pathname }) {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const userHistory = useSelector(state => state.user.history);
+
+  const title = getTitleFromPathname(pathname);
+  const baseUrls = ["Library", "Search", "Explore", ""];
+
+  if (baseUrls.includes(title)) {
+    return null;
+  }
+
+  const lastRoute = {
+    library: userHistory.library[1] || "/app/library",
+    search: userHistory.search[1] || "/app/search",
+    explore: "/app/explore"
+  };
+
+  const relativeRoute = pathname.split("/")[2];
+
+  function handleBackClick() {
+    history.push(lastRoute[relativeRoute]);
+    dispatch(dequeRoute(relativeRoute, pathname));
+  }
+
+  return <IconButton icon={faAngleLeft} onClick={handleBackClick} />;
 }
 
 Header.propTypes = {

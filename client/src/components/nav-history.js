@@ -1,27 +1,28 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import React from "react";
 
-import { saveRoute, setCurrentPage } from "../redux/actions/userActions";
+import { saveRoute } from "../redux/actions/userActions";
 
 const NavHistory = () => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const history = useSelector(state => state.user.history);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const { pathname } = location;
-    const urlParams = pathname.split("/");
+    const relativeRoute = pathname.split("/")[2]; // ["", "app", X, ...]
+    const relativeRouteHistory = history[relativeRoute] || [];
+    const prevRelativeRoute =
+      relativeRouteHistory[0] || `/app/${relativeRoute}`;
 
-    const relativeRoute = urlParams[2];
-    let lastParam = urlParams[urlParams.length - 1];
-
-    if (relativeRoute === "search") {
-      lastParam = relativeRoute;
+    if (prevRelativeRoute === pathname) {
+      // Mobile returning to tab, not navigating to new page
+      return;
     }
 
     dispatch(saveRoute(relativeRoute, pathname));
-    dispatch(setCurrentPage(lastParam));
-  }, [dispatch, location]);
+  }, [dispatch, history, location]);
 
   return null;
 };

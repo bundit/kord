@@ -94,10 +94,10 @@ const App = () => {
               />
             </Sentry.ErrorBoundary>
           </Switch>
-          <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>
-            <Route component={Footer} />
-          </Sentry.ErrorBoundary>
         </main>
+        <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>
+          <Route component={Footer} />
+        </Sentry.ErrorBoundary>
       </Route>
       <SettingsForm
         show={isSettingsOpen}

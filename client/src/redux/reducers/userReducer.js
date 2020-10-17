@@ -1,10 +1,10 @@
 import {
+  DEQUE_ROUTE,
   PUSH_LIB_ROUTE,
   REMOVE_PROFILE,
   SAVE_ROUTE,
   SET_ACCESS_TOKEN,
   SET_CONNECTION,
-  SET_CURRENT_PAGE,
   SET_CURRENT_TRACK_DROPDOWN,
   SET_KORD_ID,
   SET_MAIN_CONNECTION,
@@ -35,10 +35,9 @@ const initialState = {
   youtube: profileInitialState,
   mixcloud: profileInitialState,
   history: {
-    library: [],
-    search: [],
-    more: [],
-    currentPage: ""
+    library: ["/app/library"],
+    search: ["/app/search"],
+    explore: ["/app/explore"]
   },
   settings: {
     isSettingsOpen: false,
@@ -128,6 +127,17 @@ export default function(state = initialState, action) {
     case SAVE_ROUTE: {
       const route = action.payload;
       const relativeRoute = action.relativeRoute;
+
+      if (route === `/app/${relativeRoute}`) {
+        return {
+          ...state,
+          history: {
+            ...state.history,
+            [relativeRoute]: [route]
+          }
+        };
+      }
+
       const rootRoute = `/app/${relativeRoute}`;
       const currentHistory = state.history[relativeRoute] || [];
       const updatedHistory =
@@ -138,6 +148,24 @@ export default function(state = initialState, action) {
         history: {
           ...state.history,
           [relativeRoute]: updatedHistory
+        }
+      };
+    }
+
+    case DEQUE_ROUTE: {
+      const relativeRoute = action.payload;
+      const pathname = action.pathname;
+      const currentHistory = state.history[relativeRoute];
+
+      const currentPathIndex = currentHistory.findIndex(
+        path => path === pathname
+      );
+
+      return {
+        ...state,
+        history: {
+          ...state.history,
+          [relativeRoute]: currentHistory.slice(currentPathIndex + 1)
         }
       };
     }
@@ -161,18 +189,6 @@ export default function(state = initialState, action) {
         history: {
           ...state.history,
           library: newLibHistory
-        }
-      };
-    }
-
-    case SET_CURRENT_PAGE: {
-      const currentPage = action.payload;
-
-      return {
-        ...state,
-        history: {
-          ...state.history,
-          currentPage: currentPage
         }
       };
     }
