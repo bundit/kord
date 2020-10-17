@@ -15,9 +15,9 @@ import DeleteTrackForm from "./components/delete-track-form";
 import FallbackComponent from "./components/fallback-component";
 import Footer from "./components/layout/footer";
 import Header from "./components/layout/header";
-import Library from "./components/library-page";
+import LibraryRouter from "./components/library-router";
 import NavHistory from "./components/nav-history";
-import SearchPage from "./components/search-page";
+import SearchRouter from "./components/search-router";
 import SettingsForm from "./components/settings-form";
 import Sidebar from "./components/sidebar";
 
@@ -65,7 +65,6 @@ const App = () => {
       <Route path="/app">
         <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>
           <Sidebar />
-          <FallbackComponent />
         </Sentry.ErrorBoundary>
         <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>
           <Route component={Header} />
@@ -73,8 +72,8 @@ const App = () => {
         <main className="content">
           <Switch>
             <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>
-              <Route path="/app/search" component={SearchPage} />
-              <Route path="/app/library" component={Library} />
+              <Route path="/app/search" component={SearchRouter} />
+              <Route path="/app/library" component={LibraryRouter} />
 
               <Route
                 path="/app/explore"

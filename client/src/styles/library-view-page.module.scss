@@ -1,0 +1,8 @@
+@import "layout.module.scss";
+
+.playlistList {
+  @extend .gridLayout;
+  @extend .contentWrapper;
+
+  padding: 2rem 3rem;
+}

@@ -4,16 +4,13 @@ import React from "react";
 import { SOURCES } from "../utils/constants";
 import { capitalizeWord, filterUnconnected } from "../utils/formattingHelpers";
 import PlaylistList from "./playlist-list";
-import styles from "../styles/library.module.css";
+import styles from "../styles/library-view-page.module.scss";
 
-const LibraryList = () => {
+const LibraryViewPage = () => {
   let playlists = useSelector(state => state.library.playlists);
 
   return (
-    <div
-      className={styles.pageWrapper}
-      style={{ display: "flex", flexDirection: "column" }}
-    >
+    <div className={styles.pageWrapper}>
       {SOURCES.map(source => (
         <PlaylistSection
           source={source}
@@ -30,16 +27,16 @@ function PlaylistSection({ source, playlists }) {
     return null;
   }
 
+  const playlistSectionTitle = `${capitalizeWord(source)} Playlists`;
+
   return (
-    <div className={styles.listWrapper}>
-      <h2 style={{ marginTop: "50px" }} className={styles.listTitle}>
-        {capitalizeWord(source)}
-      </h2>
-      <div className={`${styles.libraryWrapper} ${styles.playlistList}`}>
+    <div className={styles.pageSectionWrapper}>
+      <h2 className={styles.sectionTitle}>{playlistSectionTitle}</h2>
+      <div className={styles.playlistList}>
         <PlaylistList key={`Lib:${source}`} playlists={playlists} />
       </div>
     </div>
   );
 }
 
-export default LibraryList;
+export default LibraryViewPage;

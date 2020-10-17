@@ -1,0 +1,49 @@
+@import "layout.module.scss";
+@import "playlist-item.module.scss";
+
+.recentSearchesTitle {
+  @extend .sectionTitle;
+
+  margin-top: 20px;
+}
+
+.emptySearchHistoryWrapper {
+  @extend .contentWrapper;
+
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.deleteSearchButton {
+  position: absolute;
+  align-self: flex-end;
+  top: 10px;
+  right: 10px;
+  padding: 0;
+  transition: 0.2s linear;
+  color: inherit;
+  outline: none;
+}
+
+.deleteSearchButton:hover {
+  transform: scale(1.2);
+  color: white;
+}
+
+.searchHistoryList {
+  @extend .gridLayout;
+
+  margin-top: 30px;
+  padding: 2rem 3rem;
+}
+
+.searchHistoryItemWrapper {
+  position: relative;
+  align-items: center;
+
+  .searchHistoryItem {
+    @extend .playlistItem;
+  }
+}

@@ -1,0 +1,51 @@
+@import "layout.module.scss";
+
+.artistContentSection {
+  @extend .contentWrapper;
+  padding: 1rem;
+
+  .showMoreLessBioButton {
+    color: $complementLightest;
+    outline: none;
+  }
+}
+
+.artistTagsAndSimilarSection {
+  @extend .artistContentSection;
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.artistSubHeader {
+  font-family: "Open Sans";
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.trackSectionWrapper {
+  @extend .contentWrapper;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.trackSectionTitle {
+  font-family: "Open Sans";
+  font-size: 18px;
+  color: #aaa;
+  margin-top: 30px;
+  border-bottom: 1px $borderAccent solid;
+  font-weight: 300;
+  padding: 0 10px 10px 10px;
+}
+
+@media (min-width: 800px) {
+  .artistContentSection {
+    padding: 2rem;
+  }
+
+  .trackSectionTitle {
+    font-size: 23px;
+    padding: 0 15px 15px 15px;
+  }
+}

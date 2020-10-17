@@ -1,0 +1,56 @@
+@import "variables";
+@import "layout.module.scss";
+
+.searchTrackListGridLayout {
+  @extend .contentWrapper;
+}
+
+.showingResultsTitle {
+  @extend .sectionTitle;
+  color: $textDarkBg;
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.artistList {
+  @extend .contentWrapper;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-row-gap: 10px;
+  grid-column-gap: 10px;
+  margin-top: 50px;
+}
+
+.returnToSearchButton {
+  font-size: 12px;
+  color: $textbg;
+  transition: 0.3s ease;
+  text-decoration: none;
+
+  &:hover {
+    color: white;
+  }
+}
+
+.searchButtonsWrapper {
+  display: flex;
+  padding: 3rem 3rem 0 3rem;
+}
+
+.searchButtonsWrapper > button {
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+@media (min-width: 800px) {
+  .searchTrackListGridLayout {
+    display: grid;
+    grid-auto-rows: min-content;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-row-gap: 3rem;
+    grid-column-gap: 3rem;
+
+    margin-top: 2rem;
+  }
+}

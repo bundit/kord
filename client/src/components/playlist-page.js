@@ -23,7 +23,7 @@ import { usePrevious } from "../utils/hooks";
 import LoadingSpinner from "./loading-spinner";
 import PageHeader from "./page-header";
 import TrackList from "./track-list";
-import styles from "../styles/library.module.css";
+import styles from "../styles/layout.module.scss";
 
 const playlistIncrementAmount = 25;
 
@@ -115,9 +115,8 @@ function PlaylistPage() {
       className={styles.pageWrapper}
       ref={scrollContainer}
       onScroll={loadTracksOnScroll}
-      style={{ overflowY: "scroll" }}
     >
-      <div className={styles.listContainer}>
+      <div className={styles.pageSectionWrapper}>
         <PageHeader
           imgSrc={getImgUrl(currentPlaylist, "lg")}
           title={title}
@@ -136,7 +135,7 @@ function PlaylistPage() {
           <div>{`${currentPlaylist.total} Tracks`}</div>
         </PageHeader>
 
-        <div className={`${styles.libraryWrapper}`}>
+        <div className={`${styles.contentWrapper}`}>
           <TrackList
             tracks={tracks.slice(0, numShowTracks)}
             currentTrackID={currentTrackId}
@@ -144,8 +143,8 @@ function PlaylistPage() {
             handlePlay={handlePlayTrack}
             playlistId={id}
           />
-          {isLoading && <LoadingSpinner />}
         </div>
+        {isLoading && <LoadingSpinner />}
       </div>
     </div>
   );

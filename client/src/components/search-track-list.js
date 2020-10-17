@@ -14,7 +14,7 @@ import {
 import { playTrack } from "../redux/actions/playerActions";
 import LoadingSpinner from "./loading-spinner";
 import TrackList from "./track-list";
-import styles from "../styles/library.module.css";
+import styles from "../styles/layout.module.scss";
 
 const searchIncrementAmount = 10;
 
@@ -95,10 +95,12 @@ const SearchTrackList = ({
   }
 
   return (
-    <div className={styles.listContainer}>
-      <h2 className={styles.listTitle}>{capitalizeWord(source) + " Tracks"}</h2>
+    <div className={styles.pageSectionWrapper}>
+      <h2 className={styles.sectionTitle}>
+        {capitalizeWord(source) + " Tracks"}
+      </h2>
       <div
-        className={`${styles.libraryWrapper}`}
+        className={`${styles.contentWrapper}`}
         style={{
           height: `${65 * listHeight}px`,
           overflowY: "hidden"
@@ -132,6 +134,10 @@ const SearchTrackList = ({
       )}
     </div>
   );
+};
+
+SearchTrackList.defaultProps = {
+  tracks: { list: [] }
 };
 
 export default SearchTrackList;

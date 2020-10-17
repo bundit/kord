@@ -16,7 +16,7 @@ import { pause, play, playTrack } from "../redux/actions/playerActions";
 import LoadingSpinner from "./loading-spinner";
 import PageHeader from "./page-header";
 import TrackList from "./track-list";
-import styles from "../styles/library.module.css";
+import styles from "../styles/artist-page.module.scss";
 
 const ArtistPage = () => {
   const dispatch = useDispatch();
@@ -108,7 +108,7 @@ const ArtistPage = () => {
       ref={scrollContainer}
       onScroll={loadTracksOnScroll}
     >
-      <div className={styles.listContainer}>
+      <div className={styles.pageSectionWrapper}>
         <PageHeader
           imgSrc={getImgUrl(artist, "lg")}
           title={artistName}
@@ -129,7 +129,7 @@ const ArtistPage = () => {
         </PageHeader>
 
         <ArtistInfoSection artist={artist} />
-        <div className={styles.libraryWrapper}>
+        <div className={styles.trackSectionWrapper}>
           <TrackSection
             title={`${artistName}'s Top Tracks`}
             artistName={artistName}
@@ -332,14 +332,14 @@ function ArtistInfoSection({ artist }) {
   return (
     <>
       {hasBio && (
-        <div className={styles.libraryWrapper}>
+        <div className={styles.artistContentSection}>
           <h2 className={styles.artistSubHeader}>About the Artist</h2>
           <div>
             {showFullBio ? fullBio : bio}
             {!!fullBio && (
               <button
                 onClick={toggleShowFullBio}
-                style={{ color: "#6373c8", outline: "none" }}
+                className={styles.showMoreLessBioButton}
               >
                 {showFullBio ? "Show less" : "Show more"}
               </button>
@@ -348,13 +348,7 @@ function ArtistInfoSection({ artist }) {
         </div>
       )}
       {hasSimilarOrTags && (
-        <div
-          className={styles.libraryWrapper}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "50% 50%"
-          }}
-        >
+        <div className={styles.artistTagsAndSimilarSection}>
           {hasTags && (
             <span>
               <h2 className={styles.artistSubHeader}>Tags</h2>
