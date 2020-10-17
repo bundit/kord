@@ -108,3 +108,10 @@ export function keepWithinVolumeRange(volume) {
 export function filterUnconnected(playlists) {
   return playlists.filter(playlist => playlist.isConnected);
 }
+
+export function getTitleFromPathname(pathname) {
+  // Get only last route
+  let title = pathname.slice(pathname.lastIndexOf("/") + 1);
+
+  return capitalizeWord(title);
+}

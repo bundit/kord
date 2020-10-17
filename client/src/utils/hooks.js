@@ -1,9 +1,14 @@
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
 import raf from "raf";
 
+import {
+  capitalizeWord,
+  formatArtistName,
+  getTitleFromPathname
+} from "./formattingHelpers";
 import { clearState } from "../redux/actions/stateActions";
 import { fetchGeneric } from "./fetchGeneric";
 import {
@@ -227,4 +232,21 @@ export function useKeyControls(handleKeyControls) {
       delete keysPressed[e.key];
     };
   }, [handleKeyControls]);
+}
+
+export function useSetDocumentTitle() {
+  const { pathname } = useLocation();
+  const isPlaying = useSelector(state => state.player.isPlaying);
+  const currentTrack = useSelector(state => state.player.currentTrack);
+  const currentPage = getTitleFromPathname(pathname);
+
+  useEffect(() => {
+    if (isPlaying) {
+      document.title = `${currentTrack.title} ◦ ${formatArtistName(
+        currentTrack.artist
+      )}`;
+    } else {
+      document.title = `Kord | ${capitalizeWord(currentPage)}`;
+    }
+  }, [currentPage, currentTrack, isPlaying]);
 }

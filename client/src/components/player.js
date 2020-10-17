@@ -6,11 +6,7 @@ import React, { useState, useRef } from "react";
 import ReactHowler from "react-howler";
 import raf from "raf";
 
-import {
-  capitalizeWord,
-  formatArtistName,
-  keepWithinVolumeRange
-} from "../utils/formattingHelpers";
+import { keepWithinVolumeRange } from "../utils/formattingHelpers";
 import {
   nextTrack,
   pause,
@@ -30,6 +26,7 @@ import {
   useKeyControls,
   usePauseIfSdkNotReady,
   useRenderSeekPosition,
+  useSetDocumentTitle,
   useSetDurationOnTrackChange
 } from "../utils/hooks";
 import ExpandedPlayer from "./expanded-player";
@@ -61,7 +58,6 @@ export const Player = ({
   const youtubePlayer = useRef(null);
   const alert = useAlert();
   const dispatch = useDispatch();
-  const currentPage = useSelector(state => state.user.history.currentPage);
   const seekAmount = useSelector(state => state.player.seekAmount) || 15;
 
   useKeyControls(handleKeyControls);
@@ -94,14 +90,7 @@ export const Player = ({
 
   useRenderSeekPosition(current, theRaf, renderSeekPos, isPlaying);
   useDetectMediaSession();
-
-  React.useEffect(() => {
-    if (isPlaying) {
-      document.title = `${current.title} ◦ ${formatArtistName(current.artist)}`;
-    } else {
-      document.title = `Kord | ${capitalizeWord(currentPage)}`;
-    }
-  }, [current, currentPage, isPlaying]);
+  useSetDocumentTitle();
 
   function handlePlay() {
     dispatch(play());
