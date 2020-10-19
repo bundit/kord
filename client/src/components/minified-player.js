@@ -1,48 +1,42 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleUp,
-  faPlay,
-  faPauseCircle,
   faListUl,
   faKeyboard
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import React, { useState, useRef } from "react";
 
+import {
+  IconButton as BackwardButton,
+  IconButton as ControlsButton,
+  IconButton as DesktopPlayPauseButton,
+  IconButton as ForwardButton,
+  IconButton as ExpandPlayerButton,
+  PlayPauseButton,
+  IconButton as QueueButton
+} from "./buttons";
 import { ReactComponent as BackwardIcon } from "../assets/backward.svg";
 import { ReactComponent as ForwardIcon } from "../assets/forward.svg";
 import { ReactComponent as PauseIcon } from "../assets/pause-button.svg";
 import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
-import {
-  IconButton as QueueButton,
-  IconButton as ControlsButton,
-  IconButton as BackwardButton,
-  IconButton as PlayPauseButton,
-  IconButton as ForwardButton
-} from "./buttons";
 import { getImgUrl } from "../utils/getImgUrl";
 import { secondsToFormatted } from "../utils/formattingHelpers";
 import {
   toggleKeyboardControlsMenu,
   toggleUserQueue
 } from "../redux/actions/userActions";
-import { useMobileDetection } from "../utils/hooks";
+import Image from "./image";
 import TrackInfo from "./track-info";
 import UserQueue from "./user-queue";
 import VolumeControls from "./volume-controls";
 import progressBarStyles from "../styles/progressBar.module.css";
-import styles from "../styles/player.module.css";
+import styles from "../styles/player.module.scss";
 
 const MinifiedPlayer = ({
-  current,
   handleToggleExpand,
   handlePlayPause,
-  isPlaying,
   isUserSeeking,
   userSeekPos,
-  seek,
-  duration,
   handleOnChangeUserSeek,
   handleMouseDownSeek,
   handleMouseUpSeek,
@@ -55,34 +49,8 @@ const MinifiedPlayer = ({
   handleNext
 }) => {
   const dispatch = useDispatch();
-  const [hoverOffset, setHoverOffset] = useState(0);
-  const [isUserHovering, setIsUserHovering] = useState(false);
-  const seekWrap = useRef(null);
-
-  const isMobile = useMobileDetection();
-
-  const progress = (isUserSeeking ? userSeekPos : seek) / duration;
-  const progressPercent = `${progress * 100}%`;
-
-  const hoverRatio =
-    Number(hoverOffset) /
-    Number(seekWrap.current ? seekWrap.current.offsetWidth : 1);
-  const timeRatio = hoverRatio * duration;
-
-  function getPositionOnHover(e) {
-    setIsUserHovering(true);
-
-    const parentEl = e.target.getClientRects()[0];
-
-    if (parentEl) {
-      const elementLeftOffset = e.target.offsetLeft + e.clientX - parentEl.left;
-      setHoverOffset(elementLeftOffset);
-    }
-  }
-
-  function handleMouseOut() {
-    setIsUserHovering(false);
-  }
+  const player = useSelector(state => state.player, shallowEqual);
+  const { currentTrack, isPlaying, seek, duration } = player;
 
   function handleToggleShowQueue() {
     dispatch(toggleUserQueue());
@@ -92,118 +60,67 @@ const MinifiedPlayer = ({
     dispatch(toggleKeyboardControlsMenu());
   }
 
-  const forwardBackwardButtonStyle = {
-    height: "30px",
-    width: "30px",
-    fontSize: "1.3"
-  };
+  function getImgClassName() {
+    const { source } = currentTrack;
 
-  const playPauseButtonStyle = {
-    height: "50px",
-    width: "50px",
-    fontSize: "2rem",
-    margin: "0 10px"
-  };
+    return `${styles.playerImage} ${source === "youtube" && styles.ytImage}`;
+  }
 
   return (
     <div className={styles.playerAndSeekContainer}>
+      <ProgressBar
+        isUserSeeking={isUserSeeking}
+        userSeekPos={userSeekPos}
+        handleOnChangeUserSeek={handleOnChangeUserSeek}
+        handleMouseDownSeek={handleMouseDownSeek}
+        handleMouseUpSeek={handleMouseUpSeek}
+      />
+
+      {/* MOBILE */}
       <div
-        className={progressBarStyles.progressContainer}
-        ref={seekWrap}
-        onMouseMove={getPositionOnHover}
-        onMouseOut={handleMouseOut}
+        className={styles.mobilePlayerWrapper}
+        tabIndex={0}
+        onClick={handleToggleExpand}
       >
-        <input
-          className={progressBarStyles.desktopSeekBar}
-          type="range"
-          min="0"
-          max={parseInt(duration || 0)}
-          step="any"
-          value={isUserSeeking ? userSeekPos : seek || 0}
-          onChange={handleOnChangeUserSeek}
-          onMouseDown={handleMouseDownSeek}
-          onMouseUp={handleMouseUpSeek}
-        />
-        <span className={progressBarStyles.progressTrack}></span>
-        <span
-          className={progressBarStyles.progressBar}
-          style={{ width: progressPercent }}
-        ></span>
-        <span
-          className={progressBarStyles.seekToolTip}
-          style={{ left: `${hoverOffset - 20}px` }}
-        >
-          <span
-            className={`${progressBarStyles.hoverTime} ${isUserHovering &&
-              progressBarStyles.isHovering}`}
-          >
-            {secondsToFormatted(timeRatio || 0)}
-          </span>
-        </span>
-      </div>
-      <div
-        className={`${styles.playerWrapper} ${styles.miniPlayer} ${progressBarStyles.playerWrapper}`}
-        tabIndex={isMobile ? 0 : null}
-        role="button"
-        onClick={isMobile ? handleToggleExpand : null}
-      >
-        <button
-          type="button"
-          onClick={handleToggleExpand}
-          className={styles.miniPlayerExpandButton}
-        >
-          <FontAwesomeIcon icon={faAngleUp} />
-        </button>
+        <ExpandPlayerButton onClick={handleToggleExpand} icon={faAngleUp} />
         <div className={styles.nowPlaying}>
-          <div
-            className={styles.miniPlayerImageWrap}
-            style={
-              current.source === "youtube"
-                ? { minWidth: "100px", height: "56px" }
-                : { minWidth: "56px" }
-            }
-          >
-            <img src={getImgUrl(current, "md")} alt="album-art" />
-          </div>
-          <TrackInfo track={current} isPlayer />
+          <TrackInfo track={currentTrack} isPlayer />
         </div>
-        <button
-          type="button"
-          onClick={handlePlayPause}
-          className={styles.miniPlayerPlayButton}
-        >
-          <FontAwesomeIcon icon={isPlaying ? faPauseCircle : faPlay} />
-        </button>
-        <div className={styles.desktopButtonGroup}>
+        <PlayPauseButton onClick={handlePlayPause} isPlaying={isPlaying} />
+      </div>
+
+      {/* DESKTOP */}
+      <div className={styles.desktopPlayerWrapper}>
+        <div className={styles.nowPlaying}>
+          <Image
+            src={getImgUrl(currentTrack, "md")}
+            alt="album-art"
+            className={getImgClassName()}
+          />
+          <TrackInfo track={currentTrack} isPlayer />
+        </div>
+
+        <div className={styles.backPlayForwardWrapper}>
           <span
             className={progressBarStyles.timeContainer}
             style={{ textAlign: "right" }}
           >
             {secondsToFormatted(isUserSeeking ? userSeekPos : seek || 0)}
           </span>
-
-          <BackwardButton
-            onClick={handlePrev}
-            style={{ ...forwardBackwardButtonStyle, marginLeft: "10px" }}
-          >
+          <BackwardButton onClick={handlePrev}>
             <BackwardIcon />
           </BackwardButton>
-          <PlayPauseButton
-            onClick={handlePlayPause}
-            style={playPauseButtonStyle}
-          >
+          <DesktopPlayPauseButton onClick={handlePlayPause}>
             {isPlaying ? <PauseIcon /> : <PlayIcon />}
-          </PlayPauseButton>
-          <ForwardButton
-            onClick={handleNext}
-            style={{ ...forwardBackwardButtonStyle, marginRight: "10px" }}
-          >
+          </DesktopPlayPauseButton>
+          <ForwardButton onClick={handleNext}>
             <ForwardIcon />
           </ForwardButton>
           <span className={progressBarStyles.timeContainer}>
             {secondsToFormatted(duration || 0)}
           </span>
         </div>
+
         <div className={styles.playerRightControls}>
           <ControlsButton
             onClick={handleToggleShowControls}
@@ -224,17 +141,109 @@ const MinifiedPlayer = ({
           />
         </div>
       </div>
+
       <UserQueue />
     </div>
   );
 };
 
-MinifiedPlayer.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  current: PropTypes.object.isRequired,
-  handleToggleExpand: PropTypes.func.isRequired,
-  handlePlayPause: PropTypes.func.isRequired,
-  isPlaying: PropTypes.bool.isRequired
-};
+function ProgressBar({
+  isUserSeeking,
+  userSeekPos,
+  handleOnChangeUserSeek,
+  handleMouseDownSeek,
+  handleMouseUpSeek
+}) {
+  const [hoverOffset, setHoverOffset] = useState(0);
+  const [isUserHovering, setIsUserHovering] = useState(false);
+  const seekWrap = useRef(null);
+  const player = useSelector(state => state.player, shallowEqual);
+  const { seek, duration } = player;
+
+  function getPositionOnHover(e) {
+    setIsUserHovering(true);
+
+    const parentEl = e.target.getClientRects()[0];
+
+    if (parentEl) {
+      const elementLeftOffset = e.target.offsetLeft + e.clientX - parentEl.left;
+      setHoverOffset(elementLeftOffset);
+    }
+  }
+
+  function handleMouseOut() {
+    setIsUserHovering(false);
+  }
+
+  const progressPercent = calculateProgressPercentage(
+    seek,
+    userSeekPos,
+    isUserSeeking,
+    duration
+  );
+  const timeRatio = calculateTimeRatioFromHoverPosition(
+    hoverOffset,
+    seekWrap.current && seekWrap.current.offsetWidth,
+    duration
+  );
+
+  return (
+    <div
+      className={progressBarStyles.progressContainer}
+      ref={seekWrap}
+      onMouseMove={getPositionOnHover}
+      onMouseOut={handleMouseOut}
+    >
+      <input
+        className={progressBarStyles.desktopSeekBar}
+        type="range"
+        min="0"
+        max={parseInt(duration || 0)}
+        step="any"
+        value={isUserSeeking ? userSeekPos : seek || 0}
+        onChange={handleOnChangeUserSeek}
+        onMouseDown={handleMouseDownSeek}
+        onMouseUp={handleMouseUpSeek}
+      />
+      <span className={progressBarStyles.progressTrack}></span>
+      <span
+        className={progressBarStyles.progressBar}
+        style={{ width: progressPercent }}
+      ></span>
+      <span
+        className={progressBarStyles.seekToolTip}
+        style={{ left: `${hoverOffset - 20}px` }}
+      >
+        <span
+          className={`${progressBarStyles.hoverTime} ${isUserHovering &&
+            progressBarStyles.isHovering}`}
+        >
+          {secondsToFormatted(timeRatio || 0)}
+        </span>
+      </span>
+    </div>
+  );
+}
+
+function calculateProgressPercentage(
+  seek,
+  userSeekPos,
+  isUserSeeking,
+  duration
+) {
+  const progress = (isUserSeeking ? userSeekPos : seek) / duration;
+
+  return `${progress * 100}%`;
+}
+
+function calculateTimeRatioFromHoverPosition(
+  hoverOffset,
+  containerWidth,
+  duration
+) {
+  const hoverRatio = Number(hoverOffset) / Number(containerWidth);
+
+  return hoverRatio * duration;
+}
 
 export default MinifiedPlayer;

@@ -1,0 +1,299 @@
+@import "variables";
+
+.playerAndSeekContainer {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  z-index: -1;
+}
+
+.mobilePlayerWrapper {
+  outline: none;
+  height: inherit;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: white;
+  transition: 0.3s ease-out;
+  padding: 0 10px;
+
+  &:active {
+    background-color: $bg7;
+  }
+
+  svg {
+    font-size: 18px;
+  }
+
+  button {
+    width: 30px;
+    height: 30px;
+
+    &:hover,
+    &:active {
+      color: $primaryLight;
+    }
+  }
+}
+
+.desktopPlayerWrapper {
+  display: none;
+
+  height: 100%;
+  color: white;
+  padding: 0 12px;
+  align-items: center;
+  border-top: 1px $borderAccent solid;
+
+  .playerImage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 56px;
+    min-width: 56px;
+    margin-right: 15px;
+
+    img {
+      max-height: 100%;
+    }
+  }
+
+  .ytImage {
+    height: 56px;
+    min-width: 100px;
+  }
+
+  .playerRightControls {
+    flex: 1;
+    position: relative;
+    align-items: center;
+    justify-content: flex-end;
+    display: flex;
+    height: 10px;
+
+    > button {
+      display: none;
+    }
+
+    svg {
+      font-size: 16px;
+    }
+  }
+
+  .youtubeContainer {
+    border-radius: 7px;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0;
+    bottom: 7px;
+    left: 12px;
+    position: absolute;
+    z-index: 5;
+    transition: 2s linear;
+    border: 1px transparent solid;
+    display: none;
+  }
+
+  .youtubeIsPlaying {
+    opacity: 1;
+  }
+}
+
+.nowPlaying {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+
+  text-align: center;
+  overflow: hidden;
+}
+
+.backPlayForwardWrapper {
+  min-width: 200px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  // Back button
+  button:first-of-type {
+    margin-left: 10px;
+    height: 30px;
+    width: 30px;
+  }
+
+  // Play button
+  button:nth-of-type(2) {
+    height: 50px;
+    width: 50px;
+    margin: 0 10px;
+  }
+
+  // Forward button
+  button:last-of-type {
+    margin-right: 10px;
+    height: 30px;
+    width: 30px;
+  }
+}
+
+.expandedPlayer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  position: fixed;
+  height: 85vh;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+
+  border-radius: 15px 15px 0 0;
+  color: $textbg;
+  background-color: $bg2;
+  border: 1px $borderAccent solid;
+  z-index: 10;
+  text-align: center;
+
+  > * {
+    margin-bottom: 10px;
+  }
+
+  .expandedPlayerImageWrapper {
+    > div {
+      width: 85vw;
+      height: 85vw;
+    }
+  }
+
+  .seekBarWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    > span:nth-of-type(2) {
+      padding: 0 10px;
+      input {
+        width: 50vw;
+      }
+    }
+  }
+
+  .mobileBackPlayForwardWrapper {
+    @extend .backPlayForwardWrapper;
+    justify-content: center;
+
+    // Back and forward buttons
+    button {
+      height: 40px !important;
+      width: 40px !important;
+    }
+
+    // Play button
+    button:nth-of-type(2) {
+      height: 70px !important;
+      width: 70px !important;
+    }
+  }
+}
+
+// .playerOpen {
+//   height: 95%;
+//   flex-direction: column;
+//   border-top-left-radius: 3rem;
+//   border-top-right-radius: 3rem;
+//   box-shadow: 0px -6px 3px rgba(0, 0, 0, 0.1);
+//   justify-content: space-around;
+//   bottom: 0;
+//   box-sizing: border-box;
+//   z-index: 4;
+//
+//   svg {
+//     font-size: 3rem;
+//   }
+//
+//   img {
+//     width: 85%;
+//     border-radius: 1rem;
+//     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+//   }
+// }
+
+// .expandedPlayerControls {
+//   width: 100%;
+//   display: flex;
+//   justify-content: center;
+//   margin-bottom: 1rem;
+// }
+
+// .titleWrapperExpanded {
+//   width: 100%;
+//   text-align: center;
+// }
+
+// .volumeContainer {
+//   width: 100%;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   padding: 1rem;
+//   box-sizing: border-box;
+// }
+
+// .volumeContainer > * {
+//   margin: 0 1rem;
+// }
+
+// .sliderContainer,
+// .sliderContainer input {
+//   width: 100%;
+// }
+
+@media (min-width: 800px) {
+  .playerAndSeekContainer {
+    bottom: 0;
+    right: 0;
+    height: 81px;
+    border-radius: 0;
+
+    .mobilePlayerWrapper {
+      display: none;
+    }
+
+    .desktopPlayerWrapper {
+      display: flex;
+    }
+  }
+
+  .nowPlaying {
+    justify-content: flex-start;
+    align-items: center;
+
+    text-align: left;
+
+    > :last-child,
+    > div > div {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+@media (min-width: 900px) {
+  .desktopPlayerWrapper {
+    .playerRightControls button {
+      display: inline;
+      width: 25px;
+      margin-right: 5px;
+    }
+  }
+}
