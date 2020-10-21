@@ -8,13 +8,13 @@ export function getImgUrl(track, size) {
   try {
     if (track.source === "soundcloud") {
       if (size === "sm") {
-        return track.img.replace("large.jpg", "t67x67.jpg");
+        return track.img.replace("large", "t67x67");
       }
       if (size === "md") {
-        return track.img.replace("large.jpg", "t300x300.jpg");
+        return track.img.replace("large", "t300x300");
       }
       if (size === "lg") {
-        return track.img.replace("large.jpg", "t500x500.jpg");
+        return track.img.replace("large", "original");
       }
     } else if (track.source === "spotify") {
       if (!track.img.length) {

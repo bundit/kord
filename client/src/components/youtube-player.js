@@ -1,20 +1,21 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 import * as Sentry from "@sentry/react";
 import YouTube from "react-youtube";
 
 import { nextTrack, setDuration } from "../redux/actions/playerActions";
 import { setTrackUnstreamable } from "../redux/actions/libraryActions";
-import styles from "../styles/player.module.css";
+import styles from "../styles/player.module.scss";
 
-function YoutubePlayer({ isPlaying, current, volume, forwardRef, onEnd }) {
+function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
+  const isPlaying = useSelector(state => state.player.isPlaying);
+  const current = useSelector(state => state.player.currentTrack);
+  const youtubeIsPlaying = current.source === "youtube" && isPlaying;
+
   const dispatch = useDispatch();
-  const isPlayingStyle = `${isPlaying &&
-    current.source === "youtube" &&
-    styles.youtubeIsPlaying}`;
 
   useStartAtBeginningOnTrackChange(current, forwardRef);
-  useSyncPlayPause(isPlaying, current, forwardRef);
+  useSyncPlayPause(youtubeIsPlaying, current, forwardRef);
   useSyncVolume(volume, forwardRef);
 
   function handleYoutubeReady(e) {
@@ -44,21 +45,31 @@ function YoutubePlayer({ isPlaying, current, volume, forwardRef, onEnd }) {
     }
   }
 
+  function getYoutubeContainerClassNames() {
+    const youtubeActive = current.source === "youtube";
+
+    return `${styles.youtubeContainer} ${youtubeActive &&
+      styles.youtubeActive} ${youtubeIsPlaying &&
+      styles.youtubeIsPlaying} ${playerIsExpanded &&
+      youtubeActive &&
+      styles.youtubeExpanded}`;
+  }
+
   return (
     <YouTube
       videoId={current.source === "youtube" ? current.id : null}
       opts={{
-        height: "56",
-        width: "100",
+        height: "100%",
+        width: "100%",
         playerVars: {
           controls: 0,
           fs: 0,
           iv_load_policy: 3,
           modestbranding: 1,
-          autoplay: isPlaying ? 1 : 0
+          autoplay: youtubeIsPlaying ? 1 : 0
         }
       }}
-      containerClassName={`${styles.youtubeContainer} ${isPlayingStyle}`}
+      containerClassName={getYoutubeContainerClassNames()}
       onReady={handleYoutubeReady}
       onEnd={onEnd}
       onError={handleYoutubePlayerError}
@@ -92,7 +103,7 @@ function useSyncPlayPause(isPlaying, current, youtubePlayer) {
     } else {
       youtubePlayer.current.pauseVideo();
     }
-  }, [current.source, youtubePlayer, isPlaying]);
+  }, [current, youtubePlayer, isPlaying]);
 }
 
 function useSyncVolume(volume, youtubePlayer) {

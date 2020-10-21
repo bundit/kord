@@ -1,11 +1,12 @@
 import { CSSTransition } from "react-transition-group";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { useAlert } from "react-alert";
-import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useRef } from "react";
 import ReactHowler from "react-howler";
 import raf from "raf";
 
+import { IconButton as DesktopToggleExpandButton } from "./buttons";
 import { keepWithinVolumeRange } from "../utils/formattingHelpers";
 import {
   nextTrack,
@@ -32,18 +33,19 @@ import {
 import ExpandedPlayer from "./expanded-player";
 import MinifiedPlayer from "./minified-player";
 import SpotifyPlayer from "./spotify-player";
+import UserQueue from "./user-queue";
 import YoutubePlayer from "./youtube-player";
-import miniPlayerSlide from "../styles/miniPlayerSlide.module.css";
 import slideTransition from "../styles/slide.module.css";
+import styles from "../styles/player.module.scss";
 
-export const Player = ({
-  current,
-  isPlaying,
-  volume,
-  isMuted,
-  seek,
-  duration
-}) => {
+export const Player = () => {
+  const currentTrack = useSelector(state => state.player.currentTrack);
+  const seek = useSelector(state => state.player.seek);
+  const duration = useSelector(state => state.player.duration);
+  const isMuted = useSelector(state => state.player.isMuted);
+  const isPlaying = useSelector(state => state.player.isPlaying);
+  let volume = useSelector(state => state.player.volume);
+
   const [isSpotifySdkReady, setIsSpotifySdkReady] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [userSeekPos, setUserSeekPos] = useState(0);
@@ -61,17 +63,19 @@ export const Player = ({
   const seekAmount = useSelector(state => state.player.seekAmount) || 15;
 
   useKeyControls(handleKeyControls);
-  useSetDurationOnTrackChange(current);
-  usePauseIfSdkNotReady(current, isPlaying, isSpotifySdkReady);
+  useSetDurationOnTrackChange(currentTrack);
+  usePauseIfSdkNotReady(currentTrack, isPlaying, isSpotifySdkReady);
 
   const renderSeekPos = React.useCallback(() => {
+    const { source: currentSource } = currentTrack;
     let currentPos;
+
     try {
-      if (current.source === "soundcloud") {
+      if (currentSource === "soundcloud") {
         currentPos = soundcloudPlayer.current.seek();
-      } else if (current.source === "spotify") {
+      } else if (currentSource === "spotify") {
         currentPos = spotifyPlayer.current.seek() / 1000;
-      } else if (current.source === "youtube") {
+      } else if (currentSource === "youtube") {
         currentPos = youtubePlayer.current.getCurrentTime();
       } else return raf.cancel(theRaf.current);
     } catch (e) {
@@ -86,9 +90,9 @@ export const Player = ({
     }
 
     theRaf.current = raf(renderSeekPos);
-  }, [current, dispatch]);
+  }, [currentTrack, dispatch]);
 
-  useRenderSeekPosition(current, theRaf, renderSeekPos, isPlaying);
+  useRenderSeekPosition(currentTrack, theRaf, renderSeekPos, isPlaying);
   useDetectMediaSession();
   useSetDocumentTitle();
 
@@ -143,21 +147,22 @@ export const Player = ({
   }
 
   function handleSeek(seconds) {
+    const { source: currentSource } = currentTrack;
     raf.cancel(theRaf.current);
 
     if (seconds < 0) seconds = 0;
     if (seconds > duration) seconds = duration;
 
-    if (current.source === "soundcloud") {
+    if (currentSource === "soundcloud") {
       soundcloudPlayer.current.seek(seconds);
       dispatch(setSeek(seconds));
     }
 
-    if (current.source === "spotify") {
+    if (currentSource === "spotify") {
       spotifyPlayer.current.seek(seconds * 1000);
     }
 
-    if (current.source === "youtube") {
+    if (currentSource === "youtube") {
       youtubePlayer.current.seekTo(seconds);
     }
 
@@ -261,7 +266,7 @@ export const Player = ({
       }
       if (err === 4) {
         // Not streamable
-        dispatch(setTrackUnstreamable(current.id));
+        dispatch(setTrackUnstreamable(currentTrack.id));
         handleNextTrack();
       }
     }
@@ -271,16 +276,59 @@ export const Player = ({
 
   return (
     <>
+      <UserQueue />
+
+      {/* Expanded music player */}
+      <MinifiedPlayer
+        isExpanded={isExpanded}
+        handleToggleExpand={toggleExpand}
+        handlePlayPause={handlePlayPause}
+        isUserSeeking={isUserSeeking}
+        userSeekPos={Number(userSeekPos)}
+        handleOnChangeUserSeek={handleOnChangeUserSeek}
+        handleMouseDownSeek={handleMouseDownSeek}
+        handleMouseUpSeek={handleMouseUpSeek}
+        isUserSettingVolume={isUserSettingVolume}
+        userVolumeValue={userVolumeValue}
+        handleOnChangeVolume={handleOnChangeVolume}
+        handleMouseDownVolume={handleMouseDownVolume}
+        handleMouseUpVolume={handleMouseUpVolume}
+        handlePrev={handlePrevTrack}
+        handleNext={handleNextTrack}
+      />
+
+      <CSSTransition
+        in={isExpanded}
+        timeout={250}
+        classNames={slideTransition}
+        unmountOnExit
+      >
+        <ExpandedPlayer
+          handleToggleExpand={toggleExpand}
+          handlePlayPause={handlePlayPause}
+          handleSeek={handleSeek}
+          isUserSeeking={isUserSeeking}
+          userSeekPos={Number(userSeekPos)}
+          handleOnChangeUserSeek={handleOnChangeUserSeek}
+          handleMouseDownSeek={handleMouseDownSeek}
+          handleMouseUpSeek={handleMouseUpSeek}
+          handlePrev={handlePrevTrack}
+          handleNext={handleNextTrack}
+        />
+      </CSSTransition>
+      {/* Mini Player */}
+
+      {/* </CSSTransition> */}
       <audio id="player" autoPlay loop>
         <source
           src="https://raw.githubusercontent.com/anars/blank-audio/master/10-minutes-of-silence.mp3"
           type="audio/mp3"
         />
       </audio>
-      {current.source === "soundcloud" && (
+      {currentTrack.source === "soundcloud" && (
         <ReactHowler
-          src={`https://api.soundcloud.com/tracks/${current.id}/stream?client_id=${KEY}`}
-          playing={isPlaying && current.source === "soundcloud"}
+          src={`https://api.soundcloud.com/tracks/${currentTrack.id}/stream?client_id=${KEY}`}
+          playing={isPlaying && currentTrack.source === "soundcloud"}
           onEnd={handleOnEnd}
           preload
           html5
@@ -292,98 +340,32 @@ export const Player = ({
       <SpotifyPlayer
         forwardRef={spotifyPlayer}
         playerName="Kord Player - All your music in one place"
-        isPlaying={isPlaying && current.source === "spotify"}
+        isPlaying={isPlaying && currentTrack.source === "spotify"}
         onEnd={handleOnEnd}
         volume={volume}
-        track={current}
+        track={currentTrack}
         onReady={handleSpotifyReady}
         onAccountError={handleSpotifyAccountError}
         controls={{ play: handlePlay, pause: handlePause }}
       />
+
       <YoutubePlayer
-        isPlaying={isPlaying}
-        current={current}
         volume={volume}
         forwardRef={youtubePlayer}
         onEnd={handleOnEnd}
+        playerIsExpanded={isExpanded}
       />
-      {/* Expanded music player */}
-      <CSSTransition
-        in={isExpanded}
-        timeout={300}
-        classNames={slideTransition}
-        unmountOnExit
-      >
-        <ExpandedPlayer
-          current={current}
-          handleToggleExpand={toggleExpand}
-          handlePlayPause={handlePlayPause}
-          isPlaying={isPlaying}
-          handleSeek={handleSeek}
-          isUserSeeking={isUserSeeking}
-          userSeekPos={Number(userSeekPos)}
-          seek={seek}
-          duration={duration}
-          handleOnChangeUserSeek={handleOnChangeUserSeek}
-          handleMouseDownSeek={handleMouseDownSeek}
-          handleMouseUpSeek={handleMouseUpSeek}
-          handlePrev={handlePrevTrack}
-          handleNext={handleNextTrack}
-        />
-      </CSSTransition>
-      {/* Mini Player */}
-      <CSSTransition
-        in={!isExpanded}
-        timeout={500}
-        classNames={miniPlayerSlide}
-        unmountOnExit
-      >
-        <MinifiedPlayer
-          current={current}
-          handleToggleExpand={toggleExpand}
-          handlePlayPause={handlePlayPause}
-          isPlaying={isPlaying}
-          seek={seek}
-          duration={duration}
-          isUserSeeking={isUserSeeking}
-          userSeekPos={Number(userSeekPos)}
-          handleOnChangeUserSeek={handleOnChangeUserSeek}
-          handleMouseDownSeek={handleMouseDownSeek}
-          handleMouseUpSeek={handleMouseUpSeek}
-          isUserSettingVolume={isUserSettingVolume}
-          userVolumeValue={userVolumeValue}
-          handleOnChangeVolume={handleOnChangeVolume}
-          handleMouseDownVolume={handleMouseDownVolume}
-          handleMouseUpVolume={handleMouseUpVolume}
-          handlePrev={handlePrevTrack}
-          handleNext={handleNextTrack}
-        />
-      </CSSTransition>
+
+      <DesktopToggleExpandButton
+        onClick={toggleExpand}
+        icon={faAngleDown}
+        className={styles.desktopCloseExpandedPlayerButton}
+        style={{
+          display: !isExpanded && "none"
+        }}
+      />
     </>
   );
 };
 
-Player.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  current: PropTypes.object.isRequired,
-  isPlaying: PropTypes.bool.isRequired,
-  duration: PropTypes.number,
-  volume: PropTypes.number.isRequired,
-  seek: PropTypes.number
-};
-
-Player.defaultProps = {
-  duration: 0,
-  seek: 0
-};
-
-const mapStateToProps = state => ({
-  current: state.player.currentTrack,
-  isPlaying: state.player.isPlaying,
-  volume: state.player.volume,
-  isMuted: state.player.isMuted,
-  seek: state.player.seek,
-  duration: state.player.duration
-});
-
-export default connect(mapStateToProps)(Player);
+export default Player;

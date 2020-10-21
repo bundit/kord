@@ -6,20 +6,22 @@
   display: flex;
   flex-direction: column;
   z-index: -1;
+  position: relative;
+  background-color: $bg0;
 }
 
 .mobilePlayerWrapper {
   outline: none;
   height: inherit;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   color: white;
-  transition: 0.3s ease-out;
+  transition: 0.15s linear;
   padding: 0 10px;
 
   &:active {
-    background-color: $bg7;
+    background-color: $bg11;
   }
 
   svg {
@@ -35,16 +37,28 @@
       color: $primaryLight;
     }
   }
+
+  // Override track-info component
+  // Disable artist anchors in mobile mini player
+  a {
+    cursor: default;
+    pointer-events: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .desktopPlayerWrapper {
   display: none;
-
+  width: calc(100vw - 230px);
   height: 100%;
   color: white;
   padding: 0 12px;
   align-items: center;
   border-top: 1px $borderAccent solid;
+  box-sizing: border-box;
 
   .playerImage {
     display: flex;
@@ -83,32 +97,85 @@
     }
   }
 
-  .youtubeContainer {
-    border-radius: 7px;
-    pointer-events: none;
-    overflow: hidden;
-    opacity: 0;
-    bottom: 7px;
-    left: 12px;
+  .imageOverlay {
     position: absolute;
-    z-index: 5;
-    transition: 2s linear;
+    left: 12px;
+    bottom: 10px;
+    width: 56px;
+    height: 56px;
+    z-index: 10;
+    border-radius: 7px;
     border: 1px transparent solid;
-    display: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s linear;
+
+    opacity: 0;
+
+    button {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:hover {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.4);
+    }
   }
 
-  .youtubeIsPlaying {
-    opacity: 1;
+  .ytOverlay {
+    width: 100px;
   }
+}
+
+.youtubeContainer {
+  display: none;
+  border-radius: 7px;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  z-index: 1;
+  border: 1px transparent solid;
+  transition: 0.3s linear opacity;
+
+  position: fixed;
+  left: 0;
+  top: 75px;
+  width: 100vw;
+  padding-bottom: 56.25%;
+
+  > iframe {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.youtubeExpanded {
+  transition: 0.3s linear opacity;
+  display: block;
+
+  animation: youtubeFadeIn 450ms;
+  opacity: 1;
 }
 
 .nowPlaying {
   display: flex;
-  flex: 1;
   justify-content: center;
-
+  width: inherit;
   text-align: center;
   overflow: hidden;
+
+  > :last-child,
+  > div > div {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .backPlayForwardWrapper {
@@ -144,33 +211,59 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-start;
 
+  z-index: 1;
   position: fixed;
-  height: 85vh;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  width: 100%;
-  padding-bottom: 50px;
-  box-sizing: border-box;
 
-  border-radius: 15px 15px 0 0;
   color: $textbg;
-  background-color: $bg2;
-  border: 1px $borderAccent solid;
-  z-index: 10;
+  background-color: rgba($bg2, 0.8);
+  backdrop-filter: blur(5px);
   text-align: center;
 
   > * {
     margin-bottom: 10px;
   }
 
-  .expandedPlayerImageWrapper {
-    > div {
-      width: 85vw;
-      height: 85vw;
+  .expandedPlayerHeader {
+    display: flex;
+    justify-content: flex-start;
+    align-self: stretch;
+    height: 65px;
+    padding: 20px 20px 0 20px;
+    box-sizing: border-box;
+
+    svg {
+      font-size: 25px;
     }
+  }
+
+  .expandedPlayerImageWrapper {
+    position: relative;
+    width: calc(100vw - 20px);
+    padding-top: 100%;
+    height: auto;
+
+    > div {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: inherit;
+      height: inherit;
+    }
+  }
+
+  .expandedYtImage {
+    @extend .expandedPlayerImageWrapper;
+    width: 100vw;
+    padding-top: 56.25%;
+    height: auto;
   }
 
   .seekBarWrapper {
@@ -200,68 +293,15 @@
     button:nth-of-type(2) {
       height: 70px !important;
       width: 70px !important;
+      margin: 0 20px;
     }
   }
 }
 
-// .playerOpen {
-//   height: 95%;
-//   flex-direction: column;
-//   border-top-left-radius: 3rem;
-//   border-top-right-radius: 3rem;
-//   box-shadow: 0px -6px 3px rgba(0, 0, 0, 0.1);
-//   justify-content: space-around;
-//   bottom: 0;
-//   box-sizing: border-box;
-//   z-index: 4;
-//
-//   svg {
-//     font-size: 3rem;
-//   }
-//
-//   img {
-//     width: 85%;
-//     border-radius: 1rem;
-//     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
-//   }
-// }
-
-// .expandedPlayerControls {
-//   width: 100%;
-//   display: flex;
-//   justify-content: center;
-//   margin-bottom: 1rem;
-// }
-
-// .titleWrapperExpanded {
-//   width: 100%;
-//   text-align: center;
-// }
-
-// .volumeContainer {
-//   width: 100%;
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   padding: 1rem;
-//   box-sizing: border-box;
-// }
-
-// .volumeContainer > * {
-//   margin: 0 1rem;
-// }
-
-// .sliderContainer,
-// .sliderContainer input {
-//   width: 100%;
-// }
-
 @media (min-width: 800px) {
   .playerAndSeekContainer {
-    bottom: 0;
-    right: 0;
     height: 81px;
-    border-radius: 0;
+    z-index: 1;
 
     .mobilePlayerWrapper {
       display: none;
@@ -272,19 +312,113 @@
     }
   }
 
+  .youtubeActive {
+    opacity: 1;
+    display: block;
+  }
+
+  .youtubeContainer {
+    bottom: 10px;
+    left: 11px;
+    top: auto;
+    position: absolute;
+    border: 1px transparent solid;
+    width: 100px;
+    height: 56px;
+    padding-bottom: 0;
+    border-radius: 0;
+  }
+
+  .youtubeExpanded {
+    position: absolute;
+    padding-bottom: 56.25%;
+    width: calc(100vw - 230px);
+    box-sizing: border-box;
+    z-index: -1;
+
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(80px - 100vh);
+  }
+
   .nowPlaying {
     justify-content: flex-start;
     align-items: center;
-
     text-align: left;
 
-    > :last-child,
-    > div > div {
-      width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    flex: 1;
+  }
+
+  .maxWidthImageWrap {
+    overflow: hidden;
+  }
+
+  .expandedPlayer {
+    box-sizing: border-box;
+    left: 230px;
+    bottom: 80px;
+    width: calc(100vw - 230px); // width of sidebar
+    height: calc(100vh - 80px); // height of player footer
+    z-index: -2;
+
+    > * {
+      margin-bottom: 0;
     }
+
+    .expandedPlayerHeader {
+      display: none;
+    }
+
+    .expandedPlayerImageWrapper {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: calc(100vw - 230px);
+      align-self: flex-start;
+      > div {
+        border-color: transparent;
+        border-radius: 0;
+      }
+    }
+
+    .expandedYtImage {
+    }
+
+    .nowPlaying {
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      flex: 0 1 auto;
+    }
+
+    .mobileBackPlayForwardWrapper,
+    .seekBarWrapper {
+      display: none;
+    }
+  }
+
+  .desktopCloseExpandedPlayerButton {
+    position: fixed;
+    left: 255px;
+    top: 25px;
+    background-color: rgba($bg0, 0.9);
+    border: 1px black solid;
+    color: $primaryLight;
+    box-shadow: 0px 0px 5px rgba(black, 0.8);
+    border-radius: 50%;
+    font-size: 25px;
+    width: 40px;
+    height: 40px;
+
+    &:hover {
+      background-color: $bg0;
+
+      svg {
+        color: $primary;
+      }
+    }
+
+    animation: youtubeFadeIn 450ms;
   }
 }
 
@@ -295,5 +429,25 @@
       width: 25px;
       margin-right: 5px;
     }
+  }
+}
+
+@media (min-width: 1000px) {
+  .expandedPlayer {
+    .nowPlaying {
+      display: none;
+    }
+  }
+}
+
+@keyframes youtubeFadeIn {
+  0% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

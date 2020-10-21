@@ -1,17 +1,19 @@
 import {
   faAngleUp,
+  faAngleDown,
   faListUl,
   faKeyboard
 } from "@fortawesome/free-solid-svg-icons";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useRef } from "react";
 
 import {
   IconButton as BackwardButton,
   IconButton as ControlsButton,
   IconButton as DesktopPlayPauseButton,
-  IconButton as ForwardButton,
   IconButton as ExpandPlayerButton,
+  IconButton as ForwardButton,
+  IconButton,
   PlayPauseButton,
   IconButton as QueueButton
 } from "./buttons";
@@ -27,12 +29,12 @@ import {
 } from "../redux/actions/userActions";
 import Image from "./image";
 import TrackInfo from "./track-info";
-import UserQueue from "./user-queue";
 import VolumeControls from "./volume-controls";
 import progressBarStyles from "../styles/progressBar.module.css";
 import styles from "../styles/player.module.scss";
 
 const MinifiedPlayer = ({
+  isExpanded,
   handleToggleExpand,
   handlePlayPause,
   isUserSeeking,
@@ -49,8 +51,11 @@ const MinifiedPlayer = ({
   handleNext
 }) => {
   const dispatch = useDispatch();
-  const player = useSelector(state => state.player, shallowEqual);
-  const { currentTrack, isPlaying, seek, duration } = player;
+  const currentTrack = useSelector(state => state.player.currentTrack);
+  const isPlaying = useSelector(state => state.player.isPlaying);
+  const duration = useSelector(state => state.player.duration);
+  const seek = useSelector(state => state.player.seek);
+  const { source } = currentTrack;
 
   function handleToggleShowQueue() {
     dispatch(toggleUserQueue());
@@ -61,9 +66,11 @@ const MinifiedPlayer = ({
   }
 
   function getImgClassName() {
-    const { source } = currentTrack;
-
     return `${styles.playerImage} ${source === "youtube" && styles.ytImage}`;
+  }
+
+  function getOverlayClassName() {
+    return `${styles.imageOverlay} ${source === "youtube" && styles.ytOverlay}`;
   }
 
   return (
@@ -84,13 +91,19 @@ const MinifiedPlayer = ({
       >
         <ExpandPlayerButton onClick={handleToggleExpand} icon={faAngleUp} />
         <div className={styles.nowPlaying}>
-          <TrackInfo track={currentTrack} isPlayer />
+          <TrackInfo track={currentTrack} isPlayer preventAnchor />
         </div>
         <PlayPauseButton onClick={handlePlayPause} isPlaying={isPlaying} />
       </div>
 
       {/* DESKTOP */}
       <div className={styles.desktopPlayerWrapper}>
+        <span className={getOverlayClassName()}>
+          <IconButton
+            icon={isExpanded ? faAngleDown : faAngleUp}
+            onClick={handleToggleExpand}
+          />
+        </span>
         <div className={styles.nowPlaying}>
           <Image
             src={getImgUrl(currentTrack, "md")}
@@ -141,8 +154,6 @@ const MinifiedPlayer = ({
           />
         </div>
       </div>
-
-      <UserQueue />
     </div>
   );
 };
@@ -154,11 +165,11 @@ function ProgressBar({
   handleMouseDownSeek,
   handleMouseUpSeek
 }) {
-  const [hoverOffset, setHoverOffset] = useState(0);
+  const duration = useSelector(state => state.player.duration);
+  const seek = useSelector(state => state.player.seek);
   const [isUserHovering, setIsUserHovering] = useState(false);
+  const [hoverOffset, setHoverOffset] = useState(0);
   const seekWrap = useRef(null);
-  const player = useSelector(state => state.player, shallowEqual);
-  const { seek, duration } = player;
 
   function getPositionOnHover(e) {
     setIsUserHovering(true);
