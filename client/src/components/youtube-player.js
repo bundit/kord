@@ -49,10 +49,11 @@ function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
     const youtubeActive = current.source === "youtube";
 
     return `${styles.youtubeContainer} ${youtubeActive &&
-      styles.youtubeActive} ${youtubeIsPlaying &&
-      styles.youtubeIsPlaying} ${playerIsExpanded &&
-      youtubeActive &&
-      styles.youtubeExpanded}`;
+      styles.youtubeActive} ${youtubeIsPlaying && styles.youtubeIsPlaying} ${
+      playerIsExpanded && youtubeActive
+        ? styles.youtubeExpanded
+        : styles.youtubeNotExpanded
+    }`;
   }
 
   return (

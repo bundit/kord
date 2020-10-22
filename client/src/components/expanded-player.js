@@ -50,14 +50,12 @@ const ExpandedPlayer = ({
           icon={faAngleDown}
         />
       </div>
-      <div className={styles.maxWidthImageWrap}>
-        <div className={getImgClassName()} onClick={handlePlayPause}>
-          <Image
-            src={getImgUrl(currentTrack, "lg")}
-            alt="album-artwork"
-            style={{ width: "inherit", height: "inherit" }}
-          />
-        </div>
+      <div className={getImgClassName()} onClick={handlePlayPause}>
+        <Image
+          src={getImgUrl(currentTrack, "lg")}
+          alt="album-artwork"
+          style={{ width: "inherit", height: "inherit" }}
+        />
       </div>
       {/* SEEK INPUT */}
       <div className={styles.nowPlaying}>

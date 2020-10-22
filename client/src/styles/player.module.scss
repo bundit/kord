@@ -96,48 +96,15 @@
       font-size: 16px;
     }
   }
-
-  .imageOverlay {
-    position: absolute;
-    left: 12px;
-    bottom: 10px;
-    width: 56px;
-    height: 56px;
-    z-index: 10;
-    border-radius: 7px;
-    border: 1px transparent solid;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s linear;
-
-    opacity: 0;
-
-    button {
-      width: 100%;
-      height: 100%;
-    }
-
-    &:hover {
-      opacity: 1;
-      background: rgba(0, 0, 0, 0.4);
-    }
-  }
-
-  .ytOverlay {
-    width: 100px;
-  }
 }
 
 .youtubeContainer {
   display: none;
-  border-radius: 7px;
   pointer-events: none;
   overflow: hidden;
   opacity: 0;
   z-index: 1;
   border: 1px transparent solid;
-  transition: 0.3s linear opacity;
 
   position: fixed;
   left: 0;
@@ -154,10 +121,12 @@
   }
 }
 
-.youtubeExpanded {
-  transition: 0.3s linear opacity;
-  display: block;
+.youtubeNotExpanded {
+  animation: youtubeFadeOut 450ms;
+}
 
+.youtubeExpanded {
+  display: block;
   animation: youtubeFadeIn 450ms;
   opacity: 1;
 }
@@ -224,6 +193,7 @@
   background-color: rgba($bg2, 0.8);
   backdrop-filter: blur(5px);
   text-align: center;
+  overflow: hidden;
 
   > * {
     margin-bottom: 10px;
@@ -298,6 +268,15 @@
   }
 }
 
+.desktopExpandPlayerButton {
+  transition: 0.3s linear;
+  display: none;
+}
+
+.desktopExpandPlayerButtonYT {
+  @extend .desktopExpandPlayerButton;
+}
+
 @media (min-width: 800px) {
   .playerAndSeekContainer {
     height: 81px;
@@ -326,19 +305,28 @@
     width: 100px;
     height: 56px;
     padding-bottom: 0;
-    border-radius: 0;
+    border-radius: 7px;
+  }
+
+  .ytExpandedContainer {
+    // Used to calculate center of yt container in desktop mode
+    pointer-events: none;
+    position: fixed;
+    left: 230px;
+    top: 0;
+    right: 0;
+    bottom: 80px;
   }
 
   .youtubeExpanded {
     position: absolute;
     padding-bottom: 56.25%;
-    width: calc(100vw - 230px);
-    box-sizing: border-box;
-    z-index: -1;
-
+    width: 100%;
+    height: auto;
+    border-radius: 0;
     left: 50%;
-    transform: translateX(-50%);
-    top: calc(80px - 100vh);
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .nowPlaying {
@@ -347,10 +335,6 @@
     text-align: left;
 
     flex: 1;
-  }
-
-  .maxWidthImageWrap {
-    overflow: hidden;
   }
 
   .expandedPlayer {
@@ -370,11 +354,11 @@
     }
 
     .expandedPlayerImageWrapper {
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
       width: calc(100vw - 230px);
-      align-self: flex-start;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
       > div {
         border-color: transparent;
         border-radius: 0;
@@ -397,28 +381,40 @@
     }
   }
 
-  .desktopCloseExpandedPlayerButton {
+  .desktopExpandPlayerButton {
+    display: block;
     position: fixed;
-    left: 255px;
-    top: 25px;
-    background-color: rgba($bg0, 0.9);
-    border: 1px black solid;
-    color: $primaryLight;
-    box-shadow: 0px 0px 5px rgba(black, 0.8);
+    left: 250px;
+    bottom: 20px;
     border-radius: 50%;
     font-size: 25px;
     width: 40px;
     height: 40px;
+    z-index: 8;
+    transition: 250ms linear;
+    opacity: 0;
+    background-color: $bg14;
 
-    &:hover {
-      background-color: $bg0;
-
-      svg {
-        color: $primary;
-      }
+    svg {
+      color: white;
     }
 
-    animation: youtubeFadeIn 450ms;
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .desktopMinimizePlayerButton {
+    bottom: calc(100vh - 80px + 15px);
+  }
+
+  .desktopExpandPlayerButtonYT {
+    left: 271px;
+  }
+
+  .headerExpandButton {
+    opacity: 1;
+    bottom: calc(100vh - 80px + 15px);
   }
 }
 
@@ -444,7 +440,19 @@
   0% {
     opacity: 0;
   }
-  70% {
+  30% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes youtubeFadeOut {
+  0% {
+    opacity: 0;
+  }
+  30% {
     opacity: 0;
   }
   100% {

@@ -1,6 +1,5 @@
 import {
   faAngleUp,
-  faAngleDown,
   faListUl,
   faKeyboard
 } from "@fortawesome/free-solid-svg-icons";
@@ -13,7 +12,6 @@ import {
   IconButton as DesktopPlayPauseButton,
   IconButton as ExpandPlayerButton,
   IconButton as ForwardButton,
-  IconButton,
   PlayPauseButton,
   IconButton as QueueButton
 } from "./buttons";
@@ -69,10 +67,6 @@ const MinifiedPlayer = ({
     return `${styles.playerImage} ${source === "youtube" && styles.ytImage}`;
   }
 
-  function getOverlayClassName() {
-    return `${styles.imageOverlay} ${source === "youtube" && styles.ytOverlay}`;
-  }
-
   return (
     <div className={styles.playerAndSeekContainer}>
       <ProgressBar
@@ -98,12 +92,6 @@ const MinifiedPlayer = ({
 
       {/* DESKTOP */}
       <div className={styles.desktopPlayerWrapper}>
-        <span className={getOverlayClassName()}>
-          <IconButton
-            icon={isExpanded ? faAngleDown : faAngleUp}
-            onClick={handleToggleExpand}
-          />
-        </span>
         <div className={styles.nowPlaying}>
           <Image
             src={getImgUrl(currentTrack, "md")}

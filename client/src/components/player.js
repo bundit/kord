@@ -1,12 +1,15 @@
 import { CSSTransition } from "react-transition-group";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useRef } from "react";
 import ReactHowler from "react-howler";
 import raf from "raf";
 
-import { IconButton as DesktopToggleExpandButton } from "./buttons";
+import {
+  IconButton as DesktopExpandButton,
+  IconButton as DesktopMinimizeButton
+} from "./buttons";
 import { keepWithinVolumeRange } from "../utils/formattingHelpers";
 import {
   nextTrack,
@@ -219,7 +222,7 @@ export const Player = () => {
         return handleToggleControls();
       }
       default: {
-        if (key >= 1 || key <= 9) {
+        if (key >= 1 && key <= 9) {
           handleSeek(Math.floor(duration * (key / 10)));
         }
         return;
@@ -348,21 +351,32 @@ export const Player = () => {
         onAccountError={handleSpotifyAccountError}
         controls={{ play: handlePlay, pause: handlePause }}
       />
+      <div className={isExpanded ? styles.ytExpandedContainer : undefined}>
+        <YoutubePlayer
+          volume={volume}
+          forwardRef={youtubePlayer}
+          onEnd={handleOnEnd}
+          playerIsExpanded={isExpanded}
+        />
+      </div>
 
-      <YoutubePlayer
-        volume={volume}
-        forwardRef={youtubePlayer}
-        onEnd={handleOnEnd}
-        playerIsExpanded={isExpanded}
-      />
-
-      <DesktopToggleExpandButton
+      <DesktopMinimizeButton
         onClick={toggleExpand}
         icon={faAngleDown}
-        className={styles.desktopCloseExpandedPlayerButton}
-        style={{
-          display: !isExpanded && "none"
-        }}
+        className={`${
+          currentTrack.source === "youtube"
+            ? styles.desktopExpandPlayerButtonYT
+            : styles.desktopExpandPlayerButton
+        } ${isExpanded && styles.headerExpandButton}`}
+      />
+      <DesktopExpandButton
+        onClick={toggleExpand}
+        icon={isExpanded ? faAngleDown : faAngleUp}
+        className={`${
+          currentTrack.source === "youtube"
+            ? styles.desktopExpandPlayerButtonYT
+            : styles.desktopExpandPlayerButton
+        }`}
       />
     </>
   );
