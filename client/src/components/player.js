@@ -18,7 +18,8 @@ import {
   prevTrack,
   setMuted,
   setSeek,
-  setVolume
+  setVolume,
+  toggleExpandedPlayer
 } from "../redux/actions/playerActions";
 import { setTrackUnstreamable } from "../redux/actions/libraryActions";
 import {
@@ -48,9 +49,9 @@ export const Player = () => {
   const isMuted = useSelector(state => state.player.isMuted);
   const isPlaying = useSelector(state => state.player.isPlaying);
   let volume = useSelector(state => state.player.volume);
+  const isPlayerExpanded = useSelector(state => state.player.isPlayerExpanded);
 
   const [isSpotifySdkReady, setIsSpotifySdkReady] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [userSeekPos, setUserSeekPos] = useState(0);
   const [isUserSeeking, setIsUserSeeking] = useState(false);
   const [userVolumeValue, setUserVolumeValue] = useState(volume);
@@ -128,7 +129,8 @@ export const Player = () => {
   }
 
   function toggleExpand(e) {
-    setIsExpanded(!isExpanded);
+    // setIsExpanded(!isExpanded);
+    dispatch(toggleExpandedPlayer());
 
     if (e) {
       e.stopPropagation();
@@ -289,7 +291,7 @@ export const Player = () => {
 
       {/* Expanded music player */}
       <MinifiedPlayer
-        isExpanded={isExpanded}
+        isExpanded={isPlayerExpanded}
         handleToggleExpand={toggleExpand}
         handlePlayPause={handlePlayPause}
         isUserSeeking={isUserSeeking}
@@ -307,7 +309,7 @@ export const Player = () => {
       />
 
       <CSSTransition
-        in={isExpanded}
+        in={isPlayerExpanded}
         timeout={250}
         classNames={slideTransition}
         unmountOnExit
@@ -357,12 +359,14 @@ export const Player = () => {
         onAccountError={handleSpotifyAccountError}
         controls={{ play: handlePlay, pause: handlePause }}
       />
-      <div className={isExpanded ? styles.ytExpandedContainer : undefined}>
+      <div
+        className={isPlayerExpanded ? styles.ytExpandedContainer : undefined}
+      >
         <YoutubePlayer
           volume={volume}
           forwardRef={youtubePlayer}
           onEnd={handleOnEnd}
-          playerIsExpanded={isExpanded}
+          playerIsExpanded={isPlayerExpanded}
         />
       </div>
 
@@ -373,11 +377,11 @@ export const Player = () => {
           currentTrack.source === "youtube"
             ? styles.desktopExpandPlayerButtonYT
             : styles.desktopExpandPlayerButton
-        } ${isExpanded && styles.headerExpandButton}`}
+        } ${isPlayerExpanded && styles.headerExpandButton}`}
       />
       <DesktopExpandButton
         onClick={toggleExpand}
-        icon={isExpanded ? faAngleDown : faAngleUp}
+        icon={isPlayerExpanded ? faAngleDown : faAngleUp}
         className={`${
           currentTrack.source === "youtube"
             ? styles.desktopExpandPlayerButtonYT

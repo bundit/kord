@@ -61,7 +61,6 @@ const ExpandedPlayer = ({
       <div className={styles.nowPlaying}>
         <TrackInfo
           track={currentTrack}
-          handleArtistClick={handleToggleExpand}
         />
       </div>
       <div className={styles.seekBarWrapper}>

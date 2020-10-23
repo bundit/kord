@@ -1,10 +1,21 @@
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import React from "react";
 
+import { collapsePlayer } from "../redux/actions/playerActions";
 import styles from "../styles/track-item.module.scss";
 
 const TrackInfo = ({ track, isPlayer, isForm, handleArtistClick }) => {
+  const dispatch = useDispatch();
   const artists = Array.isArray(track.artist) ? track.artist : [track.artist];
+
+  function onArtistClick() {
+    dispatch(collapsePlayer());
+
+    if (handleArtistClick) {
+      handleArtistClick();
+    }
+  }
 
   return (
     <div
@@ -26,7 +37,7 @@ const TrackInfo = ({ track, isPlayer, isForm, handleArtistClick }) => {
                 to={`/app/search/artist/${track.source}/${
                   artist.id
                 }/${encodeURIComponent(artist.name)}`}
-                onClick={handleArtistClick}
+                onClick={onArtistClick}
               >
                 {artist.name}
               </Link>

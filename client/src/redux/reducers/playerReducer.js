@@ -2,6 +2,7 @@ import {
   ADD_TRACK_TO_USER_QUEUE,
   APPEND_QUEUE,
   CLEAR_REST_OF_QUEUE,
+  COLLAPSE_PLAYER,
   NEXT_TRACK,
   PAUSE,
   PLAY,
@@ -20,7 +21,8 @@ import {
   SET_SEEK,
   SET_TRACK,
   SET_TRACK_UNSTREAMABLE,
-  SET_VOLUME
+  SET_VOLUME,
+  TOGGLE_EXPANDED_PLAYER
 } from "../actions/types";
 
 const initialState = {
@@ -47,7 +49,8 @@ const initialState = {
     id: "id"
   },
   nextHref: null,
-  seekAmount: 15
+  seekAmount: 15,
+  isPlayerExpanded: false
 };
 
 export default function(state = initialState, action) {
@@ -362,6 +365,22 @@ export default function(state = initialState, action) {
       }
 
       return state;
+    }
+
+    case TOGGLE_EXPANDED_PLAYER: {
+      const isPlayerExpanded = state.isPlayerExpanded;
+
+      return {
+        ...state,
+        isPlayerExpanded: !isPlayerExpanded
+      };
+    }
+
+    case COLLAPSE_PLAYER: {
+      return {
+        ...state,
+        isPlayerExpanded: false
+      };
     }
 
     default:

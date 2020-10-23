@@ -2,6 +2,7 @@ import {
   ADD_TRACK_TO_USER_QUEUE,
   APPEND_QUEUE,
   CLEAR_REST_OF_QUEUE,
+  COLLAPSE_PLAYER,
   NEXT_TRACK,
   PAUSE,
   PLAY,
@@ -18,7 +19,8 @@ import {
   SET_RELATED_TRACKS,
   SET_SEEK,
   SET_TRACK,
-  SET_VOLUME
+  SET_VOLUME,
+  TOGGLE_EXPANDED_PLAYER
 } from "./types";
 import { capitalizeWord } from "../../utils/formattingHelpers";
 import { fetchGeneric } from "../../utils/fetchGeneric";
@@ -58,7 +60,10 @@ export function play() {
   if (silentPlayer) {
     silentPlayer.play();
   }
-  navigator.mediaSession.playbackState = "playing";
+
+  if (navigator.mediaSession) {
+    navigator.mediaSession.playbackState = "playing";
+  }
 
   return {
     type: PLAY
@@ -70,7 +75,10 @@ export function pause() {
   if (silentPlayer) {
     silentPlayer.pause();
   }
-  navigator.mediaSession.playbackState = "paused";
+
+  if (navigator.mediaSession) {
+    navigator.mediaSession.playbackState = "paused";
+  }
 
   return {
     type: PAUSE
@@ -238,6 +246,18 @@ export function clearRestOfQueue(whichQueue) {
   return {
     type: CLEAR_REST_OF_QUEUE,
     payload: whichQueue
+  };
+}
+
+export function toggleExpandedPlayer() {
+  return {
+    type: TOGGLE_EXPANDED_PLAYER
+  };
+}
+
+export function collapsePlayer() {
+  return {
+    type: COLLAPSE_PLAYER
   };
 }
 
