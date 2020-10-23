@@ -3,39 +3,55 @@ import React from "react";
 
 import { SOURCES } from "../utils/constants";
 import { capitalizeWord, filterUnconnected } from "../utils/formattingHelpers";
+import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
 import PlaylistList from "./playlist-list";
 import styles from "../styles/library-view-page.module.scss";
 
 const LibraryViewPage = () => {
-  let playlists = useSelector(state => state.library.playlists);
+  const playlists = useSelector(state => state.library.playlists);
+
+  const playlistSections = [
+    {
+      title: "Favorited Playlists",
+      playlists: flattenPlaylistObject(playlists).filter(
+        playlist => playlist.isStarred
+      )
+    },
+    ...SOURCES.map(source => ({
+      title: `${capitalizeWord(source)} Playlists`,
+      playlists: filterUnconnectedAndStarred(playlists[source])
+    }))
+  ];
 
   return (
     <div className={styles.pageWrapper}>
-      {SOURCES.map(source => (
+      {playlistSections.map(section => (
         <PlaylistSection
-          source={source}
-          playlists={filterUnconnected(playlists[source])}
-          key={`Lib:${source}:Title`}
+          title={section.title}
+          playlists={section.playlists}
+          key={`Lib:${section.title}:Title`}
         />
       ))}
     </div>
   );
 };
 
-function PlaylistSection({ source, playlists }) {
+function filterUnconnectedAndStarred(playlists) {
+  return filterUnconnected(playlists).filter(playlist => !playlist.isStarred);
+}
+
+function PlaylistSection({ title, playlists }) {
   if (!playlists || !playlists.length) {
     return null;
   }
 
-  const playlistSectionTitle = `${capitalizeWord(source)} Playlists`;
-
   return (
-    <div className={styles.pageSectionWrapper}>
-      <h2 className={styles.sectionTitle}>{playlistSectionTitle}</h2>
+    <section className={styles.pageSectionWrapper}>
+      <h2 className={styles.sectionTitle}>{title}</h2>
       <div className={styles.playlistList}>
-        <PlaylistList key={`Lib:${source}`} playlists={playlists} />
+        <PlaylistList key={`Lib:${title}`} playlists={playlists} />
       </div>
-    </div>
+    </section>
   );
 }
 
