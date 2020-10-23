@@ -129,7 +129,10 @@ export const Player = () => {
 
   function toggleExpand(e) {
     setIsExpanded(!isExpanded);
-    e.stopPropagation();
+
+    if (e) {
+      e.stopPropagation();
+    }
   }
 
   // This gets fired when the user is manually seeking using the slider
@@ -211,6 +214,9 @@ export const Player = () => {
           dispatch(setVolume(volumeDown));
         }
         return;
+      }
+      case "f": {
+        return toggleExpand();
       }
       case "m": {
         return handleToggleMute();

@@ -38,7 +38,8 @@ const ControlsModal = () => {
     { title: "Volume Up", keys: ["Shift", faArrowUp] },
     { title: "Volume Down", keys: ["Shift", faArrowDown] },
     { title: "Show / Hide Queue", keys: ["Q"] },
-    { title: "Show / Hide Controls", keys: ["H"] }
+    { title: "Show / Hide Controls", keys: ["H"] },
+    { title: "Expand / Collapse Player", keys: ["F"] }
   ];
 
   return (
