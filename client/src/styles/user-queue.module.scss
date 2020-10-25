@@ -1,7 +1,16 @@
 @import "variables";
 
 .queueWrapper {
-  display: none;
+  position: fixed;
+  width: 400px;
+  bottom: 15px;
+  right: 15px;
+  z-index: 4;
+
+  background-color: $bg7;
+  border: 1px $borderAccent solid;
+  border-radius: 7px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
 
   .queueTitle {
     margin: 15px 5px 0px 5px;
@@ -27,10 +36,5 @@
     bottom: 95px;
     right: 15px;
     max-height: 65vh;
-
-    background-color: $bg7;
-    border: 1px $borderAccent solid;
-    border-radius: 7px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   }
 }

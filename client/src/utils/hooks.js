@@ -214,9 +214,26 @@ export function useKeepSessionAlive() {
 const keysPressed = {};
 
 export function useKeyControls(handleKeyControls) {
+  const controlList = [
+    " ",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowUp",
+    "ArrowDown",
+    "f",
+    "m",
+    "q",
+    "h",
+    "Shift"
+  ];
+
   useEffect(() => {
     window.onkeydown = e => {
       const { key } = e;
+
+      if (controlList.includes(key)) {
+        e.preventDefault();
+      }
 
       if (keysPressed[key] && key !== "Shift") {
         // Prevent holding down key rapid fire
@@ -231,7 +248,7 @@ export function useKeyControls(handleKeyControls) {
     window.onkeyup = e => {
       delete keysPressed[e.key];
     };
-  }, [handleKeyControls]);
+  }, [controlList, handleKeyControls]);
 }
 
 export function useSetDocumentTitle() {
