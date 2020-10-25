@@ -346,7 +346,9 @@ export const fetchSpotifyArtistTracks = (
   tries = 3
 ) => dispatch => {
   return spotifyApi
-    .search(`artist:${artistName}`, ["track"], { artist: artistId })
+    .search(`artist:${decodeURIComponent(artistName)}`, ["track"], {
+      artist: artistId
+    })
 
     .then(({ tracks }) => ({
       tracks: mapJsonToTracks(tracks, true),

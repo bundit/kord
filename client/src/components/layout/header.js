@@ -67,7 +67,7 @@ function Header({ location }) {
           <div className={styles.placeholder}>
             <MobileBackButton pathname={pathname} />
           </div>
-          <h1>{title.length ? title : "kord"}</h1>
+          <h1>{title.length ? decodeURIComponent(title) : "kord"}</h1>
           <div className={styles.placeholder} />
         </div>
 
