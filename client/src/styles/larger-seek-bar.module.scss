@@ -1,0 +1,33 @@
+@import "./seek-bar.module.scss";
+@import "variables";
+
+.progressContainer {
+  height: 8px;
+  flex: 1;
+
+  .seekBar {
+    display: block;
+  }
+
+  .progressBar {
+    background-color: $primaryDark;
+  }
+
+  &:hover {
+    .progressBar,
+    .progressTrack {
+      transform: none;
+    }
+
+    .progressBar {
+      background-color: $primary;
+    }
+  }
+
+  .progressTrack,
+  .progressBar,
+  .progressBarMask {
+    height: 8px;
+    border-radius: 10px;
+  }
+}

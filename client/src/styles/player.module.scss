@@ -240,12 +240,11 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
 
-    > span:nth-of-type(2) {
+    > span:first-of-type,
+    > span:last-of-type {
       padding: 0 10px;
-      input {
-        width: 50vw;
-      }
     }
   }
 

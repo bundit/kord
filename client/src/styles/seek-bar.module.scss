@@ -1,0 +1,212 @@
+@import "variables";
+
+.progressContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 0px;
+
+  &:hover {
+    .progressBar,
+    .progressTrack {
+      transform: scaleY(10);
+    }
+
+    .progressBar {
+      background: $primaryLight;
+    }
+
+    ~ .desktopPlayerWrapper .timeContainer {
+      color: $primaryLightest;
+    }
+  }
+
+  .seekBar {
+    display: none;
+    background: transparent;
+  }
+
+  .progressBar,
+  .progressTrack {
+    position: absolute;
+    height: 1px;
+    bottom: 0px;
+    left: 0;
+    transition: 0.35s ease-out;
+    pointer-events: none;
+    backface-visibility: hidden;
+    filter: grayscale(1%);
+  }
+
+  .progressTrack {
+    width: 100%;
+    background-color: $borderAccent;
+    z-index: 1;
+  }
+
+  .progressBar {
+    background-color: $primary;
+    z-index: 2;
+  }
+
+  .thumb {
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background: linear-gradient(
+      330deg,
+      rgba(255, 187, 17, 1) 0%,
+      rgba(255, 200, 66, 1) 50%,
+      rgba(255, 255, 255, 1) 100%
+    );
+    z-index: 3;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+// .progressContainer:hover ~ .desktopPlayerWrapper .timeContainer {
+//   color: $primaryLightest;
+// }
+
+.timeContainer {
+  min-width: 38px;
+}
+
+.timeContainer {
+  font-size: 11px;
+  transition: 0.2s linear;
+  color: #bbb;
+}
+
+input[type="range"].seekBar {
+  -webkit-appearance: none;
+  width: 100%;
+  opacity: 0;
+  min-height: 20px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+input[type="range"].seekBar:focus {
+  outline: none;
+}
+
+input[type="range"].seekBar::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  background: $borderAccent;
+}
+
+input[type="range"].seekBar::-webkit-slider-thumb {
+  height: 1px;
+  width: 1px;
+  background: $borderAccent;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+input[type="range"].seekBar:focus::-webkit-slider-runnable-track {
+  background: $borderAccent;
+}
+
+input[type="range"].seekBar::-moz-range-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  background: $borderAccent;
+}
+
+input[type="range"].seekBar::-moz-range-thumb {
+  height: 1px;
+  width: 1px;
+  background: $borderAccent;
+  cursor: pointer;
+}
+
+input[type="range"].seekBar::-ms-track {
+  width: 100%;
+  height: 1px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+input[type="range"].seekBar::-ms-fill-lower {
+  background: #fcfcfc;
+}
+
+input[type="range"].seekBar::-ms-fill-upper {
+  background: $borderAccent;
+  border: 0.2px solid #010101;
+}
+
+input[type="range"].seekBar::-ms-thumb {
+  height: 1px;
+  width: 10px;
+  background: $borderAccent;
+  cursor: pointer;
+  height: 5px;
+}
+
+input[type="range"].seekBar:focus::-ms-fill-lower {
+  background: $borderAccent;
+}
+
+input[type="range"].seekBar:focus::-ms-fill-upper {
+  background: $borderAccent;
+}
+
+.seekToolTip {
+  position: absolute;
+  width: 50px;
+  height: 40px;
+  bottom: 15px;
+  text-align: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hoverTime {
+  position: absolute;
+  width: 50px;
+  height: 25px;
+  bottom: 5px;
+  left: 0;
+  padding: 2px 4px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-weight: 600;
+  color: $primaryLightest;
+  background-color: $bg0;
+  transition: 0.25s ease-in;
+  transform: translateY(40px);
+}
+
+.isHovering {
+  transform: translateY(0px);
+}
+
+@media (min-width: 800px) {
+  .progressContainer {
+    position: absolute;
+    top: -10px;
+    width: 100%;
+    height: 20px;
+    z-index: 1;
+
+    .seekBar {
+      display: block;
+      position: absolute;
+      bottom: 0px;
+    }
+
+    .progressBar,
+    .progressTrack {
+      bottom: 9px;
+    }
+  }
+}

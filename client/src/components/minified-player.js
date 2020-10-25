@@ -4,7 +4,7 @@ import {
   faKeyboard
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState, useRef } from "react";
+import React from "react";
 
 import {
   IconButton as BackwardButton,
@@ -26,9 +26,10 @@ import {
   toggleUserQueue
 } from "../redux/actions/userActions";
 import Image from "./image";
+import SeekBar from "./seek-bar";
 import TrackInfo from "./track-info";
 import VolumeControls from "./volume-controls";
-import progressBarStyles from "../styles/progressBar.module.css";
+import seekBarStyles from "../styles/seek-bar.module.scss";
 import styles from "../styles/player.module.scss";
 
 const MinifiedPlayer = ({
@@ -69,7 +70,7 @@ const MinifiedPlayer = ({
 
   return (
     <div className={styles.playerAndSeekContainer}>
-      <ProgressBar
+      <SeekBar
         isUserSeeking={isUserSeeking}
         userSeekPos={userSeekPos}
         handleOnChangeUserSeek={handleOnChangeUserSeek}
@@ -91,7 +92,9 @@ const MinifiedPlayer = ({
       </div>
 
       {/* DESKTOP */}
-      <div className={styles.desktopPlayerWrapper}>
+      <div
+        className={`${styles.desktopPlayerWrapper} ${seekBarStyles.desktopPlayerWrapper}`}
+      >
         <div className={styles.nowPlaying}>
           <Image
             src={getImgUrl(currentTrack, "md")}
@@ -103,7 +106,7 @@ const MinifiedPlayer = ({
 
         <div className={styles.backPlayForwardWrapper}>
           <span
-            className={progressBarStyles.timeContainer}
+            className={seekBarStyles.timeContainer}
             style={{ textAlign: "right" }}
           >
             {secondsToFormatted(isUserSeeking ? userSeekPos : seek || 0)}
@@ -117,7 +120,7 @@ const MinifiedPlayer = ({
           <ForwardButton onClick={handleNext}>
             <ForwardIcon />
           </ForwardButton>
-          <span className={progressBarStyles.timeContainer}>
+          <span className={seekBarStyles.timeContainer}>
             {secondsToFormatted(duration || 0)}
           </span>
         </div>
@@ -145,104 +148,5 @@ const MinifiedPlayer = ({
     </div>
   );
 };
-
-function ProgressBar({
-  isUserSeeking,
-  userSeekPos,
-  handleOnChangeUserSeek,
-  handleMouseDownSeek,
-  handleMouseUpSeek
-}) {
-  const duration = useSelector(state => state.player.duration);
-  const seek = useSelector(state => state.player.seek);
-  const [isUserHovering, setIsUserHovering] = useState(false);
-  const [hoverOffset, setHoverOffset] = useState(0);
-  const seekWrap = useRef(null);
-
-  function getPositionOnHover(e) {
-    setIsUserHovering(true);
-
-    const parentEl = e.target.getClientRects()[0];
-
-    if (parentEl) {
-      const elementLeftOffset = e.target.offsetLeft + e.clientX - parentEl.left;
-      setHoverOffset(elementLeftOffset);
-    }
-  }
-
-  function handleMouseOut() {
-    setIsUserHovering(false);
-  }
-
-  const progressPercent = calculateProgressPercentage(
-    seek,
-    userSeekPos,
-    isUserSeeking,
-    duration
-  );
-  const timeRatio = calculateTimeRatioFromHoverPosition(
-    hoverOffset,
-    seekWrap.current && seekWrap.current.offsetWidth,
-    duration
-  );
-
-  return (
-    <div
-      className={progressBarStyles.progressContainer}
-      ref={seekWrap}
-      onMouseMove={getPositionOnHover}
-      onMouseOut={handleMouseOut}
-    >
-      <input
-        className={progressBarStyles.desktopSeekBar}
-        type="range"
-        min="0"
-        max={parseInt(duration || 0)}
-        step="any"
-        value={isUserSeeking ? userSeekPos : seek || 0}
-        onChange={handleOnChangeUserSeek}
-        onMouseDown={handleMouseDownSeek}
-        onMouseUp={handleMouseUpSeek}
-      />
-      <span className={progressBarStyles.progressTrack}></span>
-      <span
-        className={progressBarStyles.progressBar}
-        style={{ width: progressPercent }}
-      ></span>
-      <span
-        className={progressBarStyles.seekToolTip}
-        style={{ left: `${hoverOffset - 20}px` }}
-      >
-        <span
-          className={`${progressBarStyles.hoverTime} ${isUserHovering &&
-            progressBarStyles.isHovering}`}
-        >
-          {secondsToFormatted(timeRatio || 0)}
-        </span>
-      </span>
-    </div>
-  );
-}
-
-function calculateProgressPercentage(
-  seek,
-  userSeekPos,
-  isUserSeeking,
-  duration
-) {
-  const progress = (isUserSeeking ? userSeekPos : seek) / duration;
-
-  return `${progress * 100}%`;
-}
-
-function calculateTimeRatioFromHoverPosition(
-  hoverOffset,
-  containerWidth,
-  duration
-) {
-  const hoverRatio = Number(hoverOffset) / Number(containerWidth);
-
-  return hoverRatio * duration;
-}
 
 export default MinifiedPlayer;

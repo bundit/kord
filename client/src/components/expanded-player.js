@@ -15,8 +15,8 @@ import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import { getImgUrl } from "../utils/getImgUrl";
 import { secondsToFormatted } from "../utils/formattingHelpers";
 import Image from "./image";
+import SeekBar from "./seek-bar";
 import TrackInfo from "./track-info";
-import progressBarStyles from "../styles/progressBar.module.css";
 import styles from "../styles/player.module.scss";
 
 const ExpandedPlayer = ({
@@ -59,31 +59,21 @@ const ExpandedPlayer = ({
       </div>
       {/* SEEK INPUT */}
       <div className={styles.nowPlaying}>
-        <TrackInfo
-          track={currentTrack}
-        />
+        <TrackInfo track={currentTrack} />
       </div>
-      <div className={styles.seekBarWrapper}>
+      <div className={styles.seekBarWrapper} style={{ alignSelf: "stretch" }}>
         <span>
-          {isUserSeeking
-            ? secondsToFormatted(userSeekPos)
-            : secondsToFormatted(seek)}
+          {secondsToFormatted(isUserSeeking ? userSeekPos : seek || 0)}
         </span>
-        <span className={styles.sliderContainer}>
-          <input
-            type="range"
-            min="0"
-            max={duration}
-            step="any"
-            className={progressBarStyles.mobileSeekRange}
-            value={isUserSeeking ? userSeekPos : seek}
-            onChange={handleOnChangeUserSeek}
-            onMouseDown={handleMouseDownSeek}
-            onMouseUp={handleMouseUpSeek}
-            onTouchStart={handleMouseDownSeek}
-            onTouchEnd={handleMouseUpSeek}
-          />
-        </span>
+        <SeekBar
+          isUserSeeking={isUserSeeking}
+          userSeekPos={userSeekPos}
+          handleOnChangeUserSeek={handleOnChangeUserSeek}
+          handleMouseDownSeek={handleMouseDownSeek}
+          handleMouseUpSeek={handleMouseUpSeek}
+          isLargerSeekBar
+          withThumb
+        />
         <span>{secondsToFormatted(duration)}</span>
       </div>
       <div className={styles.mobileBackPlayForwardWrapper}>
