@@ -250,3 +250,13 @@ export function useSetDocumentTitle() {
     }
   }, [currentPage, currentTrack, isPlaying]);
 }
+
+export function useClearSessionStorageOnRefresh() {
+  useEffect(() => {
+    window.onbeforeunload = function(e) {
+      sessionStorage.clear();
+
+      e.preventDefault();
+    };
+  }, []);
+}

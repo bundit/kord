@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/react";
 
 import { closeSettings, updateProfile } from "./redux/actions/userActions";
 import {
+  useClearSessionStorageOnRefresh,
   useHashParamDetectionOnLoad,
   useKeepSessionAlive
 } from "./utils/hooks";
@@ -27,6 +28,7 @@ const App = () => {
 
   useHashParamDetectionOnLoad();
   useKeepSessionAlive();
+  useClearSessionStorageOnRefresh();
 
   const isSettingsOpen = useSelector(
     state => state.user.settings.isSettingsOpen
