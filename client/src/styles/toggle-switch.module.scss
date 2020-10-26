@@ -1,0 +1,44 @@
+@import "variables";
+
+.toggleWrapper {
+  width: 50px;
+  height: 30px;
+  border-radius: 20px;
+  background-color: $bg14;
+  position: relative;
+  cursor: pointer;
+  transition: 0.2s linear;
+
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  .switch {
+    position: absolute;
+    min-height: 20px;
+    min-width: 20px;
+    border-radius: 50%;
+    top: 50%;
+    opacity: 0.7;
+    transition: 0.15s linear;
+  }
+
+  .off {
+    @extend .switch;
+    transform: translate(5px, -50%);
+    background-color: #aaa;
+  }
+
+  .on {
+    @extend .switch;
+    transform: translate(calc(100% - 5px + 10px), -50%);
+    background-color: $primary;
+  }
+
+  &:hover {
+    background-color: $bg16;
+    .switch {
+      opacity: 1;
+    }
+  }
+}
