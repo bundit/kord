@@ -28,6 +28,7 @@ import { fetchSoundcloudProfileAndPlaylists } from "../redux/actions/soundcloudA
 import { openSettings, removeUserProfile } from "../redux/actions/userActions";
 import { reorder } from "../utils/reorder";
 import Image from "./image";
+import KordSettings from "./kord-settings";
 import LoadingSpinner from "./loading-spinner";
 import Modal from "./modal";
 import avatarImg from "../assets/avatar-placeholder.png";
@@ -162,6 +163,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   }
 
   function handleChangeSettingsTab(e) {
+    onSubmit();
     dispatch(openSettings(e.currentTarget.value));
   }
 
@@ -202,7 +204,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
       />
 
       {source === "kord" ? (
-        <div>kord settings placeholder</div>
+        <KordSettings />
       ) : !isConnected && source !== "soundcloud" ? (
         <ConnectSourceLink source={source} />
       ) : (

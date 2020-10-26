@@ -10,6 +10,7 @@ import {
   PREV_TRACK,
   REMOVE_TRACK_FROM_QUEUE,
   SEEK,
+  SET_AUTOPLAY,
   SET_CONTEXT,
   SET_DURATION,
   SET_MUTED,
@@ -50,7 +51,8 @@ const initialState = {
   },
   nextHref: null,
   seekAmount: 15,
-  isPlayerExpanded: false
+  isPlayerExpanded: false,
+  allowAutoPlay: true
 };
 
 export default function(state = initialState, action) {
@@ -380,6 +382,15 @@ export default function(state = initialState, action) {
       return {
         ...state,
         isPlayerExpanded: false
+      };
+    }
+
+    case SET_AUTOPLAY: {
+      const allowAutoPlay = action.payload;
+
+      return {
+        ...state,
+        allowAutoPlay
       };
     }
 

@@ -10,6 +10,7 @@ import {
   PREV_TRACK,
   REMOVE_TRACK_FROM_QUEUE,
   SEEK,
+  SET_AUTOPLAY,
   SET_CONTEXT,
   SET_DURATION,
   SET_MUTED,
@@ -122,7 +123,17 @@ function nextTrackAction() {
 export const nextTrack = () => dispatch => {
   let state = store.getState();
   let { index, userQueueIndex, relatedTracksIndex } = state.player;
-  const { queue, userQueue, currentTrack, relatedTracks } = state.player;
+  const {
+    queue,
+    userQueue,
+    currentTrack,
+    relatedTracks,
+    allowAutoPlay
+  } = state.player;
+
+  if (!allowAutoPlay) {
+    return dispatch(nextTrackAction());
+  }
 
   // Check if more tracks need to be loaded or not
   do {
@@ -148,7 +159,6 @@ export const nextTrack = () => dispatch => {
     userQueueIndex < userQueue.length ||
     relatedTracksIndex < relatedTracks.length;
 
-  // if (index >= queue.length && userQueueIndex >= userQueue.length) {
   if (!hasTracksLeftInAnyQueue) {
     return dispatch(loadMoreQueueTracks())
       .catch(() =>
@@ -258,6 +268,13 @@ export function toggleExpandedPlayer() {
 export function collapsePlayer() {
   return {
     type: COLLAPSE_PLAYER
+  };
+}
+
+export function setAutoPlay(allowAutoPlay) {
+  return {
+    type: SET_AUTOPLAY,
+    payload: allowAutoPlay
   };
 }
 
