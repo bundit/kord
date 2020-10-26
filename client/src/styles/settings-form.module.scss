@@ -13,8 +13,13 @@
   display: flex;
   padding: 25px 35px 0 35px;
 
+  img {
+    height: 70px;
+    width: 70px;
+    min-width: 70px;
+  }
+
   .profileLinkWrapper {
-    max-width: inherit;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -29,10 +34,11 @@
 
 // Child of profileWrap
 .profileDetails {
+  width: calc(100% - 160px);
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  margin-left: 15px;
+  margin: 0 15px;
   flex: 1;
 
   svg {

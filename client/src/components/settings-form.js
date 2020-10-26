@@ -218,7 +218,6 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
             <Image
               src={settings && settings.image ? settings.image : avatarImg}
               alt={`${source}-profile-pic`}
-              style={{ height: "70px", width: "70px", boxSizing: "border-box" }}
             />
 
             <div className={styles.profileDetails}>
