@@ -38,6 +38,7 @@ import styles from "../styles/settings-form.module.scss";
 const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   const user = useSelector(state => state.user);
   const playlists = useSelector(state => state.library.playlists);
+  const mainConnection = useSelector(state => state.user.kord.mainConnection);
   const isConnected = source && user[source] ? user[source].isConnected : null;
   const alert = useAlert();
   const dispatch = useDispatch();
@@ -168,6 +169,10 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   }
 
   function handleRemoveAccount() {
+    if (mainConnection === source) {
+      return alert.error("Cannot remove main connection");
+    }
+
     const hasConfirmed = window.confirm("Are you sure?");
 
     if (hasConfirmed) {
