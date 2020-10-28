@@ -71,6 +71,10 @@ export const Player = () => {
   usePauseIfSdkNotReady(currentTrack, isPlaying, isSpotifySdkReady);
 
   const renderSeekPos = React.useCallback(() => {
+    if (!isPlaying) {
+      return raf.cancel(theRaf.current);
+    }
+
     const { source: currentSource } = currentTrack;
     let currentPos;
 
@@ -94,11 +98,11 @@ export const Player = () => {
     }
 
     theRaf.current = raf(renderSeekPos);
-  }, [currentTrack, dispatch]);
+  }, [isPlaying, currentTrack, dispatch]);
 
-  useRenderSeekPosition(currentTrack, theRaf, renderSeekPos, isPlaying);
   useDetectMediaSession();
   useSetDocumentTitle();
+  useRenderSeekPosition(currentTrack, theRaf, renderSeekPos, isPlaying);
 
   function handlePlay() {
     dispatch(play());

@@ -54,6 +54,7 @@ export const playTrack = (index, tracklist, nextHref, context) => dispatch => {
   dispatch(setRelatedTracks([]));
   dispatch(setNextQueueHref(nextHref));
   dispatch(setContext(context));
+  dispatch(play());
 };
 
 export function play() {

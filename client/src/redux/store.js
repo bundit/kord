@@ -1,12 +1,13 @@
 import { applyMiddleware, createStore, compose } from "redux";
+import { initStateWithPrevTab } from "redux-state-sync";
 import thunk from "redux-thunk";
 
 import { loadState } from "../utils/localStorage";
-import { synchronizeDataStore } from "./sync";
+import { synchronizeDataStore, tabSyncMiddleware } from "./sync";
 import rootReducer from "./reducers";
 
 const persistedState = loadState();
-const middlewares = [thunk];
+const middlewares = [thunk, tabSyncMiddleware()];
 
 const composeEnhancers =
   (process.env.NODE_ENV !== "production" &&
@@ -19,6 +20,7 @@ const store = createStore(
   composeEnhancers(applyMiddleware(...middlewares))
 );
 
-synchronizeDataStore(store);
+initStateWithPrevTab(store); // redux-state-sync
+synchronizeDataStore(store); // local state => server
 
 export default store;

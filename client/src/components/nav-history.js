@@ -22,7 +22,8 @@ const NavHistory = () => {
     }
 
     dispatch(saveRoute(relativeRoute, pathname));
-  }, [dispatch, history, location]);
+    // eslint-disable-next-line
+  }, [dispatch, location]);
 
   return null;
 };

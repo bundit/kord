@@ -92,9 +92,7 @@ export default function(state = initialState, action) {
     case SET_TRACK: {
       return {
         ...state,
-        isPlaying: true,
-        currentTrack: action.payload,
-        isLoaded: false
+        currentTrack: action.payload
       };
     }
 
