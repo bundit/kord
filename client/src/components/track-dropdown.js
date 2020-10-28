@@ -21,7 +21,7 @@ import styles from "../styles/track-item.module.scss";
 const TrackDropdown = ({
   toggleDropdown,
   track,
-  search,
+  isFromSearch,
   trackIndex,
   playlistId,
   isFromQueue
@@ -83,7 +83,7 @@ const TrackDropdown = ({
             </span>
             <span>Add to Playlist</span>
           </button>
-          {!search && !isFromQueue && (
+          {!isFromSearch && !isFromQueue && (
             <button
               className={styles.dropdownOption}
               onClick={handleRemoveTrack}
@@ -134,8 +134,25 @@ function getTrackExternalLink(track) {
 
 TrackDropdown.propTypes = {
   toggleDropdown: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  track: PropTypes.object.isRequired
+  track: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    duration: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+      .isRequired,
+    artist: PropTypes.oneOfType([
+      PropTypes.shape({ name: PropTypes.string.isRequired }),
+      PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string.isRequired }))
+    ])
+  }).isRequired,
+  trackIndex: PropTypes.number.isRequired,
+  playlistId: PropTypes.string,
+  isFromSearch: PropTypes.bool,
+  isFromQueue: PropTypes.bool
+};
+
+TrackDropdown.defaultProps = {
+  playlistId: "",
+  isFromSearch: false,
+  isFromQueue: false
 };
 
 export default TrackDropdown;

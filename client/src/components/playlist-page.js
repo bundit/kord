@@ -2,7 +2,7 @@ import { forceCheck } from "react-lazyload";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 
 import { capitalizeWord } from "../utils/formattingHelpers";
 import {
@@ -33,7 +33,6 @@ function PlaylistPage() {
   const scrollContainer = useRef(null);
   const playlists = useSelector(state => state.library.playlists);
   const isPlaying = useSelector(state => state.player.isPlaying);
-  const currentTrackId = useSelector(state => state.player.currentTrack.id);
   const context = useSelector(state => state.player.context);
   const [numShowTracks, setNumShowTracks] = useState(playlistIncrementAmount);
   const [hasRefreshed, setHasRefreshed] = useState(false);
@@ -138,8 +137,6 @@ function PlaylistPage() {
         <div className={`${styles.contentWrapper}`}>
           <TrackList
             tracks={tracks.slice(0, numShowTracks)}
-            currentTrackID={currentTrackId}
-            isPlaying={isPlaying}
             handlePlay={handlePlayTrack}
             playlistId={id}
           />
@@ -163,7 +160,7 @@ function useLoadMoreTracksCallback(
   const dispatch = useDispatch();
   const { next, total } = playlist;
 
-  return React.useCallback(() => {
+  return useCallback(() => {
     if (isLoading || !next || total === 0) {
       return;
     }
@@ -211,7 +208,7 @@ function useResetOnPlaylistChange(
 ) {
   const prevTracklistId = usePrevious(currentPlaylist.id);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (prevTracklistId === currentPlaylist.id) return;
 
     setNumShowTracks(playlistIncrementAmount);
@@ -247,7 +244,7 @@ function useLoadTracksIfEmpty(
   hasRefreshed,
   setHasRefreshed
 ) {
-  React.useEffect(() => {
+  useEffect(() => {
     if (!tracks.length && !hasRefreshed) {
       handleLoadMoreTracks();
       setHasRefreshed(true);

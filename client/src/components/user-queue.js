@@ -21,21 +21,22 @@ import styles from "../styles/user-queue.module.scss";
 
 const UserQueue = () => {
   const dispatch = useDispatch();
+  const currentTrack = useSelector(state => state.player.currentTrack);
+  const index = useSelector(state => state.player.index);
+  const queue = useSelector(state => state.player.queue);
+  const userQueueIndex = useSelector(state => state.player.userQueueIndex);
+  const userQueue = useSelector(state => state.player.userQueue);
+  const relatedTracksIndex = useSelector(
+    state => state.player.relatedTracksIndex
+  );
+  const relatedTracks = useSelector(state => state.player.relatedTracks);
+  const context = useSelector(state => state.player.context);
 
   const isPlaying = useSelector(state => state.player.isPlaying);
   const isUserQueueOpen = useSelector(
     state => state.user.settings.isUserQueueOpen
   );
-  const {
-    currentTrack,
-    index,
-    queue,
-    userQueueIndex,
-    userQueue,
-    relatedTracksIndex,
-    relatedTracks,
-    context
-  } = useSelector(state => state.player);
+
   const nextInUserQueue = userQueue
     ? userQueue.slice(userQueueIndex, userQueue.length)
     : [];
@@ -131,8 +132,6 @@ const UserQueue = () => {
         </div>
         <TrackList
           tracks={queue.list}
-          isPlaying={isPlaying}
-          currentTrackID={currentTrack.id}
           handlePlay={queue.handlePlay}
           handleRemoveTrack={queue.handleRemove}
           isFromQueue
@@ -171,6 +170,7 @@ const UserQueue = () => {
             isActive={true}
             isPlaying={isPlaying}
             handlePlay={handlePlayCurrent}
+            index={0}
             isFromQueue
           />
           {queueComponents}

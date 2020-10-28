@@ -18,14 +18,7 @@ import styles from "../styles/layout.module.scss";
 
 const searchIncrementAmount = 10;
 
-const SearchTrackList = ({
-  source,
-  tracks,
-  query,
-  currentTrackId,
-  isPlaying,
-  restored
-}) => {
+const SearchTrackList = ({ source, tracks, query, restored }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
   const [isLoading, setIsLoading] = useState(restored ? false : true);
@@ -107,10 +100,8 @@ const SearchTrackList = ({
         }}
       >
         <TrackList
-          search
+          isFromSearch
           tracks={tracks.list.slice(0, numShowTracks)}
-          currentTrackID={currentTrackId}
-          isPlaying={isPlaying}
           handlePlay={dispatchPlayTrack}
           playlistId="search"
         />

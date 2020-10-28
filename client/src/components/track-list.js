@@ -7,32 +7,32 @@ import TrackItem from "./track-item";
 const TrackList = ({
   tracks,
   handlePlay,
-  currentTrackID,
-  isPlaying,
   playlistId,
-  search,
+  isFromSearch,
   isFromQueue,
   handleRemoveTrack
 }) => {
   const queueIndex = useSelector(state => state.player.index);
   const playingContext = useSelector(state => state.player.context);
+  const currentTrackId = useSelector(state => state.player.currentTrack.id);
 
   return (
     tracks &&
     tracks.map((track, i) => (
       <TrackItem
-        key={`${search ? "Search" : "Lib"}:${track.source}:${track.id}:${i}`}
+        key={`${isFromSearch ? "Search" : "Lib"}:${track.source}:${
+          track.id
+        }:${i}`}
         track={track}
-        handlePlay={handlePlay}
         isActive={
-          currentTrackID === track.id &&
+          currentTrackId === track.id &&
           playingContext.id === playlistId &&
-          (search || i === queueIndex)
+          (isFromSearch || i === queueIndex)
         }
-        isPlaying={isPlaying}
         index={i}
+        handlePlay={handlePlay}
         playlistId={playlistId}
-        search={search}
+        isFromSearch={isFromSearch}
         isFromQueue={isFromQueue}
         handleRemove={handleRemoveTrack}
       />
@@ -42,15 +42,19 @@ const TrackList = ({
 
 TrackList.propTypes = {
   tracks: PropTypes.arrayOf(PropTypes.object),
-  search: PropTypes.bool,
-  isPlaying: PropTypes.bool.isRequired,
-  currentTrackID: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired
+  handlePlay: PropTypes.func.isRequired,
+  playlistId: PropTypes.string,
+  isFromSearch: PropTypes.bool,
+  isFromQueue: PropTypes.bool,
+  handleRemoveTrack: PropTypes.func
 };
 
 TrackList.defaultProps = {
   tracks: [],
-  search: false
+  isFromSearch: false,
+  isFromQueue: false,
+  handleRemoveTrack: null,
+  playlistId: ""
 };
 
 export default TrackList;

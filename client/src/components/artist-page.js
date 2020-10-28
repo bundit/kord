@@ -30,7 +30,6 @@ const ArtistPage = () => {
   );
   const isPlaying = useSelector(state => state.player.isPlaying);
   const context = useSelector(state => state.player.context);
-  const currentTrackId = useSelector(state => state.player.currentTrack.id);
   const { topTracks, allTracks } = artistTracks;
   const thisArtistIsPlaying = // eslint-disable-next-line
     context.source === source && context.id == artistId && isPlaying;
@@ -132,10 +131,7 @@ const ArtistPage = () => {
         <div className={styles.trackSectionWrapper}>
           <TrackSection
             title={`${artistName}'s Top Tracks`}
-            artistName={artistName}
             tracks={topTracks.tracks}
-            currentTrackId={currentTrackId}
-            isPlaying={isPlaying}
             handlePlay={index => handlePlayTrack(index, "topTracks")}
             artistId={artistId}
           />
@@ -144,10 +140,7 @@ const ArtistPage = () => {
             title={`${
               source === "youtube" ? "" : "Other"
             } Tracks by ${artistName}`}
-            artistName={artistName}
             tracks={allTracks.tracks}
-            currentTrackId={currentTrackId}
-            isPlaying={isPlaying}
             handlePlay={index => handlePlayTrack(index, "allTracks")}
             artistId={artistId}
           />
@@ -379,15 +372,7 @@ function ArtistInfoSection({ artist }) {
   );
 }
 
-function TrackSection({
-  title,
-  artistName,
-  tracks,
-  currentTrackId,
-  isPlaying,
-  handlePlay,
-  artistId
-}) {
+function TrackSection({ title, tracks, handlePlay, artistId }) {
   if (!tracks || !tracks.length) {
     return null;
   }
@@ -397,11 +382,9 @@ function TrackSection({
       <h2 className={styles.trackSectionTitle}>{decodeURIComponent(title)}</h2>
       <TrackList
         tracks={tracks}
-        currentTrackID={currentTrackId}
-        isPlaying={isPlaying}
         handlePlay={handlePlay}
         playlistId={artistId}
-        search
+        isFromSearch
       />
     </>
   );

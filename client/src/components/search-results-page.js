@@ -143,9 +143,6 @@ function SearchTrackResults({
   searchResults,
   isRestoredPage
 }) {
-  const currentTrackId = useSelector(state => state.player.currentTrack.id);
-  const isPlaying = useSelector(state => state.player.isPlaying);
-
   return (
     <div className={styles.searchTrackListGridLayout}>
       {searchSourceList.map(source => (
@@ -155,8 +152,6 @@ function SearchTrackResults({
           tracks={
             searchResults[source] ? searchResults[source].tracks : { list: [] }
           }
-          currentTrackId={currentTrackId}
-          isPlaying={isPlaying}
           key={`Search:${source}:${query}`}
           restored={isRestoredPage}
         />

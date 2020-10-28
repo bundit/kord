@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
 import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import React from "react";
@@ -18,13 +19,14 @@ const TrackItem = ({
   track,
   handlePlay,
   isActive,
-  isPlaying,
   index,
-  search,
+  isFromSearch,
   isFromQueue,
   playlistId,
   handleRemove
 }) => {
+  const isPlaying = useSelector(state => state.player.isPlaying);
+
   const { duration: ms, source } = track;
   const isStreamable = track.streamable || track.streamable === null;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
@@ -162,9 +164,9 @@ const TrackItem = ({
         <TrackDropdown
           toggleDropdown={toggleDropdown}
           track={track}
-          search={search}
           trackIndex={index}
           playlistId={playlistId}
+          isFromSearch={isFromSearch}
           isFromQueue={isFromQueue}
         />
       )}
@@ -188,15 +190,20 @@ TrackItem.propTypes = {
       PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string.isRequired }))
     ])
   }).isRequired,
-  search: PropTypes.bool,
-  addToLibrary: PropTypes.func,
   handlePlay: PropTypes.func.isRequired,
   isActive: PropTypes.bool.isRequired,
-  isPlaying: PropTypes.bool.isRequired
+  index: PropTypes.number.isRequired,
+  playlistId: PropTypes.string,
+  isFromSearch: PropTypes.bool,
+  isFromQueue: PropTypes.bool,
+  handleRemove: PropTypes.func
 };
 
 TrackItem.defaultProps = {
-  search: false
+  isFromSearch: false,
+  isFromQueue: false,
+  handleRemove: null,
+  playlistId: ""
 };
 
 export default TrackItem;
