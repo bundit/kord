@@ -19,7 +19,6 @@ import {
   playTrack
 } from "../redux/actions/playerActions";
 import { timeSince } from "../utils/dateHelpers";
-import { usePrevious } from "../utils/hooks";
 import LoadingSpinner from "./loading-spinner";
 import PageHeader from "./page-header";
 import TrackList from "./track-list";
@@ -64,7 +63,6 @@ function PlaylistPage() {
     loadMoreTracks
   );
 
-  useResetOnPlaylistChange(currentPlaylist, setNumShowTracks, scrollContainer);
   useLoadTracksIfEmpty(tracks, loadMoreTracks, hasRefreshed, setHasRefreshed);
 
   function showMoreTracks() {
@@ -199,23 +197,6 @@ function useLoadMoreTracksCallback(
     hasRefreshed,
     setHasRefreshed
   ]);
-}
-
-function useResetOnPlaylistChange(
-  currentPlaylist,
-  setNumShowTracks,
-  scrollContainer
-) {
-  const prevTracklistId = usePrevious(currentPlaylist.id);
-
-  useEffect(() => {
-    if (prevTracklistId === currentPlaylist.id) return;
-
-    setNumShowTracks(playlistIncrementAmount);
-    if (scrollContainer.current) {
-      scrollContainer.current.scrollTo({ top: 0, left: 0 });
-    }
-  }, [prevTracklistId, currentPlaylist.id, scrollContainer, setNumShowTracks]);
 }
 
 function useLoadTracksOnScroll(
