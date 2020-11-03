@@ -21,7 +21,8 @@ import {
   SET_SEEK,
   SET_TRACK,
   SET_VOLUME,
-  TOGGLE_EXPANDED_PLAYER
+  TOGGLE_EXPANDED_PLAYER,
+  TOGGLE_SHUFFLE
 } from "./types";
 import { capitalizeWord } from "../../utils/formattingHelpers";
 import { fetchGeneric } from "../../utils/fetchGeneric";
@@ -40,9 +41,23 @@ import {
   spotifyApi
 } from "./spotifyActions";
 import { loadPlaylistTracks } from "./libraryActions";
+import { shuffleTracks } from "../../utils/shuffle";
 import store from "../store";
 
-export const playTrack = (index, tracklist, nextHref, context) => dispatch => {
+export const playTrack = (index, tracklist, nextHref, context) => (
+  dispatch,
+  getState
+) => {
+  const { shuffleEnabled } = getState().player;
+
+  // Label indices for restoring shuffle positions
+  tracklist = tracklist.map((track, index) => ({ ...track, index }));
+
+  if (shuffleEnabled) {
+    tracklist = shuffleTracks(tracklist, index);
+    index = 0;
+  }
+
   while (index < tracklist.length && !tracklist[index].streamable) {
     index++;
   }
@@ -279,6 +294,12 @@ export function setAutoPlay(allowAutoPlay) {
   };
 }
 
+export function toggleShuffle() {
+  return {
+    type: TOGGLE_SHUFFLE
+  };
+}
+
 export const playPlaylist = playlist => dispatch => {
   const { source, id, next, tracks, total } = playlist;
   const context = {
@@ -311,6 +332,8 @@ const loadMoreQueueTracks = () => dispatch => {
 
   let {
     nextHref,
+    shuffleEnabled,
+    queue,
     context: { source, id }
   } = playerState;
 
@@ -353,6 +376,18 @@ const loadMoreQueueTracks = () => dispatch => {
   }
 
   return promise.then(({ tracks, next }) => {
+    const offset = queue.length;
+
+    // Map indices for shuffle/unshuffle
+    tracks = tracks.map((track, index) => ({
+      ...track,
+      index: offset + index
+    }));
+
+    if (shuffleEnabled) {
+      tracks = shuffleTracks(tracks);
+    }
+
     dispatch(appendQueue(tracks));
     dispatch(setNextQueueHref(next));
   });
