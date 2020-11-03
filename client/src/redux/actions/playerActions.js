@@ -22,6 +22,7 @@ import {
   SET_TRACK,
   SET_VOLUME,
   TOGGLE_EXPANDED_PLAYER,
+  TOGGLE_REPEAT,
   TOGGLE_SHUFFLE
 } from "./types";
 import { capitalizeWord } from "../../utils/formattingHelpers";
@@ -144,12 +145,9 @@ export const nextTrack = () => dispatch => {
     userQueue,
     currentTrack,
     relatedTracks,
-    allowAutoPlay
+    allowAutoPlay,
+    repeatEnabled
   } = state.player;
-
-  if (!allowAutoPlay) {
-    return dispatch(nextTrackAction());
-  }
 
   // Check if more tracks need to be loaded or not
   do {
@@ -175,7 +173,15 @@ export const nextTrack = () => dispatch => {
     userQueueIndex < userQueue.length ||
     relatedTracksIndex < relatedTracks.length;
 
-  if (!hasTracksLeftInAnyQueue) {
+  if (hasTracksLeftInAnyQueue) {
+    return dispatch(nextTrackAction());
+  }
+
+  if (repeatEnabled) {
+    return dispatch(restartQueue());
+  }
+
+  if (allowAutoPlay) {
     return dispatch(loadMoreQueueTracks())
       .catch(() =>
         dispatch(fetchRelatedQueueTracks(currentTrack.source, currentTrack))
@@ -300,6 +306,12 @@ export function toggleShuffle() {
   };
 }
 
+export function toggleRepeat() {
+  return {
+    type: TOGGLE_REPEAT
+  };
+}
+
 export const playPlaylist = playlist => dispatch => {
   const { source, id, next, tracks, total } = playlist;
   const context = {
@@ -405,4 +417,11 @@ const fetchRelatedQueueTracks = (source, track) => dispatch => {
       dispatch(setRelatedTracks(tracks))
     );
   }
+};
+
+const restartQueue = () => (dispatch, getState) => {
+  const queue = getState().player.queue;
+
+  dispatch(setQueueIndex(0));
+  dispatch(setTrack(queue[0]));
 };

@@ -2,7 +2,8 @@ import {
   faAngleUp,
   faListUl,
   faKeyboard,
-  faRandom
+  faRandom,
+  faRetweet
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
@@ -14,6 +15,7 @@ import {
   IconButton as ExpandPlayerButton,
   IconButton as ForwardButton,
   IconButton as ShuffleButton,
+  IconButton as RepeatButton,
   PlayPauseButton,
   IconButton as QueueButton
 } from "./buttons";
@@ -27,7 +29,7 @@ import {
   toggleKeyboardControlsMenu,
   toggleUserQueue
 } from "../redux/actions/userActions";
-import { toggleShuffle } from "../redux/actions/playerActions";
+import { toggleRepeat, toggleShuffle } from "../redux/actions/playerActions";
 import Image from "./image";
 import SeekBar from "./seek-bar";
 import TrackInfo from "./track-info";
@@ -54,6 +56,7 @@ const MinifiedPlayer = ({
 }) => {
   const dispatch = useDispatch();
   const shuffleEnabled = useSelector(state => state.player.shuffleEnabled);
+  const repeatEnabled = useSelector(state => state.player.repeatEnabled);
   const currentTrack = useSelector(state => state.player.currentTrack);
   const isPlaying = useSelector(state => state.player.isPlaying);
   const duration = useSelector(state => state.player.duration);
@@ -70,6 +73,10 @@ const MinifiedPlayer = ({
 
   function handleToggleShuffle() {
     dispatch(toggleShuffle());
+  }
+
+  function handleToggleRepeat() {
+    dispatch(toggleRepeat());
   }
 
   function getImgClassName() {
@@ -138,6 +145,11 @@ const MinifiedPlayer = ({
               {secondsToFormatted(duration || 0)}
             </span>
           </div>
+          <RepeatButton
+            icon={faRetweet}
+            onClick={handleToggleRepeat}
+            style={{ color: repeatEnabled ? "#ffc842" : null }}
+          />
         </div>
 
         <div className={styles.playerRightControls}>

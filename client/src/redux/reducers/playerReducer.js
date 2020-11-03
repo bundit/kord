@@ -24,6 +24,7 @@ import {
   SET_TRACK_UNSTREAMABLE,
   SET_VOLUME,
   TOGGLE_EXPANDED_PLAYER,
+  TOGGLE_REPEAT,
   TOGGLE_SHUFFLE
 } from "../actions/types";
 import { shuffleTracks, unshuffleTracks } from "../../utils/shuffle";
@@ -55,7 +56,8 @@ const initialState = {
   seekAmount: 15,
   isPlayerExpanded: false,
   allowAutoPlay: true,
-  shuffleEnabled: false
+  shuffleEnabled: false,
+  repeatEnabled: false
 };
 
 export default function(state = initialState, action) {
@@ -422,6 +424,15 @@ export default function(state = initialState, action) {
         index: originalTrackIndex,
         queue: sortedTracks,
         shuffleEnabled: !shuffleEnabled
+      };
+    }
+
+    case TOGGLE_REPEAT: {
+      const repeatEnabled = state.repeatEnabled;
+
+      return {
+        ...state,
+        repeatEnabled: !repeatEnabled
       };
     }
 
