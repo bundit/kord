@@ -1,7 +1,8 @@
 import {
   faAngleUp,
   faListUl,
-  faKeyboard
+  faKeyboard,
+  faRandom
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
@@ -12,6 +13,7 @@ import {
   IconButton as DesktopPlayPauseButton,
   IconButton as ExpandPlayerButton,
   IconButton as ForwardButton,
+  IconButton as ShuffleButton,
   PlayPauseButton,
   IconButton as QueueButton
 } from "./buttons";
@@ -25,6 +27,7 @@ import {
   toggleKeyboardControlsMenu,
   toggleUserQueue
 } from "../redux/actions/userActions";
+import { toggleShuffle } from "../redux/actions/playerActions";
 import Image from "./image";
 import SeekBar from "./seek-bar";
 import TrackInfo from "./track-info";
@@ -50,6 +53,7 @@ const MinifiedPlayer = ({
   handleNext
 }) => {
   const dispatch = useDispatch();
+  const shuffleEnabled = useSelector(state => state.player.shuffleEnabled);
   const currentTrack = useSelector(state => state.player.currentTrack);
   const isPlaying = useSelector(state => state.player.isPlaying);
   const duration = useSelector(state => state.player.duration);
@@ -62,6 +66,10 @@ const MinifiedPlayer = ({
 
   function handleToggleShowControls() {
     dispatch(toggleKeyboardControlsMenu());
+  }
+
+  function handleToggleShuffle() {
+    dispatch(toggleShuffle());
   }
 
   function getImgClassName() {
@@ -104,25 +112,32 @@ const MinifiedPlayer = ({
           <TrackInfo track={currentTrack} isPlayer />
         </div>
 
-        <div className={styles.backPlayForwardWrapper}>
-          <span
-            className={seekBarStyles.timeContainer}
-            style={{ textAlign: "right" }}
-          >
-            {secondsToFormatted(isUserSeeking ? userSeekPos : seek || 0)}
-          </span>
-          <BackwardButton onClick={handlePrev}>
-            <BackwardIcon />
-          </BackwardButton>
-          <DesktopPlayPauseButton onClick={handlePlayPause}>
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
-          </DesktopPlayPauseButton>
-          <ForwardButton onClick={handleNext}>
-            <ForwardIcon />
-          </ForwardButton>
-          <span className={seekBarStyles.timeContainer}>
-            {secondsToFormatted(duration || 0)}
-          </span>
+        <div className={styles.centerControls}>
+          <ShuffleButton
+            icon={faRandom}
+            onClick={handleToggleShuffle}
+            style={{ color: shuffleEnabled ? "#ffc842" : null }}
+          />
+          <div className={styles.backPlayForwardWrapper}>
+            <span
+              className={seekBarStyles.timeContainer}
+              style={{ textAlign: "right" }}
+            >
+              {secondsToFormatted(isUserSeeking ? userSeekPos : seek || 0)}
+            </span>
+            <BackwardButton onClick={handlePrev}>
+              <BackwardIcon />
+            </BackwardButton>
+            <DesktopPlayPauseButton onClick={handlePlayPause}>
+              {isPlaying ? <PauseIcon /> : <PlayIcon />}
+            </DesktopPlayPauseButton>
+            <ForwardButton onClick={handleNext}>
+              <ForwardIcon />
+            </ForwardButton>
+            <span className={seekBarStyles.timeContainer}>
+              {secondsToFormatted(duration || 0)}
+            </span>
+          </div>
         </div>
 
         <div className={styles.playerRightControls}>

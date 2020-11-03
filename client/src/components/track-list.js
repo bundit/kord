@@ -12,7 +12,6 @@ const TrackList = ({
   isFromQueue,
   handleRemoveTrack
 }) => {
-  const queueIndex = useSelector(state => state.player.index);
   const playingContext = useSelector(state => state.player.context);
   const currentTrackId = useSelector(state => state.player.currentTrack.id);
 
@@ -25,9 +24,7 @@ const TrackList = ({
         }:${i}`}
         track={track}
         isActive={
-          currentTrackId === track.id &&
-          playingContext.id === playlistId &&
-          (isFromSearch || i === queueIndex)
+          currentTrackId === track.id && playingContext.id === playlistId
         }
         index={i}
         handlePlay={handlePlay}
