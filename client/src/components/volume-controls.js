@@ -15,7 +15,8 @@ function VolumeControls({
   userVolumeValue,
   handleOnChangeVolume,
   handleMouseDownVolume,
-  handleMouseUpVolume
+  handleMouseUpVolume,
+  muteButtonClassName
 }) {
   const dispatch = useDispatch();
   const isMuted = useSelector(state => state.player.isMuted);
@@ -42,7 +43,11 @@ function VolumeControls({
 
   return (
     <span className={styles.volumeWrapper}>
-      <MuteButton onClick={handleToggleMute} icon={volumeIcon} size="sm" />
+      <MuteButton
+        onClick={handleToggleMute}
+        icon={volumeIcon}
+        className={muteButtonClassName}
+      />
       <span
         className={styles.volumeLowerFill}
         style={{ width: volumeWidth, right: volumeRight }}

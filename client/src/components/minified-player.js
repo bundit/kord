@@ -60,7 +60,14 @@ const MinifiedPlayer = ({
   const currentTrack = useSelector(state => state.player.currentTrack);
   const isPlaying = useSelector(state => state.player.isPlaying);
   const duration = useSelector(state => state.player.duration);
+  const isMuted = useSelector(state => state.player.isMuted);
   const seek = useSelector(state => state.player.seek);
+  const isKeyboardControlsOpen = useSelector(
+    state => state.user.settings.isKeyboardControlsOpen
+  );
+  const isUserQueueOpen = useSelector(
+    state => state.user.settings.isUserQueueOpen
+  );
   const { source } = currentTrack;
 
   function handleToggleShowQueue() {
@@ -123,7 +130,7 @@ const MinifiedPlayer = ({
           <ShuffleButton
             icon={faRandom}
             onClick={handleToggleShuffle}
-            style={{ color: shuffleEnabled ? "#ffc842" : null }}
+            className={shuffleEnabled ? styles.enabledButton : undefined}
           />
           <div className={styles.backPlayForwardWrapper}>
             <span
@@ -148,7 +155,7 @@ const MinifiedPlayer = ({
           <RepeatButton
             icon={faRetweet}
             onClick={handleToggleRepeat}
-            style={{ color: repeatEnabled ? "#ffc842" : null }}
+            className={repeatEnabled ? styles.enabledButton : undefined}
           />
         </div>
 
@@ -156,12 +163,14 @@ const MinifiedPlayer = ({
           <ControlsButton
             onClick={handleToggleShowControls}
             icon={faKeyboard}
-            size="sm"
+            className={
+              isKeyboardControlsOpen ? styles.enabledButton : undefined
+            }
           />
           <QueueButton
             onClick={handleToggleShowQueue}
             icon={faListUl}
-            size="sm"
+            className={isUserQueueOpen ? styles.enabledButton : undefined}
           />
           <VolumeControls
             isUserSettingVolume={isUserSettingVolume}
@@ -169,6 +178,7 @@ const MinifiedPlayer = ({
             handleOnChangeVolume={handleOnChangeVolume}
             handleMouseDownVolume={handleMouseDownVolume}
             handleMouseUpVolume={handleMouseUpVolume}
+            muteButtonClassName={isMuted ? styles.enabledButton : undefined}
           />
         </div>
       </div>

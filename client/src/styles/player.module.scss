@@ -153,6 +153,23 @@
   padding: 0 20px;
 }
 
+.enabledButton {
+  position: relative;
+  color: $primaryLight;
+
+  &::after {
+    position: absolute;
+    content: "";
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 3px;
+    border-radius: 5px;
+    background-color: $primaryLight;
+  }
+}
+
 .backPlayForwardWrapper {
   min-width: 200px;
 
