@@ -101,7 +101,7 @@ const ExpandedPlayer = ({
           isLargerSeekBar
           withThumb
         />
-        <span>{secondsToFormatted(duration)}</span>
+        <span>{secondsToFormatted(duration || 0)}</span>
       </div>
 
       <div className={styles.mobileCenterControls}>
