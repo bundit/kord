@@ -403,6 +403,13 @@ export default function(state = initialState, action) {
       const queue = state.queue;
       const currentIndex = state.index;
 
+      if (!queue || !queue.length) {
+        return {
+          ...state,
+          shuffleEnabled: !shuffleEnabled
+        };
+      }
+
       if (needToShuffle) {
         const shuffledTracks = shuffleTracks(queue, currentIndex);
 
