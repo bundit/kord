@@ -1,4 +1,11 @@
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleDown,
+  faRandom,
+  faRetweet,
+  faListUl,
+  faVolumeMute,
+  faVolumeUp
+} from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import React from "react";
 
@@ -6,7 +13,11 @@ import {
   IconButton as BackwardButton,
   IconButton as CloseExpandedPlayerButton,
   IconButton as DesktopPlayPauseButton,
-  IconButton as ForwardButton
+  IconButton as ForwardButton,
+  IconButton as ShuffleButton,
+  IconButton as RepeatButton,
+  IconButton as QueueButton,
+  IconButton as MuteButton
 } from "./buttons";
 import { ReactComponent as BackwardIcon } from "../assets/backward.svg";
 import { ReactComponent as ForwardIcon } from "../assets/forward.svg";
@@ -27,13 +38,29 @@ const ExpandedPlayer = ({
   handleOnChangeUserSeek,
   handleMouseDownSeek,
   handleMouseUpSeek,
+  isUserSettingVolume,
+  userVolumeValue,
+  handleOnChangeVolume,
+  handleMouseDownVolume,
+  handleMouseUpVolume,
   handlePrev,
-  handleNext
+  handleNext,
+  handleToggleShuffle,
+  handleToggleRepeat,
+  handleToggleQueue,
+  handleToggleMute
 }) => {
+  const shuffleEnabled = useSelector(state => state.player.shuffleEnabled);
+  const repeatEnabled = useSelector(state => state.player.repeatEnabled);
   const currentTrack = useSelector(state => state.player.currentTrack);
   const isPlaying = useSelector(state => state.player.isPlaying);
   const duration = useSelector(state => state.player.duration);
+  const isMuted = useSelector(state => state.player.isMuted);
+  const volume = useSelector(state => state.player.volume);
   const seek = useSelector(state => state.player.seek);
+  const isUserQueueOpen = useSelector(
+    state => state.user.settings.isUserQueueOpen
+  );
 
   function getImgClassName() {
     if (currentTrack.source === "youtube") {
@@ -76,16 +103,54 @@ const ExpandedPlayer = ({
         />
         <span>{secondsToFormatted(duration)}</span>
       </div>
-      <div className={styles.mobileBackPlayForwardWrapper}>
-        <BackwardButton onClick={handlePrev}>
-          <BackwardIcon />
-        </BackwardButton>
-        <DesktopPlayPauseButton onClick={handlePlayPause}>
-          {isPlaying ? <PauseIcon /> : <PlayIcon />}
-        </DesktopPlayPauseButton>
-        <ForwardButton onClick={handleNext}>
-          <ForwardIcon />
-        </ForwardButton>
+
+      <div className={styles.mobileCenterControls}>
+        <MuteButton
+          icon={isMuted ? faVolumeMute : faVolumeUp}
+          onClick={handleToggleMute}
+          className={isMuted ? styles.enabledButton : undefined}
+        />
+        <label htmlFor="mobile-volume" className={styles.mobileVolume}>
+          <input
+            id="mobile-volume"
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            value={isUserSettingVolume ? userVolumeValue : isMuted ? 0 : volume}
+            onMouseDown={handleMouseDownVolume}
+            onMouseUp={handleMouseUpVolume}
+            onChange={handleOnChangeVolume}
+          />
+        </label>
+
+        <ShuffleButton
+          icon={faRandom}
+          onClick={handleToggleShuffle}
+          className={shuffleEnabled ? styles.enabledButton : undefined}
+        />
+        <div className={styles.mobileBackPlayForwardWrapper}>
+          <BackwardButton onClick={handlePrev}>
+            <BackwardIcon />
+          </BackwardButton>
+          <DesktopPlayPauseButton onClick={handlePlayPause}>
+            {isPlaying ? <PauseIcon /> : <PlayIcon />}
+          </DesktopPlayPauseButton>
+          <ForwardButton onClick={handleNext}>
+            <ForwardIcon />
+          </ForwardButton>
+        </div>
+        <RepeatButton
+          icon={faRetweet}
+          onClick={handleToggleRepeat}
+          className={repeatEnabled ? styles.enabledButton : undefined}
+        />
+
+        <QueueButton
+          onClick={handleToggleQueue}
+          icon={faListUl}
+          className={isUserQueueOpen ? styles.enabledButton : undefined}
+        />
       </div>
     </div>
   );

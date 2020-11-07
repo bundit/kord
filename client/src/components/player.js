@@ -19,7 +19,9 @@ import {
   setMuted,
   setSeek,
   setVolume,
-  toggleExpandedPlayer
+  toggleExpandedPlayer,
+  toggleRepeat,
+  toggleShuffle
 } from "../redux/actions/playerActions";
 import { setTrackUnstreamable } from "../redux/actions/libraryActions";
 import {
@@ -133,7 +135,6 @@ export const Player = () => {
   }
 
   function toggleExpand(e) {
-    // setIsExpanded(!isExpanded);
     dispatch(toggleExpandedPlayer());
 
     if (e) {
@@ -259,7 +260,7 @@ export const Player = () => {
     }
   }
 
-  function handleMouseDownVolume() {
+  function handleMouseDownVolume(e) {
     dispatch(setMuted(false));
     setIsUserSettingVolume(true);
   }
@@ -268,6 +269,14 @@ export const Player = () => {
     const newVolumeValue = Number(userVolumeValue);
 
     dispatch(setVolume(newVolumeValue));
+  }
+
+  function handleToggleShuffle() {
+    dispatch(toggleShuffle());
+  }
+
+  function handleToggleRepeat() {
+    dispatch(toggleRepeat());
   }
 
   function handleSpotifyAccountError() {
@@ -293,9 +302,7 @@ export const Player = () => {
     <>
       <UserQueue />
 
-      {/* Expanded music player */}
       <MinifiedPlayer
-        isExpanded={isPlayerExpanded}
         handleToggleExpand={toggleExpand}
         handlePlayPause={handlePlayPause}
         isUserSeeking={isUserSeeking}
@@ -310,6 +317,9 @@ export const Player = () => {
         handleMouseUpVolume={handleMouseUpVolume}
         handlePrev={handlePrevTrack}
         handleNext={handleNextTrack}
+        handleToggleShuffle={handleToggleShuffle}
+        handleToggleRepeat={handleToggleRepeat}
+        handleToggleQueue={handleToggleQueue}
       />
 
       <CSSTransition
@@ -321,25 +331,32 @@ export const Player = () => {
         <ExpandedPlayer
           handleToggleExpand={toggleExpand}
           handlePlayPause={handlePlayPause}
-          handleSeek={handleSeek}
           isUserSeeking={isUserSeeking}
           userSeekPos={Number(userSeekPos)}
           handleOnChangeUserSeek={handleOnChangeUserSeek}
           handleMouseDownSeek={handleMouseDownSeek}
           handleMouseUpSeek={handleMouseUpSeek}
+          isUserSettingVolume={isUserSettingVolume}
+          userVolumeValue={userVolumeValue}
+          handleOnChangeVolume={handleOnChangeVolume}
+          handleMouseDownVolume={handleMouseDownVolume}
+          handleMouseUpVolume={handleMouseUpVolume}
           handlePrev={handlePrevTrack}
           handleNext={handleNextTrack}
+          handleToggleShuffle={handleToggleShuffle}
+          handleToggleRepeat={handleToggleRepeat}
+          handleToggleQueue={handleToggleQueue}
+          handleToggleMute={handleToggleMute}
         />
       </CSSTransition>
-      {/* Mini Player */}
 
-      {/* </CSSTransition> */}
       <audio id="player" autoPlay loop>
         <source
           src="https://raw.githubusercontent.com/anars/blank-audio/master/10-minutes-of-silence.mp3"
           type="audio/mp3"
         />
       </audio>
+
       {currentTrack.source === "soundcloud" && (
         <ReactHowler
           src={`https://api.soundcloud.com/tracks/${currentTrack.id}/stream?client_id=${KEY}`}
@@ -352,6 +369,7 @@ export const Player = () => {
           onLoadError={handleSoundcloudLoadError}
         />
       )}
+
       <SpotifyPlayer
         forwardRef={spotifyPlayer}
         playerName="Kord Player - All your music in one place"
@@ -363,6 +381,7 @@ export const Player = () => {
         onAccountError={handleSpotifyAccountError}
         controls={{ play: handlePlay, pause: handlePause }}
       />
+
       <div
         className={isPlayerExpanded ? styles.ytExpandedContainer : undefined}
       >
@@ -383,6 +402,7 @@ export const Player = () => {
             : styles.desktopExpandPlayerButton
         } ${isPlayerExpanded && styles.headerExpandButton}`}
       />
+
       <DesktopExpandButton
         onClick={toggleExpand}
         icon={isPlayerExpanded ? faAngleDown : faAngleUp}

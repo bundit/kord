@@ -2,7 +2,7 @@
 
 .queueWrapper {
   position: fixed;
-  width: 400px;
+  left: 15px;
   bottom: 15px;
   right: 15px;
   z-index: 4;
@@ -34,7 +34,7 @@
 
     width: 400px;
     bottom: 95px;
-    right: 15px;
+    left: auto;
     max-height: 65vh;
   }
 }

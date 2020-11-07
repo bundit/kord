@@ -150,7 +150,44 @@
 .centerControls {
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 0 20px;
+  width: 100%;
+}
+
+.mobileCenterControls {
+  @extend .centerControls;
+  box-sizing: border-box;
+  position: relative;
+
+  & > button:first-child {
+    margin-right: auto;
+
+    &:hover {
+      ~ .mobileVolume {
+        animation: fadeInFromNone 0.3s linear;
+        display: block;
+      }
+    }
+  }
+
+  .mobileVolume {
+    position: absolute;
+    height: 10px;
+    width: 5px;
+    bottom: 40px;
+    left: 25px;
+    transform: rotate(-90deg);
+    display: none;
+
+    &:hover {
+      display: block;
+    }
+  }
+
+  & > button:last-child {
+    margin-left: auto;
+  }
 }
 
 .enabledButton {
@@ -398,9 +435,14 @@
     }
 
     .mobileBackPlayForwardWrapper,
-    .seekBarWrapper {
+    .seekBarWrapper,
+    .mobileCenterControls {
       display: none;
     }
+  }
+
+  .centerControls {
+    width: auto;
   }
 
   .desktopExpandPlayerButton {

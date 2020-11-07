@@ -25,11 +25,7 @@ import { ReactComponent as PauseIcon } from "../assets/pause-button.svg";
 import { ReactComponent as PlayIcon } from "../assets/play-button.svg";
 import { getImgUrl } from "../utils/getImgUrl";
 import { secondsToFormatted } from "../utils/formattingHelpers";
-import {
-  toggleKeyboardControlsMenu,
-  toggleUserQueue
-} from "../redux/actions/userActions";
-import { toggleRepeat, toggleShuffle } from "../redux/actions/playerActions";
+import { toggleKeyboardControlsMenu } from "../redux/actions/userActions";
 import Image from "./image";
 import SeekBar from "./seek-bar";
 import TrackInfo from "./track-info";
@@ -38,7 +34,6 @@ import seekBarStyles from "../styles/seek-bar.module.scss";
 import styles from "../styles/player.module.scss";
 
 const MinifiedPlayer = ({
-  isExpanded,
   handleToggleExpand,
   handlePlayPause,
   isUserSeeking,
@@ -52,7 +47,10 @@ const MinifiedPlayer = ({
   handleMouseDownVolume,
   handleMouseUpVolume,
   handlePrev,
-  handleNext
+  handleNext,
+  handleToggleShuffle,
+  handleToggleRepeat,
+  handleToggleQueue
 }) => {
   const dispatch = useDispatch();
   const shuffleEnabled = useSelector(state => state.player.shuffleEnabled);
@@ -70,20 +68,8 @@ const MinifiedPlayer = ({
   );
   const { source } = currentTrack;
 
-  function handleToggleShowQueue() {
-    dispatch(toggleUserQueue());
-  }
-
   function handleToggleShowControls() {
     dispatch(toggleKeyboardControlsMenu());
-  }
-
-  function handleToggleShuffle() {
-    dispatch(toggleShuffle());
-  }
-
-  function handleToggleRepeat() {
-    dispatch(toggleRepeat());
   }
 
   function getImgClassName() {
@@ -168,7 +154,7 @@ const MinifiedPlayer = ({
             }
           />
           <QueueButton
-            onClick={handleToggleShowQueue}
+            onClick={handleToggleQueue}
             icon={faListUl}
             className={isUserQueueOpen ? styles.enabledButton : undefined}
           />
