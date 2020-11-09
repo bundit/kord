@@ -1,5 +1,33 @@
 @import "layout.module.scss";
 @import "playlist-item.module.scss";
+@import "searchForm.module.css";
+
+.mobileSearchbarWrapper {
+  @extend .pageSectionWrapper;
+
+  form {
+    padding: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+
+    &:focus-within input,
+    input { // Searchbar
+      min-width: calc(100% - 70px - 20px);
+      max-width: calc(100% - 70px - 20px);
+    }
+
+    button { // Submit Button
+      transform: translateX(0);
+    }
+
+    > div:nth-child(3) { // Completion dropdown
+      z-index: 10;
+      width: calc(100% - 70px - 20px - 40px);
+      text-align: left;
+    }
+  }
+}
 
 .recentSearchesTitle {
   @extend .sectionTitle;
@@ -45,5 +73,11 @@
 
   .searchHistoryItem {
     @extend .playlistItem;
+  }
+}
+
+@media (min-width: 800px) {
+  .mobileSearchbarWrapper {
+    display: none;
   }
 }

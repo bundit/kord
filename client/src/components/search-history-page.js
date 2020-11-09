@@ -9,6 +9,7 @@ import {
   addToSearchHistory,
   removeFromSearchHistory
 } from "../redux/actions/searchActions";
+import SearchBar from "./search-bar";
 import styles from "../styles/search-history-page.module.scss";
 
 const SearchHistoryPage = () => {
@@ -16,6 +17,9 @@ const SearchHistoryPage = () => {
 
   return (
     <div className={styles.pageWrapper}>
+      <div className={styles.mobileSearchbarWrapper}>
+        <SearchBar placeholder="Search for Music" />
+      </div>
       <div className={styles.pageSectionWrapper}>
         <h2 className={styles.recentSearchesTitle}>Your Recent Searches</h2>
         {searchHistory.length ? (
