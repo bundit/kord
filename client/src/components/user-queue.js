@@ -157,11 +157,7 @@ const UserQueue = () => {
             style={{ marginLeft: "auto", fontSize: "12px" }}
           />
         </div>
-        <div
-          className={formStyles.formInnerWrapper}
-          onScroll={forceCheck}
-          style={{ height: "515px" }}
-        >
+        <div className={formStyles.formInnerWrapper} onScroll={forceCheck}>
           <span className={`${formStyles.formTitle} ${styles.queueTitle}`}>
             Currently Playing
           </span>

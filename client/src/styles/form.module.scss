@@ -11,6 +11,7 @@
   overflow-x: hidden;
   scrollbar-width: thin;
   box-sizing: border-box;
+  max-height: calc(100vh - 80px);
 
   &::-webkit-scrollbar-track {
     background-color: $bg7;
@@ -80,4 +81,10 @@
 
 .changesMade {
   color: $primaryLightest;
+}
+
+@media (min-width: 800px) {
+  .formInnerWrapper {
+    max-height: 515px;
+  }
 }

@@ -12,20 +12,16 @@
 
 .modal {
   position: fixed;
-  top: 40vh;
-  left: 50vw;
-
   display: flex;
   flex-direction: column;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-  width: 80vw;
-  height: auto;
-  max-height: 70vh;
-  margin-top: -25vh;
-  margin-left: -40vw;
-  border-radius: 7px;
   color: $textbg;
-  background-color: $bg7;
+  background-color: rgba($bg7, 0.9);
+  backdrop-filter: blur(5px);
   z-index: 4;
   overflow: hidden;
 
@@ -44,7 +40,7 @@
       justify-content: flex-end;
 
       min-height: 45px;
-      margin: 20px 25px 0 auto;
+      margin: auto 25px 0 auto;
 
       button:last-of-type {
         margin-left: 20px;
@@ -73,8 +69,22 @@
 
 @media (min-width: 800px) {
   .modal {
-    left: 50%;
+    background-color: $bg7;
+    max-height: 70vh;
+    height: auto;
     width: 500px;
+
+    top: 40vh;
+    left: 50%;
+    margin-top: -25vh;
     margin-left: -250px;
+
+    border-radius: 7px;
+
+    .modalForm {
+      .formCancelSubmitButtonGroup {
+        margin: auto 25px 0 auto;
+      }
+    }
   }
 }
