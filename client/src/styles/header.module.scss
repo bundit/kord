@@ -36,9 +36,20 @@
       font-size: 35px;
 
       svg {
-        margin-left: 10px;
         color: $primaryLight;
       }
+    }
+  }
+
+  .headerLeft {
+    svg {
+      margin-left: 10px;
+    }
+  }
+
+  .headerRight {
+    svg {
+      margin-right: 10px;
     }
   }
 }

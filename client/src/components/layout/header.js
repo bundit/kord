@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 import {
   IconButton as BackwardButton,
@@ -64,11 +66,20 @@ function Header({ location }) {
       <header className={styles.header}>
         {/* Mobile Header */}
         <div className={styles.mobileHeader}>
-          <div className={styles.placeholder}>
+          <div className={`${styles.placeholder} ${styles.headerLeft}`}>
             <MobileBackButton pathname={pathname} />
           </div>
           <h1>{title.length ? decodeURIComponent(title) : "kord"}</h1>
-          <div className={styles.placeholder} />
+          <div
+            className={`${styles.placeholder} ${styles.headerRight}`}
+            style={{ display: "flex" }}
+          >
+            <IconButton
+              icon={faUser}
+              style={{ fontSize: "25px", marginLeft: "auto" }}
+              onClick={handleOpenSettings}
+            />
+          </div>
         </div>
 
         {/* Desktop Header */}
