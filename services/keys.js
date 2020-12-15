@@ -37,7 +37,10 @@ function setSoundcloudClientId(clientId) {
 }
 
 async function fetchNewSoundcloudClientId() {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+  });
   const page = await browser.newPage();
   await page.setRequestInterception(true);
   let newClientId;
@@ -59,9 +62,21 @@ async function fetchNewSoundcloudClientId() {
 
   page.on("request", requestListener);
 
-  await page.goto("https://soundcloud.com/");
+  page.on("error", err => {
+    console.log("error at: ", err);
+  });
 
-  await browser.close();
+  page.on("pageerror", pageerr => {
+    console.log("pageerror at: ", pageerr);
+  });
+
+  try {
+    await page.goto("https://soundcloud.com/");
+  } catch (e) {
+    console.log("Caught page error: ", e);
+  } finally {
+    await browser.close();
+  }
 
   return newClientId;
 }
