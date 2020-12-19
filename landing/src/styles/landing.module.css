@@ -151,12 +151,6 @@
   align-items: center;
 }
 
-.sourceCard:hover {
-  transition: 0.3s ease;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.4);
-  background-color: white;
-}
-
 .sourceCard a {
   opacity: 0;
   transition: 0.3s ease;
@@ -173,26 +167,6 @@
   transition-delay: 0s;
 }
 
-.sourceCard:hover a {
-  transition-delay: 0.3s;
-  opacity: 1;
-}
-
-.sourceCard a:hover {
-  transition-delay: 0s;
-  border-color: #555;
-  background-color: white;
-  color: inherit;
-}
-
-.spotify a:hover {
-  border: 1px #1db954 solid;
-}
-
-.youtube a:hover {
-  border: 1px red solid;
-}
-
 .sourceCard:after {
   content: "";
   display: block;
@@ -205,20 +179,48 @@
   font-size: 3em;
 }
 
-.spotify:hover {
-  color: #1db954;
-}
+@media (hover: hover) and (pointer: fine) {
+  .sourceCard:hover {
+    transition: 0.3s ease;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.4);
+    background-color: white;
+  }
 
-.soundcloud:hover {
-  color: #f50;
-}
+  .sourceCard:hover a {
+    transition-delay: 0.3s;
+    opacity: 1;
+  }
 
-.youtube:hover {
-  color: #ff0000;
-}
+  .sourceCard a:hover {
+    transition-delay: 0s;
+    border-color: #555;
+    background-color: white;
+    color: inherit;
+  }
 
-.mixcloud:hover {
-  color: rgb(80, 0, 255);
+  .spotify a:hover {
+    border: 1px #1db954 solid;
+  }
+
+  .youtube a:hover {
+    border: 1px red solid;
+  }
+
+  .spotify:hover {
+    color: #1db954;
+  }
+
+  .soundcloud:hover {
+    color: #f50;
+  }
+
+  .youtube:hover {
+    color: #ff0000;
+  }
+
+  .mixcloud:hover {
+    color: rgb(80, 0, 255);
+  }
 }
 
 @media (min-width: 330px) {

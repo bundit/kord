@@ -125,7 +125,10 @@ const IndexPage = () => {
 
         <div className={styles.sectionContainer}>
           {sourceCards.map(card => (
-            <div className={`${styles.sourceCard} ${styles[card.source]}`}>
+            <div
+              className={`${styles.sourceCard} ${styles[card.source]}`}
+              key={`${card.source}:card`}
+            >
               <div
                 data-aos="fade-right"
                 data-aos-easing="ease-in-out-back"
