@@ -95,8 +95,10 @@ const SearchTrackList = ({ source, tracks, query, restored }) => {
       <div
         className={`${styles.contentWrapper}`}
         style={{
-          height: `${65 * listHeight}px`,
-          overflowY: "hidden"
+          height: `${65 * listHeight + 60}px`,
+          overflowY: "hidden",
+          display: "flex",
+          flexDirection: "column"
         }}
       >
         <TrackList
@@ -105,24 +107,26 @@ const SearchTrackList = ({ source, tracks, query, restored }) => {
           handlePlay={dispatchPlayTrack}
           playlistId="search"
         />
-      </div>
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <ShowMoreResultsButton
-          onClick={handleShowMore}
-          disabled={!searchHasMoreToShow}
-        >
-          {searchHasMoreToShow ? (
-            <>
-              {"Show More "}
-              <FontAwesomeIcon icon={faAngleDown} />
-            </>
+        <span style={{ alignSelf: "center" }}>
+          {isLoading ? (
+            <LoadingSpinner />
           ) : (
-            "End of results"
+            <ShowMoreResultsButton
+              onClick={handleShowMore}
+              disabled={!searchHasMoreToShow}
+            >
+              {searchHasMoreToShow ? (
+                <>
+                  {"Show More "}
+                  <FontAwesomeIcon icon={faAngleDown} />
+                </>
+              ) : (
+                "End of results"
+              )}
+            </ShowMoreResultsButton>
           )}
-        </ShowMoreResultsButton>
-      )}
+        </span>
+      </div>
     </div>
   );
 };
