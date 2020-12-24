@@ -14,6 +14,7 @@ import {
   SET_TRACK_UNSTREAMABLE,
   TOGGLE_STAR_PLAYLIST
 } from "../actions/types";
+import { reorder } from "../../utils/reorder";
 
 const initialState = {
   playlists: {
@@ -329,12 +330,35 @@ export default function(state = initialState, action) {
     case TOGGLE_STAR_PLAYLIST: {
       const { source, payload: playlistId } = action;
 
+      const playlistIndex = state.playlists[source].findIndex(
+        playlist => playlist.id === playlistId
+      );
+      const playlistIsStarred =
+        state.playlists[source][playlistIndex].isStarred;
+
+      let lastStarIndex = state.playlists[source].findIndex(
+        playlist => !playlist.isStarred
+      );
+
+      // If unstarring playlist
+      if (playlistIsStarred) {
+        // Decrement counter to accomodate reducing # of starred playlists
+        lastStarIndex--;
+      }
+
+      const reorderedPlaylists = reorder(
+        state.playlists[source],
+        playlistIndex,
+        lastStarIndex
+      );
+
       return {
         ...state,
         playlists: {
           ...state.playlists,
-          [source]: state.playlists[source].map(playlist => {
+          [source]: reorderedPlaylists.map(playlist => {
             if (playlist.id === playlistId) {
+              // Apply star or unstar
               playlist = {
                 ...playlist,
                 isStarred: !playlist.isStarred
