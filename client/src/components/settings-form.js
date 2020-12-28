@@ -79,11 +79,12 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
 
     if (sourcePlaylists) {
       const settings = sourcePlaylists.map(
-        ({ title, id, isConnected, total }) => ({
+        ({ title, id, isConnected, total, isStarred }) => ({
           title,
           id,
           isConnected,
-          total
+          total,
+          isStarred
         })
       );
       setPlaylistSettings(settings);
@@ -193,7 +194,25 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
       result.destination.index
     );
 
+    if (!validateReordering(reordered)) {
+      return alert.error("Starred playlists must come first");
+    }
+
     setPlaylistSettings([...reordered]);
+  }
+
+  function validateReordering(newList) {
+    let starredFirst = true;
+
+    for (const playlist of newList) {
+      if (playlist.isStarred && !starredFirst) {
+        return false;
+      }
+
+      starredFirst = starredFirst && playlist.isStarred;
+    }
+
+    return true;
   }
 
   return (

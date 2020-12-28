@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faGripLines } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faGripLines,
+  faStar
+} from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import React from "react";
 
@@ -11,7 +15,8 @@ const FormCheckbox = ({
   value,
   numTracks,
   onChange,
-  isDraggable
+  isDraggable,
+  isStarred
 }) => {
   function handleOnChange() {
     onChange(i);
@@ -22,8 +27,21 @@ const FormCheckbox = ({
       className={`${styles.checkboxLabel} ${value && styles.changesMade}`}
       htmlFor={`checkbox${i}`}
     >
-      <span style={{ marginRight: "10px" }} className={styles.checkboxGrip}>
-        {isDraggable && <FontAwesomeIcon icon={faGripLines} size="lg" />}
+      <span style={{ marginRight: "10px", width: "20px" }}>
+        <span
+          className={styles.checkboxStarred}
+          style={{
+            opacity: isStarred ? 1 : 0,
+            display: !isDraggable ? "block" : undefined
+          }}
+        >
+          <FontAwesomeIcon icon={faStar} size="sm" />
+        </span>
+        {isDraggable && (
+          <span className={styles.checkboxGrip}>
+            <FontAwesomeIcon icon={faGripLines} size="lg" />
+          </span>
+        )}
       </span>
       <span style={{ width: "240px" }}>{title}</span>
       <input

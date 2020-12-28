@@ -31,6 +31,7 @@ export const PlaylistSettings = ({
                     numTracks={playlist.total}
                     onChange={handleToggle}
                     isDraggable={true}
+                    isStarred={playlist.isStarred}
                   />
                 </div>
               )}

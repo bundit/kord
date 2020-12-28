@@ -94,6 +94,7 @@ const AddToPlaylistForm = ({ show }) => {
             value={checkedPlaylists[playlist.id]}
             onChange={() => toggleCheckedPlaylist(playlist.id)}
             numTracks={playlist.total}
+            isStarred={playlist.isStarred}
           />
         ))}
       </div>

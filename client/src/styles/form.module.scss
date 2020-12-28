@@ -45,7 +45,12 @@
     background-color: $bg12;
 
     .checkboxGrip {
+      display: block;
       opacity: 1;
+    }
+
+    .checkboxStarred {
+      display: none;
     }
   }
 
@@ -54,12 +59,18 @@
     color: black;
   }
 
+  .checkboxStarred {
+    margin-left: 3px;
+    color: $primaryLight;
+  }
+
   .checkboxGrip {
     color: $iconButton;
     opacity: 0;
     cursor: move;
     cursor: grab;
     transition: 0.2s ease-out;
+    display: none;
 
     &:hover {
       color: white;
