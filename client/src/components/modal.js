@@ -9,7 +9,7 @@ import {
   LargeIconButton as CloseButton,
   SubmitButton
 } from "./buttons";
-import fadeTransition from "../styles/fadeModal.module.css";
+import Backdrop from "./backdrop";
 import slideTransition from "../styles/slideModal.module.css";
 import styles from "../styles/modal.module.scss";
 import usePortal from "../utils/usePortal";
@@ -28,7 +28,7 @@ const Modal = ({ title, show, onClose, onSubmit, children }) => {
 
   return createPortal(
     <>
-      <ModalBackdrop show={show} handleClick={onClose} />
+      <Backdrop show={show} handleClick={onClose} />
       <CSSTransition
         in={show}
         timeout={350}
@@ -57,23 +57,6 @@ const Modal = ({ title, show, onClose, onSubmit, children }) => {
     target
   );
 };
-
-function ModalBackdrop({ show, handleClick }) {
-  return (
-    <CSSTransition
-      in={show}
-      timeout={300}
-      classNames={fadeTransition}
-      unmountOnExit
-    >
-      <div
-        className={styles.backdrop}
-        role="presentation"
-        onClick={handleClick}
-      />
-    </CSSTransition>
-  );
-}
 
 Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
