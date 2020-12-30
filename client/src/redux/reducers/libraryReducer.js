@@ -53,33 +53,50 @@ export default function(state = initialState, action) {
     }
 
     case IMPORT_PLAYLISTS: {
-      let newPlaylists = action.payload;
+      let newPlaylists = action.payload || [];
       const source = action.source;
-      const prevPlaylists = state.playlists[source]
+      const replaceExisting = action.replaceExisting;
+
+      if (replaceExisting) {
+        return {
+          ...state,
+          playlists: {
+            ...state.playlists,
+            [source]: newPlaylists
+          }
+        };
+      }
+
+      let prevPlaylists = state.playlists[source]
         .slice() // filter lists that are not returned in new list
         .filter(
-          playlist =>
-            newPlaylists.findIndex(list => list.id === playlist.id) !== -1 ||
-            playlist.id === "likes"
+          prevPlaylist =>
+            newPlaylists.findIndex(
+              newPlaylist => newPlaylist.id === prevPlaylist.id
+            ) !== -1 || prevPlaylist.id === "likes"
         );
 
-      const newAndOldCombined = prevPlaylists.map(playlist => {
+      const newAndOldCombined = prevPlaylists.map(prevPlaylist => {
         const newIndex = newPlaylists.findIndex(
-          list => list.id === playlist.id
+          newPlaylist => newPlaylist.id === prevPlaylist.id
         );
 
         if (newIndex !== -1) {
-          playlist = {
-            ...playlist,
-            total: newPlaylists[newIndex].total,
-            title: newPlaylists[newIndex].title,
-            img: newPlaylists[newIndex].img
+          const newPlaylist = newPlaylists[newIndex];
+
+          prevPlaylist = {
+            ...prevPlaylist,
+            total: newPlaylist.total,
+            title: newPlaylist.title,
+            img: newPlaylist.img
           };
 
-          newPlaylists = newPlaylists.filter(list => list.id !== playlist.id);
+          newPlaylists = newPlaylists.filter(
+            newPlaylist => newPlaylist.id !== prevPlaylist.id
+          );
         }
 
-        return playlist;
+        return prevPlaylist;
       });
 
       if (newPlaylists.length) {

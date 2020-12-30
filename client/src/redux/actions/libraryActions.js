@@ -43,10 +43,11 @@ export function importLikes(source, likes) {
   };
 }
 
-export function importPlaylists(source, playlists) {
+export function importPlaylists(source, playlists, replaceExisting = false) {
   return {
     type: IMPORT_PLAYLISTS,
     source,
+    replaceExisting,
     payload: playlists
   };
 }
@@ -267,7 +268,9 @@ export const fetchUserPlaylists = exclude => dispatch => {
       );
 
       if (filteredPlaylists.length) {
-        dispatch(importPlaylists(source, filteredPlaylists));
+        const replaceExisting = true;
+
+        dispatch(importPlaylists(source, filteredPlaylists, replaceExisting));
         dispatch(setConnection(source, true));
       }
     }

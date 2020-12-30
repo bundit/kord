@@ -1,14 +1,14 @@
 import { Route, Switch } from "react-router-dom";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
-import React from "react";
+import React, { useState } from "react";
 import * as Sentry from "@sentry/react";
 
 import { closeSettings, updateProfile } from "./redux/actions/userActions";
 import {
   useClearSessionStorageOnRefresh,
-  useHashParamDetectionOnLoad,
-  useKeepSessionAlive
+  useKeepSessionAlive,
+  useLoadUserDataOnMount
 } from "./utils/hooks";
 import AddToPlaylistForm from "./components/add-to-playlist-form";
 import ControlsModal from "./components/controls-modal";
@@ -17,6 +17,7 @@ import FallbackComponent from "./components/fallback-component";
 import Footer from "./components/layout/footer";
 import Header from "./components/layout/header";
 import LibraryRouter from "./components/library-router";
+import LoadingOverlay from "./components/loading-overlay";
 import NavHistory from "./components/nav-history";
 import SearchRouter from "./components/search-router";
 import SettingsForm from "./components/settings-form";
@@ -25,8 +26,9 @@ import Sidebar from "./components/sidebar";
 const App = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
+  const [isLoadingUserData, setIsLoadingUserData] = useState(false);
 
-  useHashParamDetectionOnLoad();
+  useLoadUserDataOnMount(setIsLoadingUserData);
   useKeepSessionAlive();
   useClearSessionStorageOnRefresh();
 
@@ -63,6 +65,7 @@ const App = () => {
 
   return (
     <>
+      <LoadingOverlay show={isLoadingUserData} />
       <NavHistory />
       <Route path="/app">
         <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>

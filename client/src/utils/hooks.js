@@ -2,6 +2,7 @@ import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import raf from "raf";
 
 import {
@@ -9,7 +10,6 @@ import {
   formatArtistName,
   getTitleFromPathname
 } from "./formattingHelpers";
-import { clearState } from "../redux/actions/stateActions";
 import { fetchGeneric } from "./fetchGeneric";
 import {
   fetchProfileAndPlaylists,
@@ -29,59 +29,86 @@ import {
   setSeek
 } from "../redux/actions/playerActions";
 
-export function useHashParamDetectionOnLoad() {
+export function useLoadUserDataOnMount(setIsLoadingUserData) {
+  const mainConnection = useSelector(state => state.user.kord.mainConnection);
   const dispatch = useDispatch();
   const history = useHistory();
-  const kordId = useSelector(state => state.user.kord.id);
-  const mainConnection = useSelector(state => state.user.kord.mainConnection);
   const alert = useAlert();
 
   useEffect(() => {
-    if (window.location.hash) {
-      // Get hash params excluding first #
-      const URLParams = new URLSearchParams(window.location.hash.substr(1));
-      const accessToken = URLParams.get("accessToken");
-      const source = URLParams.get("source");
-      const userId = URLParams.get("userId");
-      const login = URLParams.get("login");
+    window.addEventListener("beforeunload", setCookieOnUnload);
+    return () => {
+      window.removeEventListener("beforeunload", setCookieOnUnload);
+    };
+  }, []);
 
-      if (userId) {
-        if (userId !== kordId) {
-          dispatch(clearState());
-        }
-        dispatch(setKordId(userId));
-      }
+  const setCookieOnUnload = e => {
+    Cookies.set("userBackUnderOneHour", "true", {
+      expires: 1 / 24
+    });
+  };
 
-      if (source) {
-        let fetchUserData;
+  useEffect(() => {
+    const userBackUnderOneHour = Cookies.get("userBackUnderOneHour");
+    if (window.location.hash || !userBackUnderOneHour) {
+      setIsLoadingUserData(true);
 
-        if (accessToken) {
-          dispatch(setAccessToken(source, accessToken));
-          dispatch(setConnection(source, true));
-        }
-
-        if (login) {
-          fetchUserData = dispatch(fetchUserProfiles())
-            .catch(e => alert.error("Unable to restore profiles"))
-            .then(() => dispatch(fetchUserPlaylists()))
-            .catch(e => alert.error("Unable to restore playlists"))
-            .then(() => dispatch(fetchProfileAndPlaylists(source)))
-            .catch(e => alert.error("Connect account failed"));
-        } else {
-          fetchUserData = dispatch(fetchProfileAndPlaylists(source)).catch(e =>
-            alert.error("Connect account failed")
-          );
-        }
-
-        if (!mainConnection) {
-          dispatch(setMainConnection(source));
-        }
-
-        fetchUserData.finally(() => history.push(window.location.pathname));
-      }
+      dispatch(refreshUserData(alert))
+        .then(() => dispatch(handleHashParams(history, mainConnection)))
+        .finally(() => setTimeout(() => setIsLoadingUserData(false), 600));
+    } else {
+      setIsLoadingUserData(false);
     } // eslint-disable-next-line
   }, []);
 }
+
+const refreshUserData = alert => dispatch => {
+  const userBackUnderOneHour = Cookies.get("userBackUnderOneHour");
+
+  if (!userBackUnderOneHour) {
+    return Promise.all([
+      dispatch(fetchUserProfiles()).catch(e =>
+        alert.error("Unable to restore profiles")
+      ),
+      dispatch(fetchUserPlaylists()).catch(e =>
+        alert.error("Unable to restore playlists")
+      )
+    ]);
+  }
+
+  return Promise.resolve();
+};
+
+const handleHashParams = (history, mainConnection) => dispatch => {
+  if (window.location.hash) {
+    // Get hash params excluding first #
+    const URLParams = new URLSearchParams(window.location.hash.substr(1));
+    const accessToken = URLParams.get("accessToken");
+    const source = URLParams.get("source");
+    const userId = URLParams.get("userId");
+
+    if (userId) {
+      dispatch(setKordId(userId));
+    }
+
+    if (source) {
+      if (accessToken) {
+        dispatch(setAccessToken(source, accessToken));
+        dispatch(setConnection(source, true));
+      }
+
+      if (!mainConnection) {
+        dispatch(setMainConnection(source));
+      }
+
+      return dispatch(fetchProfileAndPlaylists(source))
+        .catch(e => alert.error("Connect account failed"))
+        .finally(() => history.push(window.location.pathname));
+    }
+  }
+
+  return Promise.resolve();
+};
 
 export function useMobileDetection() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 800);
