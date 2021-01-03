@@ -334,19 +334,28 @@ function mapJsonToProfile(json) {
 }
 
 function mapJsonToPlaylists(json) {
-  return json.items.map(item => ({
-    id: item.id,
-    title: item.snippet.localized.title,
-    description: item.snippet.localized.description,
-    img: item.snippet.thumbnails,
-    source: "youtube",
-    tracks: [],
-    total: item.contentDetails.itemCount,
-    next: "start",
-    isConnected: true,
-    dateSynced: null,
-    isStarred: false
-  }));
+  return json.items.map(
+    ({
+      id,
+      snippet: {
+        localized: { title, description },
+        thumbnails
+      },
+      contentDetails
+    }) => ({
+      id: id,
+      title: title === "Favorites" ? "YouTube Favorites" : title,
+      description: description,
+      img: thumbnails,
+      source: "youtube",
+      tracks: [],
+      total: contentDetails.itemCount,
+      next: "start",
+      isConnected: true,
+      dateSynced: null,
+      isStarred: false
+    })
+  );
 }
 
 function mapJsonToPlaylistTracks(json) {
