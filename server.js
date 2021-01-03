@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const passport = require("passport");
 const path = require("path");
+const morgan = require("morgan");
 
 require("./config/database-setup");
 require("./config/passport-setup");
@@ -23,6 +24,7 @@ if (isProduction) {
   app.use(forceSSL);
   app.use(forceWWW);
 }
+app.use(morgan("tiny"));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(passport.initialize());

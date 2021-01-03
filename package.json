@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
+    "morgan": "^1.10.0",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
@@ -40,6 +41,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node_modules/.bin/concurrently \"nodemon -r dotenv/config server.js\" \"cd client && yarn start\" \"cd landing && yarn start\"",
+    "dev-app": "node_modules/.bin/concurrently \"nodemon -r dotenv/config server.js\" \"cd client && yarn start\"",
     "heroku-postbuild": "cd client && yarn && yarn run build && cd ../landing && yarn && yarn run build"
   }
 }
