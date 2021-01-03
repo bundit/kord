@@ -257,6 +257,19 @@ export function useKeyControls(handleKeyControls) {
   useEffect(() => {
     window.onkeydown = e => {
       const { key } = e;
+      const searchBar = document.getElementById("search-bar");
+      const soundcloudUrlInput = document.getElementById("soundcloudURL");
+      const activeElement = document.activeElement;
+
+      if (keysPressed["Meta"] || keysPressed["Control"]) {
+        delete keysPressed["Meta"];
+        delete keysPressed["Control"];
+        return;
+      }
+
+      if (searchBar === activeElement || soundcloudUrlInput === activeElement) {
+        return;
+      }
 
       if (controlList.includes(key)) {
         e.preventDefault();
