@@ -111,24 +111,26 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   function handleSubmitUsername(e) {
     e.preventDefault();
     e.stopPropagation();
-    const inputPrefix = usernameInput.slice(0, 15);
-    const inputSuffix = usernameInput.slice(15);
 
-    if (usernameInput.length > 15 && inputPrefix === "soundcloud.com/") {
-      // TODO add more input validation here
+    const soundcloudURLRegEx = /^(https:\/\/|http:\/\/)?(www.)?soundcloud.com\/(.+)/;
+    const usernameMatch = usernameInput.match(soundcloudURLRegEx);
+
+    if (usernameMatch) {
+      const username = usernameMatch[usernameMatch.length - 1];
+
       dispatch(movePlaylistsToTrash("soundcloud"));
       setIsLoading(true);
 
-      dispatch(fetchSoundcloudProfileAndPlaylists(inputSuffix))
+      dispatch(fetchSoundcloudProfileAndPlaylists(username))
         .then(() => {
           dispatch(clearTrash("soundcloud"));
           setShowUsernameInput(false);
-          alert.success(`Soundcloud profile ${inputSuffix} connected`);
+          alert.success(`Soundcloud profile ${username} connected`);
         })
         .catch(e => {
           dispatch(restorePlaylistsFromTrash("soundcloud"));
           if (e.status === 404) {
-            alert.error(`User ${inputSuffix} not found`);
+            alert.error(`User ${username} not found`);
           } else if (e.status === 401) {
             alert.error(`Soundcloud Error: Could not link`);
           } else {
