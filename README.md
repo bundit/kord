@@ -1,6 +1,10 @@
+![kord-logo-small](https://user-images.githubusercontent.com/22352870/103503036-f198e980-4e07-11eb-94a7-e062e8979d36.png)
+
 # Kord App
 
 [Kord](https://www.kord.app): One place for all of your (Spotify | Soundcloud | Youtube) music. <br/>
+
+
 
 Chromium and Firefox browsers supported only.
 
