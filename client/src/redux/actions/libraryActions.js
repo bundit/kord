@@ -205,36 +205,13 @@ function removeFromPlaylistAction(track) {
   };
 }
 
-export function toggleStarPlaylistAction(playlistId, source) {
+export function toggleStarPlaylist(playlistId, source) {
   return {
     type: TOGGLE_STAR_PLAYLIST,
     source,
     payload: playlistId
   };
 }
-
-export const toggleStarPlaylist = (playlistId, source) => dispatch => {
-  const playlist = store
-    .getState()
-    .library.playlists[source].find(playlist => playlist.id === playlistId);
-  const isStarred = playlist.isStarred;
-  const payload = [
-    { field: "is_starred", playlistId: playlist.id, value: !isStarred }
-  ];
-
-  dispatch(toggleStarPlaylistAction(playlistId, source));
-
-  return fetchGeneric("/user/playlists", {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  }).catch(e => {
-    dispatch(toggleStarPlaylistAction(playlistId, source));
-    return Promise.reject(e);
-  });
-};
 
 export const fetchUserPlaylists = exclude => dispatch => {
   return fetchGeneric(`/user/playlists?exclude=${exclude}`).then(playlists => {

@@ -1,5 +1,4 @@
 import { forceCheck } from "react-lazyload";
-import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import React, { useRef, useState, useEffect, useCallback } from "react";
@@ -28,7 +27,6 @@ const playlistIncrementAmount = 25;
 
 function PlaylistPage() {
   const dispatch = useDispatch();
-  const alert = useAlert();
   const scrollContainer = useRef(null);
   const playlists = useSelector(state => state.library.playlists);
   const isPlaying = useSelector(state => state.player.isPlaying);
@@ -98,9 +96,7 @@ function PlaylistPage() {
   }
 
   function handleToggleStarPlaylist() {
-    dispatch(toggleStarPlaylist(id, source)).catch(e =>
-      alert.error("Network Error")
-    );
+    dispatch(toggleStarPlaylist(id, source));
   }
 
   if (isEmptyObject(currentPlaylist)) {

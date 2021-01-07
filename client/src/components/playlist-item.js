@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
 import { faStar, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
-import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
@@ -19,7 +18,6 @@ import styles from "../styles/playlist-item.module.scss";
 const PlaylistItem = ({ playlist, sidebar, isStarredPlaylist }) => {
   const { source, id, title } = playlist;
   const dispatch = useDispatch();
-  const alert = useAlert();
   const context = useSelector(state => state.player.context);
   const isPlaying = useSelector(state => state.player.isPlaying);
 
@@ -43,9 +41,7 @@ const PlaylistItem = ({ playlist, sidebar, isStarredPlaylist }) => {
   }
 
   function handleToggleStarPlaylist(e) {
-    dispatch(toggleStarPlaylist(id, source)).catch(e =>
-      alert.error("Network Error")
-    );
+    dispatch(toggleStarPlaylist(id, source));
 
     e.stopPropagation();
     e.preventDefault();
