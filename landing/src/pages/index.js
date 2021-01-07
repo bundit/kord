@@ -40,8 +40,18 @@ const IndexPage = () => {
 
   const sourceTransitionDuration = "400";
 
+  const appUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://www.kord.app"
+      : "http://localhost:3000";
+
+  const serverUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://www.kord.app"
+      : "http://localhost:8888";
+
   const textCTA = isLoggedIn ? "Open Player" : "Join now";
-  const linkCTA = isLoggedIn ? "/app/library" : "/login";
+  const linkCTA = isLoggedIn ? `${appUrl}/app/library` : "/login";
 
   const sourceCards = [
     {
@@ -49,7 +59,7 @@ const IndexPage = () => {
       text: "Spotify",
       icon: faSpotify,
       delay: 500,
-      loginHref: "/auth/spotify"
+      loginHref: `${serverUrl}/auth/spotify`
     },
     {
       source: "soundcloud",
@@ -62,15 +72,10 @@ const IndexPage = () => {
       text: "Youtube",
       icon: faYoutube,
       delay: 900,
-      loginHref: "/auth/youtube"
+      loginHref: `${serverUrl}/auth/youtube`
     },
     { source: "mixcloud", text: "Coming Soon!", icon: faMixcloud, delay: 1100 }
   ];
-
-  const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://www.kord.app"
-      : "http://localhost:8888";
 
   return (
     <>
@@ -139,7 +144,7 @@ const IndexPage = () => {
                 <h3>{card.text}</h3>
               </div>
               {card.loginHref ? (
-                <a href={`${baseUrl}${card.loginHref}`}>
+                <a href={card.loginHref}>
                   <span>Get Started</span>
                 </a>
               ) : null}

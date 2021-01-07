@@ -12,6 +12,11 @@ const LoginPanel = ({ login }) => {
   const text = login ? "Log in" : "Sign up";
   const isMobile = useMobileDetection();
 
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://www.kord.app"
+      : "http://localhost:8888";
+
   return (
     <div className={styles.loginWrapper}>
       <div className={styles.loginHeaderWrapper}>
@@ -38,13 +43,13 @@ const LoginPanel = ({ login }) => {
       {!isMobile && (
         <>
           <div className={styles.loginListWrapper}>
-            <a href="/auth/spotify" className={styles.oAuthLink}>
+            <a href={`${baseUrl}/auth/spotify`} className={styles.oAuthLink}>
               <span style={{ color: "#1DB954" }}>
                 <FontAwesomeIcon icon={faSpotify} size="2x" />
               </span>
               <span>{`${text} with Spotify`}</span>
             </a>
-            <a href="/auth/youtube" className={styles.oAuthLink}>
+            <a href={`${baseUrl}/auth/youtube`} className={styles.oAuthLink}>
               <span style={{ color: "red" }}>
                 <FontAwesomeIcon icon={faYoutube} size="2x" />
               </span>
