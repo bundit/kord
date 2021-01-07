@@ -113,6 +113,7 @@
   box-sizing: border-box;
   text-align: center;
   border-radius: 7px;
+  overflow-x: hidden;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 
