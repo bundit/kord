@@ -403,7 +403,7 @@ function mapSpotifyArtist(json) {
 function mapJsonToProfile(json) {
   return {
     username: json.display_name,
-    image: json.images[0].url,
+    image: json.images[0] ? json.images[0].url : undefined,
     profileUrl: json.external_urls.spotify,
     id: json.id,
     isConnected: true
