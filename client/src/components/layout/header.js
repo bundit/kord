@@ -1,10 +1,12 @@
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faUser
+} from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 import {
   IconButton as BackwardButton,
@@ -17,6 +19,7 @@ import { dequeRoute, openSettings } from "../../redux/actions/userActions";
 import { getTitleFromPathname } from "../../utils/formattingHelpers";
 import Image from "../image";
 import SearchBar from "../search-bar";
+import avatarImg from "../../assets/avatar-placeholder.png";
 import styles from "../../styles/header.module.scss";
 
 function Header({ location }) {
@@ -97,7 +100,7 @@ function Header({ location }) {
               onClick={toggleSettingsMenu}
             >
               <Image
-                src={mainUser.image}
+                src={mainUser.image || avatarImg}
                 alt="profilePic"
                 style={{
                   width: "inherit",
