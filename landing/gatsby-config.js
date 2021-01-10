@@ -20,7 +20,7 @@ module.exports = {
       options: {
         name: "Kord Player",
         short_name: "Kord",
-        start_url: "/",
+        start_url: "/app/library",
         background_color: "#ffbb11",
         theme_color: "#000000",
         display: "standalone",
