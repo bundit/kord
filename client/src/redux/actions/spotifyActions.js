@@ -110,7 +110,21 @@ export const fetchSpotifyPlaylists = (
 ) => dispatch => {
   return spotifyApi
     .getUserPlaylists({ limit, offset })
-    .then(json => mapJsonToPlaylists(json))
+    .then(async json => {
+      let playlists = mapJsonToPlaylists(json);
+      let next = json.next;
+
+      while (next) {
+        const nextJson = await spotifyApi.getGeneric(next);
+        const nextPlaylists = mapJsonToPlaylists(nextJson);
+
+        playlists = [...playlists, ...nextPlaylists];
+
+        next = nextJson.next;
+      }
+
+      return playlists;
+    })
     .catch(e => {
       if (tries) {
         return dispatch(errorHandler(e)).then(() =>
