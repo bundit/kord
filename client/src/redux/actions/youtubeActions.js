@@ -57,8 +57,21 @@ export const fetchYoutubePlaylists = (limit = 50, tries = 3) => dispatch => {
   const opts = generateYoutubeFetchOptionsAndHeaders();
 
   return fetchGeneric(endpoint, opts)
-    .then(json => {
-      const playlists = mapJsonToPlaylists(json);
+    .then(async json => {
+      let playlists = mapJsonToPlaylists(json);
+      let next =
+        json.nextPageToken && `${endpoint}&pageToken=${json.nextPageToken}`;
+
+      while (next) {
+        const nextJson = await fetchGeneric(next, opts);
+        const nextPlaylists = mapJsonToPlaylists(nextJson);
+
+        playlists = [...playlists, ...nextPlaylists];
+
+        next =
+          nextJson.nextPageToken &&
+          `${endpoint}&pageToken=${nextJson.nextPageToken}`;
+      }
 
       dispatch(importPlaylists("youtube", playlists));
     })
