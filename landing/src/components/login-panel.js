@@ -56,7 +56,7 @@ const LoginPanel = ({ login }) => {
               <span>{`${text} with Youtube`}</span>
             </a>
           </div>
-          <PrivacyPolicy />
+          <PrivacyPolicyAndTermsOfUse />
           {login ? (
             <span className={styles.otherPanelWrapper}>
               {"New here? "}
@@ -78,13 +78,17 @@ const LoginPanel = ({ login }) => {
   );
 };
 
-function PrivacyPolicy() {
+function PrivacyPolicyAndTermsOfUse() {
   return (
     <div style={{ fontSize: "10px", marginBottom: "10px" }}>
       {`Learn about how Kord collects, uses, shares and protects your personal
       data in our `}
       <Link to="/privacy" className={styles.link}>
         Privacy Policy
+      </Link>
+      {". By using our services, you agree to our "}
+      <Link to="/terms-of-use" className={styles.link}>
+        Terms of Use
       </Link>
       .
     </div>
