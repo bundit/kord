@@ -4,7 +4,10 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 
 import { addTrackToPlaylists } from "../redux/actions/libraryActions";
-import { capitalizeWord, filterUnconnected } from "../utils/formattingHelpers";
+import {
+  filterUnconnected,
+  formatSourceName
+} from "../utils/formattingHelpers";
 import { getImgUrl } from "../utils/getImgUrl";
 import { toggleAddToPlaylistForm } from "../redux/actions/userActions";
 import FormCheckbox from "./form-checkbox";
@@ -65,7 +68,7 @@ const AddToPlaylistForm = ({ show }) => {
 
   return (
     <Modal
-      title={`Add to ${capitalizeWord(track.source)} Playlist`}
+      title={`Add to ${formatSourceName(track.source)} Playlist`}
       show={show}
       onClose={handleClose}
       onSubmit={handleSubmit}
