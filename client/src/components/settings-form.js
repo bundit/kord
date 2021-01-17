@@ -17,7 +17,6 @@ import {
   LargeIconButton as SyncButton
 } from "./buttons";
 import { PlaylistSettings } from "./playlist-settings";
-import { capitalizeWord } from "../utils/formattingHelpers";
 import {
   clearTrash,
   movePlaylistsToTrash,
@@ -25,6 +24,7 @@ import {
   setPlaylistSettingsAction
 } from "../redux/actions/libraryActions";
 import { fetchSoundcloudProfileAndPlaylists } from "../redux/actions/soundcloudActions";
+import { formatSourceName } from "../utils/formattingHelpers";
 import { openSettings, removeUserProfile } from "../redux/actions/userActions";
 import { reorder } from "../utils/reorder";
 import Image from "./image";
@@ -219,7 +219,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
 
   return (
     <Modal
-      title={`${capitalizeWord(source)} Settings`}
+      title={`${formatSourceName(source)} Settings`}
       show={show}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -274,7 +274,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
             />
           </div>
           <div className={formStyles.formTitle}>
-            Your {capitalizeWord(source)} playlists
+            Your {formatSourceName(source)} playlists
           </div>
         </>
       )}
@@ -326,7 +326,7 @@ function SettingsTabsHeader({ handleTabClick, currerntSource }) {
               style={{ color: COLORS[tabSource] }}
             />
           )}
-          {capitalizeWord(tabSource)}
+          {formatSourceName(tabSource)}
         </SettingsTabButton>
       ))}
     </div>
@@ -350,7 +350,7 @@ function ConnectSourceLink({ source }) {
           color: COLORS[source]
         }}
       />
-      {`Connect ${capitalizeWord(source)} Account`}
+      {`Connect ${formatSourceName(source)} Account`}
     </a>
   );
 }

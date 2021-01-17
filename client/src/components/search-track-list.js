@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 
 import { ShowMoreResultsButton } from "./buttons";
 import { cacheValue, loadCachedValue } from "../utils/sessionStorage";
-import { capitalizeWord } from "../utils/formattingHelpers";
+import { capitalizeWord, formatSourceName } from "../utils/formattingHelpers";
 import {
   loadMoreTrackResults,
   searchForMusic
@@ -90,7 +90,7 @@ const SearchTrackList = ({ source, tracks, query, restored }) => {
   return (
     <div className={styles.pageSectionWrapper}>
       <h2 className={styles.sectionTitle}>
-        {capitalizeWord(source) + " Tracks"}
+        {formatSourceName(source) + " Tracks"}
       </h2>
       <div
         className={`${styles.contentWrapper}`}

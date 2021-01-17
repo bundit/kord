@@ -115,3 +115,7 @@ export function getTitleFromPathname(pathname) {
 
   return capitalizeWord(title);
 }
+
+export function formatSourceName(source) {
+  return source === "youtube" ? "YouTube" : capitalizeWord(source);
+}

@@ -9,7 +9,7 @@ import queryString from "query-string";
 import { COLORS, ICONS, SOURCES } from "../utils/constants";
 import { SourceSearchButton } from "./buttons";
 import { cacheValue, loadCachedValue } from "../utils/sessionStorage";
-import { capitalizeWord } from "../utils/formattingHelpers";
+import { formatSourceName } from "../utils/formattingHelpers";
 import ArtistList from "./artist-list";
 import SearchTrackList from "./search-track-list";
 import styles from "../styles/search-results-page.module.scss";
@@ -108,7 +108,7 @@ function SearchButtonList({ searchSourceList, hideSearch, showSearch }) {
           }}
         />
         {searchSourceList.includes(source) ? ` Hide` : ` Show`}{" "}
-        {capitalizeWord(source)}
+        {formatSourceName(source)}
       </SourceSearchButton>
     );
   });

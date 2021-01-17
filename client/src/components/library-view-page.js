@@ -2,7 +2,10 @@ import { useSelector } from "react-redux";
 import React from "react";
 
 import { SOURCES } from "../utils/constants";
-import { capitalizeWord, filterUnconnected } from "../utils/formattingHelpers";
+import {
+  filterUnconnected,
+  formatSourceName
+} from "../utils/formattingHelpers";
 import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
 import PlaylistList from "./playlist-list";
 import styles from "../styles/library-view-page.module.scss";
@@ -18,7 +21,7 @@ const LibraryViewPage = () => {
       )
     },
     ...SOURCES.map(source => ({
-      title: `${capitalizeWord(source)} Playlists`,
+      title: `${formatSourceName(source)} Playlists`,
       playlists: filterUnconnectedAndStarred(playlists[source])
     }))
   ];

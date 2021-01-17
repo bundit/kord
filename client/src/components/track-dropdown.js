@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import { addTrackToUserQueue } from "../redux/actions/playerActions";
-import { capitalizeWord } from "../utils/formattingHelpers";
+import { formatSourceName } from "../utils/formattingHelpers";
 import {
   openAddToPlaylistForm,
   openDeleteTrackForm
@@ -106,7 +106,7 @@ const TrackDropdown = ({
         <span>
           <FontAwesomeIcon icon={faExternalLinkAlt} />
         </span>
-        <span>{`Open in ${capitalizeWord(track.source)}`}</span>
+        <span>{`Open in ${formatSourceName(track.source)}`}</span>
       </button>
     </div>
   );
