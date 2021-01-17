@@ -8,7 +8,8 @@ const PrivacyPolicy = () => (
     <SEO title="Privacy Policy" />
     <div className={styles.p1} style={{ height: "auto" }}>
       <div className={styles.p1Content}>
-        <h1 className={styles.slogan}>Kord Privacy Policy</h1>
+        <h1 className={styles.slogan}>Privacy Policy</h1>
+        <p>Last updated January 18, 2021</p>
       </div>
 
       <div
@@ -136,7 +137,11 @@ const PrivacyPolicy = () => (
         </p>
         <p>
           For more general information on cookies, please read{" "}
-          <a href="https://www.cookieconsent.com/what-are-cookies/">
+          <a
+            href="https://www.cookieconsent.com/what-are-cookies/"
+            target="_blank"
+            rel="noreferrer"
+          >
             "What Are Cookies"
           </a>
           .
@@ -167,12 +172,50 @@ const PrivacyPolicy = () => (
           include their practices and instructions about how to opt-out of
           certain options.
         </p>
+
         <p>
           You can choose to disable cookies through your individual browser
           options. To know more detailed information about cookie management
           with specific web browsers, it can be found at the browsers'
           respective websites.
         </p>
+
+        <h3 id="youtube">YouTube</h3>
+        <p>
+          kord is a YouTube API Client (
+          <a
+            href="https://developers.google.com/youtube/terms/developer-policies#definition-api-client"
+            target="_blank"
+            rel="noreferrer"
+          >
+            https://developers.google.com/youtube/terms/developer-policies#definition-api-client
+          </a>
+          ) and uses YouTube API Services (
+          <a
+            href="https://developers.google.com/youtube/terms/developer-policies#definition-youtube-api-services"
+            target="_blank"
+            rel="noreferrer"
+          >
+            https://developers.google.com/youtube/terms/developer-policies#definition-youtube-api-services
+          </a>
+          ). You may reference the Google Privacy Policy at{" "}
+          <a
+            href="http://www.google.com/policies/privacy"
+            target="_blank"
+            rel="noreferrer"
+          >
+            http://www.google.com/policies/privacy
+          </a>
+        </p>
+
+        <p>
+          In addition, you make revoke the API Client's access to users data via
+          the Google security settings page at{" "}
+          <a href="https://security.google.com/settings/security/permissions">
+            https://security.google.com/settings/security/permissions
+          </a>
+        </p>
+
         <h2>Security</h2>
         <p>
           We value your trust in providing us your Personal Information, thus we
