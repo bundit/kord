@@ -82,7 +82,7 @@ const SearchBar = ({ placeholder }) => {
 
   function handleSearchSubmit(e) {
     if (query.length) {
-      history.push(`/app/search/${query}`);
+      history.push(`/app/search/${encodeURIComponent(query)}`);
       dispatch(addToSearchHistory(query));
     }
 

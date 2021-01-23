@@ -47,9 +47,15 @@ const PlaylistItem = ({ playlist, sidebar, isStarredPlaylist }) => {
     e.preventDefault();
   }
 
+  function getPlaylistHref() {
+    return `/app/library/playlists/${source}/${encodeURIComponent(
+      id
+    )}/${encodeURIComponent(title)}`;
+  }
+
   return (
     <NavLink
-      to={`/app/library/playlists/${source}/${id}/${title}`}
+      to={getPlaylistHref()}
       className={sidebar ? sidebarStyles.sidebarNavLink : styles.playlistItem}
       activeClassName={sidebarStyles.activeNavLink}
     >
