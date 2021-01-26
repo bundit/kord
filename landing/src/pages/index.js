@@ -69,7 +69,7 @@ const IndexPage = () => {
     },
     {
       source: "youtube",
-      text: "Youtube",
+      text: "YouTube",
       icon: faYoutube,
       delay: 900,
       loginHref: `${serverUrl}/auth/youtube`
