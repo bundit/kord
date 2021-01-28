@@ -2,6 +2,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 
+import { COLORS, ICONS } from "../utils/constants";
+import { ReactComponent as YouTubeFullColorIcon } from "../assets/youtube-icon-full-color.svg";
+import { formatSourceName } from "../utils/formattingHelpers";
 import styles from "../styles/button.module.scss";
 
 export const Button = props => (
@@ -32,15 +35,33 @@ export const DangerousButton = props => (
   <Button {...props} className={styles.dangerousButton} />
 );
 
-export const SourceSearchButton = props => (
-  <Button
-    {...props}
-    className={`${styles.searchSourceButton} ${
-      styles[`${props.source}SearchButton`]
-    }`}
-  />
-);
-
+export const SourceSearchButton = ({ source, isSearched, ...props }) => {
+  // Need to show youtube full color icon on searched due to youtube branding guidelines, monochrome is fine
+  const notYoutubeOrHasntSearchedYoutube = source !== "youtube" || !isSearched;
+  return (
+    <Button
+      {...props}
+      className={`${styles.searchSourceButton} ${
+        styles[`${source}SearchButton`]
+      }`}
+    >
+      {notYoutubeOrHasntSearchedYoutube ? (
+        <FontAwesomeIcon
+          icon={ICONS[source]}
+          style={{
+            color: isSearched ? COLORS[source] : null
+          }}
+          size="lg"
+        />
+      ) : (
+        <span className={styles.youtubeSearchedIcon}>
+          <YouTubeFullColorIcon />
+        </span>
+      )}
+      {isSearched ? ` Hide` : ` Show`} {formatSourceName(source)}{" "}
+    </Button>
+  );
+};
 export const SettingsTabButton = ({ isActive, ...props }) => (
   <Button
     {...props}
