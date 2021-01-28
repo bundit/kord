@@ -53,7 +53,7 @@ const LoginPanel = ({ login }) => {
               <span style={{ color: "red" }}>
                 <FontAwesomeIcon icon={faYoutube} size="2x" />
               </span>
-              <span>{`${text} with Youtube`}</span>
+              <span>{`${text} with YouTube`}</span>
             </a>
           </div>
           <PrivacyPolicyAndTermsOfUse />

@@ -13,12 +13,15 @@ const ArtistItem = ({ artist }) => {
   const artistName = formatArtistName(artist);
   const { source, id, name } = artist;
 
+  function getArtistHref() {
+    return `/app/search/artist/${source}/${encodeURIComponent(
+      id
+    )}/${encodeURIComponent(name)}`;
+  }
+
   return (
     <div style={{ position: "relative" }}>
-      <Link
-        to={`/app/search/artist/${source}/${id}/${encodeURIComponent(name)}`}
-        className={styles.artistLink}
-      >
+      <Link to={getArtistHref()} className={styles.artistLink}>
         <div className={styles.artistWrapper}>
           <div
             className={`${styles.artistImage}`}

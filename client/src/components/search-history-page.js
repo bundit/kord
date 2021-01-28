@@ -52,7 +52,7 @@ function SearchHistoryList({ searchHistory }) {
           key={`Phrase:${searchPhrase}`}
         >
           <Link
-            to={`/app/search/${searchPhrase}`}
+            to={`/app/search/${encodeURIComponent(searchPhrase)}`}
             className={styles.searchHistoryItem}
             onClick={handleRedoSearch}
             key={`Phrase:${searchPhrase}`}
