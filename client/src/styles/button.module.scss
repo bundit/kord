@@ -59,6 +59,14 @@
   @include generateSecondaryButton($youtube);
 }
 
+.youtubeSearchedIcon {
+  // Youtube full color icon
+  svg {
+    height: 13px;
+    vertical-align: -2px;
+  }
+}
+
 .mixcloudSearchButton {
   @include generateSecondaryButton($mixcloud);
 }
@@ -116,6 +124,11 @@
 .kordTab svg {
   height: 19px;
   vertical-align: -4px;
+}
+
+.youtubeTab svg {
+  height: 14px;
+  vertical-align: -3px;
 }
 
 .showMoreResultsButton {

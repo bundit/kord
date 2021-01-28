@@ -6,10 +6,9 @@ import { useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 import queryString from "query-string";
 
-import { COLORS, ICONS, SOURCES } from "../utils/constants";
+import { SOURCES } from "../utils/constants";
 import { SourceSearchButton } from "./buttons";
 import { cacheValue, loadCachedValue } from "../utils/sessionStorage";
-import { formatSourceName } from "../utils/formattingHelpers";
 import ArtistList from "./artist-list";
 import SearchTrackList from "./search-track-list";
 import styles from "../styles/search-results-page.module.scss";
@@ -100,16 +99,8 @@ function SearchButtonList({ searchSourceList, hideSearch, showSearch }) {
         source={source}
         onClick={handleSearchButtonClick}
         disabled={!connectedSources.includes(source)}
-      >
-        <FontAwesomeIcon
-          icon={ICONS[source]}
-          style={{
-            color: searchSourceList.includes(source) ? COLORS[source] : null
-          }}
-        />
-        {searchSourceList.includes(source) ? ` Hide` : ` Show`}{" "}
-        {formatSourceName(source)}
-      </SourceSearchButton>
+        isSearched={searchSourceList.includes(source)}
+      />
     );
   });
 }

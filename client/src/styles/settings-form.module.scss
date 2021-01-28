@@ -171,6 +171,11 @@
 
 .youtubeLink {
   @include generateSourceLink($youtube);
+
+  svg {
+    height: 25px;
+    vertical-align: -2px;
+  }
 }
 
 .mixcloudLink {

@@ -163,16 +163,8 @@
   transition: 0.3s ease-out;
   outline: none;
   font-size: 30px;
-  color: $iconButton;
+  color: $iconButtonHighlight;
   cursor: pointer;
-
-  &:hover {
-    color: $iconButtonHighlight;
-  }
-}
-
-.connectedSource {
-  color: $primaryLight;
 
   &:hover {
     transform: scale(1.1);
@@ -180,6 +172,20 @@
 
   &:active {
     transform: scale(1);
+  }
+}
+
+.connectedSpotify {
+  color: $spotify;
+}
+
+.connectedSoundcloud {
+  color: $soundcloud;
+}
+
+.connectedYoutube {
+  svg {
+    height: 24px;
   }
 }
 

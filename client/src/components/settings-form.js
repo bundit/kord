@@ -17,6 +17,7 @@ import {
   LargeIconButton as SyncButton
 } from "./buttons";
 import { PlaylistSettings } from "./playlist-settings";
+import { ReactComponent as YouTubeFullColorIcon } from "../assets/youtube-icon-full-color.svg";
 import {
   clearTrash,
   movePlaylistsToTrash,
@@ -319,6 +320,8 @@ function SettingsTabsHeader({ handleTabClick, currerntSource }) {
         >
           {tabSource === "kord" ? (
             ICONS[tabSource]
+          ) : tabSource === "youtube" ? (
+            <YouTubeFullColorIcon />
           ) : (
             <FontAwesomeIcon
               icon={ICONS[tabSource]}
@@ -344,12 +347,16 @@ function ConnectSourceLink({ source }) {
 
   return (
     <a className={styles[`${source}Link`]} href={getSourceLink()}>
-      <FontAwesomeIcon
-        icon={ICONS[source]}
-        style={{
-          color: COLORS[source]
-        }}
-      />
+      {source !== "youtube" ? (
+        <FontAwesomeIcon
+          icon={ICONS[source]}
+          style={{
+            color: COLORS[source]
+          }}
+        />
+      ) : (
+        <YouTubeFullColorIcon />
+      )}
       {`Connect ${formatSourceName(source)} Account`}
     </a>
   );
