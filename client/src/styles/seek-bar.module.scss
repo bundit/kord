@@ -170,6 +170,10 @@ input[type="range"].seekBar:focus::-ms-fill-upper {
   pointer-events: none;
 }
 
+.youtubeSeekToolTip {
+  bottom: -35px;
+}
+
 .hoverTime {
   position: absolute;
   width: 50px;
@@ -184,6 +188,10 @@ input[type="range"].seekBar:focus::-ms-fill-upper {
   background-color: $bg0;
   transition: 0.25s ease-in;
   transform: translateY(40px);
+}
+
+.youtubeHoverTime {
+  transform: translateY(-40px);
 }
 
 .isHovering {

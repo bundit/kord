@@ -101,7 +101,7 @@
   display: none;
   overflow: hidden;
   opacity: 0;
-  z-index: 0;
+  z-index: 1;
 
   position: fixed;
   left: 0;
@@ -109,12 +109,14 @@
   width: 100vw;
   padding-bottom: 56.25%;
 
-  > iframe {
+  iframe {
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
+
+    pointer-events: none;
   }
 }
 
@@ -444,7 +446,7 @@
   .desktopExpandPlayerButton {
     display: block;
     position: fixed;
-    left: 250px;
+    left: 252px;
     bottom: 20px;
     border-radius: 50%;
     font-size: 25px;
@@ -469,7 +471,7 @@
   }
 
   .desktopExpandPlayerButtonYT {
-    left: 271px;
+    left: 275px;
   }
 
   .headerExpandButton {
