@@ -55,9 +55,8 @@
   width: calc(100vw - 230px);
   height: 100%;
   color: white;
-  padding: 0 12px;
+  padding: 0 5px;
   align-items: center;
-  border-top: 1px $borderAccent solid;
   box-sizing: border-box;
 
   .playerImage {
@@ -66,8 +65,8 @@
     align-items: center;
     justify-content: center;
 
-    height: 56px;
-    min-width: 56px;
+    height: 72px;
+    min-width: 72px;
     margin-right: 15px;
 
     img {
@@ -76,8 +75,8 @@
   }
 
   .ytImage {
-    height: 56px;
-    min-width: 100px;
+    height: 72px;
+    min-width: 120px;
   }
 
   .playerRightControls {
@@ -100,11 +99,9 @@
 
 .youtubeContainer {
   display: none;
-  pointer-events: none;
   overflow: hidden;
   opacity: 0;
-  z-index: 1;
-  border: 1px transparent solid;
+  z-index: 0;
 
   position: fixed;
   left: 0;
@@ -356,13 +353,12 @@
   }
 
   .youtubeContainer {
-    bottom: 10px;
-    left: 11px;
+    bottom: 85px;
+    left: 5px;
     top: auto;
     position: absolute;
-    border: 1px transparent solid;
-    width: 100px;
-    height: 56px;
+    width: 200px;
+    height: 200px;
     padding-bottom: 0;
     border-radius: 7px;
   }

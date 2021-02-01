@@ -3,7 +3,12 @@ import React from "react";
 import * as Sentry from "@sentry/react";
 import YouTube from "react-youtube";
 
-import { nextTrack, setDuration } from "../redux/actions/playerActions";
+import {
+  nextTrack,
+  pause,
+  play,
+  setDuration
+} from "../redux/actions/playerActions";
 import { setTrackUnstreamable } from "../redux/actions/libraryActions";
 import styles from "../styles/player.module.scss";
 
@@ -45,6 +50,14 @@ function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
     }
   }
 
+  function handlePlay() {
+    dispatch(play());
+  }
+
+  function handlePause() {
+    dispatch(pause());
+  }
+
   function getYoutubeContainerClassNames() {
     const youtubeActive = current.source === "youtube";
 
@@ -75,6 +88,8 @@ function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
       onEnd={onEnd}
       onError={handleYoutubePlayerError}
       onStateChange={handleStateChange}
+      onPlay={handlePlay}
+      onPause={handlePause}
     />
   );
 }
