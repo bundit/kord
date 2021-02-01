@@ -14,12 +14,17 @@ function SeekBar({
   isLargerSeekBar = false,
   withThumb = false
 }) {
+  const isCurrentTrackFromYoutube =
+    useSelector(state => state.player.currentTrack.source) === "youtube";
+  const isPlayerExpanded = useSelector(state => state.player.isPlayerExpanded);
   const duration = useSelector(state => state.player.duration);
   const seek = useSelector(state => state.player.seek);
   const [isUserHovering, setIsUserHovering] = useState(false);
   const [hoverOffset, setHoverOffset] = useState(0);
   const seekWrap = useRef(null);
   const styles = isLargerSeekBar ? largerSeekBarStyles : seekBarStyles;
+  const seekToolTipOnBottom =
+    isCurrentTrackFromYoutube && !isPlayerExpanded && hoverOffset < 200;
 
   function getPositionOnHover(e) {
     setIsUserHovering(true);
@@ -76,12 +81,14 @@ function SeekBar({
         style={{ width: `${calculateProgressPercentage()}%` }}
       />
       <span
-        className={styles.seekToolTip}
+        className={`${styles.seekToolTip} ${seekToolTipOnBottom &&
+          styles.youtubeSeekToolTip}`}
         style={{ left: `${hoverOffset - 20}px` }}
       >
         <span
           className={`${styles.hoverTime} ${isUserHovering &&
-            styles.isHovering}`}
+            styles.isHovering} ${seekToolTipOnBottom &&
+            styles.youtubeHoverTime}`}
         >
           {secondsToFormatted(calculateTimeRatioFromHoverPosition() || 0)}
         </span>

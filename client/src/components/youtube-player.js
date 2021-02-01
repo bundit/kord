@@ -58,6 +58,14 @@ function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
     dispatch(pause());
   }
 
+  function handlePlayPause() {
+    if (isPlaying) {
+      dispatch(pause());
+    } else {
+      dispatch(play());
+    }
+  }
+
   function getYoutubeContainerClassNames() {
     const youtubeActive = current.source === "youtube";
 
@@ -70,27 +78,26 @@ function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
   }
 
   return (
-    <YouTube
-      videoId={current.source === "youtube" ? current.id : null}
-      opts={{
-        height: "100%",
-        width: "100%",
-        playerVars: {
-          controls: 0,
-          fs: 0,
-          iv_load_policy: 3,
-          modestbranding: 1,
-          autoplay: youtubeIsPlaying ? 1 : 0
-        }
-      }}
-      containerClassName={getYoutubeContainerClassNames()}
-      onReady={handleYoutubeReady}
-      onEnd={onEnd}
-      onError={handleYoutubePlayerError}
-      onStateChange={handleStateChange}
-      onPlay={handlePlay}
-      onPause={handlePause}
-    />
+    <div onClick={handlePlayPause} className={getYoutubeContainerClassNames()}>
+      <YouTube
+        videoId={current.source === "youtube" ? current.id : null}
+        opts={{
+          height: "100%",
+          width: "100%",
+          playerVars: {
+            controls: 0,
+            fs: 0,
+            iv_load_policy: 3,
+            modestbranding: 1,
+            autoplay: youtubeIsPlaying ? 1 : 0
+          }
+        }}
+        onReady={handleYoutubeReady}
+        onEnd={onEnd}
+        onError={handleYoutubePlayerError}
+        onStateChange={handleStateChange}
+      />
+    </div>
   );
 }
 

@@ -31,3 +31,15 @@
     border-radius: 10px;
   }
 }
+
+.seekToolTip {
+  bottom: 15px;
+}
+
+.hoverTime {
+  transform: translateY(40px);
+}
+
+.isHovering {
+  transform: translateY(0px);
+}
