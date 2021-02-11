@@ -365,6 +365,10 @@
     border-radius: 7px;
   }
 
+  .hiddenYoutubePlayer {
+    bottom: -200px;
+  }
+
   .ytExpandedContainer {
     // Used to calculate center of yt container in desktop mode
     pointer-events: none;

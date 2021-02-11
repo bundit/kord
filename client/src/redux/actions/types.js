@@ -62,6 +62,7 @@ export const CLEAR_REST_OF_QUEUE = "CLEAR_REST_OF_QUEUE";
 export const SET_AUTOPLAY = "SET_AUTOPLAY";
 export const TOGGLE_SHUFFLE = "TOGGLE_SHUFFLE";
 export const TOGGLE_REPEAT = "TOGGLE_REPEAT";
+export const SET_SHOW_YOUTUBE_PLAYER = "SET_SHOW_YOUTUBE_PLAYER";
 
 // Search Reducer
 export const SET_QUERY = "SET_QUERY";

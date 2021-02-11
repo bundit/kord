@@ -15,6 +15,9 @@ import styles from "../styles/player.module.scss";
 function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
   const isPlaying = useSelector(state => state.player.isPlaying);
   const current = useSelector(state => state.player.currentTrack);
+  const showYoutubePlayer = useSelector(
+    state => state.player.showYoutubePlayer
+  );
   const youtubeIsPlaying = current.source === "youtube" && isPlaying;
 
   const dispatch = useDispatch();
@@ -50,14 +53,6 @@ function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
     }
   }
 
-  function handlePlay() {
-    dispatch(play());
-  }
-
-  function handlePause() {
-    dispatch(pause());
-  }
-
   function handlePlayPause() {
     if (isPlaying) {
       dispatch(pause());
@@ -74,7 +69,7 @@ function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
       playerIsExpanded && youtubeActive
         ? styles.youtubeExpanded
         : styles.youtubeNotExpanded
-    }`;
+    } ${!showYoutubePlayer && styles.hiddenYoutubePlayer}`;
   }
 
   return (

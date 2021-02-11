@@ -1,7 +1,7 @@
 @import "variables";
 
 .settingsList {
-  padding: 0;
+  padding: 5px 50px;
 
   li {
     display: flex;
@@ -11,6 +11,15 @@
     h2 {
       font-weight: 300;
       font-family: "Open Sans";
+      width: 50%;
+      text-align: left;
+    }
+
+    & > :nth-child(2) {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

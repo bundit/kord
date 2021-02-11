@@ -168,6 +168,7 @@ input[type="range"].seekBar:focus::-ms-fill-upper {
   text-align: center;
   overflow: hidden;
   pointer-events: none;
+  opacity: 0;
 }
 
 .youtubeSeekToolTip {
@@ -196,6 +197,10 @@ input[type="range"].seekBar:focus::-ms-fill-upper {
 
 .isHovering {
   transform: translateY(0px);
+}
+
+.showToolTip {
+  opacity: 1;
 }
 
 @media (min-width: 800px) {

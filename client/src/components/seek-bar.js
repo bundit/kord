@@ -14,17 +14,23 @@ function SeekBar({
   isLargerSeekBar = false,
   withThumb = false
 }) {
-  const isCurrentTrackFromYoutube =
-    useSelector(state => state.player.currentTrack.source) === "youtube";
-  const isPlayerExpanded = useSelector(state => state.player.isPlayerExpanded);
   const duration = useSelector(state => state.player.duration);
   const seek = useSelector(state => state.player.seek);
+  const isPlayerExpanded = useSelector(state => state.player.isPlayerExpanded);
+  const isCurrentTrackFromYoutube =
+    useSelector(state => state.player.currentTrack.source) === "youtube";
+  const showYoutubePlayer = useSelector(
+    state => state.player.showYoutubePlayer
+  );
   const [isUserHovering, setIsUserHovering] = useState(false);
   const [hoverOffset, setHoverOffset] = useState(0);
   const seekWrap = useRef(null);
   const styles = isLargerSeekBar ? largerSeekBarStyles : seekBarStyles;
   const seekToolTipOnBottom =
-    isCurrentTrackFromYoutube && !isPlayerExpanded && hoverOffset < 200;
+    isCurrentTrackFromYoutube &&
+    !isPlayerExpanded &&
+    showYoutubePlayer &&
+    hoverOffset < 200;
 
   function getPositionOnHover(e) {
     setIsUserHovering(true);
@@ -60,6 +66,16 @@ function SeekBar({
     return (calculateProgressPercentage() / 100) * containerWidth - 5;
   }
 
+  function getToolTipClassNames() {
+    return `${styles.seekToolTip} ${isUserHovering &&
+      styles.showToolTip} ${seekToolTipOnBottom && styles.youtubeSeekToolTip} `;
+  }
+
+  function getHoverTimeClassNames() {
+    return `${styles.hoverTime} ${seekToolTipOnBottom &&
+      styles.youtubeHoverTime} ${isUserHovering && styles.isHovering}`;
+  }
+
   return (
     <div className={styles.progressContainer} ref={seekWrap}>
       <input
@@ -81,15 +97,10 @@ function SeekBar({
         style={{ width: `${calculateProgressPercentage()}%` }}
       />
       <span
-        className={`${styles.seekToolTip} ${seekToolTipOnBottom &&
-          styles.youtubeSeekToolTip}`}
+        className={getToolTipClassNames()}
         style={{ left: `${hoverOffset - 20}px` }}
       >
-        <span
-          className={`${styles.hoverTime} ${isUserHovering &&
-            styles.isHovering} ${seekToolTipOnBottom &&
-            styles.youtubeHoverTime}`}
-        >
+        <span className={getHoverTimeClassNames()}>
           {secondsToFormatted(calculateTimeRatioFromHoverPosition() || 0)}
         </span>
       </span>
