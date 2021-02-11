@@ -120,9 +120,9 @@ export const loadMoreTrackResults = (source, next) => dispatch => {
 };
 
 export const fetchAutoCompleteResults = query => dispatch => {
-  return fetchGeneric(
-    `https://cors-anywhere.herokuapp.com/http://suggestqueries.google.com/complete/search?client=chrome&ds=yt&q=${query}`
-  ).then(res => dispatch(setAutoCompleteResults(res[1])));
+  return fetchGeneric(`/api/autocomplete?q=${encodeURIComponent(query)}`).then(
+    res => dispatch(setAutoCompleteResults(res[1]))
+  );
 };
 
 export const fetchArtist = (artistId, source) => dispatch => {

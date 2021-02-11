@@ -70,8 +70,8 @@ export const fetchSoundcloudLikes = (next, userId) => dispatch => {
 export const fetchSoundcloudPlaylists = username => dispatch => {
   const playlistEndpoint = `${SC_API}/users/${username}/playlists?client_id=${KEY}`;
 
-  return fetchGeneric(playlistEndpoint).then(
-    data => console.log(data) || mapCollectionToPlaylists(data)
+  return fetchGeneric(playlistEndpoint).then(data =>
+    mapCollectionToPlaylists(data)
   );
 };
 
@@ -148,7 +148,7 @@ export const fetchSoundcloudArtist = artistId => dispatch => {
 
 export const fetchSoundcloudSpotlight = artistId => dispatch => {
   const endpoint = `${SC_API_V2}/users/${artistId}/spotlight?&limit=20&linked_partitioning=1`;
-  const proxyHref = `/api?url=${encodeURIComponent(endpoint)}`;
+  const proxyHref = `/api/soundcloud?url=${encodeURIComponent(endpoint)}`;
   return fetchGeneric(proxyHref).then(json =>
     mapCollectionToPlaylistsOrTracks(json.collection)
   );
@@ -168,10 +168,12 @@ export const fetchSoundcloudArtistTracks = artistId => dispatch => {
 
 export const fetchSoundcloudTracks = endpoint => dispatch => {
   if (endpoint.includes("api-v2")) {
-    endpoint = `/api?url=${encodeURIComponent(endpoint)}`;
+    endpoint = `/api/soundcloud?url=${encodeURIComponent(endpoint)}`;
   }
 
-  return fetchGeneric(endpoint).then(json => mapTracksAndNextHref(json));
+  return fetchGeneric(endpoint).then(
+    json => console.log(json) || mapTracksAndNextHref(json)
+  );
 };
 
 function mapTracksAndNextHref(json) {
