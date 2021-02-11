@@ -19,6 +19,7 @@ import {
   SET_QUEUE_INDEX,
   SET_RELATED_TRACKS,
   SET_SEEK,
+  SET_SHOW_YOUTUBE_PLAYER,
   SET_TRACK,
   SET_VOLUME,
   TOGGLE_EXPANDED_PLAYER,
@@ -297,6 +298,13 @@ export function setAutoPlay(allowAutoPlay) {
   return {
     type: SET_AUTOPLAY,
     payload: allowAutoPlay
+  };
+}
+
+export function setShowYoutubePlayer(showYoutubePlayer) {
+  return {
+    type: SET_SHOW_YOUTUBE_PLAYER,
+    payload: showYoutubePlayer
   };
 }
 

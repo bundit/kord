@@ -20,6 +20,7 @@ import {
   SET_QUEUE_INDEX,
   SET_RELATED_TRACKS,
   SET_SEEK,
+  SET_SHOW_YOUTUBE_PLAYER,
   SET_TRACK,
   SET_TRACK_UNSTREAMABLE,
   SET_VOLUME,
@@ -57,7 +58,8 @@ const initialState = {
   isPlayerExpanded: false,
   allowAutoPlay: true,
   shuffleEnabled: false,
-  repeatEnabled: false
+  repeatEnabled: false,
+  showYoutubePlayer: false
 };
 
 export default function(state = initialState, action) {
@@ -440,6 +442,15 @@ export default function(state = initialState, action) {
       return {
         ...state,
         repeatEnabled: !repeatEnabled
+      };
+    }
+
+    case SET_SHOW_YOUTUBE_PLAYER: {
+      const showYoutubePlayer = action.payload;
+
+      return {
+        ...state,
+        showYoutubePlayer
       };
     }
 
