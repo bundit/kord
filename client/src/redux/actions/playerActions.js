@@ -42,6 +42,7 @@ import {
   fetchYoutubePlaylistTracks,
   fetchYoutubeTracks
 } from "./youtubeActions";
+import { hasTracksLeftInAnyQueue } from "../../utils/queueHelpers";
 import { loadPlaylistTracks } from "./libraryActions";
 import { shuffleTracks } from "../../utils/shuffle";
 import store from "../store";
@@ -139,43 +140,18 @@ function nextTrackAction() {
 }
 
 export const nextTrack = () => dispatch => {
-  let state = store.getState();
-  let { index, userQueueIndex, relatedTracksIndex } = state.player;
-  const {
-    queue,
-    userQueue,
-    currentTrack,
-    relatedTracks,
-    allowAutoPlay,
-    repeatEnabled
-  } = state.player;
+  const playerState = store.getState().player;
+  const { currentTrack, allowAutoPlay, repeatEnabled, nextHref } = playerState;
+  const hasTracksLeftToFetch = nextHref;
 
-  // Check if more tracks need to be loaded or not
-  do {
-    index++;
-  } while (index < queue.length && !queue[index].streamable);
-
-  while (
-    userQueueIndex < userQueue.length &&
-    !userQueue[userQueueIndex].streamable
-  ) {
-    userQueueIndex++;
-  }
-
-  while (
-    relatedTracksIndex < relatedTracks.length &&
-    !relatedTracks[relatedTracksIndex].streamable
-  ) {
-    relatedTracksIndex++;
-  }
-
-  const hasTracksLeftInAnyQueue =
-    index < queue.length ||
-    userQueueIndex < userQueue.length ||
-    relatedTracksIndex < relatedTracks.length;
-
-  if (hasTracksLeftInAnyQueue) {
+  if (hasTracksLeftInAnyQueue(playerState)) {
     return dispatch(nextTrackAction());
+  }
+
+  if (hasTracksLeftToFetch) {
+    return dispatch(loadMoreQueueTracks()).then(() =>
+      dispatch(nextTrackAction())
+    );
   }
 
   if (repeatEnabled) {
@@ -183,11 +159,9 @@ export const nextTrack = () => dispatch => {
   }
 
   if (allowAutoPlay) {
-    return dispatch(loadMoreQueueTracks())
-      .catch(() =>
-        dispatch(fetchRelatedQueueTracks(currentTrack.source, currentTrack))
-      )
-      .then(() => dispatch(nextTrackAction()));
+    return dispatch(
+      fetchRelatedQueueTracks(currentTrack.source, currentTrack)
+    ).then(() => dispatch(nextTrackAction()));
   }
 
   return dispatch(nextTrackAction());
