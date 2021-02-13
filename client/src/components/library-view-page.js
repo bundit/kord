@@ -4,9 +4,9 @@ import React from "react";
 import { SOURCES } from "../utils/constants";
 import {
   filterUnconnected,
+  flattenPlaylistObject,
   formatSourceName
 } from "../utils/formattingHelpers";
-import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
 import PlaylistList from "./playlist-list";
 import styles from "../styles/library-view-page.module.scss";
 

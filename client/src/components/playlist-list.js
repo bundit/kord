@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import { filterUnconnected } from "../utils/formattingHelpers";
-import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
+import {
+  filterUnconnected,
+  flattenPlaylistObject
+} from "../utils/formattingHelpers";
 import PlaylistItem from "./playlist-item";
 
 const ListOfPlaylists = ({

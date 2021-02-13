@@ -7,8 +7,7 @@ import React from "react";
 
 import { ICONS } from "../utils/constants";
 import { IconButton, IconButton as ToggleDropDownButton } from "./buttons";
-import { getImgUrl } from "../utils/getImgUrl";
-import { msToDuration } from "../utils/formattingHelpers";
+import { getImgUrl, msToDuration } from "../utils/formattingHelpers";
 import ActiveImageOverlay from "./active-image-overlay";
 import TrackDropdown from "./track-dropdown";
 import TrackInfo from "./track-info";

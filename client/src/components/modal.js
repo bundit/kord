@@ -9,10 +9,10 @@ import {
   LargeIconButton as CloseButton,
   SubmitButton
 } from "./buttons";
+import { usePortal } from "../utils/hooks";
 import Backdrop from "./backdrop";
 import slideTransition from "../styles/slideModal.module.css";
 import styles from "../styles/modal.module.scss";
-import usePortal from "../utils/usePortal";
 
 const Modal = ({ title, show, onClose, onSubmit, children }) => {
   const target = usePortal("portal");

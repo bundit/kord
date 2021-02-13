@@ -14,7 +14,7 @@ import {
   SET_TRACK_UNSTREAMABLE,
   TOGGLE_STAR_PLAYLIST
 } from "../actions/types";
-import { reorder } from "../../utils/reorder";
+import { reorder } from "../../utils/formattingHelpers";
 
 const initialState = {
   playlists: {

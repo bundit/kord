@@ -7,8 +7,7 @@ import React from "react";
 
 import { ICONS } from "../utils/constants";
 import { PlayPauseButton } from "./buttons";
-import { capitalizeWord } from "../utils/formattingHelpers";
-import { getImgUrl } from "../utils/getImgUrl";
+import { capitalizeWord, getImgUrl } from "../utils/formattingHelpers";
 import { pause, play, playPlaylist } from "../redux/actions/playerActions";
 import { toggleStarPlaylist } from "../redux/actions/libraryActions";
 import Image from "./image";

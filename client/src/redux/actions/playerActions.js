@@ -42,9 +42,11 @@ import {
   fetchYoutubePlaylistTracks,
   fetchYoutubeTracks
 } from "./youtubeActions";
-import { hasTracksLeftInAnyQueue } from "../../utils/queueHelpers";
+import {
+  hasTracksLeftInAnyQueue,
+  shuffleTracks
+} from "../../utils/queueHelpers";
 import { loadPlaylistTracks } from "./libraryActions";
-import { shuffleTracks } from "../../utils/shuffle";
 import store from "../store";
 
 export const playTrack = (index, tracklist, nextHref, context) => (

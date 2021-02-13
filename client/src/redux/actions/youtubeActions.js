@@ -1,4 +1,4 @@
-import { YTDurationToMilliseconds } from "../../utils/YTDurationToMilliseconds";
+import { YTDurationToMilliseconds } from "../../utils/formattingHelpers";
 import { cacheValue, loadCachedValue } from "../../utils/sessionStorage";
 import { fetchGeneric } from "../../utils/fetchGeneric";
 import {

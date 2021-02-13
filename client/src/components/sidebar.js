@@ -12,7 +12,7 @@ import React from "react";
 import { ICONS, SOURCES } from "../utils/constants";
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 import { collapsePlayer } from "../redux/actions/playerActions";
-import { flattenPlaylistObject } from "../utils/flattenPlaylistObject";
+import { flattenPlaylistObject } from "../utils/formattingHelpers";
 import { openSettings } from "../redux/actions/userActions";
 import ConnectedSourceButton from "./connected-source-button";
 import PlaylistList from "./playlist-list";

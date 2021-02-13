@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import React from "react";
 
-import { getImgUrl } from "../utils/getImgUrl";
+import { getImgUrl } from "../utils/formattingHelpers";
 import { removeFromPlaylist } from "../redux/actions/libraryActions";
 import { toggleDeleteTrackForm } from "../redux/actions/userActions";
 import Image from "./image";
