@@ -383,13 +383,15 @@ function mapJsonToPlaylistTracks(json) {
 }
 
 function mapJsonSearchToTracks(json) {
-  return json.items.map(item => ({
-    id: item.id.videoId,
-    title: item.snippet.title,
-    img: item.snippet.thumbnails,
-    streamable: true,
-    source: "youtube"
-  }));
+  return json.items
+    .filter(item => item.snippet) // API error - https://stackoverflow.com/questions/35179178/youtube-api-search-list-empty-snippet-description
+    .map(item => ({
+      id: item.id.videoId,
+      title: item.snippet.title,
+      img: item.snippet.thumbnails,
+      streamable: true,
+      source: "youtube"
+    }));
 }
 
 function mapDurationAndChannelToTracks(item) {
