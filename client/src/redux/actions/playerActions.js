@@ -29,11 +29,6 @@ import {
 import { capitalizeWord } from "../../utils/formattingHelpers";
 import { fetchGeneric } from "../../utils/fetchGeneric";
 import {
-  fetchMoreYoutubeTrackResults,
-  fetchRelatedYoutubeTracks,
-  fetchYoutubePlaylistTracks
-} from "./youtubeActions";
-import {
   fetchRelatedSouncloudTracks,
   mapCollectionToTracks
 } from "./soundcloudActions";
@@ -42,6 +37,11 @@ import {
   mapJsonToTracks,
   spotifyApi
 } from "./spotifyActions";
+import {
+  fetchRelatedYoutubeTracks,
+  fetchYoutubePlaylistTracks,
+  fetchYoutubeTracks
+} from "./youtubeActions";
 import { loadPlaylistTracks } from "./libraryActions";
 import { shuffleTracks } from "../../utils/shuffle";
 import store from "../store";
@@ -354,7 +354,7 @@ const loadMoreQueueTracks = () => dispatch => {
     nextHref,
     shuffleEnabled,
     queue,
-    context: { source, id }
+    context: { source, id, search }
   } = playerState;
 
   if (!nextHref) {
@@ -388,10 +388,10 @@ const loadMoreQueueTracks = () => dispatch => {
       return { tracks, next };
     });
   } else if (source === "youtube") {
-    if (id !== "search") {
+    if (!search) {
       promise = dispatch(fetchYoutubePlaylistTracks(id, nextHref));
-    } else if (id === "search") {
-      promise = dispatch(fetchMoreYoutubeTrackResults(nextHref));
+    } else if (search) {
+      promise = dispatch(fetchYoutubeTracks(nextHref));
     }
   }
 
