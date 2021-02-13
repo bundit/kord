@@ -6,9 +6,9 @@ import React, { useState } from "react";
 import { addTrackToPlaylists } from "../redux/actions/libraryActions";
 import {
   filterUnconnected,
-  formatSourceName
+  formatSourceName,
+  getImgUrl
 } from "../utils/formattingHelpers";
-import { getImgUrl } from "../utils/getImgUrl";
 import { toggleAddToPlaylistForm } from "../redux/actions/userActions";
 import FormCheckbox from "./form-checkbox";
 import Image from "./image";

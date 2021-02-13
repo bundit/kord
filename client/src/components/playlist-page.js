@@ -3,21 +3,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 
-import { capitalizeWord } from "../utils/formattingHelpers";
+import {
+  capitalizeWord,
+  getImgUrl,
+  timeSince
+} from "../utils/formattingHelpers";
 import {
   clearPlaylistTracks,
   loadLikes,
   loadPlaylistTracks,
   toggleStarPlaylist
 } from "../redux/actions/libraryActions";
-import { getImgUrl } from "../utils/getImgUrl";
 import {
   pause,
   play,
   playPlaylist,
   playTrack
 } from "../redux/actions/playerActions";
-import { timeSince } from "../utils/dateHelpers";
 import LoadingSpinner from "./loading-spinner";
 import PageHeader from "./page-header";
 import TrackList from "./track-list";

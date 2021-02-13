@@ -25,9 +25,8 @@ import {
   setPlaylistSettingsAction
 } from "../redux/actions/libraryActions";
 import { fetchSoundcloudProfileAndPlaylists } from "../redux/actions/soundcloudActions";
-import { formatSourceName } from "../utils/formattingHelpers";
+import { formatSourceName, reorder } from "../utils/formattingHelpers";
 import { openSettings, removeUserProfile } from "../redux/actions/userActions";
-import { reorder } from "../utils/reorder";
 import Image from "./image";
 import KordSettings from "./kord-settings";
 import LoadingSpinner from "./loading-spinner";

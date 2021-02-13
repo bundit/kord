@@ -4,14 +4,17 @@ import { useParams } from "react-router-dom";
 import React, { useRef, useState, useEffect } from "react";
 
 import { cacheValue, loadCachedValue } from "../utils/sessionStorage";
-import { capitalizeWord, formatNumber } from "../utils/formattingHelpers";
+import {
+  capitalizeWord,
+  formatNumber,
+  getImgUrl
+} from "../utils/formattingHelpers";
 import {
   fetchArtist,
   fetchArtistTracks,
   fetchMoreArtistTracks
 } from "../redux/actions/searchActions";
 import { fetchArtistInfo } from "../redux/actions/lastFmActions";
-import { getImgUrl } from "../utils/getImgUrl";
 import { pause, play, playTrack } from "../redux/actions/playerActions";
 import LoadingSpinner from "./loading-spinner";
 import PageHeader from "./page-header";

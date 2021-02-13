@@ -1,5 +1,4 @@
-import { formatArtistName } from "./formattingHelpers";
-import { getImgUrl } from "./getImgUrl";
+import { formatArtistName, getImgUrl } from "./formattingHelpers";
 
 export function compareSongs(song1, song2) {
   const titleCompare = song1.title

@@ -4,8 +4,7 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import { COLORS, ICONS } from "../utils/constants";
-import { formatArtistName } from "../utils/formattingHelpers";
-import { getImgUrl } from "../utils/getImgUrl";
+import { formatArtistName, getImgUrl } from "../utils/formattingHelpers";
 import avatarImg from "../assets/avatar-placeholder.png";
 import styles from "../styles/artist-item.module.scss";
 

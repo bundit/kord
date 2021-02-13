@@ -28,7 +28,7 @@ import {
   TOGGLE_REPEAT,
   TOGGLE_SHUFFLE
 } from "../actions/types";
-import { shuffleTracks, unshuffleTracks } from "../../utils/shuffle";
+import { shuffleTracks, unshuffleTracks } from "../../utils/queueHelpers";
 
 const initialState = {
   currentTrack: {
