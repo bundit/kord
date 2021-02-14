@@ -1,22 +1,12 @@
 const router = require("express").Router();
-const passport = require("passport");
 const jwtDecode = require("jwt-decode");
+const {
+  ensureAuthenticatedRequest
+} = require("../middleware/ensureAuthenticated");
 const db = require("../config/database-setup");
 
-router.use((req, res, next) => {
-  passport.authenticate("jwt", (err, user, info) => {
-    if (err) {
-      return res.redirect(`/login#err=${err}`);
-    }
-
-    if (!user) {
-      return res.redirect(`/login#err=nouser&other=${info}`);
-    }
-
-    // No error, continue to next
-    return next();
-  })(req, res, next);
-});
+// Authenticate all requests to /user
+router.use(ensureAuthenticatedRequest);
 
 router.get("/profiles", async (req, res) => {
   const kordUser = jwtDecode(req.cookies.kordUser);
@@ -167,7 +157,7 @@ router.patch("/playlists", (req, res) => {
       try {
         await client.query(patchQuery);
       } catch (e) {
-        return res.status(400).json(e);
+        await client.query(patchQuery);
       }
     });
   });

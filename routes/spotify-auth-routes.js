@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const {
+  ensureAuthenticatedRoute
+} = require("../middleware/ensureAuthenticated");
 
 // Client will get directed to this route when they click "Login with Spotify"
 router.get(
@@ -73,19 +76,8 @@ router.get(
   }
 );
 
-router.use("/link", (req, res, next) => {
-  passport.authenticate("jwt", (err, user, info) => {
-    if (err) {
-      return res.status(403).redirect("/login");
-    }
-
-    if (!user) {
-      return res.status(401).redirect("/login");
-    }
-
-    return next();
-  })(req, res, next);
-});
+// Can only link accounts when logged in
+router.use("/link", ensureAuthenticatedRoute);
 
 router.get(
   "/link",
@@ -138,7 +130,7 @@ router.get(
       }
 
       res.redirect(
-        `/app/library#source=spotify&accessToken=${user.accessToken}&userId=${user.id}&login`
+        `/app/library#source=spotify&accessToken=${user.accessToken}&userId=${user.id}`
       );
     });
   }
