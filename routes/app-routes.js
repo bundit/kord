@@ -1,30 +1,21 @@
 const router = require("express").Router();
 const express = require("express");
-const passport = require("passport");
+// const passport = require("passport");
 const path = require("path");
+const {
+  ensureAuthenticatedRoute
+} = require("../middleware/ensureAuthenticated");
 
-// It is important to set the authentication middleware,
-// BEFORE the static path middleware
-router.use("/", (req, res, next) => {
-  passport.authenticate("jwt", (err, user, info) => {
-    if (err) {
-      return res.redirect(`/login#err=${err}`);
-    }
+// Authenticate user before app routes
+router.use("/", ensureAuthenticatedRoute);
 
-    if (!user) {
-      return res.redirect(`/login#err=nouser&other=${info}`);
-    }
-
-    // No error, continue to next
-    return next();
-  })(req, res, next);
-});
-
+// Apply static files middleware
 router.use(
   "/",
   express.static(path.resolve(__dirname, "../", "client", "build"))
 );
 
+// Send the React App
 router.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../", "client", "build", "index.html"));
 });

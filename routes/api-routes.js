@@ -1,38 +1,33 @@
 const router = require("express").Router();
-const passport = require("passport");
 const request = require("request");
 const KeyService = require("../services/keys");
+const {
+  ensureAuthenticatedRequest
+} = require("../middleware/ensureAuthenticated");
 
-router.get("/", (req, res, next) => {
-  passport.authenticate("jwt", (err, user, info) => {
-    if (err) {
-      return res.status(403).json({ message: info });
-    }
+// Authenticate all requests to /user
+router.use(ensureAuthenticatedRequest);
 
-    if (!user) {
-      return res.status(401).json({ message: info });
-    }
+router.get("/", (req, res) => {
+  const {
+    query: { url }
+  } = req;
 
-    const {
-      query: { url }
-    } = req;
+  return request
+    .get(`${url}&client_id=${KeyService.soundcloudClientId}`)
+    .on("response", async response => {
+      const { statusCode } = response;
 
-    return request
-      .get(`${url}&client_id=${KeyService.soundcloudClientId}`)
-      .on("response", async response => {
-        const { statusCode } = response;
+      if (statusCode === 403 || statusCode === 401) {
+        await KeyService.refreshSoundcloudClientId();
 
-        if (statusCode === 403 || statusCode === 401) {
-          await KeyService.refreshSoundcloudClientId();
+        return request
+          .get(`${url}&client_id=${KeyService.soundcloudClientId}`)
+          .pipe(res);
+      }
 
-          return request
-            .get(`${url}&client_id=${KeyService.soundcloudClientId}`)
-            .pipe(res);
-        }
-
-        return response.pipe(res);
-      });
-  })(req, res, next);
+      return response.pipe(res);
+    });
 });
 
 module.exports = router;

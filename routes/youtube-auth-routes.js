@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const {
+  ensureAuthenticatedRoute
+} = require("../middleware/ensureAuthenticated");
 
 router.get(
   "/",
@@ -17,7 +20,7 @@ router.get(
   }),
   // eslint-disable-next-line
   (res, req) => {
-    // The request will be redirected to spotify for authentication, so this
+    // The request will be redirected to Google for authentication, so this
     // function will not be called.
   }
 );
@@ -62,19 +65,8 @@ router.get(
   }
 );
 
-router.use("/link", (req, res, next) => {
-  passport.authenticate("jwt", (err, user, info) => {
-    if (err) {
-      return res.status(403).redirect("/login");
-    }
-
-    if (!user) {
-      return res.status(401).redirect("/login");
-    }
-
-    return next();
-  })(req, res, next);
-});
+// Can only link accounts when logged in
+router.use("/link", ensureAuthenticatedRoute);
 
 router.get(
   "/link",
@@ -91,7 +83,7 @@ router.get(
   }),
   // eslint-disable-next-line
   (res, req) => {
-    // The request will be redirected to spotify for authentication, so this
+    // The request will be redirected to Google for authentication, so this
     // function will not be called.
   }
 );

@@ -68,13 +68,15 @@ passport.use(
   new JWTStrategy(
     {
       jwtFromRequest: req => req.cookies && req.cookies.kordUser,
-      secretOrKey: process.env.JWT_SECRET
+      secretOrKey: process.env.JWT_SECRET,
+      passReqToCallback: true
     },
-    (jwtPayload, done) => {
+    async (req, jwtPayload, done) => {
       if (Date.now() > jwtPayload.expires) {
         return done("jwt expired", null);
       }
 
+      req.user = jwtPayload;
       return done(null, jwtPayload);
     }
   )
