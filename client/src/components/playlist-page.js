@@ -1,4 +1,5 @@
 import { forceCheck } from "react-lazyload";
+import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import React, { useRef, useState, useEffect, useCallback } from "react";
@@ -28,6 +29,7 @@ import styles from "../styles/layout.module.scss";
 const playlistIncrementAmount = 25;
 
 function PlaylistPage() {
+  const alert = useAlert();
   const dispatch = useDispatch();
   const scrollContainer = useRef(null);
   const playlists = useSelector(state => state.library.playlists);
@@ -53,7 +55,8 @@ function PlaylistPage() {
     tracks,
     source,
     hasRefreshed,
-    setHasRefreshed
+    setHasRefreshed,
+    alert
   );
 
   const loadTracksOnScroll = useLoadTracksOnScroll(
@@ -151,7 +154,8 @@ function useLoadMoreTracksCallback(
   tracks,
   source,
   hasRefreshed,
-  setHasRefreshed
+  setHasRefreshed,
+  alert
 ) {
   const dispatch = useDispatch();
   const { next, total } = playlist;
@@ -193,7 +197,8 @@ function useLoadMoreTracksCallback(
     dispatch,
     source,
     hasRefreshed,
-    setHasRefreshed
+    setHasRefreshed,
+    alert
   ]);
 }
 
