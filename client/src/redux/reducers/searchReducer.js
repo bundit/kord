@@ -90,13 +90,14 @@ export default function(state = initialState, action) {
     }
 
     case ADD_TO_SEARCH_HISTORY: {
+      const MAX_SEARCH_HISTORY = 20;
       const newQuery = action.payload.trim();
-      let history = state.history.slice();
-      history = history.filter(query => query !== newQuery);
+      const prevHistory = state.history.filter(query => query !== newQuery);
+      const newHistory = [newQuery, ...prevHistory];
 
       return {
         ...state,
-        history: [newQuery, ...history]
+        history: newHistory.slice(0, MAX_SEARCH_HISTORY)
       };
     }
 

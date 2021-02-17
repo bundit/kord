@@ -17,20 +17,19 @@ import {
 import styles from "../styles/searchForm.module.css";
 
 const SearchBar = ({ placeholder }) => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const prevEnteredQuery = useRef(null);
   const completionIndex = useRef(-1);
   const searchBarRef = useRef(null);
   const searchTimer = useRef(null);
   const [filteredHistory, setFilteredHistory] = useState([]);
-  const searchStore = useSelector(state => state.search);
-  const history = useHistory();
+  const searchHistory = useSelector(state => state.search.history);
+  const query = useSelector(state => state.search.query) || "";
+  const autoCompleteResults =
+    useSelector(state => state.search.autoCompleteResults) || [];
 
-  let { history: searchHistory, autoCompleteResults, query } = searchStore;
-  autoCompleteResults = autoCompleteResults || [];
-  query = query || "";
-
-  const allCompleteResults = [...filteredHistory, ...autoCompleteResults];
+  const allCompleteResults = getAllCompleteResults();
   const searchCompletionComponents = allCompleteResults.map((aQuery, i) => (
     <SearchCompletion
       query={aQuery}
@@ -41,6 +40,13 @@ const SearchBar = ({ placeholder }) => {
       isSelected={i === completionIndex.current}
     />
   ));
+
+  function getAllCompleteResults() {
+    const MAX_SEARCH_RESULTS = 10;
+    const fullList = [...filteredHistory, ...autoCompleteResults];
+
+    return fullList.slice(0, MAX_SEARCH_RESULTS);
+  }
 
   function updateFilteredHistory() {
     setFilteredHistory(
