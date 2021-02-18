@@ -17,6 +17,16 @@ const TrackInfo = ({ track, isPlayer, isForm, handleArtistClick }) => {
     }
   }
 
+  function getArtistHref(artist) {
+    if (!track.source || !artist.id) {
+      return "#";
+    }
+
+    return `/app/search/artist/${track.source}/${
+      artist.id
+    }/${encodeURIComponent(artist.name)}`;
+  }
+
   return (
     <div
       className={`${styles.titleWrapper} ${isForm && styles.formTrackTitle}`}
@@ -34,9 +44,7 @@ const TrackInfo = ({ track, isPlayer, isForm, handleArtistClick }) => {
             <React.Fragment key={artist.name}>
               <Link
                 className={`${styles.stackedArtistName}`}
-                to={`/app/search/artist/${track.source}/${
-                  artist.id
-                }/${encodeURIComponent(artist.name)}`}
+                to={getArtistHref(artist)}
                 onClick={onArtistClick}
               >
                 {artist.name}
