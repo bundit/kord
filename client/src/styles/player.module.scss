@@ -387,6 +387,7 @@
     border-radius: 0;
     left: 50%;
     top: 50%;
+    bottom: auto;
     transform: translate(-50%, -50%);
   }
 
@@ -427,13 +428,6 @@
     }
 
     .expandedYtImage {
-    }
-
-    .nowPlaying {
-      justify-content: flex-start;
-      align-items: center;
-      text-align: center;
-      flex: 0 1 auto;
     }
 
     .mobileBackPlayForwardWrapper,
@@ -494,7 +488,7 @@
   }
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 800px) {
   .expandedPlayer {
     .nowPlaying {
       display: none;
