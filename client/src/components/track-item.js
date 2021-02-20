@@ -35,6 +35,7 @@ const TrackItem = ({
     if (isStreamable) {
       handlePlay(index);
     }
+    e.stopPropagation();
   }
 
   function toggleDropdown(e) {
