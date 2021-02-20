@@ -10,6 +10,7 @@ import {
   SET_PROFILE,
   SET_SETTINGS_OPEN_STATUS,
   SET_SETTINGS_SOURCE,
+  SET_SHOW_UNSUPPORTED_BROWSER_MODAL,
   TOGGLE_ADD_TO_PLAYLIST_FORM,
   TOGGLE_DELETE_TRACK_FORM,
   TOGGLE_KEYBOARD_CONTROLS_MENU,
@@ -178,4 +179,11 @@ export const fetchUserProfiles = exclude => dispatch => {
       }
     });
   });
+};
+
+export const setShowUnsupportedBrowserModal = show => {
+  return {
+    type: SET_SHOW_UNSUPPORTED_BROWSER_MODAL,
+    payload: show
+  };
 };

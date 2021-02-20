@@ -7,6 +7,7 @@ import * as Sentry from "@sentry/react";
 import { closeSettings, updateProfile } from "./redux/actions/userActions";
 import {
   useClearSessionStorageOnRefresh,
+  useDetectWidevine,
   useKeepSessionAlive,
   useLoadUserDataOnMount
 } from "./utils/hooks";
@@ -22,6 +23,7 @@ import NavHistory from "./components/nav-history";
 import SearchRouter from "./components/search-router";
 import SettingsForm from "./components/settings-form";
 import Sidebar from "./components/sidebar";
+import UnsupportedBrowserModal from "./components/unsupported-browser-modal";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,6 +33,7 @@ const App = () => {
   useLoadUserDataOnMount(setIsLoadingUserData);
   useKeepSessionAlive();
   useClearSessionStorageOnRefresh();
+  useDetectWidevine();
 
   const isSettingsOpen = useSelector(
     state => state.user.settings.isSettingsOpen
@@ -113,6 +116,7 @@ const App = () => {
       <AddToPlaylistForm show={isAddToPlaylistFormOpen} />
       <DeleteTrackForm show={isDeleteTrackFormOpen} />
       <ControlsModal />
+      <UnsupportedBrowserModal />
     </>
   );
 };

@@ -11,6 +11,7 @@ import {
   SET_PROFILE,
   SET_SETTINGS_OPEN_STATUS,
   SET_SETTINGS_SOURCE,
+  SET_SHOW_UNSUPPORTED_BROWSER_MODAL,
   TOGGLE_ADD_TO_PLAYLIST_FORM,
   TOGGLE_DELETE_TRACK_FORM,
   TOGGLE_KEYBOARD_CONTROLS_MENU,
@@ -46,7 +47,8 @@ const initialState = {
     isDeleteTrackFormOpen: false,
     currentTrackDropdown: null,
     isUserQueueOpen: false,
-    isKeyboardControlsOpen: false
+    isKeyboardControlsOpen: false,
+    showUnsupportedBrowserModal: false
   }
 };
 
@@ -273,6 +275,16 @@ export default function(state = initialState, action) {
         settings: {
           ...state.settings,
           currentTrackDropdown: currentTrack
+        }
+      };
+    }
+
+    case SET_SHOW_UNSUPPORTED_BROWSER_MODAL: {
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          showUnsupportedBrowserModal: action.payload
         }
       };
     }

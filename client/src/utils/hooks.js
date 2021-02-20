@@ -17,7 +17,8 @@ import {
   setAccessToken,
   setConnection,
   setKordId,
-  setMainConnection
+  setMainConnection,
+  setShowUnsupportedBrowserModal
 } from "../redux/actions/userActions";
 import { fetchUserPlaylists } from "../redux/actions/libraryActions";
 import {
@@ -373,4 +374,45 @@ export function usePortal(id) {
   }
 
   return getRootElem();
+}
+
+// https://www.radiantmediaplayer.com/blog/detecting-eme-cdm-browser.html
+export function useDetectWidevine() {
+  const dispatch = useDispatch();
+
+  const config = [
+    {
+      initDataTypes: ["cenc"],
+      audioCapabilities: [
+        {
+          contentType: 'audio/mp4;codecs="mp4a.40.2"'
+        }
+      ]
+    }
+  ];
+
+  useEffect(() => {
+    function handleWidevineNotSupported() {
+      const disablePrompt = localStorage.getItem("disablePrompt") === "true";
+
+      if (!disablePrompt) {
+        dispatch(setShowUnsupportedBrowserModal(true));
+      }
+    }
+
+    try {
+      navigator
+        .requestMediaKeySystemAccess("com.widevine.alpha", config)
+        .then(function(mediaKeySystemAccess) {
+          // Widevine support OK
+        })
+        .catch(function(e) {
+          // Widevine NOT supported
+          handleWidevineNotSupported();
+        });
+    } catch (e) {
+      // Widevine NOT supported
+      handleWidevineNotSupported();
+    } // eslint-disable-next-line
+  }, []);
 }
