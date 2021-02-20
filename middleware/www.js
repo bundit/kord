@@ -1,6 +1,8 @@
 module.exports = function forceWWW(req, res, next) {
-  if (req.headers.host.slice(0, 4) !== "www.") {
-    const { host } = req.headers;
+  const urlRegex = /([a-z0-9]+[.])?kord.app/;
+  const [host, subdomain] = req.headers.host.match(urlRegex);
+
+  if (subdomain !== "www.") {
     return res.redirect(301, `${req.protocol}://www.${host}${req.originalUrl}`);
   }
   return next();
