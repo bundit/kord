@@ -11,10 +11,10 @@ import {
 import React, { useState } from "react";
 
 import { useAuthDetection } from "../utils/auth-provider";
-import SEO from "../components/seo";
-import styles from "../styles/landing.module.css";
 import ArtistMockup from "../assets/mockup-artist.jpg";
+import SEO from "../components/seo";
 import SearchMockup from "../assets/mockup-search.jpg";
+import styles from "../styles/landing.module.css";
 
 const IndexPage = () => {
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -115,111 +115,147 @@ const IndexPage = () => {
           )}
         </div>
       </div>
-      <div className={styles.p2}>
-        <div
-          data-aos="zoom-out"
-          data-aos-easing="ease-in-out-back"
-          data-aos-duration="1000"
-          data-aos-offset="200"
-        >
-          <h1>Already have playlists? No problem.</h1>
-          <h3 className={styles.p2Blurb}>
-            Connect your playlists from other major streaming platforms.
-          </h3>
+
+      <div className={styles.p2Wrapper}>
+        <div className={styles.p2}>
+          <div
+            data-aos="zoom-out"
+            data-aos-easing="ease-in-out-back"
+            data-aos-duration="1000"
+            data-aos-offset="200"
+          >
+            <h1>Already have playlists? No problem.</h1>
+            <h3 className={styles.p2Blurb}>
+              Connect your playlists from other major streaming platforms.
+            </h3>
+          </div>
+
+          <div className={styles.sectionContainer}>
+            {sourceCards.map(card => (
+              <div
+                className={`${styles.sourceCard} ${styles[card.source]}`}
+                key={`${card.source}:card`}
+              >
+                <div
+                  data-aos="fade-right"
+                  data-aos-easing="ease-in-out-back"
+                  data-aos-duration={sourceTransitionDuration}
+                  data-aos-delay={card.delay}
+                >
+                  <FontAwesomeIcon icon={card.icon} />
+                  <h3>{card.text}</h3>
+                </div>
+                {card.loginHref ? (
+                  <a href={card.loginHref}>
+                    <span>Get Started</span>
+                  </a>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className={styles.p2}>
+          <div
+            data-aos="zoom-out"
+            data-aos-easing="ease-in-out-back"
+            data-aos-duration="1000"
+            data-aos-offset="200"
+          >
+            <h1>Experience your music from any computer</h1>
+            <h3 className={styles.p2Blurb}>
+              Easily browse your saved online music from all platforms in one
+              place on your desktop, laptop, or work computer.
+            </h3>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              padding: "0 50px"
+            }}
+          >
+            <div
+              data-aos="fade-right"
+              data-aos-easing="ease-in-out-back"
+              data-aos-duration="1000"
+              data-aos-offset="300"
+            >
+              <img
+                className={styles.mockupImg}
+                src={ArtistMockup}
+                alt="artist-mockup"
+              />
+              <h3 className={styles.p2Blurb}>
+                Google Chrome and Mozilla Firefox supported.
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div className={styles.p2}>
+          <div
+            data-aos="zoom-out"
+            data-aos-easing="ease-in-out-back"
+            data-aos-duration="1000"
+            data-aos-offset="200"
+          >
+            <h1>Search across platforms in an instant</h1>
+            <h3 className={styles.p2Blurb}>
+              Couldn&apos;t find the song you&apos;re looking for? No need to
+              switch websites.
+            </h3>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              padding: "0 50px"
+            }}
+          >
+            <div
+              data-aos="fade-left"
+              data-aos-easing="ease-in-out-back"
+              data-aos-duration="1000"
+              data-aos-offset="300"
+            >
+              <img
+                className={styles.mockupImg}
+                src={SearchMockup}
+                alt="artist-mockup"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className={styles.sectionContainer}>
-          {sourceCards.map(card => (
-            <div
-              className={`${styles.sourceCard} ${styles[card.source]}`}
-              key={`${card.source}:card`}
-            >
-              <div
-                data-aos="fade-right"
-                data-aos-easing="ease-in-out-back"
-                data-aos-duration={sourceTransitionDuration}
-                data-aos-delay={card.delay}
-              >
-                <FontAwesomeIcon icon={card.icon} />
-                <h3>{card.text}</h3>
-              </div>
-              {card.loginHref ? (
-                <a href={card.loginHref}>
-                  <span>Get Started</span>
-                </a>
-              ) : null}
+        <div className={styles.p2}>
+          <div
+            data-aos="zoom-out"
+            data-aos-easing="ease-in-out-back"
+            data-aos-duration="1000"
+            data-aos-offset="200"
+          >
+            <h1>Still not interested?</h1>
+            <h3 className={styles.p2Blurb}>Check out Kord in our demo video</h3>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              padding: "0 50px"
+            }}
+          >
+            <div className={styles.demoWrapper}>
+              <iframe
+                src="https://player.vimeo.com/video/514566587?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullscreen
+                title="kord-demo.mp4"
+              />
             </div>
-          ))}
-        </div>
-      </div>
-      <div className={styles.p2} style={{ boxShadow: "none" }}>
-        <div
-          data-aos="zoom-out"
-          data-aos-easing="ease-in-out-back"
-          data-aos-duration="1000"
-          data-aos-offset="200"
-        >
-          <h1>Experience your music from any computer</h1>
-          <h3 className={styles.p2Blurb}>
-            Easily browse your saved online music from all platforms in one
-            place on your desktop, laptop, or work computer.
-          </h3>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            padding: "0 50px"
-          }}
-        >
-          <div
-            data-aos="fade-right"
-            data-aos-easing="ease-in-out-back"
-            data-aos-duration="1000"
-            data-aos-offset="300"
-          >
-            <img
-              style={{ width: "60vw", height: "auto" }}
-              src={ArtistMockup}
-              alt="artist-mockup"
-            />
           </div>
         </div>
       </div>
-      <div className={styles.p2} style={{ boxShadow: "none" }}>
-        <div
-          data-aos="zoom-out"
-          data-aos-easing="ease-in-out-back"
-          data-aos-duration="1000"
-          data-aos-offset="200"
-        >
-          <h1>Search across platforms in an instant</h1>
-          <h3 className={styles.p2Blurb}>
-            Couldn&apos;t find the song you&apos;re looking for? No need to
-            switch websites.
-          </h3>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            padding: "0 50px"
-          }}
-        >
-          <div
-            data-aos="fade-left"
-            data-aos-easing="ease-in-out-back"
-            data-aos-duration="1000"
-            data-aos-offset="300"
-          >
-            <img
-              style={{ width: "60vw", height: "auto" }}
-              src={SearchMockup}
-              alt="artist-mockup"
-            />
-          </div>
-        </div>
-      </div>
+
       <div className={styles.p1} style={{ height: "auto" }}>
         <div className={`${styles.p1Content} ${styles.p3Content}`}>
           <h1

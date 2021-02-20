@@ -112,9 +112,7 @@
   padding: 50px 0;
   box-sizing: border-box;
   text-align: center;
-  border-radius: 7px;
   overflow-x: hidden;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 
 .p2 h1 {
@@ -177,6 +175,47 @@
 
 .sourceCard svg {
   font-size: 3em;
+}
+
+.p2Wrapper .p2:first-child {
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.2);
+}
+.p2Wrapper .p2:not(:first-child):not(:last-child) {
+  border-radius: 0;
+  box-shadow: none;
+}
+.p2Wrapper .p2:last-child {
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+}
+
+.mockupImg {
+  height: auto;
+  width: 100vw;
+  max-width: 1200px;
+}
+
+.demoWrapper {
+  position: relative;
+  padding-bottom: 60%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  width: 100%;
+  border-radius: 7px;
+  overflow: hidden;
+  max-width: 1100px;
+}
+
+.demoWrapper iframe,
+.demoWrapper object,
+.demoWrapper embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -264,6 +303,10 @@
 
   .slogan {
     font-size: 70px;
+  }
+
+  .mockupImg {
+    width: 90vw;
   }
 }
 
