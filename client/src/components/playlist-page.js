@@ -35,6 +35,7 @@ function PlaylistPage() {
   const playlists = useSelector(state => state.library.playlists);
   const isPlaying = useSelector(state => state.player.isPlaying);
   const context = useSelector(state => state.player.context);
+  const user = useSelector(state => state.user);
   const [numShowTracks, setNumShowTracks] = useState(playlistIncrementAmount);
   const [hasRefreshed, setHasRefreshed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -118,7 +119,7 @@ function PlaylistPage() {
         <PageHeader
           imgSrc={getImgUrl(currentPlaylist, "lg")}
           title={title}
-          titleHref={getPlaylistLink(source, currentPlaylist)}
+          titleHref={getPlaylistLink(source, currentPlaylist, user)}
           imgBorderRadius="7px"
           isStarred={currentPlaylist.isStarred}
           handleStar={handleToggleStarPlaylist}
@@ -236,9 +237,12 @@ function useLoadTracksIfEmpty(
   }, [tracks, handleLoadMoreTracks, hasRefreshed, setHasRefreshed]);
 }
 
-function getPlaylistLink(source, playlist) {
+function getPlaylistLink(source, playlist, user) {
   if (source === "soundcloud") {
-    return playlist.externalUrl;
+    if (playlist.id === "likes") {
+      return `https://soundcloud.com/${user.soundcloud.username}/likes`;
+    }
+    return `https://soundcloud.com/${user.soundcloud.username}/sets/${playlist.title}`;
   } else if (source === "spotify") {
     if (playlist.id === "likes") {
       return "https://open.spotify.com/collection/tracks";
