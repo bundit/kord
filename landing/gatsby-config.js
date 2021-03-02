@@ -2,7 +2,9 @@ module.exports = {
   siteMetadata: {
     title: "Kord",
     description: "All your music, in one place.",
-    author: "@Bundit"
+    author: "@Bundit",
+    url: "https://www.kord.app",
+    image: "/kord-og-image.png"
   },
   plugins: [
     "gatsby-plugin-react-helmet",
