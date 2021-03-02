@@ -3,7 +3,7 @@ import { faEllipsisV, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import { ICONS } from "../utils/constants";
 import { IconButton, IconButton as ToggleDropDownButton } from "./buttons";
@@ -25,10 +25,13 @@ const TrackItem = ({
   handleRemove
 }) => {
   const isPlaying = useSelector(state => state.player.isPlaying);
+  const trackItemRef = useRef();
 
   const { duration: ms, source } = track;
   const isStreamable = track.streamable || track.streamable === null;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+
+  useDetectOutsideClick(trackItemRef, closeDropdown);
 
   function handlePlayTrack(e) {
     e.target.blur();
@@ -50,6 +53,10 @@ const TrackItem = ({
     if (e) {
       e.stopPropagation();
     }
+  }
+
+  function closeDropdown() {
+    setIsDropdownOpen(false);
   }
 
   function stopPropagation(e) {
@@ -92,7 +99,7 @@ const TrackItem = ({
   }
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative" }} ref={trackItemRef}>
       <LazyLoad height={65} once>
         <div
           className={getTrackWrapperClasses()}
@@ -173,6 +180,21 @@ const TrackItem = ({
     </div>
   );
 };
+
+function useDetectOutsideClick(ref, callback) {
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        callback();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref, callback]);
+}
 
 const isActiveStyles = {
   opacity: 1,
