@@ -15,6 +15,7 @@ import {
   loadPlaylistTracks,
   toggleStarPlaylist
 } from "../redux/actions/libraryActions";
+import { isEmptyObject } from "../utils/compareHelpers";
 import {
   pause,
   play,
@@ -252,10 +253,6 @@ function getPlaylistLink(source, playlist, user) {
   } else if (source === "youtube") {
     return `https://www.youtube.com/playlist?list=${playlist.id}`;
   }
-}
-
-function isEmptyObject(obj) {
-  return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
 export default PlaylistPage;

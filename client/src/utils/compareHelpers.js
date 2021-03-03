@@ -76,3 +76,7 @@ function hasPlaylistChanges(newPlaylist, prevPlaylist) {
     getImgUrl(prevPlaylist, "lg") !== getImgUrl(newPlaylist, "lg")
   );
 }
+
+export function isEmptyObject(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}

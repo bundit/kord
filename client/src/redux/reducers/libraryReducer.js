@@ -14,6 +14,7 @@ import {
   SET_TRACK_UNSTREAMABLE,
   TOGGLE_STAR_PLAYLIST
 } from "../actions/types";
+import { isEmptyObject } from "../../utils/compareHelpers";
 import { reorder } from "../../utils/formattingHelpers";
 
 const initialState = {
@@ -67,40 +68,45 @@ export default function(state = initialState, action) {
         };
       }
 
-      let prevPlaylists = state.playlists[source]
-        .slice() // filter lists that are not returned in new list
-        .filter(
-          prevPlaylist =>
-            newPlaylists.findIndex(
-              newPlaylist => newPlaylist.id === prevPlaylist.id
-            ) !== -1 || prevPlaylist.id === "likes"
-        );
+      // Map playlists by id
+      const newPlaylistsMap = newPlaylists.reduce((map, playlist, index) => {
+        map[playlist.id] = {
+          ...playlist,
+          index
+        };
 
+        return map;
+      }, {});
+
+      // Delete playlists that are not in the new list
+      let prevPlaylists = state.playlists[source].filter(
+        prevPlaylist => newPlaylistsMap[prevPlaylist.id]
+      );
+
+      // Merge new and old playlists
       const newAndOldCombined = prevPlaylists.map(prevPlaylist => {
-        const newIndex = newPlaylists.findIndex(
-          newPlaylist => newPlaylist.id === prevPlaylist.id
-        );
+        const newPlaylist = newPlaylistsMap[prevPlaylist.id];
+        const newIndex = newPlaylist ? newPlaylist.index : null;
+        const playlistExistedBefore = newIndex !== null;
 
-        if (newIndex !== -1) {
-          const newPlaylist = newPlaylists[newIndex];
-
+        if (playlistExistedBefore) {
           prevPlaylist = {
-            ...prevPlaylist,
+            ...newPlaylist,
             total: newPlaylist.total,
             title: newPlaylist.title,
             img: newPlaylist.img
           };
 
-          newPlaylists = newPlaylists.filter(
-            newPlaylist => newPlaylist.id !== prevPlaylist.id
-          );
+          delete newPlaylistsMap[prevPlaylist.id];
         }
 
         return prevPlaylist;
       });
 
-      if (newPlaylists.length) {
-        newAndOldCombined.push(...newPlaylists);
+      // Add new playlists that were not in prevPlaylists
+      const hasNewPlaylistsToImport = !isEmptyObject(newPlaylistsMap);
+      if (hasNewPlaylistsToImport) {
+        newAndOldCombined.push(...Object.values(newPlaylistsMap));
       }
 
       return {
