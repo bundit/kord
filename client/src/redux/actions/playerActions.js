@@ -47,7 +47,6 @@ import {
   shuffleTracks
 } from "../../utils/queueHelpers";
 import { loadPlaylistTracks } from "./libraryActions";
-import store from "../store";
 
 export const playTrack = (index, tracklist, nextHref, context) => (
   dispatch,
@@ -141,8 +140,8 @@ function nextTrackAction() {
   };
 }
 
-export const nextTrack = () => dispatch => {
-  const playerState = store.getState().player;
+export const nextTrack = () => (dispatch, getState) => {
+  const playerState = getState().player;
   const { currentTrack, allowAutoPlay, repeatEnabled, nextHref } = playerState;
   const hasTracksLeftToFetch = nextHref;
 
@@ -322,9 +321,8 @@ export function appendQueue(tracks) {
   };
 }
 
-const loadMoreQueueTracks = () => dispatch => {
-  const state = store.getState();
-  const playerState = state.player;
+const loadMoreQueueTracks = () => (dispatch, getState) => {
+  const playerState = getState().player;
 
   let {
     nextHref,

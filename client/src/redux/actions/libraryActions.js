@@ -33,7 +33,6 @@ import {
   fetchSoundcloudPlaylistTracks
 } from "./soundcloudActions";
 import { setConnection } from "./userActions";
-import store from "../store";
 
 export function importLikes(source, likes) {
   return {
@@ -106,12 +105,12 @@ export const setPlaylistSettingsAction = (source, newSettings) => {
   };
 };
 
-export const loadLikes = source => dispatch => {
+export const loadLikes = source => (dispatch, getState) => {
   if (source === "spotify") {
     const setResults = true;
     return dispatch(fetchSpotifyLikes(setResults));
   } else if (source === "soundcloud") {
-    const userId = store.getState().user.soundcloud.id;
+    const userId = getState().user.soundcloud.id;
 
     return dispatch(fetchSoundcloudLikes(null, userId));
   }
@@ -143,14 +142,15 @@ export function clearPlaylistTracks(source, playlistId) {
   };
 }
 
-export function setTrackUnstreamable(id) {
-  const context = store.getState().player.context || {};
-  return {
+export const setTrackUnstreamable = id => (dispatch, getState) => {
+  const context = getState().player.context || {};
+
+  dispatch({
     type: SET_TRACK_UNSTREAMABLE,
     context,
     payload: id
-  };
-}
+  });
+};
 
 export const addTrackToPlaylists = (playlistIds, track) => dispatch => {
   const addTrack = {
