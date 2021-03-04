@@ -17,7 +17,7 @@ const SearchResultsPage = () => {
   const [sourcesToSearch, setSourcesToSearch] = useState([]);
   const results = useSelector(state => state.search);
 
-  const { query } = useParams();
+  const query = decodeURIComponent(useParams().query);
   const { search } = useLocation();
   const { restored } = queryString.parse(search);
 
