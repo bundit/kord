@@ -350,9 +350,7 @@ const loadMoreQueueTracks = () => (dispatch, getState) => {
     });
   } else if (source === "soundcloud") {
     if (nextHref.includes("api-v2")) {
-      nextHref = `/api?url=${encodeURIComponent(
-        `${nextHref}&client_id=${process.env.REACT_APP_SC_V2_KEY}`
-      )}`;
+      nextHref = `/api/soundcloud?url=${encodeURIComponent(`${nextHref}`)}`;
     }
 
     promise = fetchGeneric(nextHref).then(data => {
