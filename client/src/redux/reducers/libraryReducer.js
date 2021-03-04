@@ -15,7 +15,7 @@ import {
   TOGGLE_STAR_PLAYLIST
 } from "../actions/types";
 import { isEmptyObject } from "../../utils/compareHelpers";
-import { reorder } from "../../utils/formattingHelpers";
+import { mapListByIdAndIndex, reorder } from "../../utils/formattingHelpers";
 
 const initialState = {
   playlists: {
@@ -69,14 +69,7 @@ export default function(state = initialState, action) {
       }
 
       // Map playlists by id
-      const newPlaylistsMap = newPlaylists.reduce((map, playlist, index) => {
-        map[playlist.id] = {
-          ...playlist,
-          index
-        };
-
-        return map;
-      }, {});
+      const newPlaylistsMap = mapListByIdAndIndex(newPlaylists);
 
       // Delete playlists that are not in the new list
       let prevPlaylists = state.playlists[source].filter(
@@ -233,16 +226,13 @@ export default function(state = initialState, action) {
 
     case SET_PLAYLIST_SETTINGS: {
       const source = action.source;
-      const prevSettings = state.playlists[source].slice();
+      const prevSettings = state.playlists[source];
+      const prevSettingsMap = mapListByIdAndIndex(prevSettings);
 
-      const newSettings = action.payload.map(updated => {
-        const index = prevSettings.findIndex(prev => prev.id === updated.id);
-
-        return {
-          ...prevSettings[index],
-          ...updated
-        };
-      });
+      const newSettings = action.payload.map(updated => ({
+        ...prevSettingsMap[updated.id],
+        ...updated
+      }));
 
       return {
         ...state,

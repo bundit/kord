@@ -252,3 +252,13 @@ export function getImgUrl(track, size) {
     return placeholderImg;
   }
 }
+
+export function mapListByIdAndIndex(list) {
+  return list.reduce((map, item, index) => {
+    map[item.id] = {
+      ...item,
+      index
+    };
+    return map;
+  }, {});
+}
