@@ -83,7 +83,8 @@ export const fetchSpotifyLikes = (
         total: json.total,
         source: "spotify",
         isConnected: true,
-        dateSynced: new Date()
+        dateSynced: new Date(),
+        isStarred: false
       };
 
       if (setResults) {

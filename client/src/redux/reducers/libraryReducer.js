@@ -83,14 +83,17 @@ export default function(state = initialState, action) {
         const playlistExistedBefore = newIndex !== null;
 
         if (playlistExistedBefore) {
-          prevPlaylist = {
+          const mergedOldAndNewPlaylist = {
             ...newPlaylist,
             total: newPlaylist.total,
             title: newPlaylist.title,
-            img: newPlaylist.img
+            img: newPlaylist.img,
+            isStarred: prevPlaylist.isStarred
           };
 
           delete newPlaylistsMap[prevPlaylist.id];
+
+          return mergedOldAndNewPlaylist;
         }
 
         return prevPlaylist;

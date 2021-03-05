@@ -46,7 +46,8 @@ export const fetchSoundcloudProfile = username => dispatch => {
       next: beginHref,
       isConnected: true,
       dateSynced: new Date(),
-      externalUrl: profile.profileUrl + "/likes"
+      externalUrl: profile.profileUrl + "/likes",
+      isStarred: false
     };
 
     dispatch(setUserProfile("soundcloud", profile));
