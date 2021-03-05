@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useState } from "react";
 import * as Sentry from "@sentry/react";
 
-import { closeSettings, updateProfile } from "./redux/actions/userActions";
+import { closeSettings } from "./redux/actions/userActions";
 import {
   useClearSessionStorageOnRefresh,
   useDetectWidevine,
@@ -27,7 +27,6 @@ import UnsupportedBrowserModal from "./components/unsupported-browser-modal";
 
 const App = () => {
   const dispatch = useDispatch();
-  const alert = useAlert();
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
 
   useLoadUserDataOnMount(setIsLoadingUserData);
@@ -50,20 +49,6 @@ const App = () => {
 
   function handleCloseSettings() {
     dispatch(closeSettings());
-  }
-
-  function handleUpdateProfile(source, user) {
-    return dispatch(updateProfile(source, user))
-      .then(() => {
-        alert.success("Profile Refreshed");
-      })
-      .catch(e => {
-        if (e.status === 0) {
-          alert.error("Connection Error");
-        } else {
-          alert.error(`Unhandled Error${e.status}`);
-        }
-      });
   }
 
   return (
@@ -111,7 +96,6 @@ const App = () => {
         show={isSettingsOpen}
         source={settingsSource}
         onClose={handleCloseSettings}
-        handleUpdate={handleUpdateProfile}
       />
       <AddToPlaylistForm show={isAddToPlaylistFormOpen} />
       <DeleteTrackForm show={isDeleteTrackFormOpen} />

@@ -26,7 +26,11 @@ import {
 } from "../redux/actions/libraryActions";
 import { fetchSoundcloudProfileAndPlaylists } from "../redux/actions/soundcloudActions";
 import { formatSourceName, reorder } from "../utils/formattingHelpers";
-import { openSettings, removeUserProfile } from "../redux/actions/userActions";
+import {
+  openSettings,
+  removeUserProfile,
+  updateProfile
+} from "../redux/actions/userActions";
 import Image from "./image";
 import KordSettings from "./kord-settings";
 import LoadingSpinner from "./loading-spinner";
@@ -35,7 +39,7 @@ import avatarImg from "../assets/avatar-placeholder.png";
 import formStyles from "../styles/form.module.scss";
 import styles from "../styles/settings-form.module.scss";
 
-const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
+const SettingsForm = ({ show, source, onClose }) => {
   const user = useSelector(state => state.user);
   const playlists = useSelector(state => state.library.playlists);
   const mainConnection = useSelector(state => state.user.kord.mainConnection);
@@ -47,6 +51,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
   const [playlistSettings, setPlaylistSettings] = useState([]);
   const [hasSynced, setHasSynced] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const soundcloudURLRegEx = /^(https:\/\/|http:\/\/)?(www.)?soundcloud.com\/(.+)/;
 
   const [showUsernameInput, setShowUsernameInput] = useState(
     !isConnected && source === "soundcloud"
@@ -112,7 +117,6 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const soundcloudURLRegEx = /^(https:\/\/|http:\/\/)?(www.)?soundcloud.com\/(.+)/;
     const usernameMatch = usernameInput.match(soundcloudURLRegEx);
 
     if (usernameMatch) {
@@ -151,14 +155,25 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
     setUsernameInput(e.target.value);
   }
 
-  function handleSync(e) {
+  function handleUpdateProfile() {
     setIsLoading(true);
     if (!hasSynced && isConnected) {
       setHasSynced(true);
 
-      return handleUpdate(source, usernameInput.slice(15))
+      const user = usernameInput.slice(15);
+      dispatch(updateProfile(source, user))
+        .then(() => {
+          alert.success("Profile Refreshed");
+        })
         .catch(e => {
-          alert.error(`Error syncing: ${e}`);
+          if (e.status === 0) {
+            alert.error("Connection Error");
+          } else if (e.status === 404) {
+            alert.error("Profile Not Found");
+          } else {
+            console.log(e);
+            alert.error(`Unhandled Error${e.status}`);
+          }
         })
         .finally(() => {
           setTimeout(() => setIsLoading(false), 500);
@@ -268,7 +283,7 @@ const SettingsForm = ({ show, source, onClose, handleUpdate }) => {
             </div>
             <SyncButton
               icon={faSync}
-              onClick={handleSync}
+              onClick={handleUpdateProfile}
               disabled={hasSynced}
               style={{ borderColor: "#383f41", marginLeft: "auto" }}
             />
