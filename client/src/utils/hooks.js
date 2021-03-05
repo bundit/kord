@@ -55,7 +55,7 @@ export function useLoadUserDataOnMount(setIsLoadingUserData) {
       setIsLoadingUserData(true);
 
       dispatch(refreshUserData(alert))
-        .then(() => dispatch(handleHashParams(history, mainConnection)))
+        .then(() => dispatch(handleHashParams(history, mainConnection, alert)))
         .finally(() => setTimeout(() => setIsLoadingUserData(false), 600));
     } else {
       setIsLoadingUserData(false);
@@ -80,7 +80,7 @@ const refreshUserData = alert => dispatch => {
   return Promise.resolve();
 };
 
-const handleHashParams = (history, mainConnection) => dispatch => {
+const handleHashParams = (history, mainConnection, alert) => dispatch => {
   if (window.location.hash) {
     // Get hash params excluding first #
     const URLParams = new URLSearchParams(window.location.hash.substr(1));
