@@ -88,7 +88,8 @@ export default function(state = initialState, action) {
             total: newPlaylist.total,
             title: newPlaylist.title,
             img: newPlaylist.img,
-            isStarred: prevPlaylist.isStarred
+            isStarred: prevPlaylist.isStarred,
+            isConnected: prevPlaylist.isConnected
           };
 
           delete newPlaylistsMap[prevPlaylist.id];
