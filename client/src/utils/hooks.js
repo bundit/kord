@@ -296,7 +296,7 @@ export function useSetDocumentTitle() {
   const { pathname } = useLocation();
   const isPlaying = useSelector(state => state.player.isPlaying);
   const currentTrack = useSelector(state => state.player.currentTrack);
-  const currentPage = getTitleFromPathname(pathname);
+  const currentPage = decodeURIComponent(getTitleFromPathname(pathname));
 
   useEffect(() => {
     if (isPlaying) {
