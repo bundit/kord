@@ -62,7 +62,7 @@ $ npm dev
 
 ### Environment Variables
 
-Server:
+#### Server Variables
 Development server variables are stored in a ".env" file at root
 
 ```
@@ -74,13 +74,31 @@ YOUTUBE_CLIENT_SECRET=XXXXX
 DATABASE_URL=XXXXX
 JWT_SECRET=XXXXX
 JWT_TOKEN_EXPIRE=XXXXX
+
+# Callback Variables
 SPOTIFY_CALLBACK=XXXXX
 SPOTIFY_LINK_CALLBACK=XXXXX
 YOUTUBE_CALLBACK=XXXXX
 YOUTUBE_LINK_CALLBACK=XXXXX
 ```
 
-Application:
+The callback variables handle backend endpoints for Oauth authorization (Redirect URIs). You will need to add these URIs to your list of authorized origins on their respective platforms. Google calls them "Authorized JavaScript origins" and Spotify calls them "Redirect URIs"<br>
+```
+# Development callback variables
+SPOTIFY_CALLBACK=http://localhost:8888/auth/spotify/callback
+SPOTIFY_LINK_CALLBACK=http://localhost:8888/auth/spotify/link/callback
+YOUTUBE_CALLBACK=http://localhost:8888/auth/youtube/callback
+YOUTUBE_LINK_CALLBACK=http://localhost:8888/auth/youtube/link/callback
+```
+```
+# Production callback variables
+SPOTIFY_CALLBACK={DOMAIN_BASE}/auth/spotify/callback
+SPOTIFY_LINK_CALLBACK={DOMAIN_BASE}/auth/spotify/link/callback
+YOUTUBE_CALLBACK={DOMAIN_BASE}/auth/youtube/callback
+YOUTUBE_LINK_CALLBACK={DOMAIN_BASE}/auth/youtube/link/callback
+```
+
+#### Application Variables
 Development app variables are stored in a ".env.development" file in the "client" folder
 
 ```
