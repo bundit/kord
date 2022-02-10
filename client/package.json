@@ -12,7 +12,7 @@
     "broadcast-channel": "^3.3.0",
     "eslint-config-airbnb": "^18.0.1",
     "js-cookie": "^2.2.1",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "prop-types": "^15.7.2",
     "query-string": "^6.12.1",
     "raf": "^3.4.1",
