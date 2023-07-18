@@ -1,5 +1,5 @@
-import { Route } from "react-router-dom";
 import React from "react";
+import { Route } from "react-router-dom";
 
 import ArtistPage from "./artist-page";
 import SearchHistoryPage from "./search-history-page";
@@ -18,7 +18,6 @@ const SearchRouter = () => {
             params: { source, artistId, artistName }
           }
         }) => <ArtistPage key={`artist/${source}:${artistId}:${artistName}`} />}
-        key
       />
     </>
   );
