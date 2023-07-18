@@ -52,7 +52,7 @@ const initialState = {
   }
 };
 
-export default function(state = initialState, action) {
+export default function userReducer(state = initialState, action) {
   switch (action.type) {
     case SET_KORD_ID: {
       const kordId = action.payload;
@@ -160,7 +160,7 @@ export default function(state = initialState, action) {
       const currentHistory = state.history[relativeRoute];
 
       const currentPathIndex = currentHistory.findIndex(
-        path => path === pathname
+        (path) => path === pathname
       );
 
       return {
