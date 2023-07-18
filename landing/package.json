@@ -4,6 +4,9 @@
   "description": "Static files for kord.app",
   "version": "0.1.0",
   "author": "Bundit <bundit.dev@gmail.com>",
+  "engines": {
+    "node": "^16.0.0"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-brands-svg-icons": "^5.12.1",
