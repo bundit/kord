@@ -1,11 +1,12 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 
-import SEO from "../components/seo";
-import styles from "../styles/landing.module.css";
 import termsOfUse from "../assets/raw-terms-of-use";
+import SEO from "../components/seo";
+import * as styles from "../styles/landing.module.css";
 
-const urlRegex = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/gim;
+const urlRegex =
+  /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/gim;
 
 const TermsOfUse = () => (
   <>
@@ -64,7 +65,7 @@ const TermsOfUse = () => (
 
 function ParagraphWithLinks({ line }) {
   const urls = line.match(urlRegex);
-  const text = line.split(urlRegex).filter(str => str !== "");
+  const text = line.split(urlRegex).filter((str) => str !== "");
   const components = [];
 
   while (text.length || urls.length) {

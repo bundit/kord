@@ -1,5 +1,5 @@
 import React from "react";
-import Particles from "react-particles-js";
+import Particles from "react-particles";
 
 // window.addEventListener("load", event => {});
 let numParticles = 150;

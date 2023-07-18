@@ -1,20 +1,20 @@
 import "../styles/button-3d-round.css";
 
+import {
+  faMixcloud,
+  faSoundcloud,
+  faSpotify,
+  faYoutube
+} from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, navigate } from "gatsby";
-import {
-  faSpotify,
-  faSoundcloud,
-  faYoutube,
-  faMixcloud
-} from "@fortawesome/free-brands-svg-icons";
 import React, { useState } from "react";
 
-import { useAuthDetection } from "../utils/auth-provider";
 import ArtistMockup from "../assets/mockup-artist.jpg";
-import SEO from "../components/seo";
 import SearchMockup from "../assets/mockup-search.jpg";
-import styles from "../styles/landing.module.css";
+import SEO from "../components/seo";
+import * as styles from "../styles/landing.module.css";
+import { useAuthDetection } from "../utils/auth-provider";
 
 const IndexPage = () => {
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -131,7 +131,7 @@ const IndexPage = () => {
           </div>
 
           <div className={styles.sectionContainer}>
-            {sourceCards.map(card => (
+            {sourceCards.map((card) => (
               <div
                 className={`${styles.sourceCard} ${styles[card.source]}`}
                 key={`${card.source}:card`}
@@ -248,7 +248,7 @@ const IndexPage = () => {
                 src="https://player.vimeo.com/video/514566587?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
                 frameBorder="0"
                 allow="autoplay; fullscreen; picture-in-picture"
-                allowFullscreen
+                allowFullScreen
                 title="kord-demo.mp4"
               />
             </div>

@@ -1,11 +1,11 @@
+import { faSpotify, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "gatsby";
-import { faSpotify, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import PropTypes from "prop-types";
 import React from "react";
 
 import Kord3D from "../assets/circle-logo.svg";
-import styles from "../styles/login.module.css";
+import * as styles from "../styles/login.module.css";
 import useMobileDetection from "../utils/useMobileDetection";
 
 const LoginPanel = ({ login }) => {
