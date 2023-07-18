@@ -1,16 +1,8 @@
-import { Route, Switch } from "react-router-dom";
-import { useAlert } from "react-alert";
-import { useDispatch, useSelector } from "react-redux";
-import React, { useState } from "react";
 import * as Sentry from "@sentry/react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Switch } from "react-router-dom";
 
-import { closeSettings } from "./redux/actions/userActions";
-import {
-  useClearSessionStorageOnRefresh,
-  useDetectWidevine,
-  useKeepSessionAlive,
-  useLoadUserDataOnMount
-} from "./utils/hooks";
 import AddToPlaylistForm from "./components/add-to-playlist-form";
 import ControlsModal from "./components/controls-modal";
 import DeleteTrackForm from "./components/delete-track-form";
@@ -24,6 +16,13 @@ import SearchRouter from "./components/search-router";
 import SettingsForm from "./components/settings-form";
 import Sidebar from "./components/sidebar";
 import UnsupportedBrowserModal from "./components/unsupported-browser-modal";
+import { closeSettings } from "./redux/actions/userActions";
+import {
+  useClearSessionStorageOnRefresh,
+  useDetectWidevine,
+  useKeepSessionAlive,
+  useLoadUserDataOnMount
+} from "./utils/hooks";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -35,16 +34,16 @@ const App = () => {
   useDetectWidevine();
 
   const isSettingsOpen = useSelector(
-    state => state.user.settings.isSettingsOpen
+    (state) => state.user.settings.isSettingsOpen
   );
   const settingsSource = useSelector(
-    state => state.user.settings.settingsSource
+    (state) => state.user.settings.settingsSource
   );
   const isAddToPlaylistFormOpen = useSelector(
-    state => state.user.settings.isAddToPlaylistFormOpen
+    (state) => state.user.settings.isAddToPlaylistFormOpen
   );
   const isDeleteTrackFormOpen = useSelector(
-    state => state.user.settings.isDeleteTrackFormOpen
+    (state) => state.user.settings.isDeleteTrackFormOpen
   );
 
   function handleCloseSettings() {
