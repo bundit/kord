@@ -1,3 +1,5 @@
+import { isEmptyObject } from "../../utils/compareHelpers";
+import { mapListByIdAndIndex, reorder } from "../../utils/formattingHelpers";
 import {
   ADD_TRACK_TO_PLAYLIST,
   CLEAR_PLAYLIST_TRACKS,
@@ -14,8 +16,6 @@ import {
   SET_TRACK_UNSTREAMABLE,
   TOGGLE_STAR_PLAYLIST
 } from "../actions/types";
-import { isEmptyObject } from "../../utils/compareHelpers";
-import { mapListByIdAndIndex, reorder } from "../../utils/formattingHelpers";
 
 const initialState = {
   playlists: {
@@ -26,7 +26,7 @@ const initialState = {
   }
 };
 
-export default function(state = initialState, action) {
+export default function libraryReducer(state = initialState, action) {
   switch (action.type) {
     case IMPORT_LIKES: {
       let likes = action.payload;
@@ -73,11 +73,11 @@ export default function(state = initialState, action) {
 
       // Delete playlists that are not in the new list
       let prevPlaylists = state.playlists[source].filter(
-        prevPlaylist => newPlaylistsMap[prevPlaylist.id]
+        (prevPlaylist) => newPlaylistsMap[prevPlaylist.id]
       );
 
       // Merge new and old playlists
-      const newAndOldCombined = prevPlaylists.map(prevPlaylist => {
+      const newAndOldCombined = prevPlaylists.map((prevPlaylist) => {
         const newPlaylist = newPlaylistsMap[prevPlaylist.id];
         const newIndex = newPlaylist ? newPlaylist.index : null;
         const playlistExistedBefore = newIndex !== null;
@@ -119,7 +119,7 @@ export default function(state = initialState, action) {
       const { source, playlistId } = action;
       const loadedTracks = action.payload;
 
-      const newPlaylistList = state.playlists[source].map(playlist => {
+      const newPlaylistList = state.playlists[source].map((playlist) => {
         //eslint-disable-next-line
         if (playlist.id == playlistId) {
           const playlistIsEmpty = !playlist.tracks || !playlist.tracks.length;
@@ -162,7 +162,7 @@ export default function(state = initialState, action) {
         ...state,
         playlists: {
           ...state.playlists,
-          [source]: state.playlists[source].map(playlist => {
+          [source]: state.playlists[source].map((playlist) => {
             const isLikes = playlistId === "likes";
 
             if (playlist.id === playlistId) {
@@ -187,7 +187,7 @@ export default function(state = initialState, action) {
         ...state,
         playlists: {
           ...state.playlists,
-          [source]: state.playlists[source].map(playlist => {
+          [source]: state.playlists[source].map((playlist) => {
             if (playlist.id === playlistId) {
               playlist = {
                 ...playlist,
@@ -211,7 +211,7 @@ export default function(state = initialState, action) {
       const { source, playlistId } = action;
       const nextHref = action.payload;
 
-      const newPlaylistList = state.playlists[source].map(playlist => {
+      const newPlaylistList = state.playlists[source].map((playlist) => {
         if (playlist.id === playlistId) {
           playlist.next = nextHref;
         }
@@ -233,7 +233,7 @@ export default function(state = initialState, action) {
       const prevSettings = state.playlists[source];
       const prevSettingsMap = mapListByIdAndIndex(prevSettings);
 
-      const newSettings = action.payload.map(updated => ({
+      const newSettings = action.payload.map((updated) => ({
         ...prevSettingsMap[updated.id],
         ...updated
       }));
@@ -251,7 +251,7 @@ export default function(state = initialState, action) {
       const source = action.source;
       const playlistId = action.payload;
 
-      const updatedPlaylists = state.playlists[source].map(playlist => {
+      const updatedPlaylists = state.playlists[source].map((playlist) => {
         if (playlist.id === playlistId) {
           return {
             ...playlist,
@@ -321,10 +321,10 @@ export default function(state = initialState, action) {
         return state;
       }
 
-      const updatedPlaylists = state.playlists[source].map(playlist => {
+      const updatedPlaylists = state.playlists[source].map((playlist) => {
         // eslint-disable-next-line
         if (playlist.id == playlistId) {
-          playlist.tracks = playlist.tracks.map(track => {
+          playlist.tracks = playlist.tracks.map((track) => {
             // eslint-disable-next-line
             if (track.id == trackId) {
               track.streamable = false;
@@ -348,13 +348,13 @@ export default function(state = initialState, action) {
       const { source, payload: playlistId } = action;
 
       const playlistIndex = state.playlists[source].findIndex(
-        playlist => playlist.id === playlistId
+        (playlist) => playlist.id === playlistId
       );
       const playlistIsStarred =
         state.playlists[source][playlistIndex].isStarred;
 
       let lastStarIndex = state.playlists[source].findIndex(
-        playlist => !playlist.isStarred
+        (playlist) => !playlist.isStarred
       );
 
       // If unstarring playlist
@@ -373,7 +373,7 @@ export default function(state = initialState, action) {
         ...state,
         playlists: {
           ...state.playlists,
-          [source]: reorderedPlaylists.map(playlist => {
+          [source]: reorderedPlaylists.map((playlist) => {
             if (playlist.id === playlistId) {
               // Apply star or unstar
               playlist = {
