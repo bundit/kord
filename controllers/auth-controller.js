@@ -5,7 +5,7 @@ const passport = require("passport");
 const db = require("../config/database-setup");
 
 // eslint-disable-next-line
-function authNoop(req, res) {
+function authNoop(_req, _res) {
   // The request will be redirected for authentication, so this
   // function will not be called.
 }
@@ -91,7 +91,7 @@ function loginUser(source, isLinking = false) {
     const jwtPayload = generateJwtPayload(id, email);
 
     /** assigns payload to req.user */
-    req.login(jwtPayload, { session: false }, error => {
+    req.login(jwtPayload, { session: false }, (error) => {
       if (error) {
         res.status(400).send({ error: error.toString() });
       }
@@ -156,7 +156,7 @@ async function refreshOauthToken(req, res) {
   );
 }
 
-function logoutUser(req, res) {
+function logoutUser(_req, res) {
   res.clearCookie("kordUser");
   res.clearCookie("userBackUnderOneHour");
 
