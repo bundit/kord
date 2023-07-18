@@ -40,7 +40,7 @@ const initialState = {
   history: []
 };
 
-export default function(state = initialState, action) {
+export default function searchReducer(state = initialState, action) {
   switch (action.type) {
     case SET_QUERY: {
       return {
@@ -92,7 +92,7 @@ export default function(state = initialState, action) {
     case ADD_TO_SEARCH_HISTORY: {
       const MAX_SEARCH_HISTORY = 20;
       const newQuery = action.payload.trim();
-      const prevHistory = state.history.filter(query => query !== newQuery);
+      const prevHistory = state.history.filter((query) => query !== newQuery);
       const newHistory = [newQuery, ...prevHistory];
 
       return {
@@ -104,7 +104,7 @@ export default function(state = initialState, action) {
     case REMOVE_FROM_SEARCH_HISTORY: {
       const queryToFilter = action.payload;
       const filteredHistory = state.history.filter(
-        query => query !== queryToFilter
+        (query) => query !== queryToFilter
       );
 
       return {
