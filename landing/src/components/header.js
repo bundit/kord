@@ -31,7 +31,6 @@ const Header = ({ isScrolledPast }) => {
           className={`${styles.homeLink}`}
           style={{ display: "flex" }}
         >
-          <span className={styles.svgContainer}>{/* <Icon /> */}</span>
           <h2>
             <Kord3D />
             <span style={{ display: "none" }}>kord player</span>
