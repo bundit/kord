@@ -61,7 +61,7 @@
   "homepage": "/app",
   "devDependencies": {
     "@babel/helper-builder-react-jsx": "^7.22.5",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.0",
     "babel-plugin-dynamic-import-node": "^2.3.3"
   }
 }
