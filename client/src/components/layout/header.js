@@ -3,42 +3,42 @@ import {
   faAngleRight,
   faUser
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
+import avatarImg from "../../assets/avatar-placeholder.png";
+import { clearState } from "../../redux/actions/stateActions";
+import { dequeRoute, openSettings } from "../../redux/actions/userActions";
+import styles from "../../styles/header.module.scss";
+import { getTitleFromPathname } from "../../utils/formattingHelpers";
 import {
   IconButton as BackwardButton,
   IconButton as ForwardButton,
   IconButton,
   Button as UserSettingsButton
 } from "../buttons";
-import { clearState } from "../../redux/actions/stateActions";
-import { dequeRoute, openSettings } from "../../redux/actions/userActions";
-import { getTitleFromPathname } from "../../utils/formattingHelpers";
 import Image from "../image";
 import SearchBar from "../search-bar";
-import avatarImg from "../../assets/avatar-placeholder.png";
-import styles from "../../styles/header.module.scss";
 
 function Header({ location }) {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const mainConnection = useSelector(state => state.user.kord.mainConnection);
+  const mainConnection = useSelector((state) => state.user.kord.mainConnection);
   const mainUser =
-    useSelector(state => state.user[mainConnection]) || "spotify";
+    useSelector((state) => state.user[mainConnection]) || "spotify";
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { pathname } = location;
   const title = getTitleFromPathname(pathname);
 
   function handleGoBack() {
-    history.goBack();
+    navigate(-1);
   }
 
   function handleGoForward() {
-    history.goForward();
+    navigate(1);
   }
 
   function handleOpenSettings() {
@@ -129,8 +129,8 @@ function Header({ location }) {
 
 function MobileBackButton({ pathname }) {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const userHistory = useSelector(state => state.user.history);
+  const navigate = useNavigate();
+  const userHistory = useSelector((state) => state.user.history);
 
   const title = getTitleFromPathname(pathname);
   const baseUrls = ["Library", "Search", "Explore", ""];
@@ -148,7 +148,7 @@ function MobileBackButton({ pathname }) {
   const relativeRoute = pathname.split("/")[2];
 
   function handleBackClick() {
-    history.push(lastRoute[relativeRoute]);
+    navigate(lastRoute[relativeRoute]);
     dispatch(dequeRoute(relativeRoute, pathname));
   }
 

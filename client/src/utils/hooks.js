@@ -3,7 +3,7 @@ import raf from "raf";
 import { useEffect, useRef, useState } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { fetchUserPlaylists } from "../redux/actions/libraryActions";
 import {
@@ -33,7 +33,7 @@ import {
 export function useLoadUserDataOnMount(setIsLoadingUserData) {
   const mainConnection = useSelector((state) => state.user.kord.mainConnection);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const alert = useAlert();
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export function useLoadUserDataOnMount(setIsLoadingUserData) {
       setIsLoadingUserData(true);
 
       dispatch(refreshUserData(alert))
-        .then(() => dispatch(handleHashParams(history, mainConnection, alert)))
+        .then(() => dispatch(handleHashParams(navigate, mainConnection, alert)))
         .finally(() => setTimeout(() => setIsLoadingUserData(false), 600));
     } else {
       setIsLoadingUserData(false);
@@ -80,7 +80,7 @@ const refreshUserData = (alert) => (dispatch) => {
   return Promise.resolve();
 };
 
-const handleHashParams = (history, mainConnection, alert) => (dispatch) => {
+const handleHashParams = (navigate, mainConnection, alert) => (dispatch) => {
   if (window.location.hash) {
     // Get hash params excluding first #
     const URLParams = new URLSearchParams(window.location.hash.substr(1));
@@ -104,7 +104,7 @@ const handleHashParams = (history, mainConnection, alert) => (dispatch) => {
 
       return dispatch(fetchProfileAndPlaylists(source))
         .catch((e) => alert.error("Connect account failed"))
-        .finally(() => history.push(window.location.pathname));
+        .finally(() => navigate(window.location.pathname));
     }
   }
 
