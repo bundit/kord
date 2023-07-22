@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.0",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
@@ -61,7 +62,6 @@
   "homepage": "/app",
   "devDependencies": {
     "@babel/helper-builder-react-jsx": "^7.22.5",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.0",
     "babel-plugin-dynamic-import-node": "^2.3.3"
   }
 }
