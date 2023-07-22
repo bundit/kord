@@ -1,24 +1,25 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NavLink } from "react-router-dom";
 import { faStar, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
 import PropTypes from "prop-types";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 
-import { ICONS } from "../utils/constants";
-import { PlayPauseButton } from "./buttons";
-import { capitalizeWord, getImgUrl } from "../utils/formattingHelpers";
-import { pause, play, playPlaylist } from "../redux/actions/playerActions";
 import { toggleStarPlaylist } from "../redux/actions/libraryActions";
-import Image from "./image";
-import sidebarStyles from "../styles/sidebar.module.scss";
+import { pause, play, playPlaylist } from "../redux/actions/playerActions";
 import styles from "../styles/playlist-item.module.scss";
+import sidebarStyles from "../styles/sidebar.module.scss";
+import { ICONS } from "../utils/constants";
+import { capitalizeWord, getImgUrl } from "../utils/formattingHelpers";
+import { PlayPauseButton } from "./buttons";
+import Image from "./image";
 
 const PlaylistItem = ({ playlist, sidebar, isStarredPlaylist }) => {
   const { source, id, title } = playlist;
   const dispatch = useDispatch();
-  const context = useSelector(state => state.player.context);
-  const isPlaying = useSelector(state => state.player.isPlaying);
+  const context = useSelector((state) => state.player.context);
+  const isPlaying = useSelector((state) => state.player.isPlaying);
 
   // eslint-disable-next-line
   const thisPlaylistHasContext = context.source === source && context.id == id;
@@ -55,8 +56,13 @@ const PlaylistItem = ({ playlist, sidebar, isStarredPlaylist }) => {
   return (
     <NavLink
       to={getPlaylistHref()}
-      className={sidebar ? sidebarStyles.sidebarNavLink : styles.playlistItem}
-      activeClassName={sidebarStyles.activeNavLink}
+      className={({ isActive }) =>
+        classNames({
+          [sidebarStyles.sidebarNavLink]: sidebar,
+          [styles.playlistItem]: !sidebar,
+          [sidebarStyles.activeNavLink]: isActive
+        })
+      }
     >
       {!sidebar && (
         <PlaylistImage

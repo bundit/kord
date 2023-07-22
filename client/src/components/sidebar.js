@@ -9,6 +9,7 @@ import React from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
+import classNames from "classnames";
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 import { collapsePlayer } from "../redux/actions/playerActions";
 import { openSettings } from "../redux/actions/userActions";
@@ -100,7 +101,10 @@ const Sidebar = () => {
 
 function AppNavLinks({ isPlayingFromSearch, handleSearchNavigationOnClick }) {
   const navLinks = [
-    { title: "Library", to: "/app/library", exact: true, icon: faMusic },
+    // end is true for library so that we don't show multiple active links (end means match exact path)
+    { title: "Library", to: "/app/library", end: true, icon: faMusic },
+    // end is false for Search and Explore so we can show it as active for any subroutes.
+    // e.g. artist page will show search tab as active /app/search/artist/spotify/27gtK7m9vYwCyJ04zz0kIb/Lane%208
     { title: "Search", to: "/app/search", icon: faSearch },
     { title: "Explore", to: "/app/explore", icon: faCompass }
   ];
@@ -114,10 +118,11 @@ function AppNavLinks({ isPlayingFromSearch, handleSearchNavigationOnClick }) {
   return navLinks.map((link) => (
     <NavLink
       to={link.to}
-      exact={link.exact}
+      end={link.end}
       onClick={link.title === "Search" ? handleSearchNavigationOnClick : null}
-      className={styles.sidebarNavLink}
-      activeClassName={styles.activeNavLink}
+      className={({ isActive }) =>
+        classNames(styles.sidebarNavLink, { [styles.activeNavLink]: isActive })
+      }
       style={getLinkStyle(link.title)}
       key={link.title + "sidebarNav"}
     >

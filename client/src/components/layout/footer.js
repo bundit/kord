@@ -1,23 +1,22 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NavLink, useLocation } from "react-router-dom";
 import {
+  faCompass,
   faMusic,
-  faSearch,
-  faCompass
+  faSearch
 } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
-import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
 import React from "react";
-
-import Player from "../player";
+import { useSelector } from "react-redux";
+import { NavLink, useLocation } from "react-router-dom";
 import styles from "../../styles/footer.module.scss";
+import Player from "../player";
 
-const Footer = ({ location }) => {
+const Footer = () => {
   return (
     <footer className={styles.footer}>
       <Player />
       <div className={styles.mobileFooterWrapper}>
-        <MobileFooterNav location={location} />
+        <MobileFooterNav />
       </div>
     </footer>
   );
@@ -25,7 +24,7 @@ const Footer = ({ location }) => {
 
 function MobileFooterNav() {
   const { pathname } = useLocation();
-  const userHistory = useSelector(state => state.user.history);
+  const userHistory = useSelector((state) => state.user.history);
   let {
     library: [lastLibraryRoute],
     search: [lastSearchRoute]
@@ -60,11 +59,12 @@ function MobileFooterNav() {
     }
   ];
 
-  return navLinks.map(navLink => (
+  return navLinks.map((navLink) => (
     <NavLink
       to={navLink.to}
-      className={styles.navLink}
-      activeClassName={styles.active}
+      className={({ isActive }) =>
+        classNames(styles.navLink, { [styles.active]: isActive })
+      }
       key={`${navLink.to}-footer-nav`}
     >
       <div>
@@ -74,12 +74,6 @@ function MobileFooterNav() {
     </NavLink>
   ));
 }
-
-Footer.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string
-  }).isRequired
-};
 
 Footer.defaultProps = {
   libHistory: []

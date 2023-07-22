@@ -1,12 +1,10 @@
-import * as Sentry from "@sentry/react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 
 import AddToPlaylistForm from "./components/add-to-playlist-form";
 import ControlsModal from "./components/controls-modal";
 import DeleteTrackForm from "./components/delete-track-form";
-import FallbackComponent from "./components/fallback-component";
 import Footer from "./components/layout/footer";
 import Header from "./components/layout/header";
 import LibraryRouter from "./components/library-router";
@@ -54,43 +52,40 @@ const App = () => {
     <>
       <LoadingOverlay show={isLoadingUserData} />
       <NavHistory />
-      <Route path="/app">
-        <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>
-          <Sidebar />
-        </Sentry.ErrorBoundary>
-        <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>
-          <Route component={Header} />
-        </Sentry.ErrorBoundary>
-        <main className="content">
-          <Switch>
-            <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>
-              <Route path="/app/search" component={SearchRouter} />
-              <Route path="/app/library" component={LibraryRouter} />
-
-              <Route
-                path="/app/explore"
-                render={() => (
-                  <h1
-                    style={{
-                      marginTop: "150px",
-                      marginLeft: "50px",
-                      fontFamily: "Pacifico",
-                      color: "#ccc",
-                      fontSize: "45px",
-                      fontWeight: "300"
-                    }}
-                  >
-                    Coming soon!
-                  </h1>
-                )}
-              />
-            </Sentry.ErrorBoundary>
-          </Switch>
-        </main>
-        <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>
-          <Route component={Footer} />
-        </Sentry.ErrorBoundary>
-      </Route>
+      <Routes>
+        <Route
+          path="/app"
+          element={
+            <>
+              <Sidebar />
+              <Header />
+              <main className="content">
+                <Outlet />
+              </main>
+              <Footer />
+            </>
+          }
+        >
+          <Route path="library/*" element={<LibraryRouter />} />
+          <Route path="search/*" element={<SearchRouter />} />
+          <Route
+            path="explore"
+            element={
+              <h1
+                style={{
+                  margin: "0 auto",
+                  fontFamily: "Pacifico",
+                  color: "#ccc",
+                  fontSize: "45px",
+                  fontWeight: "300"
+                }}
+              >
+                Coming soon!
+              </h1>
+            }
+          />
+        </Route>
+      </Routes>
       <SettingsForm
         show={isSettingsOpen}
         source={settingsSource}

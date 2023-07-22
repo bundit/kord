@@ -3,10 +3,9 @@ import {
   faAngleRight,
   faUser
 } from "@fortawesome/free-solid-svg-icons";
-import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import avatarImg from "../../assets/avatar-placeholder.png";
 import { clearState } from "../../redux/actions/stateActions";
@@ -22,7 +21,7 @@ import {
 import Image from "../image";
 import SearchBar from "../search-bar";
 
-function Header({ location }) {
+function Header() {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const mainConnection = useSelector((state) => state.user.kord.mainConnection);
   const mainUser =
@@ -30,6 +29,7 @@ function Header({ location }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const location = useLocation();
   const { pathname } = location;
   const title = getTitleFromPathname(pathname);
 
@@ -154,11 +154,5 @@ function MobileBackButton({ pathname }) {
 
   return <IconButton icon={faAngleLeft} onClick={handleBackClick} />;
 }
-
-Header.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired
-  }).isRequired
-};
 
 export default Header;
