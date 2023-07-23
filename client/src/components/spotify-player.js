@@ -1,7 +1,7 @@
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import React, { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { refreshSpotifyToken } from "../redux/actions/spotifyActions";
 import { usePrevious } from "../utils/hooks";
@@ -20,16 +20,16 @@ const SpotifyPlayer = ({
 }) => {
   const dispatch = useDispatch();
   const player = useRef(null);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useSpotifyWebPlaybackSdkScript();
 
   useEffect(() => {
     window.onSpotifyWebPlaybackSDKReady = () => {
       function fetchToken() {
-        return dispatch(refreshSpotifyToken()).catch(e => {
+        return dispatch(refreshSpotifyToken()).catch((e) => {
           if (e.status === 401) {
-            history.push("/login");
+            navigate("/login");
           }
         });
       }
@@ -158,11 +158,11 @@ class SpotifyWebPlaybackSdk {
 
   fetchAndSetToken(cb) {
     return this.fetchToken()
-      .then(token => {
+      .then((token) => {
         this.setAccessToken(token);
         if (cb) cb(token);
       })
-      .catch(e => console.error(`Error refreshing spotify player ${e}`));
+      .catch((e) => console.error(`Error refreshing spotify player ${e}`));
   }
 
   setAccessToken(token) {
@@ -178,7 +178,7 @@ class SpotifyWebPlaybackSdk {
     }
 
     if (this.player && this.deviceId) {
-      return this.loadTrackToPlayer(trackId, positionMs).then(res => {
+      return this.loadTrackToPlayer(trackId, positionMs).then((res) => {
         if (res.status === 401) {
           // Expired token
           return this.fetchAndSetToken().then(() =>
@@ -283,9 +283,9 @@ class SpotifyWebPlaybackSdk {
         "Content-Type": "application/json"
       },
       method: "GET"
-    }).then(d => {
+    }).then((d) => {
       if (d.status === 204) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           return resolve(undefined);
         });
       }
@@ -306,28 +306,28 @@ class SpotifyWebPlaybackSdk {
   }
 
   addListeners() {
-    this.player.addListener("initialization_error", e => {
+    this.player.addListener("initialization_error", (e) => {
       console.error("initialization_error", e.message);
     });
-    this.player.addListener("authentication_error", e => {
+    this.player.addListener("authentication_error", (e) => {
       console.error("authentication_error", e.message);
     });
-    this.player.addListener("account_error", e => {
+    this.player.addListener("account_error", (e) => {
       this.handleAccountError();
       console.error("account_error", e.message);
     });
-    this.player.addListener("playback_error", e => {
+    this.player.addListener("playback_error", (e) => {
       this.load(this.currentTrack, this.progressMs);
       console.error("playback_error", e);
     });
 
     // Playback status updates
     this.player.removeListener("player_state_changed");
-    this.player.addListener("player_state_changed", state => {
+    this.player.addListener("player_state_changed", (state) => {
       this.handleStateChange(state);
     });
 
-    this.player.addListener("ready", data => {
+    this.player.addListener("ready", (data) => {
       let d = new Date();
       console.log(
         `Ready with Device ID: ${
@@ -349,7 +349,7 @@ class SpotifyWebPlaybackSdk {
       }
     });
 
-    this.player.addListener("not_ready", data => {
+    this.player.addListener("not_ready", (data) => {
       console.log("Device ID has gone offline", data.device_id);
       this.deviceId = null;
 
@@ -365,9 +365,10 @@ class SpotifyWebPlaybackSdk {
     const prevStateExists = this.prevState && state;
 
     if (prevStateExists) {
-      const currentTrackIsInPreviousTracks = state.track_window.previous_tracks.find(
-        x => x.id === state.track_window.current_track.id
-      );
+      const currentTrackIsInPreviousTracks =
+        state.track_window.previous_tracks.find(
+          (x) => x.id === state.track_window.current_track.id
+        );
       const notPausedBeforeButPausedNow =
         !this.prevState.paused && state.paused;
 

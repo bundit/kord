@@ -1,21 +1,23 @@
+import { faSpotify, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "gatsby";
-import { faSpotify, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Kord3D from "../assets/circle-logo.svg";
-import styles from "../styles/login.module.css";
+import * as styles from "../styles/login.module.css";
 import useMobileDetection from "../utils/useMobileDetection";
 
 const LoginPanel = ({ login }) => {
   const text = login ? "Log in" : "Sign up";
   const isMobile = useMobileDetection();
+  const [hostname, setHostname] = useState();
 
-  const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://www.kord.app"
-      : "http://localhost:8888";
+  useEffect(() => {
+    setHostname(
+      process.env.NODE_ENV === "production" ? "" : "http://localhost:8888"
+    );
+  }, []);
 
   return (
     <div className={styles.loginWrapper}>
@@ -43,13 +45,13 @@ const LoginPanel = ({ login }) => {
       {!isMobile && (
         <>
           <div className={styles.loginListWrapper}>
-            <a href={`${baseUrl}/auth/spotify`} className={styles.oAuthLink}>
+            <a href={`${hostname}/auth/spotify`} className={styles.oAuthLink}>
               <span style={{ color: "#1DB954" }}>
                 <FontAwesomeIcon icon={faSpotify} size="2x" />
               </span>
               <span>{`${text} with Spotify`}</span>
             </a>
-            <a href={`${baseUrl}/auth/youtube`} className={styles.oAuthLink}>
+            <a href={`${hostname}/auth/youtube`} className={styles.oAuthLink}>
               <span style={{ color: "red" }}>
                 <FontAwesomeIcon icon={faYoutube} size="2x" />
               </span>

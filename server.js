@@ -18,9 +18,10 @@ const apiRoutes = require("./routes/api-routes");
 
 const app = express();
 const isProduction = app.get("env") === "production";
+const isPreProd = process.env.BUILD_ENV !== "production";
 
 // MIDDLEWARE
-if (isProduction) {
+if (isProduction && !isPreProd) {
   app.use(forceSSL);
   app.use(forceWWW);
 }

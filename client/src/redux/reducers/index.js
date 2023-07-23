@@ -13,10 +13,12 @@ const appReducer = combineReducers({
   user: userReducer
 });
 
-export default (state, action) => {
+const masterReducer = (state, action) => {
   if (action.type === CLEAR_STATE) {
     state = undefined;
   }
 
   return appReducer(state, action);
 };
+
+export default masterReducer;

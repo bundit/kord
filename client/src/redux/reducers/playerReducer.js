@@ -1,3 +1,4 @@
+import { shuffleTracks, unshuffleTracks } from "../../utils/queueHelpers";
 import {
   ADD_TRACK_TO_USER_QUEUE,
   APPEND_QUEUE,
@@ -28,7 +29,6 @@ import {
   TOGGLE_REPEAT,
   TOGGLE_SHUFFLE
 } from "../actions/types";
-import { shuffleTracks, unshuffleTracks } from "../../utils/queueHelpers";
 
 const initialState = {
   currentTrack: {
@@ -62,7 +62,7 @@ const initialState = {
   showYoutubePlayer: false
 };
 
-export default function(state = initialState, action) {
+export default function playerReducer(state = initialState, action) {
   switch (action.type) {
     case PLAY: {
       return {
@@ -290,7 +290,7 @@ export default function(state = initialState, action) {
       const trackId = action.payload;
       return {
         ...state,
-        queue: state.queue.map(track => {
+        queue: state.queue.map((track) => {
           // eslint-disable-next-line
           if (track.id == trackId) {
             track.streamable = false;

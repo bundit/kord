@@ -1,6 +1,6 @@
 import React from "react";
 import SEO from "../components/seo";
-import styles from "../styles/landing.module.css";
+import * as styles from "../styles/landing.module.css";
 
 const NotFoundPage = () => (
   <>

@@ -1,25 +1,10 @@
-import { useAlert } from "react-alert";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
-import { useRef, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import raf from "raf";
+import { useEffect, useRef, useState } from "react";
+import { useAlert } from "react-alert";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import {
-  capitalizeWord,
-  formatArtistName,
-  getTitleFromPathname
-} from "./formattingHelpers";
-import { fetchGeneric } from "./fetchGeneric";
-import {
-  fetchProfileAndPlaylists,
-  fetchUserProfiles,
-  setAccessToken,
-  setConnection,
-  setKordId,
-  setMainConnection,
-  setShowUnsupportedBrowserModal
-} from "../redux/actions/userActions";
 import { fetchUserPlaylists } from "../redux/actions/libraryActions";
 import {
   nextTrack,
@@ -29,11 +14,26 @@ import {
   setDuration,
   setSeek
 } from "../redux/actions/playerActions";
+import {
+  fetchProfileAndPlaylists,
+  fetchUserProfiles,
+  setAccessToken,
+  setConnection,
+  setKordId,
+  setMainConnection,
+  setShowUnsupportedBrowserModal
+} from "../redux/actions/userActions";
+import { fetchGeneric } from "./fetchGeneric";
+import {
+  capitalizeWord,
+  formatArtistName,
+  getTitleFromPathname
+} from "./formattingHelpers";
 
 export function useLoadUserDataOnMount(setIsLoadingUserData) {
-  const mainConnection = useSelector(state => state.user.kord.mainConnection);
+  const mainConnection = useSelector((state) => state.user.kord.mainConnection);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const alert = useAlert();
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export function useLoadUserDataOnMount(setIsLoadingUserData) {
     };
   }, []);
 
-  const setCookieOnUnload = e => {
+  const setCookieOnUnload = (e) => {
     Cookies.set("userBackUnderOneHour", "true", {
       expires: 1 / 24
     });
@@ -55,7 +55,7 @@ export function useLoadUserDataOnMount(setIsLoadingUserData) {
       setIsLoadingUserData(true);
 
       dispatch(refreshUserData(alert))
-        .then(() => dispatch(handleHashParams(history, mainConnection, alert)))
+        .then(() => dispatch(handleHashParams(navigate, mainConnection, alert)))
         .finally(() => setTimeout(() => setIsLoadingUserData(false), 600));
     } else {
       setIsLoadingUserData(false);
@@ -63,15 +63,15 @@ export function useLoadUserDataOnMount(setIsLoadingUserData) {
   }, []);
 }
 
-const refreshUserData = alert => dispatch => {
+const refreshUserData = (alert) => (dispatch) => {
   const userBackUnderOneHour = Cookies.get("userBackUnderOneHour");
 
   if (!userBackUnderOneHour) {
     return Promise.all([
-      dispatch(fetchUserProfiles()).catch(e =>
+      dispatch(fetchUserProfiles()).catch((e) =>
         alert.error("Unable to restore profiles")
       ),
-      dispatch(fetchUserPlaylists()).catch(e =>
+      dispatch(fetchUserPlaylists()).catch((e) =>
         alert.error("Unable to restore playlists")
       )
     ]);
@@ -80,7 +80,7 @@ const refreshUserData = alert => dispatch => {
   return Promise.resolve();
 };
 
-const handleHashParams = (history, mainConnection, alert) => dispatch => {
+const handleHashParams = (navigate, mainConnection, alert) => (dispatch) => {
   if (window.location.hash) {
     // Get hash params excluding first #
     const URLParams = new URLSearchParams(window.location.hash.substr(1));
@@ -103,8 +103,8 @@ const handleHashParams = (history, mainConnection, alert) => dispatch => {
       }
 
       return dispatch(fetchProfileAndPlaylists(source))
-        .catch(e => alert.error("Connect account failed"))
-        .finally(() => history.push(window.location.pathname));
+        .catch((e) => alert.error("Connect account failed"))
+        .finally(() => navigate(window.location.pathname));
     }
   }
 
@@ -220,7 +220,7 @@ export function useKeepSessionAlive() {
   const timer = useRef(null);
 
   function refreshUserCookie() {
-    fetchGeneric("/auth/token").catch(e => {
+    fetchGeneric("/auth/token").catch((e) => {
       if (e.status === 403 || e.status === 401) {
         window.location = "/login";
       }
@@ -239,24 +239,24 @@ export function useKeepSessionAlive() {
   }, []);
 }
 
+const controlList = [
+  " ",
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowUp",
+  "ArrowDown",
+  "f",
+  "m",
+  "q",
+  "h",
+  "Shift"
+];
+
 const keysPressed = {};
 
 export function useKeyControls(handleKeyControls) {
-  const controlList = [
-    " ",
-    "ArrowLeft",
-    "ArrowRight",
-    "ArrowUp",
-    "ArrowDown",
-    "f",
-    "m",
-    "q",
-    "h",
-    "Shift"
-  ];
-
   useEffect(() => {
-    window.onkeydown = e => {
+    window.onkeydown = (e) => {
       const { key } = e;
       const searchBar = document.getElementById("search-bar");
       const soundcloudUrlInput = document.getElementById("soundcloudURL");
@@ -286,16 +286,16 @@ export function useKeyControls(handleKeyControls) {
       handleKeyControls(key, keysPressed["Shift"]);
     };
 
-    window.onkeyup = e => {
+    window.onkeyup = (e) => {
       delete keysPressed[e.key];
     };
-  }, [controlList, handleKeyControls]);
+  }, [handleKeyControls]);
 }
 
 export function useSetDocumentTitle() {
   const { pathname } = useLocation();
-  const isPlaying = useSelector(state => state.player.isPlaying);
-  const currentTrack = useSelector(state => state.player.currentTrack);
+  const isPlaying = useSelector((state) => state.player.isPlaying);
+  const currentTrack = useSelector((state) => state.player.currentTrack);
   const currentPage = decodeURIComponent(getTitleFromPathname(pathname));
 
   useEffect(() => {
@@ -311,7 +311,7 @@ export function useSetDocumentTitle() {
 
 export function useClearSessionStorageOnRefresh() {
   useEffect(() => {
-    window.onbeforeunload = function(e) {
+    window.onbeforeunload = function (e) {
       sessionStorage.clear();
 
       e.preventDefault();
@@ -403,10 +403,10 @@ export function useDetectWidevine() {
     try {
       navigator
         .requestMediaKeySystemAccess("com.widevine.alpha", config)
-        .then(function(mediaKeySystemAccess) {
+        .then(function (mediaKeySystemAccess) {
           // Widevine support OK
         })
-        .catch(function(e) {
+        .catch(function (e) {
           // Widevine NOT supported
           handleWidevineNotSupported();
         });

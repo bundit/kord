@@ -6,7 +6,7 @@
   "repository": "https://github.com/bundit/kord-app.git",
   "author": "Bundit Hongmanee <bundit.j.h@gmail.com>",
   "engines": {
-    "node": "11.12.x"
+    "node": "^18.16.0"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -22,7 +22,7 @@
     "passport-mixcloud": "^0.0.2",
     "passport-oauth2-refresh": "^2.0.0",
     "passport-spotify": "^1.1.0",
-    "pg": "^7.18.2",
+    "pg": "^8.11.1",
     "puppeteer": "^5.2.0",
     "request": "^2.88.2"
   },

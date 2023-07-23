@@ -1,11 +1,11 @@
 import { SubmitButton } from "./buttons";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useHistory } from "react-router-dom";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   addToSearchHistory,
@@ -17,17 +17,17 @@ import {
 import styles from "../styles/searchForm.module.css";
 
 const SearchBar = ({ placeholder }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const prevEnteredQuery = useRef(null);
   const completionIndex = useRef(-1);
   const searchBarRef = useRef(null);
   const searchTimer = useRef(null);
   const [filteredHistory, setFilteredHistory] = useState([]);
-  const searchHistory = useSelector(state => state.search.history);
-  const query = useSelector(state => state.search.query) || "";
+  const searchHistory = useSelector((state) => state.search.history);
+  const query = useSelector((state) => state.search.query) || "";
   const autoCompleteResults =
-    useSelector(state => state.search.autoCompleteResults) || [];
+    useSelector((state) => state.search.autoCompleteResults) || [];
 
   const allCompleteResults = getAllCompleteResults();
   const searchCompletionComponents = allCompleteResults.map((aQuery, i) => (
@@ -50,7 +50,7 @@ const SearchBar = ({ placeholder }) => {
 
   function updateFilteredHistory() {
     setFilteredHistory(
-      searchHistory.filter(pastQuery => !query || pastQuery.includes(query))
+      searchHistory.filter((pastQuery) => !query || pastQuery.includes(query))
     );
   }
 
@@ -88,7 +88,7 @@ const SearchBar = ({ placeholder }) => {
 
   function handleSearchSubmit(e) {
     if (query.length) {
-      history.push(`/app/search/${encodeURIComponent(query)}`);
+      navigate(`/app/search/${encodeURIComponent(query)}`);
       dispatch(addToSearchHistory(query));
     }
 
@@ -156,7 +156,7 @@ const SearchBar = ({ placeholder }) => {
     dispatch(removeFromSearchHistory(query));
 
     setFilteredHistory(
-      filteredHistory.filter(prevQuery => prevQuery !== query)
+      filteredHistory.filter((prevQuery) => prevQuery !== query)
     );
 
     if (searchBarRef.current) {
@@ -172,8 +172,9 @@ const SearchBar = ({ placeholder }) => {
       style={{ position: "relative" }}
     >
       <input
-        className={`${styles.searchBar} ${query.length &&
-          styles.searchBarHasValue}`}
+        className={`${styles.searchBar} ${
+          query.length && styles.searchBarHasValue
+        }`}
         ref={searchBarRef}
         id="search-bar"
         name="search"
@@ -192,8 +193,9 @@ const SearchBar = ({ placeholder }) => {
       />
       <div className={styles.searchButtonContainer}>
         <SubmitButton
-          className={`${styles.submitSearchButton} ${query.length &&
-            styles.visibleButton}`}
+          className={`${styles.submitSearchButton} ${
+            query.length && styles.visibleButton
+          }`}
         >
           Search
         </SubmitButton>
@@ -216,8 +218,9 @@ function SearchCompletion({
 }) {
   return (
     <div
-      className={`${styles.searchCompleteItem} ${isSelected &&
-        styles.selectedItem}`}
+      className={`${styles.searchCompleteItem} ${
+        isSelected && styles.selectedItem
+      }`}
     >
       <Link
         to={`/app/search/${encodeURIComponent(query)}`}
@@ -227,7 +230,7 @@ function SearchCompletion({
         {query}
       </Link>
       {isHistory && (
-        <button type="button" onClick={e => handleRemove(e, query)}>
+        <button type="button" onClick={(e) => handleRemove(e, query)}>
           <FontAwesomeIcon icon={faTimes} size="sm" />
         </button>
       )}

@@ -1,33 +1,34 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
 import {
+  faCompass,
   faMusic,
   faSearch,
-  faCompass,
   faVolumeUp
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
-import { ICONS, SOURCES } from "../utils/constants";
+import classNames from "classnames";
 import { ReactComponent as Kord3d } from "../assets/circle-logo.svg";
 import { collapsePlayer } from "../redux/actions/playerActions";
-import { flattenPlaylistObject } from "../utils/formattingHelpers";
 import { openSettings } from "../redux/actions/userActions";
+import styles from "../styles/sidebar.module.scss";
+import { ICONS, SOURCES } from "../utils/constants";
+import { flattenPlaylistObject } from "../utils/formattingHelpers";
 import ConnectedSourceButton from "./connected-source-button";
 import PlaylistList from "./playlist-list";
-import styles from "../styles/sidebar.module.scss";
 
 const Sidebar = () => {
-  const playlists = useSelector(state => state.library.playlists);
-  const userHistory = useSelector(state => state.user.history);
-  const user = useSelector(state => state.user);
-  const context = useSelector(state => state.player.context);
-  const isPlaying = useSelector(state => state.player.isPlaying);
+  const playlists = useSelector((state) => state.library.playlists);
+  const userHistory = useSelector((state) => state.user.history);
+  const user = useSelector((state) => state.user);
+  const context = useSelector((state) => state.player.context);
+  const isPlaying = useSelector((state) => state.player.isPlaying);
 
   const dispatch = useDispatch();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const isPlayingFromSearch =
     (context.id === "search" || context.search) && isPlaying;
@@ -43,7 +44,7 @@ const Sidebar = () => {
     const newPath =
       lastPath === currentPath ? "/app/search" : `${lastPath}?restored=true`;
 
-    history.push(newPath);
+    navigate(newPath);
   }
 
   function collapsePlayerOnSidebarNavigation(e) {
@@ -100,7 +101,10 @@ const Sidebar = () => {
 
 function AppNavLinks({ isPlayingFromSearch, handleSearchNavigationOnClick }) {
   const navLinks = [
-    { title: "Library", to: "/app/library", exact: true, icon: faMusic },
+    // end is true for library so that we don't show multiple active links (end means match exact path)
+    { title: "Library", to: "/app/library", end: true, icon: faMusic },
+    // end is false for Search and Explore so we can show it as active for any subroutes.
+    // e.g. artist page will show search tab as active /app/search/artist/spotify/27gtK7m9vYwCyJ04zz0kIb/Lane%208
     { title: "Search", to: "/app/search", icon: faSearch },
     { title: "Explore", to: "/app/explore", icon: faCompass }
   ];
@@ -111,13 +115,14 @@ function AppNavLinks({ isPlayingFromSearch, handleSearchNavigationOnClick }) {
     }
   }
 
-  return navLinks.map(link => (
+  return navLinks.map((link) => (
     <NavLink
       to={link.to}
-      exact={link.exact}
+      end={link.end}
       onClick={link.title === "Search" ? handleSearchNavigationOnClick : null}
-      className={styles.sidebarNavLink}
-      activeClassName={styles.activeNavLink}
+      className={({ isActive }) =>
+        classNames(styles.sidebarNavLink, { [styles.activeNavLink]: isActive })
+      }
       style={getLinkStyle(link.title)}
       key={link.title + "sidebarNav"}
     >
@@ -140,7 +145,7 @@ function getPlayingFromSearchIcon(isPlayingFromSearch) {
 
 function StarredPlaylistsNavLinks({ playlists }) {
   const starredPlaylists = flattenPlaylistObject(playlists).filter(
-    playlist => playlist.isStarred
+    (playlist) => playlist.isStarred
   );
 
   return (
@@ -155,7 +160,7 @@ function StarredPlaylistsNavLinks({ playlists }) {
 }
 
 function RemainingPlaylistNavs({ playlists }) {
-  return SOURCES.map(source => (
+  return SOURCES.map((source) => (
     <div
       className={`${styles.playlistContainer} ${
         styles[`${source}PlaylistSection`]
@@ -163,7 +168,7 @@ function RemainingPlaylistNavs({ playlists }) {
       key={`sidebar:${source}:playlists`}
     >
       <PlaylistList
-        playlists={playlists[source].filter(playlist => !playlist.isStarred)}
+        playlists={playlists[source].filter((playlist) => !playlist.isStarred)}
         source={source}
         sidebar
       />
@@ -172,7 +177,7 @@ function RemainingPlaylistNavs({ playlists }) {
 }
 
 function SourceButtonList({ user, toggleSettingsForm }) {
-  return SOURCES.map(source => (
+  return SOURCES.map((source) => (
     <ConnectedSourceButton
       key={`Connect-${source}`}
       isConnected={user[source].isConnected}
@@ -183,7 +188,7 @@ function SourceButtonList({ user, toggleSettingsForm }) {
   ));
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   user: state.user,
   playlists: state.library.playlists
 });
