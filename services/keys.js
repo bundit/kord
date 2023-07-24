@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const puppeteer = require("puppeteer");
 const db = require("../config/database-setup");
 
@@ -64,11 +65,11 @@ async function fetchNewSoundcloudClientId() {
   page.on("request", requestListener);
 
   page.on("error", (err) => {
-    console.log("error at: ", err);
+    console.error("error at: ", err);
   });
 
   page.on("pageerror", (pageerr) => {
-    console.log("pageerror at: ", pageerr);
+    console.error("pageerror at: ", pageerr);
   });
 
   try {
@@ -76,7 +77,7 @@ async function fetchNewSoundcloudClientId() {
       waitUntil: "networkidle0"
     });
   } catch (e) {
-    console.log("Caught page error: ", e);
+    console.error("Caught page error: ", e);
   } finally {
     await browser.close();
   }
