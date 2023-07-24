@@ -15,6 +15,7 @@
 # production
 /client/build
 postgres.sql
+/dist
 
 # misc
 .DS_Store
