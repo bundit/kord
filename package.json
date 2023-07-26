@@ -40,12 +40,13 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.17.0",
     "nodemon": "^2.0.2",
+    "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "node_modules/.bin/concurrently \"nodemon -r dotenv/config server.js\" \"cd client && yarn start\" \"cd landing && yarn start\"",
-    "dev-app": "node_modules/.bin/concurrently \"nodemon -r dotenv/config server.js\" \"cd client && yarn start\"",
-    "heroku-postbuild": "cd client && yarn && yarn run build && cd ../landing && yarn && yarn run build"
+    "start": "node_modules/ts-node/dist/bin.js --transpileOnly server.ts",
+    "dev": "node_modules/.bin/concurrently --handle-input \"nodemon -r dotenv/config server.ts\" \"cd client && yarn start\" \"cd landing && yarn start\"",
+    "dev-app": "node_modules/.bin/concurrently --handle-input \"nodemon -r dotenv/config server.ts\" \"cd client && yarn start\"",
+    "heroku-postbuild": "./node_modules/typescript/bin/tsc && cd client && yarn && yarn run build && cd ../landing && yarn && yarn run build"
   }
 }
