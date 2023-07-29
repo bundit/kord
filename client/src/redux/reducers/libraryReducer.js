@@ -220,7 +220,7 @@ export default function libraryReducer(state = initialState, action) {
       const nextHref = action.payload;
 
       const newPlaylistList = state.playlists[source].map((playlist) => {
-        if (playlist.id === playlistId) {
+        if (playlist.id.toString() === playlistId.toString()) {
           playlist.next = nextHref;
         }
 
