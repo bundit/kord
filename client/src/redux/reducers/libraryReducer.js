@@ -29,26 +29,34 @@ const initialState = {
 export default function libraryReducer(state = initialState, action) {
   switch (action.type) {
     case IMPORT_LIKES: {
-      let likes = action.payload;
+      let likes = action.payload; // typeof Playlist
       const source = action.source;
       const playlistsOfThisSource = state.playlists[source].slice() || [];
-      const firstPlaylist = playlistsOfThisSource[0];
-      let rest;
-      if (firstPlaylist && firstPlaylist.id === "likes") {
-        rest = state.playlists[source].slice(1);
-        likes = {
-          ...firstPlaylist,
-          ...likes,
-          isConnected: firstPlaylist.isConnected,
-          tracks: [...firstPlaylist.tracks, ...likes.tracks]
-        };
-      } else rest = playlistsOfThisSource;
+
+      const hasLikesPlaylist = playlistsOfThisSource.some(
+        (playlist) => playlist.id === "likes"
+      );
+
+      const updatedPlaylists = !hasLikesPlaylist
+        ? [likes, ...playlistsOfThisSource]
+        : playlistsOfThisSource.map((playlist) => {
+            if (playlist.id === "likes") {
+              return {
+                ...playlist,
+                ...likes,
+                isConnected: playlist.isConnected,
+                tracks: [...playlist.tracks, ...likes.tracks]
+              };
+            }
+
+            return playlist;
+          });
 
       return {
         ...state,
         playlists: {
           ...state.playlists,
-          [source]: [likes, ...rest]
+          [source]: updatedPlaylists
         }
       };
     }
