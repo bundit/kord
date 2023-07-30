@@ -66,7 +66,18 @@ function getSoundcloudSearchResults(req: ExpressRequest, res: ExpressResponse) {
     return res.status(500);
   }
 
-  return fetchSoundcloudAndPipeResponse(decodeURIComponent(url), res);
+  const decodedUrl = decodeURIComponent(url);
+
+  const urlObject = new URL(decodedUrl);
+
+  const isSoundcloudApiEndpoint = urlObject.origin === SC_API_V2_BASE;
+  const isHttps = urlObject.protocol === "https:";
+
+  if (!isSoundcloudApiEndpoint || !isHttps) {
+    return res.status(500).end();
+  }
+
+  return fetchSoundcloudAndPipeResponse(decodedUrl, res);
 }
 
 async function getSuggestedAutocomplete(
