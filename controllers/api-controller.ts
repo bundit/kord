@@ -2,53 +2,59 @@ import {
   Request as ExpressRequest,
   Response as ExpressResponse
 } from "express";
-import request, {
-  Request as RequestRequest,
-  Response as RequestResponse
-} from "request";
+import { isString, keyBy, set } from "lodash";
+import fetch, { Response as FetchResponse } from "node-fetch";
+import {
+  SoundcloudGetUserPlaylistsResponse,
+  SoundcloudPlaylist,
+  SoundcloudTrack,
+  SoundcloudTrackLite
+} from "../types/common/soundcloud";
+
 const KeyService = require("../services/keys");
 
 const SC_API_V2_BASE = "https://api-v2.soundcloud.com";
 
-/**
- * Makes the request to soundcloud endpoint and handles adding the client_id and retry if expired
- * @param url the soundcloud endpoint
- * @returns
- */
-function fetchSoundcloud(
+function formatEndpointHref(endpoint: string, key: string): string {
+  const concatChar = endpoint.includes("?") ? "&" : "?";
+
+  return `${endpoint}${concatChar}client_id=${key}`;
+}
+
+async function fetchSoundcloud(
+  endpoint: string,
+  retriesRemaining: number = 1
+): Promise<FetchResponse> {
+  try {
+    const response = await fetch(
+      formatEndpointHref(endpoint, KeyService.soundcloudClientId)
+    );
+
+    const shouldRetry = response.status === 403 || response.status === 401;
+
+    if (shouldRetry && retriesRemaining > 0) {
+      await KeyService.refreshSoundcloudClientId();
+
+      return fetchSoundcloud(endpoint, retriesRemaining - 1);
+    }
+
+    return response;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function fetchSoundcloudAndPipeResponse(
   endpoint: string,
   res: ExpressResponse
-): RequestRequest {
-  function appendSoundcloudClientId(key: string): string {
-    const concatChar = endpoint.includes("?") ? "&" : "?";
-
-    return `${endpoint}${concatChar}client_id=${key}`;
+): Promise<ExpressResponse> {
+  try {
+    const response = await fetchSoundcloud(endpoint);
+    return response.body.pipe(res);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).end();
   }
-
-  return request
-    .get(appendSoundcloudClientId(KeyService.soundcloudClientId))
-    .on("response", async (response: RequestResponse) => {
-      const { statusCode } = response;
-
-      if (statusCode === 403 || statusCode === 401) {
-        const newClientId = await KeyService.refreshSoundcloudClientId();
-
-        // Failed to refresh soundcloud key
-        if (typeof KeyService.soundcloudClientId !== "string") {
-          return res.status(500).end();
-        }
-
-        return request
-          .get(
-            `${appendSoundcloudClientId(newClientId)}&client_id=${
-              KeyService.soundcloudClientId
-            }`
-          )
-          .pipe(res);
-      }
-
-      return response.pipe(res);
-    });
 }
 
 function getSoundcloudSearchResults(req: ExpressRequest, res: ExpressResponse) {
@@ -60,39 +66,175 @@ function getSoundcloudSearchResults(req: ExpressRequest, res: ExpressResponse) {
     return res.status(500);
   }
 
-  return fetchSoundcloud(decodeURIComponent(url), res);
+  return fetchSoundcloudAndPipeResponse(decodeURIComponent(url), res);
 }
 
-function getSuggestedAutocomplete(req: ExpressRequest, res: ExpressResponse) {
+async function getSuggestedAutocomplete(
+  req: ExpressRequest,
+  res: ExpressResponse
+) {
   const {
     query: { q }
   } = req;
-  const endpoint =
+  const searchAutocompleteEndpoint =
     "http://suggestqueries.google.com/complete/search?client=chrome&ds=yt";
 
-  if (typeof q !== "string" || !q) {
+  if (!isString(q) || !q) {
     return res.status(500);
   }
 
-  return request
-    .get(`${endpoint}&q=${encodeURIComponent(q)}`)
-    .on("response", (response: RequestResponse) => response.pipe(res));
+  const autoCompleteResponse = await fetch(
+    `${searchAutocompleteEndpoint}&q=${encodeURIComponent(q)}`
+  );
+
+  return autoCompleteResponse.body.pipe(res);
 }
 
 function getSoundcloudUser(req: ExpressRequest, res: ExpressResponse) {
-  console.log("HEre");
   const {
     query: { username }
   } = req;
 
   const userProfileUrl = `https%3A//soundcloud.com/${username}`;
-  const endpoint = `${SC_API_V2_BASE}/resolve?url=${userProfileUrl}&client_id=${KeyService.soundcloudClientId}`;
+  const userProfileEndpoint = `${SC_API_V2_BASE}/resolve?url=${userProfileUrl}`;
 
-  return fetchSoundcloud(endpoint, res);
+  return fetchSoundcloudAndPipeResponse(userProfileEndpoint, res);
+}
+
+function getSoundcloudUserLikes(req: ExpressRequest, res: ExpressResponse) {
+  const {
+    params: { soundcloudUserId }
+  } = req;
+  const likesEndpoint = `${SC_API_V2_BASE}/users/${soundcloudUserId}/likes?&limit=30&offset=0&linked_partitioning=1`;
+
+  return fetchSoundcloudAndPipeResponse(likesEndpoint, res);
+}
+
+async function getSoundcloudUserPlaylists(
+  req: ExpressRequest,
+  res: ExpressResponse
+) {
+  const {
+    params: { soundcloudUserId }
+  } = req;
+
+  try {
+    const playlistsEndpoint = `${SC_API_V2_BASE}/users/${soundcloudUserId}/playlists`;
+    const playlistsResponse = await fetchSoundcloud(playlistsEndpoint);
+    const playlistsCollection: SoundcloudGetUserPlaylistsResponse =
+      await playlistsResponse.json();
+
+    for (let playlist of playlistsCollection.collection) {
+      set(
+        playlist,
+        "tracks",
+        await getMissingSoundcloudTrackInfo(playlist.tracks)
+      );
+    }
+
+    console.log(playlistsCollection);
+
+    return res.status(200).send(playlistsCollection);
+  } catch (e) {
+    console.error(e);
+
+    return res.status(500).end();
+  }
+}
+
+/**
+ * Sometimes soundcloud api returns only the first 5 tracks as full objects so we use this to fill in the rest of the infomation for the remaining tracks
+ * @param tracks list of tracks that may be either SoundcloudTrack or SoundcloudTrackLite
+ * @return a list of SoundcloudTracks that have replaced the lite version with the full versions
+ */
+async function getMissingSoundcloudTrackInfo(
+  tracks: (SoundcloudTrack | SoundcloudTrackLite)[]
+): Promise<SoundcloudTrack[]> {
+  const tracksThatNeedInfo: SoundcloudTrackLite[] = tracks.filter(
+    (track) => !("title" in track)
+  );
+
+  const soundcloudTrackInfoResponse = await getSoundcloudTrackInfo(
+    tracksThatNeedInfo.map((track) => track.id)
+  );
+
+  const tracksWithInfo = await soundcloudTrackInfoResponse.json();
+  const tracksByIdMap = keyBy(tracksWithInfo, "id");
+
+  return tracks.map((track) => tracksByIdMap[track.id] || track);
+}
+
+async function getSoundcloudPlaylist(
+  req: ExpressRequest,
+  res: ExpressResponse
+) {
+  const {
+    params: { soundcloudPlaylistId }
+  } = req;
+  const playlistEndpoint = `${SC_API_V2_BASE}/playlists/${soundcloudPlaylistId}?limit=`;
+
+  try {
+    const playlistResponse = await fetchSoundcloud(playlistEndpoint);
+    const soundcloudPlaylist: SoundcloudPlaylist =
+      await playlistResponse.json();
+
+    set(
+      soundcloudPlaylist,
+      "tracks",
+      await getMissingSoundcloudTrackInfo(soundcloudPlaylist.tracks)
+    );
+
+    return res.send(soundcloudPlaylist).status(200).end();
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+function getSoundcloudTrackInfo(ids: number[]) {
+  const trackInfoEndpoint = `${SC_API_V2_BASE}/tracks?ids=${encodeURIComponent(
+    ids.join(",")
+  )}`;
+
+  return fetchSoundcloud(trackInfoEndpoint);
+}
+
+function searchSoundcloudTracks(req: ExpressRequest, res: ExpressResponse) {
+  const {
+    query: { q }
+  } = req;
+  const trackSearchEndpoint = `${SC_API_V2_BASE}/search/tracks?q=${q}`;
+
+  return fetchSoundcloudAndPipeResponse(trackSearchEndpoint, res);
+}
+
+function searchSoundcloudArtists(req: ExpressRequest, res: ExpressResponse) {
+  const {
+    query: { q }
+  } = req;
+  const userSearchEndpoint = `${SC_API_V2_BASE}/search/users?q=${q}`;
+
+  return fetchSoundcloudAndPipeResponse(userSearchEndpoint, res);
+}
+
+function getSoundcloudArtist(req: ExpressRequest, res: ExpressResponse) {
+  const {
+    params: { soundcloudArtistId }
+  } = req;
+
+  const userEndpoint = `${SC_API_V2_BASE}/users/${soundcloudArtistId}`;
+
+  return fetchSoundcloudAndPipeResponse(userEndpoint, res);
 }
 
 export = {
   getSoundcloudSearchResults,
   getSuggestedAutocomplete,
-  getSoundcloudUser
+  getSoundcloudUser,
+  getSoundcloudUserPlaylists,
+  getSoundcloudPlaylist,
+  searchSoundcloudTracks,
+  searchSoundcloudArtists,
+  getSoundcloudArtist,
+  getSoundcloudUserLikes
 };
