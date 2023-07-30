@@ -30,7 +30,7 @@ export interface SoundcloudTrack extends SoundcloudTrackLite {
   };
   station_urn: string; // "soundcloud:system-playlists:track-stations:1342486297",
   station_permalink: string; // "track-stations:1342486297"
-  user: SoundcloudArtist;
+  user: SoundcloudUser;
 }
 
 interface SoundcloudTranscoding {
@@ -133,4 +133,4 @@ export type SoundcloudTrackSearchResponse =
   SoundcloudSearchResponse<SoundcloudTrack>;
 
 export type SoundcloudGetUserPlaylistsResponse =
-  SoundcloudCollection<SoundcloudPlaylist>;
+  SoundcloudCollectionResponse<SoundcloudPlaylist>;

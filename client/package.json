@@ -67,6 +67,7 @@
   "proxy": "http://localhost:8888/",
   "homepage": "/app",
   "devDependencies": {
-    "@babel/helper-builder-react-jsx": "^7.22.5"
+    "@babel/helper-builder-react-jsx": "^7.22.5",
+    "@types/react-alert": "^7.0.2"
   }
 }

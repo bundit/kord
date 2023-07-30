@@ -1,4 +1,4 @@
-import { LegacyRef, ReactElement } from "react";
+import React, { LegacyRef, ReactElement } from "react";
 import { default as SCPlayer } from "react-player/soundcloud";
 
 interface SoundcloudPlayerProps {

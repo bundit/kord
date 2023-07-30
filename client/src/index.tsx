@@ -1,22 +1,22 @@
 import "./index.css";
 
-import { Provider as AlertProvider } from "react-alert";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import AlertTemplate from "react-alert-template-basic";
-import React from "react";
-import ReactDOM from "react-dom";
 import * as Sentry from "@sentry/react";
+import { Provider as AlertProvider, AlertProviderProps } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
-import * as serviceWorker from "./serviceWorker";
 import store from "./redux/store";
+import * as serviceWorker from "./serviceWorker";
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DNS
 });
 
-const alertOptions = {
+const alertOptions: AlertProviderProps = {
+  template: AlertTemplate,
   position: "bottom center",
   timeout: 3500,
   offset: "90px",
@@ -26,7 +26,7 @@ const alertOptions = {
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <AlertProvider template={AlertTemplate} {...alertOptions}>
+      <AlertProvider {...alertOptions}>
         <App />
       </AlertProvider>
     </BrowserRouter>
