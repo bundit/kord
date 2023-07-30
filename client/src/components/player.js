@@ -1,16 +1,10 @@
-import { CSSTransition } from "react-transition-group";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import raf from "raf";
+import React, { useRef, useState } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState, useRef } from "react";
-import ReactHowler from "react-howler";
-import raf from "raf";
+import { CSSTransition } from "react-transition-group";
 
-import {
-  IconButton as DesktopExpandButton,
-  IconButton as DesktopMinimizeButton
-} from "./buttons";
-import { keepWithinVolumeRange } from "../utils/formattingHelpers";
 import {
   nextTrack,
   pause,
@@ -23,11 +17,13 @@ import {
   toggleRepeat,
   toggleShuffle
 } from "../redux/actions/playerActions";
-import { setTrackUnstreamable } from "../redux/actions/libraryActions";
 import {
   toggleKeyboardControlsMenu,
   toggleUserQueue
 } from "../redux/actions/userActions";
+import styles from "../styles/player.module.scss";
+import slideTransition from "../styles/slide.module.css";
+import { keepWithinVolumeRange } from "../utils/formattingHelpers";
 import {
   useDetectMediaSession,
   useKeyControls,
@@ -36,22 +32,28 @@ import {
   useSetDocumentTitle,
   useSetDurationOnTrackChange
 } from "../utils/hooks";
+import { getTrackExternalLink } from "../utils/libraryUtils";
+import {
+  IconButton as DesktopExpandButton,
+  IconButton as DesktopMinimizeButton
+} from "./buttons";
 import ExpandedPlayer from "./expanded-player";
 import MinifiedPlayer from "./minified-player";
+import SoundcloudPlayer from "./soundcloud-player.tsx";
 import SpotifyPlayer from "./spotify-player";
 import UserQueue from "./user-queue";
 import YoutubePlayer from "./youtube-player";
-import slideTransition from "../styles/slide.module.css";
-import styles from "../styles/player.module.scss";
 
 export const Player = () => {
-  const currentTrack = useSelector(state => state.player.currentTrack);
-  const seek = useSelector(state => state.player.seek);
-  const duration = useSelector(state => state.player.duration);
-  const isMuted = useSelector(state => state.player.isMuted);
-  const isPlaying = useSelector(state => state.player.isPlaying);
-  let volume = useSelector(state => state.player.volume);
-  const isPlayerExpanded = useSelector(state => state.player.isPlayerExpanded);
+  const currentTrack = useSelector((state) => state.player.currentTrack);
+  const seek = useSelector((state) => state.player.seek);
+  const duration = useSelector((state) => state.player.duration);
+  const isMuted = useSelector((state) => state.player.isMuted);
+  const isPlaying = useSelector((state) => state.player.isPlaying);
+  let volume = useSelector((state) => state.player.volume);
+  const isPlayerExpanded = useSelector(
+    (state) => state.player.isPlayerExpanded
+  );
 
   const [isSpotifySdkReady, setIsSpotifySdkReady] = useState(false);
   const [userSeekPos, setUserSeekPos] = useState(0);
@@ -66,7 +68,7 @@ export const Player = () => {
   const youtubePlayer = useRef(null);
   const alert = useAlert();
   const dispatch = useDispatch();
-  const seekAmount = useSelector(state => state.player.seekAmount) || 15;
+  const seekAmount = useSelector((state) => state.player.seekAmount) || 15;
 
   useKeyControls(handleKeyControls);
   useSetDurationOnTrackChange(currentTrack);
@@ -82,7 +84,7 @@ export const Player = () => {
 
     try {
       if (currentSource === "soundcloud") {
-        currentPos = soundcloudPlayer.current.seek();
+        currentPos = soundcloudPlayer.current.getCurrentTime();
       } else if (currentSource === "spotify") {
         currentPos = spotifyPlayer.current.seek() / 1000;
       } else if (currentSource === "youtube") {
@@ -167,7 +169,7 @@ export const Player = () => {
     if (seconds > duration) seconds = duration;
 
     if (currentSource === "soundcloud") {
-      soundcloudPlayer.current.seek(seconds);
+      soundcloudPlayer.current.seekTo(seconds);
       dispatch(setSeek(seconds));
     }
 
@@ -283,21 +285,6 @@ export const Player = () => {
     alert.error("Error: Spotify Premium Required");
   }
 
-  function handleSoundcloudLoadError(id, err) {
-    if (soundcloudPlayer.current) {
-      if (err === 2 || err === 3) {
-        soundcloudPlayer.current.initHowler();
-      }
-      if (err === 4) {
-        // Not streamable
-        dispatch(setTrackUnstreamable(currentTrack.id));
-        handleNextTrack();
-      }
-    }
-  }
-
-  const KEY = process.env.REACT_APP_SC_KEY;
-
   return (
     <>
       <UserQueue />
@@ -358,15 +345,12 @@ export const Player = () => {
       </audio>
 
       {currentTrack.source === "soundcloud" && (
-        <ReactHowler
-          src={`https://api.soundcloud.com/tracks/${currentTrack.id}/stream?client_id=${KEY}`}
-          playing={isPlaying && currentTrack.source === "soundcloud"}
+        <SoundcloudPlayer
+          playerRef={soundcloudPlayer}
+          isPlaying={isPlaying}
           onEnd={handleOnEnd}
-          preload
-          html5
           volume={volume}
-          ref={soundcloudPlayer}
-          onLoadError={handleSoundcloudLoadError}
+          sourceUrl={getTrackExternalLink(currentTrack)}
         />
       )}
 
