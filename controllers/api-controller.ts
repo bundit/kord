@@ -227,6 +227,39 @@ function getSoundcloudArtist(req: ExpressRequest, res: ExpressResponse) {
   return fetchSoundcloudAndPipeResponse(userEndpoint, res);
 }
 
+function getSoundcloudArtistTracks(req: ExpressRequest, res: ExpressResponse) {
+  const {
+    params: { soundcloudArtistId }
+  } = req;
+
+  const artistTracksEndpoint = `${SC_API_V2_BASE}/stream/users/${soundcloudArtistId}?limit=30&linked_partitioning=1`;
+
+  return fetchSoundcloudAndPipeResponse(artistTracksEndpoint, res);
+}
+
+function getSoundcloudArtistTopTracks(
+  req: ExpressRequest,
+  res: ExpressResponse
+) {
+  const {
+    params: { soundcloudArtistId }
+  } = req;
+
+  const artistSpotlightEndpoint = `${SC_API_V2_BASE}/users/${soundcloudArtistId}/toptracks?limit=30&linked_partitioning=1`;
+
+  return fetchSoundcloudAndPipeResponse(artistSpotlightEndpoint, res);
+}
+
+function getRelatedSoundcloudTracks(req: ExpressRequest, res: ExpressResponse) {
+  const {
+    params: { soundcloudTrackId }
+  } = req;
+
+  const relatedTracksEndpoint = `${SC_API_V2_BASE}/stations/soundcloud:track-stations:${soundcloudTrackId}/tracks`;
+
+  return fetchSoundcloudAndPipeResponse(relatedTracksEndpoint, res);
+}
+
 export = {
   getSoundcloudSearchResults,
   getSuggestedAutocomplete,
@@ -236,5 +269,8 @@ export = {
   searchSoundcloudTracks,
   searchSoundcloudArtists,
   getSoundcloudArtist,
-  getSoundcloudUserLikes
+  getSoundcloudUserLikes,
+  getRelatedSoundcloudTracks,
+  getSoundcloudArtistTracks,
+  getSoundcloudArtistTopTracks
 };

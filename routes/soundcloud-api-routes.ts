@@ -25,10 +25,25 @@ router.get(
   ApiController.getSoundcloudPlaylist
 );
 
+router.get(
+  "/track/:soundcloudTrackId/related",
+  ApiController.getRelatedSoundcloudTracks
+);
+
 router.get("/search/tracks", ApiController.searchSoundcloudTracks);
 
 router.get("/search/artists", ApiController.searchSoundcloudArtists);
 
 router.get("/artist/:soundcloudArtistId", ApiController.getSoundcloudArtist);
+
+router.get(
+  "/artist/:soundcloudArtistId/tracks",
+  ApiController.getSoundcloudArtistTracks
+);
+
+router.get(
+  "/artist/:soundcloudArtistId/toptracks",
+  ApiController.getSoundcloudArtistTopTracks
+);
 
 export = router;
