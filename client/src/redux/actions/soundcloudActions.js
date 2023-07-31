@@ -53,7 +53,6 @@ export const fetchSoundcloudProfile = (username) => (dispatch) => {
 };
 
 export const fetchSoundcloudLikes = (next, userId) => (dispatch) => {
-  console.log("fetchSoundcloudLikes");
   if (!next) {
     next = `/api/soundcloud/user/${userId}/likes`;
   }
