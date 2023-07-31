@@ -143,8 +143,6 @@ async function getSoundcloudUserPlaylists(
       );
     }
 
-    console.log(playlistsCollection);
-
     return res.status(200).send(playlistsCollection);
   } catch (e) {
     console.error(e);
