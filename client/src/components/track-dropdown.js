@@ -17,6 +17,7 @@ import {
   openDeleteTrackForm
 } from "../redux/actions/userActions";
 import styles from "../styles/track-item.module.scss";
+import { getTrackExternalLink } from "../utils/libraryUtils";
 
 const TrackDropdown = ({
   toggleDropdown,
@@ -112,25 +113,7 @@ const TrackDropdown = ({
   );
 };
 
-function getTrackExternalLink(track) {
-  switch (track.source) {
-    case "spotify": {
-      return `https://open.spotify.com/track/${track.id}`;
-    }
 
-    case "soundcloud": {
-      return `https://soundcloud.com/${track.permalink}`;
-    }
-
-    case "youtube": {
-      return `https://www.youtube.com/watch?v=${track.id}`;
-    }
-
-    default: {
-      return "";
-    }
-  }
-}
 
 TrackDropdown.propTypes = {
   toggleDropdown: PropTypes.func.isRequired,

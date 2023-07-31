@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const express = require("express");
@@ -37,16 +38,16 @@ if (isProduction) {
   app.use("/", indexRoutes);
   app.use("/app", appRoutes);
 
-  app.get("*", (req, res) => {
+  app.get("*", (_req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "landing", "public", "index.html"));
   });
 } else if (!isProduction) {
   // Serve react-app develment server in development
-  app.get("/app*", (req, res) => {
+  app.get("/app*", (req: Request, res: Response) => {
     res.redirect(`http://localhost:3000${req.originalUrl}`);
   });
   // Serve gatsby server in development
-  app.get("*", (req, res) => {
+  app.get("*", (req: Request, res: Response) => {
     res.redirect(`http://localhost:8000${req.originalUrl}`);
   });
 }

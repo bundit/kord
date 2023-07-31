@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const puppeteer = require("puppeteer");
 const db = require("../config/database-setup");
 
@@ -48,13 +49,14 @@ async function fetchNewSoundcloudClientId() {
   function requestListener(req) {
     const requestUrl = req.url();
 
-    if (requestUrl.includes("client_id")) {
+    const soundcloudApiV2Regex = /api-v2.soundcloud.com\/.*client_id.*/;
+    if (soundcloudApiV2Regex.test(requestUrl)) {
       const newKey = requestUrl
-        .match(/(client_id=([0-9A-Za-z])+&)/g)[0]
-        .slice(10, -1);
+        .match(/(client_id=([0-9A-Za-z])+)/g)[0]
+        .slice(10);
 
       newClientId = newKey;
-      page.removeListener("request", requestListener);
+      page.off("request", requestListener);
     }
 
     req.continue();
@@ -62,18 +64,20 @@ async function fetchNewSoundcloudClientId() {
 
   page.on("request", requestListener);
 
-  page.on("error", err => {
-    console.log("error at: ", err);
+  page.on("error", (err) => {
+    console.error("error at: ", err);
   });
 
-  page.on("pageerror", pageerr => {
-    console.log("pageerror at: ", pageerr);
+  page.on("pageerror", (pageerr) => {
+    console.error("pageerror at: ", pageerr);
   });
 
   try {
-    await page.goto("https://soundcloud.com/");
+    await page.goto("https://soundcloud.com/discover", {
+      waitUntil: "networkidle0"
+    });
   } catch (e) {
-    console.log("Caught page error: ", e);
+    console.error("Caught page error: ", e);
   } finally {
     await browser.close();
   }
