@@ -27,7 +27,7 @@ module.exports = {
   // For executing one query
   query: (text, params, callback) => pool.query(text, params, callback),
   // For executing multiple queries with one connection
-  getClient: async callback => {
+  getClient: async (callback) => {
     const client = await pool.connect();
     try {
       await callback(client);
@@ -38,7 +38,7 @@ module.exports = {
     }
   },
   // For executing a transaction
-  transaction: async callback => {
+  transaction: async (callback) => {
     const client = await pool.connect();
     try {
       await client.query("BEGIN");
@@ -46,6 +46,7 @@ module.exports = {
         await callback(client);
         client.query("COMMIT");
       } catch (e) {
+        console.error(`Error executing transaction: ${err.stack}`);
         client.query("ROLLBACK");
         throw e;
       }

@@ -57,7 +57,7 @@ async function deleteUserProfile(req, res) {
   }
 
   try {
-    await db.transaction(async client => {
+    await db.transaction(async (client) => {
       const deleteProfileQuery = {
         text: `DELETE FROM user_profiles
                WHERE user_id=$1 AND oauth_provider=$2`,
@@ -108,7 +108,7 @@ async function insertUserPlaylists(req, res) {
   const { source, playlists } = req.body;
 
   try {
-    await db.transaction(async client => {
+    await db.transaction(async (client) => {
       if (source) {
         const deleteQuery = {
           text: `DELETE FROM user_playlists
@@ -119,11 +119,13 @@ async function insertUserPlaylists(req, res) {
         await client.query(deleteQuery);
       }
 
-      playlists.forEach(
-        async ({ id, title, isConnected, index, img, total, isStarred }) => {
+      await Promise.all(
+        playlists.map((playlist) => {
+          const { id, title, isConnected, index, img, total, isStarred } =
+            playlist;
           const insertQuery = {
             text: `INSERT INTO user_playlists(user_id, source, external_id, title, is_connected, index, img, total, is_starred)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
             values: [
               kordUser.id,
               source,
@@ -137,8 +139,8 @@ async function insertUserPlaylists(req, res) {
             ]
           };
 
-          await client.query(insertQuery);
-        }
+          return client.query(insertQuery);
+        })
       );
     });
   } catch (e) {
@@ -153,21 +155,21 @@ async function updateUserPlaylists(req, res) {
   const operations = req.body;
 
   try {
-    await db.getClient(client => {
-      operations.forEach(async ({ field, playlistId, value }) => {
-        const patchQuery = {
-          text: `UPDATE user_playlists
+    await db.getClient(async (client) => {
+      await Promise.all(
+        operations.map((operation) => {
+          const { field, playlistId, value } = operation;
+
+          const patchQuery = {
+            text: `UPDATE user_playlists
                    SET ${field}=$3
                    WHERE user_id=$1 AND external_id=$2`,
-          values: [kordUser.id, playlistId, value]
-        };
+            values: [kordUser.id, playlistId, value]
+          };
 
-        try {
-          await client.query(patchQuery);
-        } catch (e) {
-          await client.query(patchQuery);
-        }
-      });
+          return client.query(patchQuery);
+        })
+      );
     });
   } catch (e) {
     return res.status(400).json(e);
