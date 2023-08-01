@@ -64,7 +64,7 @@ export function generateProfilePayload(source, profile) {
     source,
     profile: {
       id: profile.id,
-      img: profile.image,
+      img: [profile.image],
       username: profile.username,
       profile_url: profile.profileUrl
     }
