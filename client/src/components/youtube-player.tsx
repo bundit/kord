@@ -1,22 +1,40 @@
-import { useDispatch, useSelector } from "react-redux";
-import React from "react";
 import * as Sentry from "@sentry/react";
-import YouTube from "react-youtube";
+import React, { MutableRefObject, ReactElement } from "react";
+import ReactYoutube, { YouTubePlayerProps } from "react-player/youtube";
+import { useDispatch, useSelector } from "react-redux";
 
+import { setTrackUnstreamable } from "../redux/actions/libraryActions";
 import {
   nextTrack,
   pause,
   play,
   setDuration
 } from "../redux/actions/playerActions";
-import { setTrackUnstreamable } from "../redux/actions/libraryActions";
-import styles from "../styles/player.module.scss";
 
-function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
-  const isPlaying = useSelector(state => state.player.isPlaying);
-  const current = useSelector(state => state.player.currentTrack);
+import ReactPlayer from "react-player";
+import styles from "../styles/player.module.scss";
+import { Track } from "../types/global";
+import { getTrackExternalLink } from "../utils/libraryUtils";
+
+type YoutubeInstanceRef = MutableRefObject<ReactPlayer>;
+
+interface YoutubePlayerProps {
+  volume: number;
+  forwardRef: YoutubeInstanceRef;
+  onEnd: YouTubePlayerProps["onEnded"];
+  playerIsExpanded: boolean;
+}
+
+function YoutubePlayer({
+  volume,
+  forwardRef,
+  onEnd,
+  playerIsExpanded
+}: YoutubePlayerProps): ReactElement {
+  const isPlaying = useSelector((state) => state.player.isPlaying);
+  const current = useSelector((state) => state.player.currentTrack);
   const showYoutubePlayer = useSelector(
-    state => state.player.showYoutubePlayer
+    (state) => state.player.showYoutubePlayer
   );
   const youtubeIsPlaying = current.source === "youtube" && isPlaying;
 
@@ -27,8 +45,9 @@ function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
   useSyncVolume(volume, forwardRef);
 
   function handleYoutubeReady(e) {
-    forwardRef.current = e.target;
-    forwardRef.current.setVolume(volume * 100);
+    // forwardRef.current = e.target;
+    // forwardRef.current.setVolume(volume * 100);
+    // forwardRef.current.
   }
 
   function handleYoutubePlayerError(e) {
@@ -64,8 +83,9 @@ function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
   function getYoutubeContainerClassNames() {
     const youtubeActive = current.source === "youtube";
 
-    return `${styles.youtubeContainer} ${youtubeActive &&
-      styles.youtubeActive} ${youtubeIsPlaying && styles.youtubeIsPlaying} ${
+    return `${styles.youtubeContainer} ${
+      youtubeActive && styles.youtubeActive
+    } ${youtubeIsPlaying && styles.youtubeIsPlaying} ${
       playerIsExpanded && youtubeActive
         ? styles.youtubeExpanded
         : styles.youtubeNotExpanded
@@ -74,62 +94,53 @@ function YoutubePlayer({ volume, forwardRef, onEnd, playerIsExpanded }) {
 
   return (
     <div onClick={handlePlayPause} className={getYoutubeContainerClassNames()}>
-      <YouTube
-        videoId={current.source === "youtube" ? current.id : null}
-        opts={{
-          height: "100%",
-          width: "100%",
-          playerVars: {
-            controls: 0,
-            fs: 0,
-            iv_load_policy: 3,
-            modestbranding: 1,
-            autoplay: youtubeIsPlaying ? 1 : 0
-          }
-        }}
-        onReady={handleYoutubeReady}
-        onEnd={onEnd}
-        onError={handleYoutubePlayerError}
-        onStateChange={handleStateChange}
-      />
+      {current.source === "youtube" && current.id && (
+        <ReactYoutube
+          ref={forwardRef}
+          url={getTrackExternalLink(current)}
+          videoId={current.id}
+          config={{
+            playerVars: {
+              controls: 0,
+              fs: 0,
+              iv_load_policy: 3,
+              modestbranding: 1,
+              autoplay: youtubeIsPlaying ? 1 : 0
+            }
+          }}
+          opts={{
+            height: "100%",
+            width: "100%",
+            playerVars: {
+              controls: 0,
+              fs: 0,
+              iv_load_policy: 3,
+              modestbranding: 1,
+              autoplay: youtubeIsPlaying ? 1 : 0
+            }
+          }}
+          onReady={handleYoutubeReady}
+          onEnded={onEnd}
+          onError={handleYoutubePlayerError}
+          onStateChange={handleStateChange}
+          volume={volume}
+          playing={isPlaying}
+        />
+      )}
     </div>
   );
 }
 
 // Make sure that video starts at 0:00 on track change and not cached seek time
-function useStartAtBeginningOnTrackChange(currentTrack, youtubePlayer) {
+function useStartAtBeginningOnTrackChange(
+  currentTrack: Track,
+  youtubePlayer: YoutubeInstanceRef
+) {
   React.useEffect(() => {
     if (currentTrack.source === "youtube" && youtubePlayer.current) {
       youtubePlayer.current.seekTo(0);
     }
   }, [currentTrack, youtubePlayer]);
-}
-
-function useSyncPlayPause(isPlaying, current, youtubePlayer) {
-  React.useEffect(() => {
-    if (!youtubePlayer.current) {
-      return;
-    }
-
-    if (current.source !== "youtube") {
-      youtubePlayer.current.stopVideo();
-      return;
-    }
-
-    if (isPlaying) {
-      youtubePlayer.current.playVideo();
-    } else {
-      youtubePlayer.current.pauseVideo();
-    }
-  }, [current, youtubePlayer, isPlaying]);
-}
-
-function useSyncVolume(volume, youtubePlayer) {
-  React.useEffect(() => {
-    if (youtubePlayer.current) {
-      youtubePlayer.current.setVolume(volume * 100);
-    }
-  }, [youtubePlayer, volume]);
 }
 
 export default YoutubePlayer;
