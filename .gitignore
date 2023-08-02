@@ -15,7 +15,11 @@
 # production
 /client/build
 postgres.sql
+
+# typescript
 /dist
+/**/*.module.scss.d.ts
+/**/variables.scss.d.ts
 
 # misc
 .DS_Store
@@ -23,6 +27,7 @@ postgres.sql
 .env.development.local
 .env.test.local
 .env.production.local
+/**/.vscode/*
 
 # notes
 endpoints.txt
@@ -37,3 +42,4 @@ landing/public
 
 # other tooling
 .importjs.js
+
