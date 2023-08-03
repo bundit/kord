@@ -68,6 +68,7 @@
   "devDependencies": {
     "@babel/helper-builder-react-jsx": "^7.22.5",
     "@types/react-alert": "^7.0.2",
+    "@types/youtube": "^0.0.47",
     "typed-scss-modules": "^7.1.2"
   }
 }

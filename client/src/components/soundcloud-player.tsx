@@ -1,8 +1,8 @@
-import React, { LegacyRef, ReactElement } from "react";
+import { MutableRefObject, ReactElement } from "react";
 import { default as SCPlayer } from "react-player/soundcloud";
 
 interface SoundcloudPlayerProps {
-  playerRef?: LegacyRef<SCPlayer>;
+  playerRef?: MutableRefObject<SCPlayer>;
   isPlaying: boolean;
   onEnd: () => void;
   volume: number;

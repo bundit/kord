@@ -19,4 +19,24 @@ export interface Track {
   type?: string;
   source: Source;
   streamable: boolean;
+  // YouTube
+  playlistItemId?: string;
+}
+
+export interface Playlist {
+  // From external
+  id: string | number;
+  title: string;
+  img: string | string[];
+  source: Source;
+  tracks: Track[];
+  total: number;
+  next: "start" | string;
+  // Soundcloud
+  description?: string;
+  externalUrl?: string;
+  // Kord playlist properties
+  isConnected: boolean;
+  isStarred: boolean;
+  dateSynced: string;
 }
