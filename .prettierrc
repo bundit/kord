@@ -3,5 +3,10 @@
   "semi": true,
   "singleQuote": false,
   "tabWidth": 2,
-  "trailingComma": "none"
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "quoteProps": "consistent",
+  "tabs": false
 }
