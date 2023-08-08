@@ -1,9 +1,17 @@
-module.exports = function forceWWW(req, res, next) {
-  const urlRegex = /([a-z0-9]+[.])?kord.app/;
-  const [host, subdomain] = req.headers.host.match(urlRegex);
+import { NextFunction, Request, Response } from "express";
 
-  if (subdomain !== "www.") {
-    return res.redirect(301, `${req.protocol}://www.${host}${req.originalUrl}`);
+export = function forceWWW(req: Request, res: Response, next: NextFunction) {
+  const urlRegex = /([a-z0-9]+[.])?kord.app/;
+  if (req.headers.host) {
+    const [host, subdomain] = req.headers.host.match(urlRegex) || [];
+
+    if (subdomain !== "www.") {
+      return res.redirect(
+        301,
+        `${req.protocol}://www.${host}${req.originalUrl}`,
+      );
+    }
   }
+
   return next();
 };

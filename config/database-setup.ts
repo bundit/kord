@@ -1,21 +1,24 @@
-const { Pool } = require("pg");
+import pg = require("pg");
+import { DATABASE_URL, NODE_ENV } from "../lib/constants";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+const { Pool } = pg;
+
+const pool: pg.Pool = new Pool({
+  connectionString: DATABASE_URL,
   ssl: {
-    rejectUnauthorized: process.env.ENVIRONMENT === "development"
+    rejectUnauthorized: NODE_ENV === "development",
   },
-  max: 20
+  max: 20,
 });
 
-pool.connect((err, client, release) => {
+pool.connect((err: Error, client: pg.PoolClient, done) => {
   if (err) {
     console.error(`Error connecting: ${err.stack}`);
   } else {
-    client.query("SELECT NOW();", (queryErr, res) => {
-      release();
+    client.query("SELECT NOW();", (queryErr: Error, res: pg.QueryResult) => {
+      done();
       if (queryErr) {
-        return console.error(`Error executing query: ${err.stack}`);
+        return console.error(`Error executing query: ${queryErr.stack}`);
       }
 
       return console.log(`Connected to DB ${JSON.stringify(res.rows[0])}`);
@@ -23,35 +26,39 @@ pool.connect((err, client, release) => {
   }
 });
 
-module.exports = {
+export = {
   // For executing one query
-  query: (text, params, callback) => pool.query(text, params, callback),
+  query: pool?.query,
   // For executing multiple queries with one connection
-  getClient: async (callback) => {
+  getClient: async (callback: (client: pg.PoolClient) => void) => {
     const client = await pool.connect();
     try {
       await callback(client);
-    } catch (err) {
-      console.error(`Error executing query: ${err.stack}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`Error executing query: ${error.stack}`);
+      }
     } finally {
       client.release();
     }
   },
   // For executing a transaction
-  transaction: async (callback) => {
+  transaction: async (callback: (client: pg.PoolClient) => void) => {
     const client = await pool.connect();
     try {
       await client.query("BEGIN");
       try {
         await callback(client);
         client.query("COMMIT");
-      } catch (e) {
-        console.error(`Error executing transaction: ${err.stack}`);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(`Error executing transaction: ${error.stack}`);
+        }
         client.query("ROLLBACK");
-        throw e;
+        throw error;
       }
     } finally {
       client.release();
     }
-  }
+  },
 };
