@@ -1,15 +1,18 @@
-const jwtDecode = require("jwt-decode");
-const db = require("../config/database-setup");
+import { Request, Response } from "express";
+import jwt_decode from "jwt-decode";
+import { KordJWT } from "../types";
+import { Source } from "../types/common/kord";
+import db = require("../config/database-setup");
 
-async function getUserProfiles(req, res) {
-  const kordUser = jwtDecode(req.cookies.kordUser);
+async function getUserProfiles(req: Request, res: Response) {
+  const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
   const exclude = req.query.exclude || "none";
 
   const query = {
     text: `SELECT oauth_provider as source, provider_id as id, images as image, profile_url as "profileUrl", username
            FROM user_profiles
            WHERE user_id=$1 AND oauth_provider!=$2`,
-    values: [kordUser.id, exclude]
+    values: [kordUser.id, exclude],
   };
 
   try {
@@ -20,8 +23,23 @@ async function getUserProfiles(req, res) {
   }
 }
 
-async function insertUserProfile(req, res) {
-  const kordUser = jwtDecode(req.cookies.kordUser);
+interface PutUserProfileDto {
+  source: Source;
+  profile: UserProfileDto;
+}
+
+interface UserProfileDto {
+  id: string;
+  img: string[];
+  username?: string;
+  profile_url: string;
+}
+
+async function insertUserProfile(
+  req: Request<{}, {}, PutUserProfileDto>,
+  res: Response,
+) {
+  const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
   const { source, profile } = req.body;
 
   const query = {
@@ -35,8 +53,8 @@ async function insertUserProfile(req, res) {
       profile.id,
       profile.img,
       profile.username,
-      profile.profile_url
-    ]
+      profile.profile_url,
+    ],
   };
 
   try {
@@ -48,8 +66,8 @@ async function insertUserProfile(req, res) {
   return res.status(204).send();
 }
 
-async function deleteUserProfile(req, res) {
-  const kordUser = jwtDecode(req.cookies.kordUser);
+async function deleteUserProfile(req: Request, res: Response) {
+  const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
   const { provider } = req.query;
 
   if (!provider) {
@@ -61,7 +79,7 @@ async function deleteUserProfile(req, res) {
       const deleteProfileQuery = {
         text: `DELETE FROM user_profiles
                WHERE user_id=$1 AND oauth_provider=$2`,
-        values: [kordUser.id, provider]
+        values: [kordUser.id, provider],
       };
 
       await client.query(deleteProfileQuery);
@@ -69,7 +87,7 @@ async function deleteUserProfile(req, res) {
       const deletePlaylistsQuery = {
         text: `DELETE FROM user_playlists
                WHERE user_id=$1 AND source=$2`,
-        values: [kordUser.id, provider]
+        values: [kordUser.id, provider],
       };
 
       await client.query(deletePlaylistsQuery);
@@ -81,8 +99,8 @@ async function deleteUserProfile(req, res) {
   return res.status(204).send();
 }
 
-async function getUserPlaylists(req, res) {
-  const kordUser = jwtDecode(req.cookies.kordUser);
+async function getUserPlaylists(req: Request, res: Response) {
+  const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
   const exclude = req.query.exclude || "none";
 
   const query = {
@@ -92,7 +110,7 @@ async function getUserPlaylists(req, res) {
              ON users.id=user_playlists.user_id)
            WHERE users.id=$1 AND user_playlists.source!=$2
            ORDER BY source, index;`,
-    values: [kordUser.id, exclude]
+    values: [kordUser.id, exclude],
   };
 
   try {
@@ -103,9 +121,28 @@ async function getUserPlaylists(req, res) {
   }
 }
 
-async function insertUserPlaylists(req, res) {
-  const kordUser = jwtDecode(req.cookies.kordUser);
-  const { source, playlists } = req.body;
+interface PutUserPlaylistsDto {
+  source: Source;
+  playlists: PlaylistDto[];
+}
+
+interface PlaylistDto {
+  id: string;
+  isConnected: boolean;
+  title: string;
+  index: number;
+  img: string[];
+  total: number;
+  isStarred: boolean;
+}
+
+async function insertUserPlaylists(
+  req: Request<{}, {}, PutUserPlaylistsDto>,
+  res: Response,
+) {
+  const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
+  const source: Source = req.body.source;
+  const playlists = req.body.playlists;
 
   try {
     await db.transaction(async (client) => {
@@ -113,7 +150,7 @@ async function insertUserPlaylists(req, res) {
         const deleteQuery = {
           text: `DELETE FROM user_playlists
                   WHERE user_id=$1 AND source=$2;`,
-          values: [kordUser.id, source]
+          values: [kordUser.id, source],
         };
 
         await client.query(deleteQuery);
@@ -135,12 +172,12 @@ async function insertUserPlaylists(req, res) {
               index,
               JSON.stringify(img),
               total,
-              isStarred
-            ]
+              isStarred,
+            ],
           };
 
           return client.query(insertQuery);
-        })
+        }),
       );
     });
   } catch (e) {
@@ -150,39 +187,10 @@ async function insertUserPlaylists(req, res) {
   return res.status(204).send();
 }
 
-async function updateUserPlaylists(req, res) {
-  const kordUser = jwtDecode(req.cookies.kordUser);
-  const operations = req.body;
-
-  try {
-    await db.getClient(async (client) => {
-      await Promise.all(
-        operations.map((operation) => {
-          const { field, playlistId, value } = operation;
-
-          const patchQuery = {
-            text: `UPDATE user_playlists
-                   SET ${field}=$3
-                   WHERE user_id=$1 AND external_id=$2`,
-            values: [kordUser.id, playlistId, value]
-          };
-
-          return client.query(patchQuery);
-        })
-      );
-    });
-  } catch (e) {
-    return res.status(400).json(e);
-  }
-
-  return res.status(204).send();
-}
-
-module.exports = {
+export = {
   getUserProfiles,
   insertUserProfile,
   deleteUserProfile,
   getUserPlaylists,
   insertUserPlaylists,
-  updateUserPlaylists
 };

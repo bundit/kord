@@ -1,19 +1,31 @@
-const jwt = require("jsonwebtoken");
-const jwtDecode = require("jwt-decode");
-const refresh = require("passport-oauth2-refresh");
-const passport = require("passport");
-const db = require("../config/database-setup");
+import jwt = require("jsonwebtoken");
+import { Request, Response } from "express";
+import jwt_decode from "jwt-decode";
+import { JWT_SECRET, JWT_TOKEN_EXPIRE, NODE_ENV } from "../lib/constants";
+
+import { KordJWT, KordUser } from "../types";
+import { Source } from "../types/common/kord";
+import refresh = require("passport-oauth2-refresh");
+import passport = require("passport");
+import db = require("../config/database-setup");
+
+declare global {
+  namespace Express {
+    interface User extends KordUser {}
+  }
+}
 
 // eslint-disable-next-line
-function authNoop(_req, _res) {
+function authNoop(_req: Request, _res: Response) {
   // The request will be redirected for authentication, so this
   // function will not be called.
 }
 
-function authenticateWithOauth(source, isLinking = false) {
+function authenticateWithOauth(source: Source, isLinking: boolean = false) {
   const authStrategy = isLinking ? `${source}Link` : source;
 
   if (source === "spotify") {
+    // @ts-ignore
     return passport.authenticate(authStrategy, {
       scope: [
         "user-read-email",
@@ -30,63 +42,61 @@ function authenticateWithOauth(source, isLinking = false) {
         "user-follow-read",
         "user-read-recently-played",
         "playlist-modify-private",
-        "user-library-read"
+        "user-library-read",
       ],
-      showDialog: true
+      showDialog: true,
     });
   }
 
   if (source === "youtube") {
+    // @ts-ignore
     return passport.authenticate(authStrategy, {
       scope: [
         "email",
         "profile",
         "openid",
-        "https://www.googleapis.com/auth/youtube"
+        "https://www.googleapis.com/auth/youtube",
       ],
       showDialog: true,
       prompt: "consent",
-      accessType: "offline"
+      accessType: "offline",
     });
   }
 
   return authNoop;
 }
 
-function handleOauthCallback(source, isLinking) {
+function handleOauthCallback(source: Source, isLinking: boolean = false) {
   const authStrategy = isLinking ? `${source}Link` : source;
 
   return passport.authenticate(authStrategy, { failureRedirect: "/login" });
 }
 
-function generateJwtPayload(userId, email) {
-  const expires = Date.now() + parseInt(process.env.JWT_TOKEN_EXPIRE, 10);
+function generateJwtPayload(userId: string, email: string): KordJWT {
+  const expires = Date.now() + parseInt(JWT_TOKEN_EXPIRE, 10);
 
   return {
     id: userId,
     email,
-    expires
+    expires,
   };
 }
 
-function signAndSetJWTSessionToken(res, jwtPayload) {
-  const token = jwt.sign(jwtPayload, process.env.JWT_SECRET);
+function signAndSetJWTSessionToken(res: Response, jwtPayload: KordJWT): void {
+  const token = jwt.sign(jwtPayload, JWT_SECRET);
 
-  /** assign our jwt to the cookie */
+  res.clearCookie("kordUser");
+
   res.cookie("kordUser", token, {
     httpOnly: true,
-    maxAge: process.env.JWT_TOKEN_EXPIRE,
-    secure: process.env.NODE_ENV === "production",
-    overwrite: true
+    maxAge: parseInt(JWT_TOKEN_EXPIRE, 10),
+    secure: NODE_ENV === "production",
   });
 }
 
-// This code block will only execute if login is successful
-function loginUser(source, isLinking = false) {
-  return (req, res) => {
-    const {
-      user: { id, email, accessToken }
-    } = req;
+function loginUser(source: Source, isLinking: boolean = false) {
+  return (req: Request, res: Response) => {
+    const { id, email, accessToken } = req.user!;
 
     const jwtPayload = generateJwtPayload(id, email);
 
@@ -105,10 +115,8 @@ function loginUser(source, isLinking = false) {
   };
 }
 
-function refreshSessionToken(req, res) {
-  const {
-    user: { id, email }
-  } = req;
+function refreshSessionToken(req: Request, res: Response) {
+  const { id, email } = req.user!;
 
   const newJwtPayload = generateJwtPayload(id, email);
 
@@ -117,21 +125,21 @@ function refreshSessionToken(req, res) {
   return res.status(200).json({ message: "success" });
 }
 
-async function refreshOauthToken(req, res) {
+async function refreshOauthToken(req: Request, res: Response) {
   const { provider } = req.params;
   const userCookie = req.cookies.kordUser;
-  const kordUser = jwtDecode(userCookie);
+  const kordUser: KordJWT = jwt_decode(userCookie);
 
   const query = {
     text: `SELECT *
          FROM (users JOIN user_profiles
          ON users.id=user_profiles.user_id)
          WHERE users.id=$1 AND user_profiles.oauth_provider=$2`,
-    values: [kordUser.id, provider]
+    values: [kordUser.id, provider],
   };
 
   const {
-    rows: [firstRow]
+    rows: [firstRow],
   } = await db.query(query);
 
   if (!firstRow) {
@@ -145,30 +153,30 @@ async function refreshOauthToken(req, res) {
       if (error) {
         return res.send({
           provider: firstRow.oauth_provider,
-          error: JSON.parse(error.data)
+          error: JSON.parse(error.data),
         });
       }
       return res.send({
         provider: firstRow.oauth_provider,
-        accessToken
+        accessToken,
       });
-    }
+    },
   );
 }
 
-function logoutUser(_req, res) {
+function logoutUser(_req: Request, res: Response) {
   res.clearCookie("kordUser");
   res.clearCookie("userBackUnderOneHour");
 
   return res.status(200).redirect("/login");
 }
 
-module.exports = {
+export = {
   authNoop,
   authenticateWithOauth,
   handleOauthCallback,
   loginUser,
   refreshSessionToken,
   refreshOauthToken,
-  logoutUser
+  logoutUser,
 };

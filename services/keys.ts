@@ -1,31 +1,37 @@
-/* eslint-disable no-console */
-const puppeteer = require("puppeteer");
-const db = require("../config/database-setup");
+import puppeteer = require("puppeteer");
+import db = require("../config/database-setup");
+import { Source } from "../types/common/kord";
+import { KeyDao } from "../types/models";
 
-async function fetchKey(source, type) {
+async function fetchKey(source: Source, type: KeyDao["type"]) {
   const query = {
     text: `SELECT *
                FROM keys
                WHERE source=$1 AND type=$2`,
-    values: [source, type]
+    values: [source, type],
   };
-  const res = await db.query(query);
 
-  const {
-    rows: [result]
-  } = res;
+  try {
+    const res = await db.query<KeyDao>(query);
+    const {
+      rows: [result],
+    } = res;
+    return result && result.key;
+  } catch (e) {
+    console.error(e);
 
-  return result && result.key;
+    return;
+  }
 }
 
-async function storeKey(source, type, newKey) {
+async function storeKey(source: Source, type: KeyDao["type"], newKey: string) {
   const query = {
     text: `INSERT INTO keys(source, type, key, last_updated)
            VALUES($1, $2, $3, now())
            ON CONFLICT (source, type) DO UPDATE
               SET key=$3,
                   last_updated=now();`,
-    values: [source, type, newKey]
+    values: [source, type, newKey],
   };
 
   const result = await db.query(query);
@@ -33,30 +39,33 @@ async function storeKey(source, type, newKey) {
   return result;
 }
 
-function setSoundcloudClientId(clientId) {
+function setSoundcloudClientId(clientId: string) {
   module.exports.soundcloudClientId = clientId;
 }
 
-async function fetchNewSoundcloudClientId() {
+async function fetchNewSoundcloudClientId(): Promise<string> {
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
   await page.setRequestInterception(true);
-  let newClientId;
+  let newClientId = "";
 
-  function requestListener(req) {
+  function requestListener(req: puppeteer.HTTPRequest) {
     const requestUrl = req.url();
 
     const soundcloudApiV2Regex = /api-v2.soundcloud.com\/.*client_id.*/;
     if (soundcloudApiV2Regex.test(requestUrl)) {
-      const newKey = requestUrl
-        .match(/(client_id=([0-9A-Za-z])+)/g)[0]
-        .slice(10);
+      const match = requestUrl.match(/(client_id=([0-9A-Za-z])+)/g);
 
-      newClientId = newKey;
-      page.off("request", requestListener);
+      if (match) {
+        const newKey = match[0].slice(10);
+
+        newClientId = newKey;
+        page.off("request", requestListener);
+        browser.close();
+      }
     }
 
     req.continue();
@@ -74,9 +83,10 @@ async function fetchNewSoundcloudClientId() {
 
   try {
     await page.goto("https://soundcloud.com/discover", {
-      waitUntil: "networkidle0"
+      waitUntil: "networkidle0",
     });
   } catch (e) {
+    // We will expect a navigation error since we will early abort once key is found
     console.error("Caught page error: ", e);
   } finally {
     await browser.close();
@@ -88,15 +98,17 @@ async function fetchNewSoundcloudClientId() {
 (async () => {
   const soundcloudClientId = await fetchKey("soundcloud", "client_id");
 
-  setSoundcloudClientId(soundcloudClientId);
+  if (soundcloudClientId) {
+    setSoundcloudClientId(soundcloudClientId);
+  }
 })();
 
-module.exports = {
+export = {
   async refreshSoundcloudClientId() {
     const newClientId = await fetchNewSoundcloudClientId();
 
     storeKey("soundcloud", "client_id", newClientId);
 
     module.exports.soundcloudClientId = newClientId;
-  }
+  },
 };

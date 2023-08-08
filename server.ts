@@ -1,25 +1,26 @@
 import { Request, Response } from "express";
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const express = require("express");
-const passport = require("passport");
-const path = require("path");
-const morgan = require("morgan");
+import { BUILD_ENV, PORT } from "./lib/constants";
+import bodyParser = require("body-parser");
+import cookieParser = require("cookie-parser");
+import express = require("express");
+import passport = require("passport");
+import path = require("path");
+import morgan = require("morgan");
 
 require("./config/database-setup");
 require("./config/passport-setup");
 
-const forceSSL = require("./middleware/ssl");
-const forceWWW = require("./middleware/www");
-const appRoutes = require("./routes/app-routes");
-const authRoutes = require("./routes/auth-routes");
-const indexRoutes = require("./routes/index-routes");
-const userRoutes = require("./routes/user-routes");
-const apiRoutes = require("./routes/api-routes");
+import forceSSL = require("./middleware/ssl");
+import forceWWW = require("./middleware/www");
+import appRoutes = require("./routes/app-routes");
+import authRoutes = require("./routes/auth-routes");
+import indexRoutes = require("./routes/index-routes");
+import userRoutes = require("./routes/user-routes");
+import apiRoutes = require("./routes/api-routes");
 
 const app = express();
 const isProduction = app.get("env") === "production";
-const isPreProd = process.env.BUILD_ENV !== "production";
+const isPreProd = BUILD_ENV !== "production";
 
 // MIDDLEWARE
 if (isProduction && !isPreProd) {
@@ -52,5 +53,5 @@ if (isProduction) {
   });
 }
 
-const port = process.env.PORT || 8888;
+const port = PORT || 8888;
 app.listen(port, () => console.log(`Listening on port ${port}.`));
