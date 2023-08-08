@@ -28,7 +28,7 @@ pool.connect((err: Error, client: pg.PoolClient, done) => {
 
 export = {
   // For executing one query
-  query: pool?.query,
+  query: (queryConfig: pg.QueryConfig) => pool.query(queryConfig),
   // For executing multiple queries with one connection
   getClient: async (callback: (client: pg.PoolClient) => void) => {
     const client = await pool.connect();
