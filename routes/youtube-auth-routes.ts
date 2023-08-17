@@ -1,6 +1,7 @@
 import express = require("express");
 import authMiddleware = require("../middleware/ensureAuthenticated");
 import authController = require("../controllers/auth-controller");
+
 const router = express.Router();
 
 const YOUTUBE = "youtube";

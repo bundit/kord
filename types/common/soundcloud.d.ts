@@ -1,38 +1,3 @@
-interface SoundcloudTrackLite {
-  id: number;
-  kind: string | "track";
-  monetization_model: "NOT_APPLICABLE" | string;
-  policy: "ALLOW" | string;
-}
-
-export interface SoundcloudTrack extends SoundcloudTrackLite {
-  artwork_url: string;
-  comment_count: number;
-  created_at: string; // UTC time
-  description: string;
-  duration: number; // milliseconds
-  full_duration: number; // milliseconds
-  genre: string;
-  likes_count: number;
-  permalink: string; // mood-provider-8-full-mixtape
-  permalink_url: string; // https://soundcloud.com/flamingosis/mood-provider-8-full-mixtape
-  playback_count: number;
-  reposts_count: number;
-  tag_list: string;
-  title: string;
-  track_format: string | "single-track";
-  uri: string; // https://api.soundcloud.com/tracks/1342486297
-  urn: string; // soundcloud:tracks:1342486297
-  user_id: number;
-  waveform_url: string; // https://wave.sndcdn.com/RUDDjsM7OtcD_m.json
-  media: {
-    transcodings: SoundcloudTranscoding;
-  };
-  station_urn: string; // "soundcloud:system-playlists:track-stations:1342486297",
-  station_permalink: string; // "track-stations:1342486297"
-  user: SoundcloudUser;
-}
-
 interface SoundcloudTranscoding {
   url: string; // "https://api-v2.soundcloud.com/media/soundcloud:tracks:1342486297/a6965c5f-4095-4e02-83d9-bc73f609b283/stream/hls"
   preset: "mp3_1_0" | "opus_0_0";
@@ -72,7 +37,7 @@ interface SoundcloudUserLite {
 export interface SoundcloudUser extends SoundcloudUserLite {
   comments_count: number;
   created_at: string; // UTC
-  description: string; // "Management : asmith@c3mgmt.com myoung@c3mgmt.com \nBooking: dlandau@paradigmagency.com\n____________________\n\nFlamingosis (the name comes from a free- style Frisbee move that his father invented) is a New Jersey-based electronic music producer and beatboxer. Drawing on influences from other producers such as Flying Lotus and J Dilla as well as vintage funk and disco music, Flamingosis creates engaging and souful tracks and puts on an infectiously energetic live show."
+  description: string;
   followings_count: number;
   likes_count: number;
   playlist_likes_count: number;
@@ -84,6 +49,41 @@ export interface SoundcloudUser extends SoundcloudUserLite {
     entry_time: number;
     visual_url: string; // "https://i1.sndcdn.com/visuals-000001410762-jyZL3A-original.jpg"
   }>;
+}
+
+interface SoundcloudTrackLite {
+  id: number;
+  kind: string | "track";
+  monetization_model: "NOT_APPLICABLE" | string;
+  policy: "ALLOW" | string;
+}
+
+export interface SoundcloudTrack extends SoundcloudTrackLite {
+  artwork_url: string;
+  comment_count: number;
+  created_at: string; // UTC time
+  description: string;
+  duration: number; // milliseconds
+  full_duration: number; // milliseconds
+  genre: string;
+  likes_count: number;
+  permalink: string; // mood-provider-8-full-mixtape
+  permalink_url: string; // https://soundcloud.com/flamingosis/mood-provider-8-full-mixtape
+  playback_count: number;
+  reposts_count: number;
+  tag_list: string;
+  title: string;
+  track_format: string | "single-track";
+  uri: string; // https://api.soundcloud.com/tracks/1342486297
+  urn: string; // soundcloud:tracks:1342486297
+  user_id: number;
+  waveform_url: string; // https://wave.sndcdn.com/RUDDjsM7OtcD_m.json
+  media: {
+    transcodings: SoundcloudTranscoding;
+  };
+  station_urn: string; // "soundcloud:system-playlists:track-stations:1342486297",
+  station_permalink: string; // "track-stations:1342486297"
+  user: SoundcloudUser;
 }
 
 interface SoundcloudPlaylist {

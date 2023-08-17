@@ -1,10 +1,11 @@
 import express = require("express");
-const router = express.Router();
 
-import spotifyAuthRoutes = require("./spotify-auth-routes");
-import youtubeAuthRoutes = require("./youtube-auth-routes");
 import authMiddleware = require("../middleware/ensureAuthenticated");
 import authController = require("../controllers/auth-controller");
+import spotifyAuthRoutes = require("./spotify-auth-routes");
+import youtubeAuthRoutes = require("./youtube-auth-routes");
+
+const router = express.Router();
 
 router.use("/spotify", spotifyAuthRoutes);
 router.use("/youtube", youtubeAuthRoutes);

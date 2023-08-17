@@ -1,6 +1,8 @@
 import pg = require("pg");
 import { DATABASE_URL, NODE_ENV } from "../lib/constants";
 
+type ClientCallbackHandler = (client: pg.PoolClient) => void;
+
 const { Pool } = pg;
 
 const pool: pg.Pool = new Pool({
@@ -28,10 +30,9 @@ pool.connect((err: Error, client: pg.PoolClient, done) => {
 
 export = {
   // For executing one query
-  query: <T extends pg.QueryResultRow>(queryConfig: pg.QueryConfig) =>
-    pool.query<T>(queryConfig),
+  query: <T extends pg.QueryResultRow>(queryConfig: pg.QueryConfig) => pool.query<T>(queryConfig),
   // For executing multiple queries with one connection
-  getClient: async (callback: (client: pg.PoolClient) => void) => {
+  getClient: async (callback: ClientCallbackHandler) => {
     const client = await pool.connect();
     try {
       await callback(client);
@@ -44,7 +45,7 @@ export = {
     }
   },
   // For executing a transaction
-  transaction: async (callback: (client: pg.PoolClient) => void) => {
+  transaction: async (callback: ClientCallbackHandler) => {
     const client = await pool.connect();
     try {
       await client.query("BEGIN");

@@ -1,6 +1,7 @@
 import express = require("express");
 import authMiddleware = require("../middleware/ensureAuthenticated");
 import userController = require("../controllers/user-controller");
+
 const router = express.Router();
 
 // Authenticate all requests to /user

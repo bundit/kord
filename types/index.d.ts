@@ -1,4 +1,4 @@
-// This User overwrites the Express.User definition that is injected by Passport (available on req.user)
+// This User overwrites Express.User definition that is injected by Passport (available on req.user)
 export interface KordUser {
   email: string;
   id: string;

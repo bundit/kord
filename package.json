@@ -27,9 +27,6 @@
     "pg": "^8.11.2",
     "puppeteer": "^21.0.1"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "devDependencies": {
     "@types/body-parser": "^1.19.2",
     "@types/cookie-parser": "^1.4.3",
@@ -44,12 +41,16 @@
     "@types/passport-oauth2-refresh": "^1.1.1",
     "@types/passport-spotify": "^2.0.1",
     "@types/pg": "^8.10.2",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
     "concurrently": "^5.1.0",
     "dotenv": "^8.2.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-import": "^2.20.0",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.17.0",
+    "eslint": "^8.46.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.28.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.33.1",
     "nodemon": "^2.0.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"

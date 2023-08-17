@@ -1,12 +1,12 @@
 import { Request } from "express";
-import jwt_decode from "jwt-decode";
+import jwtDecode from "jwt-decode";
 import { PoolClient } from "pg";
+import passportSpotify = require("passport-spotify");
+import passportGoogle = require("passport-google-oauth20");
 import { KordJWT } from "../types";
 import { OauthProvider } from "../types/common/kord";
 import { UserDao, UserProfileDao } from "../types/models";
 import db = require("../config/database-setup");
-import passportSpotify = require("passport-spotify");
-import passportGoogle = require("passport-google-oauth20");
 
 type VerifyCallback =
   | passportSpotify.VerifyCallback
@@ -14,7 +14,10 @@ type VerifyCallback =
 type OAuthProfile = passportSpotify.Profile | passportGoogle.Profile;
 
 // Returns false if does not exist, otherwise returns user row
-async function checkIfUserExists(client: PoolClient, email: string) {
+async function findUserByEmail(
+  client: PoolClient,
+  email: string,
+): Promise<UserDao | undefined> {
   const searchQuery = {
     text: `SELECT *
              FROM users
@@ -23,23 +26,9 @@ async function checkIfUserExists(client: PoolClient, email: string) {
   };
 
   const { rows: userSearchRows } = await client.query<UserDao>(searchQuery);
+  const user = userSearchRows[0];
 
-  return userSearchRows[0];
-}
-
-async function getUserById(client: PoolClient, kordId: string) {
-  const searchQuery = {
-    text: `SELECT *
-             FROM users
-             WHERE id=$1`,
-    values: [kordId],
-  };
-
-  const {
-    rows: [userRow],
-  } = await client.query(searchQuery);
-
-  return userRow;
+  return user;
 }
 
 // Insert a user and return the new row
@@ -70,6 +59,7 @@ async function insertUserProfile(
   client: PoolClient,
   userProfile: UserProfileDao,
 ): Promise<void> {
+  // eslint-disable-next-line camelcase
   const { user_id, oauth_provider, provider_id, refresh_token } = userProfile;
 
   const profileInsertQuery = {
@@ -79,6 +69,7 @@ async function insertUserProfile(
              )
            ON CONFLICT (user_id, oauth_provider) DO UPDATE
              SET refresh_token=$4`,
+    // eslint-disable-next-line camelcase
     values: [user_id, oauth_provider, provider_id, refresh_token],
   };
 
@@ -99,7 +90,7 @@ function SignUpOrSignIn(
     } = profile;
 
     const kordUser =
-      (await checkIfUserExists(client, email)) ||
+      (await findUserByEmail(client, email)) ||
       (await insertNewUser(client, email));
 
     if (!kordUser) {
@@ -126,7 +117,7 @@ function LinkAccount(
   refreshToken: string,
   accessToken: string,
   done: VerifyCallback,
-) {
+): void {
   db.getClient(async (client) => {
     const {
       id: providerID,
@@ -134,7 +125,7 @@ function LinkAccount(
       provider,
     } = profile;
 
-    const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
+    const kordUser: KordJWT = jwtDecode(req.cookies.kordUser);
 
     const newUserProfile: UserProfileDao = {
       user_id: kordUser.id,

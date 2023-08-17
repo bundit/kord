@@ -1,9 +1,10 @@
 import puppeteer = require("puppeteer");
-import db = require("../config/database-setup");
 import { Source } from "../types/common/kord";
 import { KeyDao } from "../types/models";
 
-async function fetchKey(source: Source, type: KeyDao["type"]) {
+import db = require("../config/database-setup");
+
+async function fetchKey(source: Source, type: KeyDao["type"]): Promise<string> {
   const query = {
     text: `SELECT *
                FROM keys
@@ -16,15 +17,19 @@ async function fetchKey(source: Source, type: KeyDao["type"]) {
     const {
       rows: [result],
     } = res;
-    return result && result.key;
+    return result?.key || "";
   } catch (e) {
     console.error(e);
 
-    return;
+    return "";
   }
 }
 
-async function storeKey(source: Source, type: KeyDao["type"], newKey: string) {
+async function storeKey(
+  source: Source,
+  type: KeyDao["type"],
+  newKey: string,
+): Promise<void> {
   const query = {
     text: `INSERT INTO keys(source, type, key, last_updated)
            VALUES($1, $2, $3, now())
@@ -34,12 +39,10 @@ async function storeKey(source: Source, type: KeyDao["type"], newKey: string) {
     values: [source, type, newKey],
   };
 
-  const result = await db.query(query);
-
-  return result;
+  await db.query(query);
 }
 
-function setSoundcloudClientId(clientId: string) {
+function setSoundcloudClientId(clientId: string): void {
   module.exports.soundcloudClientId = clientId;
 }
 
@@ -52,7 +55,7 @@ async function fetchNewSoundcloudClientId(): Promise<string> {
   await page.setRequestInterception(true);
   let newClientId = "";
 
-  function requestListener(req: puppeteer.HTTPRequest) {
+  function requestListener(req: puppeteer.HTTPRequest): void {
     const requestUrl = req.url();
 
     const soundcloudApiV2Regex = /api-v2.soundcloud.com\/.*client_id.*/;

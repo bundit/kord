@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import jwt_decode from "jwt-decode";
+import jwtDecode from "jwt-decode";
 import { KordJWT } from "../types";
 import { Source } from "../types/common/kord";
 import db = require("../config/database-setup");
 
-async function getUserProfiles(req: Request, res: Response) {
-  const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
+async function getUserProfiles(req: Request, res: Response): Promise<Response> {
+  const kordUser: KordJWT = jwtDecode(req.cookies.kordUser);
   const exclude = req.query.exclude || "none";
 
   const query = {
@@ -23,11 +23,6 @@ async function getUserProfiles(req: Request, res: Response) {
   }
 }
 
-interface PutUserProfileDto {
-  source: Source;
-  profile: UserProfileDto;
-}
-
 interface UserProfileDto {
   id: string;
   img: string[];
@@ -35,11 +30,16 @@ interface UserProfileDto {
   profile_url: string;
 }
 
+interface PutUserProfileDto {
+  source: Source;
+  profile: UserProfileDto;
+}
+
 async function insertUserProfile(
   req: Request<{}, {}, PutUserProfileDto>,
   res: Response,
-) {
-  const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
+): Promise<Response> {
+  const kordUser: KordJWT = jwtDecode(req.cookies.kordUser);
   const { source, profile } = req.body;
 
   const query = {
@@ -66,8 +66,11 @@ async function insertUserProfile(
   return res.status(204).send();
 }
 
-async function deleteUserProfile(req: Request, res: Response) {
-  const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
+async function deleteUserProfile(
+  req: Request,
+  res: Response,
+): Promise<Response> {
+  const kordUser: KordJWT = jwtDecode(req.cookies.kordUser);
   const { provider } = req.query;
 
   if (!provider) {
@@ -99,8 +102,11 @@ async function deleteUserProfile(req: Request, res: Response) {
   return res.status(204).send();
 }
 
-async function getUserPlaylists(req: Request, res: Response) {
-  const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
+async function getUserPlaylists(
+  req: Request,
+  res: Response,
+): Promise<Response> {
+  const kordUser: KordJWT = jwtDecode(req.cookies.kordUser);
   const exclude = req.query.exclude || "none";
 
   const query = {
@@ -121,11 +127,6 @@ async function getUserPlaylists(req: Request, res: Response) {
   }
 }
 
-interface PutUserPlaylistsDto {
-  source: Source;
-  playlists: PlaylistDto[];
-}
-
 interface PlaylistDto {
   id: string;
   isConnected: boolean;
@@ -136,13 +137,18 @@ interface PlaylistDto {
   isStarred: boolean;
 }
 
+interface PutUserPlaylistsDto {
+  source: Source;
+  playlists: PlaylistDto[];
+}
+
 async function insertUserPlaylists(
   req: Request<{}, {}, PutUserPlaylistsDto>,
   res: Response,
-) {
-  const kordUser: KordJWT = jwt_decode(req.cookies.kordUser);
-  const source: Source = req.body.source;
-  const playlists = req.body.playlists;
+): Promise<Response> {
+  const kordUser: KordJWT = jwtDecode(req.cookies.kordUser);
+  const { source } = req.body;
+  const { playlists } = req.body;
 
   try {
     await db.transaction(async (client) => {

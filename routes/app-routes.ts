@@ -1,6 +1,7 @@
-import express = require("express");
 import path = require("path");
+import express = require("express");
 import authMiddleware = require("../middleware/ensureAuthenticated");
+
 const router = express.Router();
 
 // Authenticate user before app routes

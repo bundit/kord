@@ -1,8 +1,8 @@
 import express = require("express");
 
-const router = express.Router();
-
 import ApiController = require("../controllers/api-controller");
+
+const router = express.Router();
 
 // @Deprecated
 // Will be phasing this out for dedicated api routes
@@ -12,22 +12,22 @@ router.get("/user", ApiController.getSoundcloudUser);
 
 router.get(
   "/user/:soundcloudUserId/likes",
-  ApiController.getSoundcloudUserLikes
+  ApiController.getSoundcloudUserLikes,
 );
 
 router.get(
   "/user/:soundcloudUserId/playlist",
-  ApiController.getSoundcloudUserPlaylists
+  ApiController.getSoundcloudUserPlaylists,
 );
 
 router.get(
   "/playlist/:soundcloudPlaylistId",
-  ApiController.getSoundcloudPlaylist
+  ApiController.getSoundcloudPlaylist,
 );
 
 router.get(
   "/track/:soundcloudTrackId/related",
-  ApiController.getRelatedSoundcloudTracks
+  ApiController.getRelatedSoundcloudTracks,
 );
 
 router.get("/search/tracks", ApiController.searchSoundcloudTracks);
@@ -38,12 +38,12 @@ router.get("/artist/:soundcloudArtistId", ApiController.getSoundcloudArtist);
 
 router.get(
   "/artist/:soundcloudArtistId/tracks",
-  ApiController.getSoundcloudArtistTracks
+  ApiController.getSoundcloudArtistTracks,
 );
 
 router.get(
   "/artist/:soundcloudArtistId/toptracks",
-  ApiController.getSoundcloudArtistTopTracks
+  ApiController.getSoundcloudArtistTopTracks,
 );
 
 export = router;

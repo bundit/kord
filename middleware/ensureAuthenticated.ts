@@ -1,12 +1,12 @@
 import passport = require("passport");
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, RequestHandler } from "express";
 import { KordUser } from "../types";
 
 function ensureAuthenticatedRoute(
   req: Request,
   res: Response,
   next: NextFunction,
-) {
+): RequestHandler {
   return passport.authenticate(
     "jwt",
     (err: Error, user: KordUser, info?: string) => {
@@ -28,7 +28,7 @@ function ensureAuthenticatedRequest(
   req: Request,
   res: Response,
   next: NextFunction,
-) {
+): RequestHandler {
   return passport.authenticate(
     "jwt",
     (err: Error, user: KordUser, info?: string) => {

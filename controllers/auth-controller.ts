@@ -1,16 +1,17 @@
 import jwt = require("jsonwebtoken");
-import { Request, Response } from "express";
-import jwt_decode from "jwt-decode";
-import { JWT_SECRET, JWT_TOKEN_EXPIRE, NODE_ENV } from "../lib/constants";
-
-import { KordJWT, KordUser } from "../types";
-import { Source } from "../types/common/kord";
+import { Request, Response, Handler } from "express";
+import jwtDecode from "jwt-decode";
 import refresh = require("passport-oauth2-refresh");
 import passport = require("passport");
+import { JWT_SECRET, JWT_TOKEN_EXPIRE, NODE_ENV } from "../lib/constants";
+import { KordJWT, KordUser } from "../types";
+import { Source } from "../types/common/kord";
 import db = require("../config/database-setup");
 
 declare global {
+  // eslint-disable-next-line no-unused-vars
   namespace Express {
+    // eslint-disable-next-line no-unused-vars
     interface User extends KordUser {}
   }
 }
@@ -21,7 +22,10 @@ function authNoop(_req: Request, _res: Response) {
   // function will not be called.
 }
 
-function authenticateWithOauth(source: Source, isLinking: boolean = false) {
+function authenticateWithOauth(
+  source: Source,
+  isLinking: boolean = false,
+): Handler {
   const authStrategy = isLinking ? `${source}Link` : source;
 
   if (source === "spotify") {
@@ -66,7 +70,10 @@ function authenticateWithOauth(source: Source, isLinking: boolean = false) {
   return authNoop;
 }
 
-function handleOauthCallback(source: Source, isLinking: boolean = false) {
+function handleOauthCallback(
+  source: Source,
+  isLinking: boolean = false,
+): Handler {
   const authStrategy = isLinking ? `${source}Link` : source;
 
   return passport.authenticate(authStrategy, { failureRedirect: "/login" });
@@ -115,7 +122,7 @@ function loginUser(source: Source, isLinking: boolean = false) {
   };
 }
 
-function refreshSessionToken(req: Request, res: Response) {
+function refreshSessionToken(req: Request, res: Response): Response {
   const { id, email } = req.user!;
 
   const newJwtPayload = generateJwtPayload(id, email);
@@ -125,10 +132,13 @@ function refreshSessionToken(req: Request, res: Response) {
   return res.status(200).json({ message: "success" });
 }
 
-async function refreshOauthToken(req: Request, res: Response) {
+async function refreshOauthToken(
+  req: Request,
+  res: Response,
+): Promise<Response> {
   const { provider } = req.params;
   const userCookie = req.cookies.kordUser;
-  const kordUser: KordJWT = jwt_decode(userCookie);
+  const kordUser: KordJWT = jwtDecode(userCookie);
 
   const query = {
     text: `SELECT *
@@ -164,7 +174,7 @@ async function refreshOauthToken(req: Request, res: Response) {
   );
 }
 
-function logoutUser(_req: Request, res: Response) {
+function logoutUser(_req: Request, res: Response): void {
   res.clearCookie("kordUser");
   res.clearCookie("userBackUnderOneHour");
 

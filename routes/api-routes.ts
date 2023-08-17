@@ -4,7 +4,7 @@ import soundcloudApiRoutes = require("../routes/soundcloud-api-routes");
 
 const router = express.Router();
 const {
-  ensureAuthenticatedRequest
+  ensureAuthenticatedRequest,
 } = require("../middleware/ensureAuthenticated");
 
 // Authenticate all requests to /api

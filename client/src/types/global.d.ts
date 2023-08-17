@@ -1,9 +1,9 @@
+import { Source } from "../../../types/common/kord";
+
 declare module "*.module.scss" {
   const classes: { [key: string]: string };
   export default classes;
 }
-
-type Source = "soundcloud" | "spotify" | "youtube";
 
 export interface Track {
   title: string;
