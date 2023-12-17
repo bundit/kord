@@ -59,6 +59,7 @@
     "start": "node_modules/ts-node/dist/bin.js --transpileOnly server.ts",
     "dev": "node_modules/.bin/concurrently --handle-input \"nodemon -r dotenv/config server.ts\" \"cd client && yarn typed-scss-modules src --watch && yarn start\" \"cd landing && yarn start\"",
     "dev-app": "node_modules/.bin/concurrently --handle-input \"nodemon -r dotenv/config server.ts\" \"cd client && yarn typed-scss-modules src --watch\" \"cd client && yarn start\"",
-    "heroku-postbuild": "./node_modules/typescript/bin/tsc && cd client && yarn && yarn typed-scss-modules src && yarn run build && cd ../landing && yarn && yarn run build"
+    "build": "./node_modules/typescript/bin/tsc && cd client && yarn && yarn typed-scss-modules src && yarn run build && cd ../landing && yarn && yarn run build",
+    "heroku-postbuild": "mkdir ./.cache && mv /app/.cache/puppeteer ./.cache"
   }
 }
