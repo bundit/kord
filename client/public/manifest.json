@@ -1,6 +1,13 @@
 {
   "short_name": "Kord",
   "name": "Kord Player",
+  "author": "Bundit Hongmanee",
+  "description": "All your music, in one place.",
+  "categories": ["music"],
+  "mauv_id": "mWTktNtLYCyh5UzdYEf8",
+  "mauv_links": {
+    "github": "https://github.com/bundit/kord-app"
+  },
   "icons": [
     {
       "src": "favicon.png",
